@@ -17,7 +17,7 @@ setup(
     description='Clove is a library that makes atomic swaps between chains easy.',
     long_description=long_description,
     install_requires=[
-        'bitcoinlib==0.3.29',
+        'python-bitcoinlib==0.9.0',
     ],
     extras_require={
         'testing': [
@@ -37,9 +37,9 @@ setup(
     download_url='https://github.com/Landen/clove/tarball/' + __version__,
     license='GPLv3',
     classifiers=[
-      'Development Status :: 3 - Alpha',
-      'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3',
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Programming Language :: Python :: 3',
     ],
     keywords='',
     packages=find_packages(exclude=['docs', 'tests*']),
