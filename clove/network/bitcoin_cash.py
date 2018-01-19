@@ -30,7 +30,7 @@ class TestNetBitcoinCash(BitcoinCash):
     seeds = (
         'testnet-seed.bitcoinabc.org',
         'testnet-seed-abc.bitcoinforks.org',
-        'testnet - seed.bitprim.org',
+        'testnet-seed.bitprim.org',
         'testnet-seed.deadalnix.me',
         'testnet-seeder.criptolayer.net',
     )

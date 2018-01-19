@@ -25,6 +25,7 @@ setup(
             'pytest==3.3.2',
             'isort==4.2.15',
             'flake8==3.5.0',
+            'validators==0.12.0',
         ],
         'docs': [
             'Sphinx==1.6.6',
