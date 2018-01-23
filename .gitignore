@@ -15,6 +15,7 @@ eggs
 parts
 bin
 var
+venv
 sdist
 develop-eggs
 .installed.cfg
@@ -25,6 +26,7 @@ lib64
 pip-log.txt
 
 # Unit test / coverage reports
+.cache
 .coverage
 .tox
 nosetests.xml
