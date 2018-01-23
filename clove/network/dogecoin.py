@@ -1,7 +1,7 @@
-from clove.network.base import BaseNetwork
+from clove.network.bitcoin import Bitcoin
 
 
-class Dogecoin(BaseNetwork):
+class Dogecoin(Bitcoin):
     """
     Class with all the necessary DOGE network information based on
     https://github.com/dogecoin/dogecoin/blob/master/src/chainparams.cpp

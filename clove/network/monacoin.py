@@ -1,7 +1,7 @@
-from clove.network.base import BaseNetwork
+from clove.network.bitcoin import Bitcoin
 
 
-class Monacoin(BaseNetwork):
+class Monacoin(Bitcoin):
     """
     Class with all the necessary MONA network information based on
     https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp

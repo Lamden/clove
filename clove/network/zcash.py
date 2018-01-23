@@ -1,7 +1,7 @@
-from clove.network.base import BaseNetwork
+from clove.network.bitcoin import Bitcoin
 
 
-class Zcash(BaseNetwork):
+class Zcash(Bitcoin):
     """
     Class with all the necessary ZEC network information based on
     https://github.com/zcash/zcash/blob/master/src/chainparams.cpp

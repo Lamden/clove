@@ -1,7 +1,7 @@
-from clove.network.base import BaseNetwork
+from clove.network.bitcoin import Bitcoin
 
 
-class Zclassic(BaseNetwork):
+class Zclassic(Bitcoin):
     """
     Class with all the necessary ZCL network information based on
     https://github.com/z-classic/zclassic/blob/master/src/chainparams.cpp

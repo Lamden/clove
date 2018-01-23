@@ -1,3 +1,4 @@
+from collections import namedtuple
 import socket
 
 
@@ -34,3 +35,10 @@ class BaseNetwork(object):
                 except (socket.timeout, ConnectionRefusedError, OSError):
                     continue
                 return connection
+
+    def initiate_atomic_swap(self, sender_address: str, recipient_address: str, value: float, txin: tuple):
+        raise NotImplementedError
+
+    @staticmethod
+    def dict_to_namedtuple(dictionary):
+        return namedtuple('GenericDict', dictionary.keys())(**dictionary)
