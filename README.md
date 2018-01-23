@@ -27,7 +27,7 @@ Or clone the repo:
 
     $ git clone https://github.com/Landen/clove.git
     $ cd clove
-    $ virtualenv venv
+    $ virtualenv venv --python=python3.6
     $ . venv/bin/activate
     $ python setup.py develop
 
