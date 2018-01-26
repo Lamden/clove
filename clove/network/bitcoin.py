@@ -1,10 +1,16 @@
+import base64
 from datetime import datetime, timedelta
-import hashlib
+from hashlib import sha256
+from random import choices
+from string import ascii_letters, digits
 import struct
 
+from Crypto import Random
+from Crypto.Cipher import AES
 from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, Hash160, b2x, lx, script, x
+from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
-from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret
+from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 
 from clove.network.base import BaseNetwork
 
@@ -65,7 +71,7 @@ class BitcoinTransaction(object):
         self.locktime = datetime.utcnow() + timedelta(hours=number_of_hours)
 
     def generate_hash(self):
-        self.secret = hashlib.sha256(b'some random words').digest()
+        self.secret = sha256(b'some random words').digest()
         self.secret_hash = CBitcoinSecret.from_secret_bytes(self.secret)
 
     def build_outputs(self):
@@ -166,3 +172,51 @@ class TestNetBitcoin(Bitcoin):
         'testnet-seed.bluematt.me',
     )
     port = 18333
+
+
+class BitcoinWallet(object):
+
+    def __init__(self, private_key=None, encrypted_private_key=None, password=None):
+        if private_key is None and encrypted_private_key is None:
+            secret = ''.join(choices(ascii_letters + digits, k=64))
+            self.secret = sha256(bytes(secret.encode('utf-8'))).digest()
+            self.private_key = CBitcoinSecret.from_secret_bytes(secret=self.secret)
+
+        elif private_key is not None:
+            self.private_key = CBitcoinSecret(private_key)
+
+        elif encrypted_private_key is not None and password is not None:
+            self.private_key = CBitcoinSecret(self.decrypt_private_key(encrypted_private_key, password))
+
+        elif password is None:
+            raise TypeError(
+                "__init__() missing 'password' argument, since 'encrypted_private_key' argument was provided"
+            )
+
+        self.public_key = self.private_key.pub
+
+    def get_private_key(self) -> str:
+        return str(self.private_key)
+
+    def get_public_key(self) -> CPubKey:
+        return self.public_key
+
+    def get_address(self) -> str:
+        return str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
+
+    @staticmethod
+    def encrypt_private_key(private_key: str, password: str) -> bytes:
+        """Encrypt private key with the password."""
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
+        encrypted_private_key = base64.b64encode(iv + cipher.encrypt(private_key))
+        return encrypted_private_key
+
+    @staticmethod
+    def decrypt_private_key(encrypted_private_key: bytes, password: str) -> str:
+        """Decrypt private key with the password."""
+        encrypted_private_key = base64.b64decode(encrypted_private_key)
+        iv = encrypted_private_key[:AES.block_size]
+        cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
+        private_key = cipher.decrypt(encrypted_private_key[AES.block_size:])
+        return str(private_key, 'ascii')
