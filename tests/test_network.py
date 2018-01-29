@@ -25,12 +25,3 @@ def test_seeds_valid_dns_address(seed):
 @mark.parametrize('seed', seeds)
 def test_seeds_dns_address_resolves_to_ip(seed):
     assert hostname_resolves(seed) is True
-
-
-@mark.parametrize('network', networks)
-def test_swap_contract(network):
-    first_address = '1JvDywcLY4mKVPb2RvsjYri8qiuMNG13cr'
-    second_address = '12BTnbfFRBLEwsfYVyexpUEADyNfEKwY8h'
-    secret = '123456789'
-    contract = network.atomic_swap_contract(first_address, second_address, secret)
-    assert contract.is_valid()
