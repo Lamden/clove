@@ -1,4 +1,3 @@
-from collections import namedtuple
 import socket
 from time import sleep
 
@@ -28,27 +27,6 @@ class BaseNetwork(object):
             return []
 
         return nodes
-
-#     @classmethod
-#     def connect(cls, timeout=2):
-#         for seed in cls.seeds:
-#             nodes = cls.get_nodes(seed)
-#             for node in nodes:
-#                 try:
-#                     connection = socket.create_connection(
-#                         address=(node, cls.port),
-#                         timeout=timeout
-#                     )
-#                 except (socket.timeout, ConnectionRefusedError, OSError):
-#                     continue
-#                 return connection
-
-#     def initiate_atomic_swap(self, sender_address: str, recipient_address: str, value: float, txin: tuple):
-#         raise NotImplementedError
-
-#     @staticmethod
-#     def dict_to_namedtuple(dictionary):
-#         return namedtuple('GenericDict', dictionary.keys())(**dictionary)
 
     def connect(self, timeout=2):
         if self.connection is None:
