@@ -7,12 +7,64 @@ import struct
 
 from Crypto import Random
 from Crypto.Cipher import AES
-from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, Hash160, b2x, lx, script, x
+from bitcoin import SelectParams
+from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, Hash160, b2x, lx, script
 from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 
 from clove.network.base import BaseNetwork
+
+
+class BitcoinWallet(object):
+
+    def __init__(self, private_key=None, encrypted_private_key=None, password=None, testnet=False):
+        if testnet:
+            SelectParams('testnet')
+
+        if private_key is None and encrypted_private_key is None:
+            secret = ''.join(choices(ascii_letters + digits, k=64))
+            self.secret = sha256(bytes(secret.encode('utf-8'))).digest()
+            self.private_key = CBitcoinSecret.from_secret_bytes(secret=self.secret)
+
+        elif private_key is not None:
+            self.private_key = CBitcoinSecret(private_key)
+
+        elif encrypted_private_key is not None and password is not None:
+            self.private_key = CBitcoinSecret(self.decrypt_private_key(encrypted_private_key, password))
+
+        elif password is None:
+            raise TypeError(
+                "__init__() missing 'password' argument, since 'encrypted_private_key' argument was provided"
+            )
+
+        self.public_key = self.private_key.pub
+
+    def get_private_key(self) -> str:
+        return str(self.private_key)
+
+    def get_public_key(self) -> CPubKey:
+        return self.public_key
+
+    def get_address(self) -> str:
+        return str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
+
+    @staticmethod
+    def encrypt_private_key(private_key: str, password: str) -> bytes:
+        """Encrypt private key with the password."""
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
+        encrypted_private_key = base64.b64encode(iv + cipher.encrypt(private_key))
+        return encrypted_private_key
+
+    @staticmethod
+    def decrypt_private_key(encrypted_private_key: bytes, password: str) -> str:
+        """Decrypt private key with the password."""
+        encrypted_private_key = base64.b64decode(encrypted_private_key)
+        iv = encrypted_private_key[:AES.block_size]
+        cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
+        private_key = cipher.decrypt(encrypted_private_key[AES.block_size:])
+        return str(private_key, 'ascii')
 
 
 class BitcoinTransaction(object):
@@ -39,7 +91,7 @@ class BitcoinTransaction(object):
     def build_atomic_swap_contract(self):
         self.contract = script.CScript([
             script.OP_IF,
-            script.OP_RIPEMD160,
+            script.OP_SHA256,
             self.secret_hash,
             script.OP_EQUALVERIFY,
             script.OP_DUP,
@@ -53,6 +105,8 @@ class BitcoinTransaction(object):
             script.OP_HASH160,
             Hash160(self.sender_address.encode()),
             script.OP_ENDIF,
+            script.OP_EQUALVERIFY,
+            script.OP_CHECKSIG,
         ])
 
     def build_inputs(self):
@@ -64,7 +118,7 @@ class BitcoinTransaction(object):
                     outpoint['vout']
                 )
             )
-            tx_in.scriptSig = script.CScript(x(outpoint['scriptPubKey']))
+            tx_in.scriptSig = script.CScript.fromhex(outpoint['scriptPubKey'])
             self.tx_in_list.append(tx_in)
 
     def set_locktime(self, number_of_hours):
@@ -78,32 +132,27 @@ class BitcoinTransaction(object):
         self.generate_hash()
 
         self.set_locktime(number_of_hours=48)
-        self.contract = self.build_atomic_swap_contract()
+        self.build_atomic_swap_contract()
 
         self.contract_p2sh = self.contract.to_p2sh_scriptPubKey()
         self.contract_address = CBitcoinAddress.from_scriptPubKey(self.contract_p2sh)
 
         self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract_address), ]
         if self.outpoints_value > self.value:
-            change = self.outpoints_value = self.value
+            change = self.outpoints_value - self.value
             self.tx_out_list.append(CMutableTxOut(change, CBitcoinAddress(self.sender_address).to_scriptPubKey()))
 
-    def get_secret_from_private_key(self, private_key):
-        # TODO
-        return secret  # noqa
-
-    def sign(self, private_key):
-        seckey = self.get_secret_from_private_key(private_key)
-        for tx_in_index in range(len(self.tx.vin)):
-            txin_scriptPubKey = self.tx.vin[tx_in_index].scriptSig
-            sig_hash = script.SignatureHash(txin_scriptPubKey, self.tx, tx_in_index, script.SIGHASH_ALL)
-            sig = seckey.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
-            self.tx.vin[tx_in_index].scriptSig = script.CScript([sig, seckey.pub])
+    def sign(self, wallet: BitcoinWallet):
+        for tx_index, tx_in in enumerate(self.tx.vin):
+            original_script_signature = tx_in.scriptSig
+            sig_hash = script.SignatureHash(original_script_signature, self.tx, tx_index, script.SIGHASH_ALL)
+            sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
+            tx_in.scriptSig = script.CScript([sig, wallet.private_key.pub])
             VerifyScript(
-                self.tx.vin[tx_in_index].scriptSig,
-                txin_scriptPubKey,
+                tx_in.scriptSig,
+                original_script_signature,
                 self.tx,
-                tx_in_index,
+                tx_index,
                 (SCRIPT_VERIFY_P2SH,)
             )
 
@@ -152,7 +201,16 @@ class Bitcoin(BaseNetwork):
     )
     port = 8333
 
-    def initiate_atomic_swap(self, sender_address: str, recipient_address: str, value: float, outpoints: list):
+    def __init__(self):
+        SelectParams('mainnet')
+
+    def initiate_atomic_swap(
+        self,
+        sender_address: str,
+        recipient_address: str,
+        value: float,
+        outpoints: list
+    ) -> BitcoinTransaction:
         transaction = BitcoinTransaction(self, sender_address, recipient_address, value, outpoints)
         transaction.create_unsign_transaction()
         return transaction
@@ -173,50 +231,5 @@ class TestNetBitcoin(Bitcoin):
     )
     port = 18333
 
-
-class BitcoinWallet(object):
-
-    def __init__(self, private_key=None, encrypted_private_key=None, password=None):
-        if private_key is None and encrypted_private_key is None:
-            secret = ''.join(choices(ascii_letters + digits, k=64))
-            self.secret = sha256(bytes(secret.encode('utf-8'))).digest()
-            self.private_key = CBitcoinSecret.from_secret_bytes(secret=self.secret)
-
-        elif private_key is not None:
-            self.private_key = CBitcoinSecret(private_key)
-
-        elif encrypted_private_key is not None and password is not None:
-            self.private_key = CBitcoinSecret(self.decrypt_private_key(encrypted_private_key, password))
-
-        elif password is None:
-            raise TypeError(
-                "__init__() missing 'password' argument, since 'encrypted_private_key' argument was provided"
-            )
-
-        self.public_key = self.private_key.pub
-
-    def get_private_key(self) -> str:
-        return str(self.private_key)
-
-    def get_public_key(self) -> CPubKey:
-        return self.public_key
-
-    def get_address(self) -> str:
-        return str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
-
-    @staticmethod
-    def encrypt_private_key(private_key: str, password: str) -> bytes:
-        """Encrypt private key with the password."""
-        iv = Random.new().read(AES.block_size)
-        cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
-        encrypted_private_key = base64.b64encode(iv + cipher.encrypt(private_key))
-        return encrypted_private_key
-
-    @staticmethod
-    def decrypt_private_key(encrypted_private_key: bytes, password: str) -> str:
-        """Decrypt private key with the password."""
-        encrypted_private_key = base64.b64decode(encrypted_private_key)
-        iv = encrypted_private_key[:AES.block_size]
-        cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
-        private_key = cipher.decrypt(encrypted_private_key[AES.block_size:])
-        return str(private_key, 'ascii')
+    def __init__(self):
+        SelectParams('testnet')

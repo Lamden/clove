@@ -18,7 +18,7 @@ setup(
     long_description=long_description,
     install_requires=[
         'pycrypto==2.6.1',
-        'python-bitcoinlib==0.9.0',
+        'python_bitcoinlib',
     ],
     extras_require={
         'testing': [
@@ -34,6 +34,11 @@ setup(
             'recommonmark==0.4.0',
         ],
     },
+    dependency_links=[
+        # waiting for this fix to be released:
+        # https://github.com/petertodd/python-bitcoinlib/commit/1a089d67f5a0b64ae9f2ffcac786b87b56a0551b
+        'https://github.com/petertodd/python-bitcoinlib/archive/master.zip#egg=python_bitcoinlib'
+    ],
     url='https://github.com/Landen/clove',
     download_url='https://github.com/Landen/clove/tarball/' + __version__,
     license='GPLv3',
