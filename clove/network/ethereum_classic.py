@@ -1,5 +1,7 @@
-from clove.network.ethereum import Ethereum
 import web3
+
+from clove.network.ethereum import Ethereum
+
 
 class Ethereum_Classic(Ethereum):
     """
