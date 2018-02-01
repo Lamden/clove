@@ -1,9 +1,9 @@
-from clove.network.bitcoin import BitcoinTransaction, TestNetBitcoin
+from clove.network.bitcoin import BitcoinTestNet, BitcoinTransaction
 
 
 def test_swap_contract(alice_wallet, bob_wallet):
     transaction = BitcoinTransaction(
-        TestNetBitcoin(),
+        BitcoinTestNet(),
         alice_wallet.get_address(),
         bob_wallet.get_address(),
         0.5,
@@ -16,7 +16,7 @@ def test_swap_contract(alice_wallet, bob_wallet):
 
 
 def test_initiate_atomic_swap(alice_wallet, bob_wallet):
-    btc_network = TestNetBitcoin()
+    btc_network = BitcoinTestNet()
     outpoints = [
         {
             'txid': '6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',

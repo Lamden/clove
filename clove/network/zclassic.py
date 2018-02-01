@@ -13,7 +13,7 @@ class Zclassic(Bitcoin):
     port = 8033
 
 
-class TestNetZclassic(Zclassic):
+class ZclassicTestNet(Zclassic):
     """
     Class with all the necessary ZCL testing network information based on
     https://github.com/z-classic/zclassic/blob/master/src/chainparams.cpp

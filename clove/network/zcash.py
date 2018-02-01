@@ -17,7 +17,7 @@ class Zcash(Bitcoin):
     port = 18233
 
 
-class TestNetZcash(Zcash):
+class ZcashTestNet(Zcash):
     """
     Class with all the necessary ZEC testing network information based on
     https://github.com/zcash/zcash/blob/master/src/chainparams.cpp

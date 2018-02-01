@@ -120,7 +120,7 @@ def build_tx(sender_address, recipient_address, payload, value, gas_limit, sende
     return Ethereum.web3_connection.eth.sendRawTransaction(raw_tx_hex)
 
 
-class TestNetKovanEthereum(Ethereum):
+class KovanEthereumTestNet(Ethereum):
     """
     Infura connector to the Kovan network
     """

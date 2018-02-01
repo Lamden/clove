@@ -20,7 +20,7 @@ class BitcoinCash(Bitcoin):
     port = 8333
 
 
-class TestNetBitcoinCash(BitcoinCash):
+class BitcoinCashTestNet(BitcoinCash):
     """
     Class with all the necessary BCH testing network information based on
     https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/src/chainparams.cpp

@@ -18,7 +18,7 @@ class Dash(Bitcoin):
     port = 9999
 
 
-class TestNetDash(Dash):
+class DashTestNet(Dash):
     """
     Class with all the necessary DASH testing network information based on
     https://github.com/dashpay/dash/blob/master/src/chainparams.cpp
