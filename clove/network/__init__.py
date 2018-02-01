@@ -1,21 +1,21 @@
-from .bitcoin import Bitcoin, TestNetBitcoin
-from .bitcoin_cash import BitcoinCash, TestNetBitcoinCash
-from .dash import Dash, TestNetDash
-from .dogecoin import Dogecoin, TestNetDogecoin
-from .komodo import Komodo, TestNetKomodo
-from .litecoin import Litecoin, TestNetLitecoin
-from .monacoin import Monacoin, TestNetMonacoin
-from .zcash import Zcash, TestNetZcash
-from .zclassic import Zclassic, TestNetZclassic
+from .bitcoin import Bitcoin, BitcoinTestNet
+from .bitcoin_cash import BitcoinCash, BitcoinCashTestNet
+from .dash import Dash, DashTestNet
+from .dogecoin import Dogecoin, DogecoinTestNet
+from .komodo import Komodo, KomodoTestNet
+from .litecoin import Litecoin, LitecoinTestNet
+from .monacoin import Monacoin, MonacoinTestNet
+from .zcash import Zcash, ZcashTestNet
+from .zclassic import Zclassic, ZclassicTestNet
 
 __all__ = (
-    Bitcoin, TestNetBitcoin,
-    BitcoinCash, TestNetBitcoinCash,
-    Dash, TestNetDash,
-    Dogecoin, TestNetDogecoin,
-    Komodo, TestNetKomodo,
-    Litecoin, TestNetLitecoin,
-    Monacoin, TestNetMonacoin,
-    Zcash, TestNetZcash,
-    Zclassic, TestNetZclassic,
+    Bitcoin, BitcoinTestNet,
+    BitcoinCash, BitcoinCashTestNet,
+    Dash, DashTestNet,
+    Dogecoin, DogecoinTestNet,
+    Komodo, KomodoTestNet,
+    Litecoin, LitecoinTestNet,
+    Monacoin, MonacoinTestNet,
+    Zcash, ZcashTestNet,
+    Zclassic, ZclassicTestNet,
 )

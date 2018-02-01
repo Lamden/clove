@@ -15,7 +15,7 @@ class Monacoin(Bitcoin):
     port = 9401
 
 
-class TestNetMonacoin(Monacoin):
+class MonacoinTestNet(Monacoin):
     """
     Class with all the necessary MONA testing network information based on
     https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp

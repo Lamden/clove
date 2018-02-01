@@ -19,7 +19,7 @@ class Litecoin(Bitcoin):
     port = 9333
 
 
-class TestNetLitecoin(Litecoin):
+class LitecoinTestNet(Litecoin):
     """
     Class with all the necessary LTC testing network information based on
     https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp

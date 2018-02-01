@@ -18,7 +18,7 @@ class Dogecoin(Bitcoin):
     port = 22556
 
 
-class TestNetDogecoin(Dogecoin):
+class DogecoinTestNet(Dogecoin):
     """
     Class with all the necessary DOGE testing network information based on
     https://github.com/dogecoin/dogecoin/blob/master/src/chainparams.cpp

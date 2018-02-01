@@ -125,8 +125,9 @@ class BitcoinTransaction(object):
         self.locktime = datetime.utcnow() + timedelta(hours=number_of_hours)
 
     def generate_hash(self):
-        self.secret = sha256(b'some random words').digest()
-        self.secret_hash = CBitcoinSecret.from_secret_bytes(self.secret)
+        wallet = BitcoinWallet()
+        self.secret = wallet.secret
+        self.secret_hash = wallet.private_key
 
     def build_outputs(self):
         self.generate_hash()
@@ -216,7 +217,7 @@ class Bitcoin(BaseNetwork):
         return transaction
 
 
-class TestNetBitcoin(Bitcoin):
+class BitcoinTestNet(Bitcoin):
     """
     Class with all the necessary BTC testing network information based on
     https://github.com/bitcoin/bitcoin/blob/master/src/chainparams.cpp

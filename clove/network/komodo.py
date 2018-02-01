@@ -16,7 +16,7 @@ class Komodo(Bitcoin):
     port = 7770
 
 
-class TestNetKomodo(Komodo):
+class KomodoTestNet(Komodo):
     """
     Class with all the necessary KMD testing network information based on
     https://github.com/jl777/komodo/blob/master/src/chainparams.cpp
