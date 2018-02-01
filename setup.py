@@ -17,6 +17,7 @@ setup(
     description='Clove is a library that makes atomic swaps between chains easy.',
     long_description=long_description,
     install_requires=[
+        'pycrypto==2.6.1',
         'python-bitcoinlib==0.9.0',
     ],
     extras_require={

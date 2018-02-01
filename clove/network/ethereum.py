@@ -134,7 +134,9 @@ class TestNetKovanEthereum(Ethereum):
 
 
 s = generate_secret()
-print(Ethereum.atomic_swap_contract(
+
+print(
+    Ethereum.atomic_swap_contract(
         '0x0123456789012345678901234567890123456789',
         '0x0123456789012345678901234567890123456789',
         '0x0123456789012345678901234567890123456789',
