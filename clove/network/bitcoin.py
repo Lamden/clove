@@ -166,7 +166,7 @@ class BitcoinTransaction(object):
     def publish(self):
         pass
 
-    def __dict__(self):
+    def show_details(self):
         return {
             'contract': self.contract.hex(),
             'contract_address': str(self.contract_address),
@@ -175,12 +175,10 @@ class BitcoinTransaction(object):
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.sender_address,
-            # 'refund_transaction': '',
-            # 'refund_transaction_hash': '',
             'secret': self.secret.hex(),
             'secret_hash': self.secret_hash.hex(),
             'value': self.value,
-            'value_text': f'{self.value} {self.symbol}',
+            'value_text': f'{self.value:.8f} {self.symbol}',
         }
 
 
