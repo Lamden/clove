@@ -3,7 +3,7 @@ from bitcoin.core.key import CPubKey
 from bitcoin.wallet import CBitcoinSecret
 from pytest import mark, raises
 
-from clove.network.bitcoin import BitcoinWallet
+from clove.network.bitcoin import Bitcoin, BitcoinWallet
 
 
 def test_password_encryption():
@@ -49,3 +49,26 @@ def test_bitcoin_wallet_address_correct():
     address = BitcoinWallet().get_address()
     assert address.startswith('1')
     assert encode(decode(address)) == address
+
+
+@mark.parametrize('kwargs', [
+        dict(),
+        dict(private_key='KxhniiXPCdBBpJmQnYPHmutKJq42Wm3yPY6AAKxvDPnTt8KA8BJF'),
+        dict(
+            encrypted_private_key=b'3bktZ1EG4dvKOilVbveJo8WoScrVJqGOfhjULdfooL'
+                                  b'CN7Il5Bu4CCA0HBP1k7iPZWyfohxiSdwJ3CpgHijIL2zb1THA=',
+            password='test_password_xyz'
+        )
+])
+def test_get_bitcoin_wallet_via_network(kwargs):
+    btc_network = Bitcoin()
+    wallet = btc_network.get_wallet(**kwargs)
+
+    assert isinstance(wallet, BitcoinWallet)
+
+
+def test_get_new_bitcoin_wallet_via_network():
+    btc_network = Bitcoin()
+    wallet = btc_network.get_new_wallet()
+
+    assert isinstance(wallet, BitcoinWallet)

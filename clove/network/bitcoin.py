@@ -214,6 +214,10 @@ class Bitcoin(BaseNetwork):
         transaction.create_unsign_transaction()
         return transaction
 
+    @staticmethod
+    def get_wallet(private_key=None, encrypted_private_key=None, password=None):
+        return BitcoinWallet(private_key, encrypted_private_key, password)
+
 
 class BitcoinTestNet(Bitcoin):
     """
@@ -232,3 +236,7 @@ class BitcoinTestNet(Bitcoin):
 
     def __init__(self):
         SelectParams('testnet')
+
+    @staticmethod
+    def get_wallet(private_key=None, encrypted_private_key=None, password=None):
+        return BitcoinWallet(private_key, encrypted_private_key, password, testnet=True)

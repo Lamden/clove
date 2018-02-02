@@ -74,3 +74,10 @@ class BaseNetwork(object):
         except SerializationTruncationError:
             pass
         return pong
+
+    @staticmethod
+    def get_wallet():
+        raise NotImplementedError
+
+    def get_new_wallet(self):
+        return self.get_wallet()
