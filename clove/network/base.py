@@ -1,12 +1,14 @@
 import json
 import socket
-from time import sleep
 from urllib.error import HTTPError, URLError
 import urllib.request
 
-from bitcoin import params
-from bitcoin.core import COIN, SerializationTruncationError
-from bitcoin.messages import MsgSerializable, msg_ping, msg_verack, msg_version
+from bitcoin.core import COIN, CMutableTransaction
+from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
+from bitcoin.messages import (
+    MSG_TX, MsgSerializable, msg_getdata, msg_inv, msg_ping, msg_pong, msg_reject, msg_tx, msg_verack, msg_version
+)
+from bitcoin.net import CInv
 
 
 class BaseNetwork(object):
@@ -16,6 +18,7 @@ class BaseNetwork(object):
     port = None
     connection = None
     protocol_version = None
+    blacklist_nodes = {}
 
     @property
     def default_symbol(self):
@@ -34,26 +37,46 @@ class BaseNetwork(object):
     def connect(self, timeout=2):
         if self.connection is None:
             for seed in self.seeds:
-                nodes = self.get_nodes(seed)
+                nodes = self.filter_blacklisted_nodes(self.get_nodes(seed))
                 for node in nodes:
+                    self.update_blacklist(node)
                     try:
                         self.connection = socket.create_connection(
                             address=(node, self.port),
                             timeout=timeout
                         )
                         self.connection.send(self.version_packet())
-                        sleep(0.1)
-                        self.protocol_version = MsgSerializable.from_bytes(
-                            self.clean_message(self.connection.recv(1024), b'version')
-                        )
+                        self.connection.settimeout(0.2)
+                        try:
+                            self.protocol_version = MsgSerializable.from_bytes(
+                                self.clean_message(self.connection.recv(1024), b'version')
+                            )
+                        except SerializationTruncationError:
+                            self.terminate(node)
+                            continue
 
-                        self.connection.send(msg_verack().to_bytes())
-                        sleep(0.1)
+                        self.connection.send(msg_verack(self.protocol_version.nVersion).to_bytes())
+                        self.connection.settimeout(0.2)
                         self.connection.recv(1024)
 
                     except (socket.timeout, ConnectionRefusedError, OSError):
                         continue
                     return
+
+    def filter_blacklisted_nodes(self, nodes, max_tries_number=3):
+        return [node for node in nodes if self.blacklist_nodes.get(node, 0) <= max_tries_number]
+
+    def terminate(self, node=None):
+        if node:
+            self.update_blacklist(node)
+        self.connection.close()
+        self.connection = None
+
+    def update_blacklist(self, node):
+        try:
+            self.blacklist_nodes[node] += 1
+        except KeyError:
+            self.blacklist_nodes[node] = 1
 
     def version_packet(self):
         packet = msg_version()
@@ -62,7 +85,8 @@ class BaseNetwork(object):
         return packet.to_bytes()
 
     @staticmethod
-    def clean_message(message, command):
+    def clean_message(message: bytes, command: bytes) -> bytes:
+        from bitcoin import params
         messages = reversed(message.split(params.MESSAGE_START))
         message = next((message for message in messages if command in message), b'')
         return params.MESSAGE_START + message
@@ -70,7 +94,7 @@ class BaseNetwork(object):
     def ping(self):
         self.connect()
         self.connection.send(msg_ping().to_bytes())
-        sleep(0.1)
+        self.connection.settimeout(0.1)
         pong = None
         try:
             pong = MsgSerializable.from_bytes(self.clean_message(self.connection.recv(1024), b'pong'))
@@ -99,3 +123,62 @@ class BaseNetwork(object):
                 return data['high_fee_per_kb'] / COIN
         except (URLError, HTTPError):
             return
+
+    def broadcast_transaction(self, transaction: CMutableTransaction):
+        serialized_transaction = transaction.serialize()
+        got_data = self.set_inventory(serialized_transaction)
+
+        if got_data and any(el.hash == Hash(serialized_transaction) for el in got_data.inv):
+            message = msg_tx()
+            message.tx = transaction
+            self.connection.sendall(message.to_bytes())
+            self.connection.settimeout(120)
+
+            responses = self.extract_all_the_responses(self.connection.recv(8192))
+            if any(isinstance(response, msg_reject) for response in responses):
+                NotImplementedError
+            return responses
+
+    def set_inventory(self, serialized_transaction) -> msg_getdata:
+        message = msg_inv()
+        inventory = CInv()
+        inventory.type = MSG_TX
+        hash_transaction = Hash(serialized_transaction)
+        inventory.hash = hash_transaction
+        message.inv.append(inventory)
+
+        while True:
+            self.connect()
+            if self.connection is None:
+                break
+
+            try:
+                self.connection.sendall(message.to_bytes())
+                self.connection.settimeout(2)
+                messages = self.extract_all_the_responses(self.connection.recv(8192))
+            except socket.timeout:
+                self.terminate(node=self.connection.getpeername()[0])
+                continue
+
+            message_getdata = next((message for message in messages if isinstance(message, msg_getdata)), None)
+            message_ping = next((message for message in messages if isinstance(message, msg_ping)), None)
+
+            if message_getdata:
+                return message_getdata
+            elif message_ping:
+                self.connection.send(msg_pong(self.protocol_version.nVersion, message_ping.nonce).to_bytes())
+            else:
+                self.terminate(node=self.connection.getpeername()[0])
+
+    @staticmethod
+    def extract_all_the_responses(buffer: bytes) -> list:
+        from bitcoin import params
+        prefix = params.MESSAGE_START
+        messages = [prefix + message for message in buffer.split(prefix)]
+        responses = []
+        for message in messages:
+            try:
+                responses.append(MsgSerializable.from_bytes(message))
+            except (SerializationTruncationError, SerializationError, ValueError):
+                pass
+        return responses
