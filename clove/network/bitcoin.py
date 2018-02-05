@@ -1,8 +1,6 @@
 import base64
 from datetime import datetime, timedelta
 from hashlib import sha256
-from random import choices
-from string import ascii_letters, digits
 import struct
 
 from Crypto import Random
@@ -14,6 +12,7 @@ from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 
 from clove.network.base import BaseNetwork
+from clove.utils.hashing import generate_secret_with_hash
 
 
 class BitcoinWallet(object):
@@ -23,9 +22,8 @@ class BitcoinWallet(object):
             SelectParams('testnet')
 
         if private_key is None and encrypted_private_key is None:
-            secret = ''.join(choices(ascii_letters + digits, k=64))
-            self.secret = sha256(bytes(secret.encode('utf-8'))).digest()
-            self.private_key = CBitcoinSecret.from_secret_bytes(secret=self.secret)
+            _, secret_hash = generate_secret_with_hash()
+            self.private_key = CBitcoinSecret.from_secret_bytes(secret=secret_hash)
 
         elif private_key is not None:
             self.private_key = CBitcoinSecret(private_key)
@@ -123,9 +121,7 @@ class BitcoinTransaction(object):
         self.locktime = datetime.utcnow() + timedelta(hours=number_of_hours)
 
     def generate_hash(self):
-        wallet = BitcoinWallet()
-        self.secret = wallet.secret
-        self.secret_hash = sha256(self.secret).digest()
+        self.secret, self.secret_hash = generate_secret_with_hash()
 
     def build_outputs(self):
         self.generate_hash()
