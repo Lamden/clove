@@ -84,8 +84,6 @@ class BitcoinTransaction(object):
         self.secret_hash = None
         self.locktime = None
         self.contract = None
-        self.contract_p2sh = None
-        self.contract_address = None
         self.tx = None
 
     def build_atomic_swap_contract(self):
@@ -135,13 +133,12 @@ class BitcoinTransaction(object):
         self.set_locktime(number_of_hours=48)
         self.build_atomic_swap_contract()
 
-        self.contract_p2sh = self.contract.to_p2sh_scriptPubKey()
-        self.contract_address = CBitcoinAddress.from_scriptPubKey(self.contract_p2sh)
-
-        self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract_address), ]
+        self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract), ]
         if self.outpoints_value > self.value:
             change = self.outpoints_value - self.value
-            self.tx_out_list.append(CMutableTxOut(change, CBitcoinAddress(self.sender_address).to_scriptPubKey()))
+            self.tx_out_list.append(
+                CMutableTxOut(change * COIN, CBitcoinAddress(self.sender_address).to_scriptPubKey())
+            )
 
     def sign(self, wallet: BitcoinWallet):
         for tx_index, tx_in in enumerate(self.tx.vin):
@@ -169,7 +166,6 @@ class BitcoinTransaction(object):
     def show_details(self):
         return {
             'contract': self.contract.hex(),
-            'contract_address': str(self.contract_address),
             'contract_transaction': b2x(self.tx.serialize()),
             'contract_transaction_hash': self.tx.GetHash().hex(),
             'locktime': self.locktime,
