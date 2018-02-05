@@ -1,5 +1,8 @@
+import json
 import socket
 from time import sleep
+from urllib.error import HTTPError, URLError
+import urllib.request
 
 from bitcoin import params
 from bitcoin.core import SerializationTruncationError
@@ -81,3 +84,18 @@ class BaseNetwork(object):
 
     def get_new_wallet(self):
         return self.get_wallet()
+
+    @classmethod
+    def get_current_fee_per_kb(cls) -> int:
+        """Returns current high priority (1-2 blocks) fee estimates."""
+        symbol = cls.symbols[0].lower()
+        if symbol not in ('btc', 'ltc', 'doge', 'dash') or cls.name.startswith('test-'):
+            raise NotImplementedError
+        try:
+            with urllib.request.urlopen(f'https://api.blockcypher.com/v1/{symbol}/main') as url:
+                if url.status != 200:
+                    return
+                data = json.loads(url.read().decode())
+                return data['high_fee_per_kb']
+        except (URLError, HTTPError):
+            return

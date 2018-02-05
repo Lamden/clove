@@ -1,3 +1,6 @@
+from unittest.mock import patch
+
+import pytest
 from pytest import mark
 from validators import domain
 
@@ -25,3 +28,13 @@ def test_seeds_valid_dns_address(seed):
 @mark.parametrize('seed', seeds)
 def test_seeds_dns_address_resolves_to_ip(seed):
     assert hostname_resolves(seed) is True
+
+
+@mark.parametrize('network', networks)
+@patch('urllib.request.urlopen')
+def test_fee_per_kb_implementation(request_mock, network):
+    if network.symbols[0] in ('BTC', 'LTC', 'DOGE', 'DASH') and not network.name.startswith('test-'):
+        network.get_current_fee_per_kb()
+    else:
+        with pytest.raises(NotImplementedError):
+            network.get_current_fee_per_kb()
