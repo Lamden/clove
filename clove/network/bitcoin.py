@@ -8,7 +8,7 @@ import struct
 from Crypto import Random
 from Crypto.Cipher import AES
 from bitcoin import SelectParams
-from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, Hash160, b2x, lx, script
+from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, b2x, lx, script
 from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
@@ -94,14 +94,14 @@ class BitcoinTransaction(object):
             script.OP_EQUALVERIFY,
             script.OP_DUP,
             script.OP_HASH160,
-            Hash160(self.recipient_address.encode()),
+            CBitcoinAddress(self.recipient_address),
             script.OP_ELSE,
             str(int(self.locktime.timestamp())).encode(),
             script.OP_CHECKLOCKTIMEVERIFY,
             script.OP_DROP,
             script.OP_DUP,
             script.OP_HASH160,
-            Hash160(self.sender_address.encode()),
+            CBitcoinAddress(self.sender_address),
             script.OP_ENDIF,
             script.OP_EQUALVERIFY,
             script.OP_CHECKSIG,
@@ -125,7 +125,7 @@ class BitcoinTransaction(object):
     def generate_hash(self):
         wallet = BitcoinWallet()
         self.secret = wallet.secret
-        self.secret_hash = wallet.private_key
+        self.secret_hash = sha256(self.secret).digest()
 
     def build_outputs(self):
         self.generate_hash()
