@@ -5,7 +5,7 @@ from urllib.error import HTTPError, URLError
 import urllib.request
 
 from bitcoin import params
-from bitcoin.core import SerializationTruncationError
+from bitcoin.core import COIN, SerializationTruncationError
 from bitcoin.messages import MsgSerializable, msg_ping, msg_verack, msg_version
 
 
@@ -86,7 +86,7 @@ class BaseNetwork(object):
         return self.get_wallet()
 
     @classmethod
-    def get_current_fee_per_kb(cls) -> int:
+    def get_current_fee_per_kb(cls) -> float:
         """Returns current high priority (1-2 blocks) fee estimates."""
         symbol = cls.symbols[0].lower()
         if symbol not in ('btc', 'ltc', 'doge', 'dash') or cls.name.startswith('test-'):
@@ -96,6 +96,6 @@ class BaseNetwork(object):
                 if url.status != 200:
                     return
                 data = json.loads(url.read().decode())
-                return data['high_fee_per_kb']
+                return data['high_fee_per_kb'] / COIN
         except (URLError, HTTPError):
             return
