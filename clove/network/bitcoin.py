@@ -2,6 +2,7 @@ import base64
 from datetime import datetime, timedelta
 from hashlib import sha256
 import struct
+import sys
 
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -71,6 +72,7 @@ class BitcoinTransaction(object):
         self.sender_address = sender_address
         self.recipient_address = recipient_address
         self.value = value
+        self.network = network
         self.symbol = network.default_symbol
 
         self.tx_in_list = []
@@ -83,6 +85,8 @@ class BitcoinTransaction(object):
         self.locktime = None
         self.contract = None
         self.tx = None
+        self.fee = None
+        self.fee_per_kb = None
 
     def build_atomic_swap_contract(self):
         self.contract = script.CScript([
@@ -114,7 +118,6 @@ class BitcoinTransaction(object):
                     outpoint['vout']
                 )
             )
-            tx_in.scriptSig = script.CScript.fromhex(outpoint['scriptPubKey'])
             self.tx_in_list.append(tx_in)
 
     def set_locktime(self, number_of_hours):
@@ -136,15 +139,31 @@ class BitcoinTransaction(object):
                 CMutableTxOut(change * COIN, CBitcoinAddress(self.sender_address).to_scriptPubKey())
             )
 
+    def add_fee_and_sign(self, wallet):
+        """Signing transaction and adding fee under the hood."""
+
+        # signing the transaction for the first time to get the right transaction size
+        self.sign(wallet)
+
+        # adding fee based on transaction size (this will modify the transaction)
+        self.add_fee()
+
+        # signing the modified transaction
+        self.sign(wallet)
+
     def sign(self, wallet: BitcoinWallet):
+        """Signing transaction using the wallet object."""
+
         for tx_index, tx_in in enumerate(self.tx.vin):
-            original_script_signature = tx_in.scriptSig
-            sig_hash = script.SignatureHash(original_script_signature, self.tx, tx_index, script.SIGHASH_ALL)
+
+            tx_script = script.CScript.fromhex(self.outpoints[tx_index]['script'])
+            sig_hash = script.SignatureHash(tx_script, self.tx, tx_index, script.SIGHASH_ALL)
             sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
             tx_in.scriptSig = script.CScript([sig, wallet.private_key.pub])
+
             VerifyScript(
                 tx_in.scriptSig,
-                original_script_signature,
+                tx_script,
                 self.tx,
                 tx_index,
                 (SCRIPT_VERIFY_P2SH,)
@@ -159,16 +178,42 @@ class BitcoinTransaction(object):
     def publish(self):
         pass
 
+    @property
+    def size(self) -> int:
+        """Returns the size of a transaction represented in byte."""
+        return sys.getsizeof(self.tx.serialize())
+
+    def calculate_fee(self):
+        """Calculating fee for given transaction based on transaction size and estimated fee per kb."""
+        if not self.fee_per_kb:
+            self.fee_per_kb = self.network.get_current_fee_per_kb()
+        self.fee = round((self.fee_per_kb / 1000) * self.size, 8)
+
+    def add_fee(self):
+        """Adding fee to the transaction by decreasing 'change' transaction."""
+        if not self.fee:
+            self.calculate_fee()
+        if len(self.tx.vout) == 1 or self.tx.vout[1].nValue < self.fee:
+            raise RuntimeError('Cannot subtract fee from change transaction. You need to add more input transactions.')
+        fee_in_satoshi = round(self.fee * COIN)
+        self.tx.vout[1].nValue -= fee_in_satoshi
+
     def show_details(self):
         return {
             'contract': self.contract.hex(),
             'contract_transaction': b2x(self.tx.serialize()),
             'contract_transaction_hash': self.tx.GetHash().hex(),
+            'fee': self.fee,
+            'fee_per_kb': self.fee_per_kb,
+            'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',
+            'fee_text': f'{self.fee:.8f} {self.symbol}',
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.sender_address,
             'secret': self.secret.hex(),
             'secret_hash': self.secret_hash.hex(),
+            'size': self.size,
+            'size_text': f'{self.size} bytes',
             'value': self.value,
             'value_text': f'{self.value:.8f} {self.symbol}',
         }
