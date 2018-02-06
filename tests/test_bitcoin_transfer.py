@@ -46,7 +46,6 @@ def test_show_details(alice_wallet, bob_wallet, alice_outpoints):
 
     str_fields = (
         'contract',
-        'contract_address',
         'contract_transaction',
         'contract_transaction_hash',
         'recipient_address',

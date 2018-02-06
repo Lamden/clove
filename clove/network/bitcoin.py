@@ -1,19 +1,18 @@
 import base64
 from datetime import datetime, timedelta
 from hashlib import sha256
-from random import choices
-from string import ascii_letters, digits
 import struct
 
 from Crypto import Random
 from Crypto.Cipher import AES
 from bitcoin import SelectParams
-from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, Hash160, b2x, lx, script
+from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, b2x, lx, script
 from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 
 from clove.network.base import BaseNetwork
+from clove.utils.hashing import generate_secret_with_hash
 
 
 class BitcoinWallet(object):
@@ -23,9 +22,8 @@ class BitcoinWallet(object):
             SelectParams('testnet')
 
         if private_key is None and encrypted_private_key is None:
-            secret = ''.join(choices(ascii_letters + digits, k=64))
-            self.secret = sha256(bytes(secret.encode('utf-8'))).digest()
-            self.private_key = CBitcoinSecret.from_secret_bytes(secret=self.secret)
+            _, secret_hash = generate_secret_with_hash()
+            self.private_key = CBitcoinSecret.from_secret_bytes(secret=secret_hash)
 
         elif private_key is not None:
             self.private_key = CBitcoinSecret(private_key)
@@ -84,8 +82,6 @@ class BitcoinTransaction(object):
         self.secret_hash = None
         self.locktime = None
         self.contract = None
-        self.contract_p2sh = None
-        self.contract_address = None
         self.tx = None
 
     def build_atomic_swap_contract(self):
@@ -96,14 +92,14 @@ class BitcoinTransaction(object):
             script.OP_EQUALVERIFY,
             script.OP_DUP,
             script.OP_HASH160,
-            Hash160(self.recipient_address.encode()),
+            CBitcoinAddress(self.recipient_address),
             script.OP_ELSE,
             str(int(self.locktime.timestamp())).encode(),
             script.OP_CHECKLOCKTIMEVERIFY,
             script.OP_DROP,
             script.OP_DUP,
             script.OP_HASH160,
-            Hash160(self.sender_address.encode()),
+            CBitcoinAddress(self.sender_address),
             script.OP_ENDIF,
             script.OP_EQUALVERIFY,
             script.OP_CHECKSIG,
@@ -125,9 +121,7 @@ class BitcoinTransaction(object):
         self.locktime = datetime.utcnow() + timedelta(hours=number_of_hours)
 
     def generate_hash(self):
-        wallet = BitcoinWallet()
-        self.secret = wallet.secret
-        self.secret_hash = wallet.private_key
+        self.secret, self.secret_hash = generate_secret_with_hash()
 
     def build_outputs(self):
         self.generate_hash()
@@ -135,13 +129,12 @@ class BitcoinTransaction(object):
         self.set_locktime(number_of_hours=48)
         self.build_atomic_swap_contract()
 
-        self.contract_p2sh = self.contract.to_p2sh_scriptPubKey()
-        self.contract_address = CBitcoinAddress.from_scriptPubKey(self.contract_p2sh)
-
-        self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract_address), ]
+        self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract), ]
         if self.outpoints_value > self.value:
             change = self.outpoints_value - self.value
-            self.tx_out_list.append(CMutableTxOut(change, CBitcoinAddress(self.sender_address).to_scriptPubKey()))
+            self.tx_out_list.append(
+                CMutableTxOut(change * COIN, CBitcoinAddress(self.sender_address).to_scriptPubKey())
+            )
 
     def sign(self, wallet: BitcoinWallet):
         for tx_index, tx_in in enumerate(self.tx.vin):
@@ -169,7 +162,6 @@ class BitcoinTransaction(object):
     def show_details(self):
         return {
             'contract': self.contract.hex(),
-            'contract_address': str(self.contract_address),
             'contract_transaction': b2x(self.tx.serialize()),
             'contract_transaction_hash': self.tx.GetHash().hex(),
             'locktime': self.locktime,
