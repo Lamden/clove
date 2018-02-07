@@ -11,13 +11,14 @@ from Crypto import Random
 from Crypto.Cipher import AES
 from bitcoin import SelectParams
 from bitcoin.core import (
-    COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, CTransaction, b2lx, b2x, lx, script, x
+    CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, CTransaction, b2lx, b2x, lx, script, x
 )
 from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 
 from clove.network.base import BaseNetwork
+from clove.utils.bitcoin import btc_to_satoshi, satoshi_to_btc
 from clove.utils.hashing import generate_secret_with_hash
 
 
@@ -137,11 +138,11 @@ class BitcoinTransaction(object):
         self.set_locktime(number_of_hours=48)
         self.build_atomic_swap_contract()
 
-        self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract), ]
+        self.tx_out_list = [CMutableTxOut(btc_to_satoshi(self.value), self.contract), ]
         if self.utxo_value > self.value:
             change = self.utxo_value - self.value
             self.tx_out_list.append(
-                CMutableTxOut(change * COIN, CBitcoinAddress(self.sender_address).to_scriptPubKey())
+                CMutableTxOut(btc_to_satoshi(change), CBitcoinAddress(self.sender_address).to_scriptPubKey())
             )
 
     def add_fee_and_sign(self, wallet):
@@ -200,8 +201,7 @@ class BitcoinTransaction(object):
             self.calculate_fee()
         if len(self.tx.vout) == 1 or self.tx.vout[1].nValue < self.fee:
             raise RuntimeError('Cannot subtract fee from change transaction. You need to add more input transactions.')
-        fee_in_satoshi = round(self.fee * COIN)
-        self.tx.vout[1].nValue -= fee_in_satoshi
+        self.tx.vout[1].nValue -= btc_to_satoshi(self.fee)
 
     def show_details(self):
         return {
@@ -240,7 +240,7 @@ class BitcoinContract(object):
             self.refund_address = P2PKHBitcoinAddress.from_bytes(script_ops[13])
             self.locktime = datetime.fromtimestamp(int(script_ops[8]))
             self.secret_hash = b2x(script_ops[2])
-            self.value = contract_tx_out.nValue / COIN
+            self.value = satoshi_to_btc(contract_tx_out.nValue)
         else:
             raise ValueError('Given transaction is not a valid contract.')
 
@@ -346,6 +346,6 @@ class BitcoinTestNet(Bitcoin):
                 if url.status != 200:
                     return
                 data = json.loads(url.read().decode())
-                return data['high_fee_per_kb'] / COIN
+                return satoshi_to_btc(data['high_fee_per_kb'])
         except (URLError, HTTPError):
             return
