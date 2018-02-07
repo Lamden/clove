@@ -18,7 +18,7 @@ def bob_wallet():
 
 
 @pytest.fixture
-def alice_outpoints():
+def alice_utxo():
     return [
         {
             'txid': '6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',
@@ -30,13 +30,13 @@ def alice_outpoints():
 
 
 @pytest.fixture
-def unsigned_transaction(alice_wallet, bob_wallet, alice_outpoints):
+def unsigned_transaction(alice_wallet, bob_wallet, alice_utxo):
     btc_network = BitcoinTestNet()
     transaction = btc_network.initiate_atomic_swap(
         alice_wallet.get_address(),
         bob_wallet.get_address(),
         0.7,
-        alice_outpoints
+        alice_utxo
     )
     return transaction
 

@@ -12,7 +12,7 @@ def test_swap_contract(alice_wallet, bob_wallet):
         alice_wallet.get_address(),
         bob_wallet.get_address(),
         0.5,
-        outpoints={}
+        solvable_utxo={}
     )
     transaction.set_locktime(number_of_hours=48)
     transaction.generate_hash()
