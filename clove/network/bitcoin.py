@@ -10,12 +10,15 @@ import urllib.request
 from Crypto import Random
 from Crypto.Cipher import AES
 from bitcoin import SelectParams
-from bitcoin.core import COIN, CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, b2x, lx, script
+from bitcoin.core import (
+    CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, CTransaction, b2lx, b2x, lx, script, x
+)
 from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 
 from clove.network.base import BaseNetwork
+from clove.utils.bitcoin import btc_to_satoshi, satoshi_to_btc
 from clove.utils.hashing import generate_secret_with_hash
 
 
@@ -135,11 +138,11 @@ class BitcoinTransaction(object):
         self.set_locktime(number_of_hours=48)
         self.build_atomic_swap_contract()
 
-        self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract), ]
+        self.tx_out_list = [CMutableTxOut(btc_to_satoshi(self.value), self.contract), ]
         if self.utxo_value > self.value:
             change = self.utxo_value - self.value
             self.tx_out_list.append(
-                CMutableTxOut(change * COIN, CBitcoinAddress(self.sender_address).to_scriptPubKey())
+                CMutableTxOut(btc_to_satoshi(change), CBitcoinAddress(self.sender_address).to_scriptPubKey())
             )
 
     def add_fee_and_sign(self, wallet):
@@ -198,14 +201,13 @@ class BitcoinTransaction(object):
             self.calculate_fee()
         if len(self.tx.vout) == 1 or self.tx.vout[1].nValue < self.fee:
             raise RuntimeError('Cannot subtract fee from change transaction. You need to add more input transactions.')
-        fee_in_satoshi = round(self.fee * COIN)
-        self.tx.vout[1].nValue -= fee_in_satoshi
+        self.tx.vout[1].nValue -= btc_to_satoshi(self.fee)
 
     def show_details(self):
         return {
             'contract': self.contract.hex(),
             'contract_transaction': b2x(self.tx.serialize()),
-            'contract_transaction_hash': self.tx.GetHash().hex(),
+            'transaction_hash': b2lx(self.tx.GetHash()),
             'fee': self.fee,
             'fee_per_kb': self.fee_per_kb,
             'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',
@@ -217,6 +219,58 @@ class BitcoinTransaction(object):
             'secret_hash': self.secret_hash.hex(),
             'size': self.size,
             'size_text': f'{self.size} bytes',
+            'value': self.value,
+            'value_text': f'{self.value:.8f} {self.symbol}',
+        }
+
+
+class BitcoinContract(object):
+
+    def __init__(self, raw_transaction: str, symbol: str):
+        self.symbol = symbol
+        self.tx = CTransaction.deserialize(x(raw_transaction))
+
+        if not self.tx.vout:
+            raise ValueError('Given transaction has no outputs.')
+
+        contract_tx_out = self.tx.vout[0]
+        script_ops = list(contract_tx_out.scriptPubKey)
+        if self.is_valid_contract_script(script_ops):
+            self.recipient_address = P2PKHBitcoinAddress.from_bytes(script_ops[6])
+            self.refund_address = P2PKHBitcoinAddress.from_bytes(script_ops[13])
+            self.locktime = datetime.fromtimestamp(int(script_ops[8]))
+            self.secret_hash = b2x(script_ops[2])
+            self.value = satoshi_to_btc(contract_tx_out.nValue)
+        else:
+            raise ValueError('Given transaction is not a valid contract.')
+
+    @staticmethod
+    def is_valid_contract_script(script_ops):
+        try:
+            is_valid = (
+                script_ops[0] == script.OP_IF
+                and script_ops[1] == script.OP_SHA256
+                and script_ops[3] == script_ops[15] == script.OP_EQUALVERIFY
+                and script_ops[4] == script_ops[11] == script.OP_DUP
+                and script_ops[5] == script_ops[12] == script.OP_HASH160
+                and script_ops[7] == script.OP_ELSE
+                and script_ops[9] == script.OP_CHECKLOCKTIMEVERIFY
+                and script_ops[10] == script.OP_DROP
+                and script_ops[14] == script.OP_ENDIF
+                and script_ops[16] == script.OP_CHECKSIG
+            )
+        except IndexError:
+            is_valid = False
+
+        return is_valid
+
+    def show_details(self):
+        return {
+            'transaction_hash': b2lx(self.tx.GetHash()),
+            'locktime': self.locktime,
+            'recipient_address': str(self.recipient_address),
+            'refund_address': str(self.refund_address),
+            'secret_hash': self.secret_hash,
             'value': self.value,
             'value_text': f'{self.value:.8f} {self.symbol}',
         }
@@ -254,6 +308,9 @@ class Bitcoin(BaseNetwork):
         transaction.create_unsign_transaction()
         return transaction
 
+    def audit_contract(self, raw_transaction: str) -> BitcoinContract:
+        return BitcoinContract(raw_transaction, self.default_symbol)
+
     @staticmethod
     def get_wallet(private_key=None, encrypted_private_key=None, password=None):
         return BitcoinWallet(private_key, encrypted_private_key, password)
@@ -289,6 +346,6 @@ class BitcoinTestNet(Bitcoin):
                 if url.status != 200:
                     return
                 data = json.loads(url.read().decode())
-                return data['high_fee_per_kb'] / COIN
+                return satoshi_to_btc(data['high_fee_per_kb'])
         except (URLError, HTTPError):
             return

@@ -1,7 +1,8 @@
 from datetime import datetime
 from unittest.mock import patch
 
-from bitcoin.core import COIN
+from bitcoin.core import COIN, CTransaction, b2x
+from pytest import raises
 
 from clove.network.bitcoin import BitcoinTestNet, BitcoinTransaction
 
@@ -36,7 +37,7 @@ def test_show_details(signed_transaction):
     str_fields = (
         'contract',
         'contract_transaction',
-        'contract_transaction_hash',
+        'transaction_hash',
         'recipient_address',
         'refund_address',
         'secret',
@@ -95,3 +96,39 @@ def test_transaction_fee(fee_per_kb_mock, unsigned_transaction):
 
     assert change_without_fee - unsigned_transaction.fee * COIN == change_with_fee
     assert unsigned_transaction.tx.serialize()
+
+
+def test_audit_contract(signed_transaction):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    contract_details = contract.show_details()
+
+    assert contract.locktime == signed_transaction.locktime.replace(microsecond=0)
+
+    contract_details.pop('locktime')
+
+    for field in contract_details.keys():
+        assert contract_details[field] == transaction_details[field]
+
+
+def test_audit_contract_empty_transaction():
+    btc_network = BitcoinTestNet()
+    tx = b2x(CTransaction().serialize())
+
+    with raises(
+        ValueError, match='Given transaction has no outputs.'
+    ):
+        btc_network.audit_contract(tx)
+
+
+def test_audit_contract_invalid_transaction(signed_transaction):
+    btc_network = BitcoinTestNet()
+    signed_transaction.tx.vout.pop(0)
+    tx = signed_transaction.show_details()['contract_transaction']
+
+    with raises(
+        ValueError, match='Given transaction is not a valid contract.'
+    ):
+        btc_network.audit_contract(tx)
