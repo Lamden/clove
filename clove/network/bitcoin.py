@@ -162,7 +162,7 @@ class BitcoinTransaction(object):
             tx_script = script.CScript.fromhex(self.solvable_utxo[tx_index]['script'])
             sig_hash = script.SignatureHash(tx_script, self.tx, tx_index, script.SIGHASH_ALL)
             sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
-            tx_in.scriptSig = script.CScript([sig, wallet.private_key.pub])
+            tx_in.scriptSig = script.CScript([sig, wallet.public_key])
 
             VerifyScript(
                 tx_in.scriptSig,
@@ -179,7 +179,7 @@ class BitcoinTransaction(object):
         self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list)
 
     def publish(self):
-        pass
+        return self.network.broadcast_transaction(self.tx)
 
     @property
     def size(self) -> int:
