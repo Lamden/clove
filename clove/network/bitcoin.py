@@ -72,27 +72,149 @@ class BitcoinWallet(object):
         return str(private_key, 'ascii')
 
 
+class Utxo(object):
+
+    def __init__(self, tx_id, vout, value, tx_script, wallet=None, secret=None, refund=False):
+        self.tx_id = tx_id
+        self.vout = vout
+        self.value = value
+        self.tx_script = tx_script
+        self.wallet = wallet
+        self.secret = secret
+        self.refund = refund
+
+    @property
+    def outpoint(self):
+        return COutPoint(lx(self.tx_id), self.vout)
+
+    @property
+    def tx_in(self):
+        return CMutableTxIn(self.outpoint, scriptSig=script.CScript(self.unsigned_script_sig))
+
+    @property
+    def parsed_script(self):
+        return script.CScript.fromhex(self.tx_script)
+
+    @property
+    def unsigned_script_sig(self):
+        if self.refund:
+            return [script.OP_FALSE]
+        elif self.secret:
+            return [x(self.secret), script.OP_TRUE]
+        else:
+            return []
+
+
 class BitcoinTransaction(object):
 
-    def __init__(self, network, sender_address: str, recipient_address: str, value: float, solvable_utxo: dict):
-        self.sender_address = sender_address
+    def __init__(self, network, recipient_address: str, value: float, solvable_utxo: list):
         self.recipient_address = recipient_address
         self.value = value
         self.network = network
         self.symbol = network.default_symbol
 
-        self.tx_in_list = []
-        self.tx_out_list = []
         self.solvable_utxo = solvable_utxo
-        self.utxo_value = 0
+        self.utxo_value = sum(utxo.value for utxo in self.solvable_utxo)
+        self.tx_in_list = [utxo.tx_in for utxo in self.solvable_utxo]
+        self.tx_out_list = []
 
+        self.tx = None
+        self.fee = 0.0
+        self.fee_per_kb = 0.0
+
+    def build_outputs(self):
+        self.tx_out_list = [
+            CMutableTxOut(btc_to_satoshi(self.value), CBitcoinAddress(self.recipient_address).to_scriptPubKey())
+        ]
+
+    def add_fee_and_sign(self, default_wallet=None):
+        """Signing transaction and adding fee under the hood."""
+
+        # signing the transaction for the first time to get the right transaction size
+        self.sign(default_wallet)
+
+        # adding fee based on transaction size (this will modify the transaction)
+        self.add_fee()
+
+        # signing the modified transaction
+        self.sign(default_wallet)
+
+    def sign(self, default_wallet: BitcoinWallet=None):
+        """Signing transaction using the wallet object."""
+
+        for tx_index, tx_in in enumerate(self.tx.vin):
+            utxo = self.solvable_utxo[tx_index]
+            wallet = utxo.wallet or default_wallet
+
+            if wallet is None:
+                raise RuntimeError('Cannot sign transaction without a wallet.')
+
+            tx_script = utxo.parsed_script
+            sig_hash = script.SignatureHash(tx_script, self.tx, tx_index, script.SIGHASH_ALL)
+            sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
+            script_sig = [sig, wallet.private_key.pub] + utxo.unsigned_script_sig
+            tx_in.scriptSig = script.CScript(script_sig)
+
+            VerifyScript(
+                tx_in.scriptSig,
+                tx_script,
+                self.tx,
+                tx_index,
+                (SCRIPT_VERIFY_P2SH,)
+            )
+
+    def create_unsigned_transaction(self):
+        assert self.utxo_value >= self.value
+        self.build_outputs()
+        self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list)
+
+    def publish(self):
+        return self.network.broadcast_transaction(self.tx)
+
+    @property
+    def size(self) -> int:
+        """Returns the size of a transaction represented in byte."""
+        return sys.getsizeof(self.tx.serialize())
+
+    def calculate_fee(self):
+        """Calculating fee for given transaction based on transaction size and estimated fee per kb."""
+        if not self.fee_per_kb:
+            self.fee_per_kb = self.network.get_current_fee_per_kb()
+        self.fee = round((self.fee_per_kb / 1000) * self.size, 8)
+
+    def add_fee(self):
+        """Adding fee to the transaction by decreasing 'change' transaction."""
+        if not self.fee:
+            self.calculate_fee()
+        if self.tx.vout[0].nValue < self.fee:
+            raise RuntimeError('Cannot subtract fee from transaction. You need to add more input transactions.')
+        self.tx.vout[0].nValue -= btc_to_satoshi(self.fee)
+
+    def show_details(self):
+        return {
+            'transaction': b2x(self.tx.serialize()),
+            'transaction_hash': b2lx(self.tx.GetHash()),
+            'fee': self.fee,
+            'fee_per_kb': self.fee_per_kb,
+            'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',
+            'fee_text': f'{self.fee:.8f} {self.symbol}',
+            'recipient_address': self.recipient_address,
+            'size': self.size,
+            'size_text': f'{self.size} bytes',
+            'value': self.value,
+            'value_text': f'{self.value:.8f} {self.symbol}',
+        }
+
+
+class BitcoinInitTransaction(BitcoinTransaction):
+
+    def __init__(self, network, sender_address: str, recipient_address: str, value: float, solvable_utxo: list):
+        super().__init__(network, recipient_address, value, solvable_utxo)
+        self.sender_address = sender_address
         self.secret = None
         self.secret_hash = None
         self.locktime = None
         self.contract = None
-        self.tx = None
-        self.fee = None
-        self.fee_per_kb = None
 
     def build_atomic_swap_contract(self):
         self.contract = script.CScript([
@@ -115,17 +237,6 @@ class BitcoinTransaction(object):
             script.OP_CHECKSIG,
         ])
 
-    def build_inputs(self):
-        for utxo in self.solvable_utxo:
-            self.utxo_value += utxo['value']
-            tx_in = CMutableTxIn(
-                COutPoint(
-                    lx(utxo['txid']),
-                    utxo['vout']
-                )
-            )
-            self.tx_in_list.append(tx_in)
-
     def set_locktime(self, number_of_hours):
         self.locktime = datetime.utcnow() + timedelta(hours=number_of_hours)
 
@@ -144,56 +255,6 @@ class BitcoinTransaction(object):
             self.tx_out_list.append(
                 CMutableTxOut(btc_to_satoshi(change), CBitcoinAddress(self.sender_address).to_scriptPubKey())
             )
-
-    def add_fee_and_sign(self, wallet):
-        """Signing transaction and adding fee under the hood."""
-
-        # signing the transaction for the first time to get the right transaction size
-        self.sign(wallet)
-
-        # adding fee based on transaction size (this will modify the transaction)
-        self.add_fee()
-
-        # signing the modified transaction
-        self.sign(wallet)
-
-    def sign(self, wallet: BitcoinWallet):
-        """Signing transaction using the wallet object."""
-
-        for tx_index, tx_in in enumerate(self.tx.vin):
-
-            tx_script = script.CScript.fromhex(self.solvable_utxo[tx_index]['script'])
-            sig_hash = script.SignatureHash(tx_script, self.tx, tx_index, script.SIGHASH_ALL)
-            sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
-            tx_in.scriptSig = script.CScript([sig, wallet.public_key])
-
-            VerifyScript(
-                tx_in.scriptSig,
-                tx_script,
-                self.tx,
-                tx_index,
-                (SCRIPT_VERIFY_P2SH,)
-            )
-
-    def create_unsign_transaction(self):
-        self.build_inputs()
-        assert self.utxo_value >= self.value
-        self.build_outputs()
-        self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list)
-
-    def publish(self):
-        return self.network.broadcast_transaction(self.tx)
-
-    @property
-    def size(self) -> int:
-        """Returns the size of a transaction represented in byte."""
-        return sys.getsizeof(self.tx.serialize())
-
-    def calculate_fee(self):
-        """Calculating fee for given transaction based on transaction size and estimated fee per kb."""
-        if not self.fee_per_kb:
-            self.fee_per_kb = self.network.get_current_fee_per_kb()
-        self.fee = round((self.fee_per_kb / 1000) * self.size, 8)
 
     def add_fee(self):
         """Adding fee to the transaction by decreasing 'change' transaction."""
@@ -226,8 +287,9 @@ class BitcoinTransaction(object):
 
 class BitcoinContract(object):
 
-    def __init__(self, raw_transaction: str, symbol: str):
-        self.symbol = symbol
+    def __init__(self, network, raw_transaction: str):
+        self.network = network
+        self.symbol = self.network.default_symbol
         self.tx = CTransaction.deserialize(x(raw_transaction))
 
         if not self.tx.vout:
@@ -236,13 +298,17 @@ class BitcoinContract(object):
         contract_tx_out = self.tx.vout[0]
         script_ops = list(contract_tx_out.scriptPubKey)
         if self.is_valid_contract_script(script_ops):
-            self.recipient_address = P2PKHBitcoinAddress.from_bytes(script_ops[6])
-            self.refund_address = P2PKHBitcoinAddress.from_bytes(script_ops[13])
+            self.recipient_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[6]))
+            self.refund_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[13]))
             self.locktime = datetime.fromtimestamp(int(script_ops[8]))
             self.secret_hash = b2x(script_ops[2])
             self.value = satoshi_to_btc(contract_tx_out.nValue)
         else:
             raise ValueError('Given transaction is not a valid contract.')
+
+    @property
+    def transaction_hash(self):
+        return b2lx(self.tx.GetHash())
 
     @staticmethod
     def is_valid_contract_script(script_ops):
@@ -264,12 +330,43 @@ class BitcoinContract(object):
 
         return is_valid
 
+    def get_contract_utxo(self, wallet=None, secret=None, refund=False):
+        return Utxo(
+            tx_id=self.transaction_hash,
+            vout=0,
+            value=self.value,
+            tx_script=self.tx.vout[0].scriptPubKey.hex(),
+            wallet=wallet,
+            secret=secret,
+            refund=refund
+        )
+
+    def redeem(self, wallet, secret):
+        transaction = BitcoinTransaction(
+            network=self.network,
+            recipient_address=self.recipient_address,
+            value=self.value,
+            solvable_utxo=[self.get_contract_utxo(wallet, secret)]
+        )
+        transaction.create_unsigned_transaction()
+        return transaction
+
+    def refund(self, wallet):
+        transaction = BitcoinTransaction(
+            network=self.network,
+            recipient_address=self.refund_address,
+            value=self.value,
+            solvable_utxo=[self.get_contract_utxo(wallet, refund=True)]
+        )
+        transaction.create_unsigned_transaction()
+        return transaction
+
     def show_details(self):
         return {
-            'transaction_hash': b2lx(self.tx.GetHash()),
+            'transaction_hash': self.transaction_hash,
             'locktime': self.locktime,
-            'recipient_address': str(self.recipient_address),
-            'refund_address': str(self.refund_address),
+            'recipient_address': self.recipient_address,
+            'refund_address': self.refund_address,
             'secret_hash': self.secret_hash,
             'value': self.value,
             'value_text': f'{self.value:.8f} {self.symbol}',
@@ -303,13 +400,13 @@ class Bitcoin(BaseNetwork):
         recipient_address: str,
         value: float,
         solvable_utxo: list
-    ) -> BitcoinTransaction:
-        transaction = BitcoinTransaction(self, sender_address, recipient_address, value, solvable_utxo)
-        transaction.create_unsign_transaction()
+    ) -> BitcoinInitTransaction:
+        transaction = BitcoinInitTransaction(self, sender_address, recipient_address, value, solvable_utxo)
+        transaction.create_unsigned_transaction()
         return transaction
 
     def audit_contract(self, raw_transaction: str) -> BitcoinContract:
-        return BitcoinContract(raw_transaction, self.default_symbol)
+        return BitcoinContract(self, raw_transaction)
 
     @staticmethod
     def get_wallet(private_key=None, encrypted_private_key=None, password=None):

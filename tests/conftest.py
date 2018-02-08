@@ -2,7 +2,7 @@ from collections import namedtuple
 
 import pytest
 
-from clove.network.bitcoin import BitcoinTestNet
+from clove.network.bitcoin import BitcoinTestNet, Utxo
 
 Key = namedtuple('Key', ['secret', 'address'])
 
@@ -18,14 +18,15 @@ def bob_wallet():
 
 
 @pytest.fixture
-def alice_utxo():
+def alice_utxo(alice_wallet):
     return [
-        {
-            'txid': '6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',
-            'vout': 1,
-            'value': 0.78956946,
-            'script': '76a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac'
-        },
+        Utxo(
+            tx_id='6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',
+            vout=1,
+            value=0.78956946,
+            tx_script='76a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac',
+            wallet=alice_wallet
+        ),
     ]
 
 
@@ -42,8 +43,8 @@ def unsigned_transaction(alice_wallet, bob_wallet, alice_utxo):
 
 
 @pytest.fixture
-def signed_transaction(alice_wallet, unsigned_transaction):
+def signed_transaction(unsigned_transaction):
     transaction = unsigned_transaction
     transaction.fee_per_kb = 0.002
-    transaction.add_fee_and_sign(alice_wallet)
+    transaction.add_fee_and_sign()
     return transaction
