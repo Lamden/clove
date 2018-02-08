@@ -37,7 +37,8 @@ def test_seeds_dns_address_resolves_to_ip(seed):
 @mark.parametrize('network', networks)
 @patch('urllib.request.urlopen')
 def test_fee_per_kb_implementation(request_mock, network):
-    if network.symbols[0] in ('BTC', 'LTC', 'DOGE', 'DASH') and not network.name.startswith('test-'):
+    if network.symbols[0] in ('BTC', 'LTC', 'DOGE', 'DASH') and not \
+            (network.name.startswith('test-') and network.name != 'test-bitcoin'):
         network.get_current_fee_per_kb()
     else:
         with pytest.raises(NotImplementedError):

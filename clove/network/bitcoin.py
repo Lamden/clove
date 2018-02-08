@@ -1,8 +1,11 @@
 import base64
 from datetime import datetime, timedelta
 from hashlib import sha256
+import json
 import struct
 import sys
+from urllib.error import HTTPError, URLError
+import urllib.request
 
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -68,7 +71,7 @@ class BitcoinWallet(object):
 
 class BitcoinTransaction(object):
 
-    def __init__(self, network, sender_address: str, recipient_address: str, value: float, outpoints: dict):
+    def __init__(self, network, sender_address: str, recipient_address: str, value: float, solvable_utxo: dict):
         self.sender_address = sender_address
         self.recipient_address = recipient_address
         self.value = value
@@ -77,8 +80,8 @@ class BitcoinTransaction(object):
 
         self.tx_in_list = []
         self.tx_out_list = []
-        self.outpoints = outpoints
-        self.outpoints_value = 0
+        self.solvable_utxo = solvable_utxo
+        self.utxo_value = 0
 
         self.secret = None
         self.secret_hash = None
@@ -110,12 +113,12 @@ class BitcoinTransaction(object):
         ])
 
     def build_inputs(self):
-        for outpoint in self.outpoints:
-            self.outpoints_value += outpoint['value']
+        for utxo in self.solvable_utxo:
+            self.utxo_value += utxo['value']
             tx_in = CMutableTxIn(
                 COutPoint(
-                    lx(outpoint['txid']),
-                    outpoint['vout']
+                    lx(utxo['txid']),
+                    utxo['vout']
                 )
             )
             self.tx_in_list.append(tx_in)
@@ -133,8 +136,8 @@ class BitcoinTransaction(object):
         self.build_atomic_swap_contract()
 
         self.tx_out_list = [CMutableTxOut(self.value * COIN, self.contract), ]
-        if self.outpoints_value > self.value:
-            change = self.outpoints_value - self.value
+        if self.utxo_value > self.value:
+            change = self.utxo_value - self.value
             self.tx_out_list.append(
                 CMutableTxOut(change * COIN, CBitcoinAddress(self.sender_address).to_scriptPubKey())
             )
@@ -156,7 +159,7 @@ class BitcoinTransaction(object):
 
         for tx_index, tx_in in enumerate(self.tx.vin):
 
-            tx_script = script.CScript.fromhex(self.outpoints[tx_index]['script'])
+            tx_script = script.CScript.fromhex(self.solvable_utxo[tx_index]['script'])
             sig_hash = script.SignatureHash(tx_script, self.tx, tx_index, script.SIGHASH_ALL)
             sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
             tx_in.scriptSig = script.CScript([sig, wallet.public_key])
@@ -171,7 +174,7 @@ class BitcoinTransaction(object):
 
     def create_unsign_transaction(self):
         self.build_inputs()
-        assert self.outpoints_value >= self.value
+        assert self.utxo_value >= self.value
         self.build_outputs()
         self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list)
 
@@ -245,9 +248,9 @@ class Bitcoin(BaseNetwork):
         sender_address: str,
         recipient_address: str,
         value: float,
-        outpoints: list
+        solvable_utxo: list
     ) -> BitcoinTransaction:
-        transaction = BitcoinTransaction(self, sender_address, recipient_address, value, outpoints)
+        transaction = BitcoinTransaction(self, sender_address, recipient_address, value, solvable_utxo)
         transaction.create_unsign_transaction()
         return transaction
 
@@ -277,3 +280,15 @@ class BitcoinTestNet(Bitcoin):
     @staticmethod
     def get_wallet(private_key=None, encrypted_private_key=None, password=None):
         return BitcoinWallet(private_key, encrypted_private_key, password, testnet=True)
+
+    @classmethod
+    def get_current_fee_per_kb(cls) -> float:
+        """Returns current high priority (1-2 blocks) fee estimates."""
+        try:
+            with urllib.request.urlopen('https://api.blockcypher.com/v1/btc/test3') as url:
+                if url.status != 200:
+                    return
+                data = json.loads(url.read().decode())
+                return data['high_fee_per_kb'] / COIN
+        except (URLError, HTTPError):
+            return
