@@ -66,16 +66,20 @@ Alice and Bob exchange their wallet addresses.
 
 [**Alice**] have to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://api.blockcypher.com/v1/btc/test3/txs/6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8?limit=50&includeHex=true)
 
+    from clove.network.bitcoin import Utxo
+
     bob_btc_address = 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1'
 
     bitcoins_ammount = 2
 
-    solvable_utxo = [{
-        'txid': '6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',
-        'vout': 1,
-        'value': 2.78956946,
-        'script': '76a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac'
-    },]
+    solvable_utxo = [
+        Utxo(
+            tx_id='6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',
+            vout=1,
+            value=2.78956946,
+            tx_script='76a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac'
+        ),
+    ]
 
     transaction = btc_network.initiate_atomic_swap(
         alice_btc_wallet.get_address(),

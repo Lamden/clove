@@ -104,6 +104,17 @@ class Utxo(object):
         else:
             return []
 
+    def __repr__(self):
+        return "Utxo(tx_id='{}', vout='{}', value='{}', tx_script='{}', wallet={}, secret={}, refund={})".format(
+            self.tx_id,
+            self.vout,
+            self.value,
+            self.tx_script,
+            self.wallet,
+            str(self.secret),
+            self.refund,
+        )
+
 
 class BitcoinTransaction(object):
 
