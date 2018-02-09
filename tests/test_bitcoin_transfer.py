@@ -156,7 +156,8 @@ def test_redeem_transaction(bob_wallet, signed_transaction):
 
     contract = btc_network.audit_contract(transaction_details['contract_transaction'])
     redeem_transaction = contract.redeem(bob_wallet, transaction_details['secret'])
-    redeem_transaction.sign()
+    redeem_transaction.fee_per_kb = 0.002
+    redeem_transaction.add_fee_and_sign()
 
     assert redeem_transaction.recipient_address == bob_wallet.get_address()
     assert redeem_transaction.value == signed_transaction.value
@@ -168,7 +169,8 @@ def test_refund_transaction(alice_wallet, signed_transaction):
 
     contract = btc_network.audit_contract(transaction_details['contract_transaction'])
     refund_transaction = contract.refund(alice_wallet)
-    refund_transaction.sign()
+    refund_transaction.fee_per_kb = 0.002
+    refund_transaction.add_fee_and_sign()
 
     assert refund_transaction.recipient_address == alice_wallet.get_address()
     assert refund_transaction.value == signed_transaction.value

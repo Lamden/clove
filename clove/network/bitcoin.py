@@ -89,7 +89,7 @@ class Utxo(object):
 
     @property
     def tx_in(self):
-        return CMutableTxIn(self.outpoint, scriptSig=script.CScript(self.unsigned_script_sig))
+        return CMutableTxIn(self.outpoint, scriptSig=script.CScript(self.unsigned_script_sig), nSequence=0)
 
     @property
     def parsed_script(self):
@@ -107,7 +107,7 @@ class Utxo(object):
 
 class BitcoinTransaction(object):
 
-    def __init__(self, network, recipient_address: str, value: float, solvable_utxo: list):
+    def __init__(self, network, recipient_address: str, value: float, solvable_utxo: list, tx_locktime: int=0):
         self.recipient_address = recipient_address
         self.value = value
         self.network = network
@@ -119,6 +119,7 @@ class BitcoinTransaction(object):
         self.tx_out_list = []
 
         self.tx = None
+        self.tx_locktime = tx_locktime
         self.fee = 0.0
         self.fee_per_kb = 0.0
 
@@ -166,7 +167,7 @@ class BitcoinTransaction(object):
     def create_unsigned_transaction(self):
         assert self.utxo_value >= self.value
         self.build_outputs()
-        self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list)
+        self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list, nLockTime=self.tx_locktime)
 
     def publish(self):
         return self.network.broadcast_transaction(self.tx)
@@ -208,8 +209,16 @@ class BitcoinTransaction(object):
 
 class BitcoinInitTransaction(BitcoinTransaction):
 
-    def __init__(self, network, sender_address: str, recipient_address: str, value: float, solvable_utxo: list):
-        super().__init__(network, recipient_address, value, solvable_utxo)
+    def __init__(
+        self,
+        network,
+        sender_address: str,
+        recipient_address: str,
+        value: float,
+        solvable_utxo: list,
+        tx_locktime: int=0
+    ):
+        super().__init__(network, recipient_address, value, solvable_utxo, tx_locktime)
         self.sender_address = sender_address
         self.secret = None
         self.secret_hash = None
@@ -226,7 +235,7 @@ class BitcoinInitTransaction(BitcoinTransaction):
             script.OP_HASH160,
             CBitcoinAddress(self.recipient_address),
             script.OP_ELSE,
-            str(int(self.locktime.timestamp())).encode(),
+            int(self.locktime.timestamp()),
             script.OP_CHECKLOCKTIMEVERIFY,
             script.OP_DROP,
             script.OP_DUP,
@@ -300,7 +309,8 @@ class BitcoinContract(object):
         if self.is_valid_contract_script(script_ops):
             self.recipient_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[6]))
             self.refund_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[13]))
-            self.locktime = datetime.fromtimestamp(int(script_ops[8]))
+            self.locktime_timestamp = int.from_bytes(script_ops[8], byteorder='little')
+            self.locktime = datetime.fromtimestamp(self.locktime_timestamp)
             self.secret_hash = b2x(script_ops[2])
             self.value = satoshi_to_btc(contract_tx_out.nValue)
         else:
@@ -356,7 +366,8 @@ class BitcoinContract(object):
             network=self.network,
             recipient_address=self.refund_address,
             value=self.value,
-            solvable_utxo=[self.get_contract_utxo(wallet, refund=True)]
+            solvable_utxo=[self.get_contract_utxo(wallet, refund=True)],
+            tx_locktime=self.locktime_timestamp,
         )
         transaction.create_unsigned_transaction()
         return transaction
