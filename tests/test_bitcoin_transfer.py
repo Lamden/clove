@@ -1,19 +1,20 @@
 from datetime import datetime
 from unittest.mock import patch
 
-from bitcoin.core import COIN, CTransaction, b2x
+from bitcoin.core import CTransaction, b2x
 from pytest import raises
 
-from clove.network.bitcoin import BitcoinTestNet, BitcoinTransaction
+from clove.network.bitcoin import BitcoinInitTransaction, BitcoinTestNet
+from clove.utils.bitcoin import btc_to_satoshi
 
 
 def test_swap_contract(alice_wallet, bob_wallet):
-    transaction = BitcoinTransaction(
+    transaction = BitcoinInitTransaction(
         BitcoinTestNet(),
         alice_wallet.get_address(),
         bob_wallet.get_address(),
         0.5,
-        solvable_utxo={}
+        solvable_utxo=[]
     )
     transaction.set_locktime(number_of_hours=48)
     transaction.generate_hash()
@@ -21,8 +22,23 @@ def test_swap_contract(alice_wallet, bob_wallet):
     assert transaction.contract.is_valid()
 
 
-def test_transaction_signing(alice_wallet, unsigned_transaction):
+def test_transaction_signing(unsigned_transaction):
     transaction = unsigned_transaction
+    first_script_signature = transaction.tx.vin[0].scriptSig
+    transaction.sign()
+    second_first_script_signature = transaction.tx.vin[0].scriptSig
+    assert first_script_signature != second_first_script_signature
+
+
+def test_transaction_signing_with_default_wallet(alice_wallet, unsigned_transaction):
+    transaction = unsigned_transaction
+    unsigned_transaction.solvable_utxo[0].wallet = None
+    with raises(
+        RuntimeError,
+        match="Cannot sign transaction without a wallet."
+    ):
+        transaction.sign()
+
     first_script_signature = transaction.tx.vin[0].scriptSig
     transaction.sign(alice_wallet)
     second_first_script_signature = transaction.tx.vin[0].scriptSig
@@ -94,7 +110,7 @@ def test_transaction_fee(fee_per_kb_mock, unsigned_transaction):
     unsigned_transaction.add_fee()
     change_with_fee = unsigned_transaction.tx.vout[1].nValue
 
-    assert change_without_fee - unsigned_transaction.fee * COIN == change_with_fee
+    assert change_without_fee - btc_to_satoshi(unsigned_transaction.fee) == change_with_fee
     assert unsigned_transaction.tx.serialize()
 
 
@@ -132,3 +148,27 @@ def test_audit_contract_invalid_transaction(signed_transaction):
         ValueError, match='Given transaction is not a valid contract.'
     ):
         btc_network.audit_contract(tx)
+
+
+def test_redeem_transaction(bob_wallet, signed_transaction):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    redeem_transaction = contract.redeem(bob_wallet, transaction_details['secret'])
+    redeem_transaction.sign()
+
+    assert redeem_transaction.recipient_address == bob_wallet.get_address()
+    assert redeem_transaction.value == signed_transaction.value
+
+
+def test_refund_transaction(alice_wallet, signed_transaction):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    refund_transaction = contract.refund(alice_wallet)
+    refund_transaction.sign()
+
+    assert refund_transaction.recipient_address == alice_wallet.get_address()
+    assert refund_transaction.value == signed_transaction.value
