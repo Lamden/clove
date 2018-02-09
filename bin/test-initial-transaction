@@ -8,6 +8,7 @@ from urllib.error import HTTPError, URLError
 import urllib.request
 
 from clove.network import BitcoinTestNet
+from clove.network.bitcoin import Utxo
 from clove.utils.bitcoin import satoshi_to_btc
 
 ALICE_ADDRESS = 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM'
@@ -15,7 +16,7 @@ BOB_ADDRESS = 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1'
 ALICE_PK = 'cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe'
 
 
-def get_utxo(address, ammount):
+def get_utxo(address, amount):
     print('>>> Searching for UTXO\'s')
     api_url = \
         f'https://api.blockcypher.com/v1/btc/test3/addrs/{address}/full?limit=50?unspentOnly=true&includeScript=true'
@@ -34,14 +35,16 @@ def get_utxo(address, ammount):
                             or output['script_type'] != 'pay-to-pubkey-hash':
                         continue
                     value = satoshi_to_btc(output['value'])
-                    utxo.append({
-                        'txid': txs['hash'],
-                        'vout': i,
-                        'value': value,
-                        'script': output['script']
-                    })
+                    utxo.append(
+                        Utxo(
+                            tx_id=txs['hash'],
+                            vout=i,
+                            value=value,
+                            tx_script=output['script'],
+                        )
+                    )
                     total += value
-                    if total > ammount:
+                    if total > amount:
                         return utxo
             return utxo
     except (URLError, HTTPError):
@@ -58,20 +61,22 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--private-key', help='Private key', type=str, default=ALICE_PK)
 
     args = parser.parse_args()
+    if not args.amount:
+        args.amount = float(input('How many BTC do you want to transfer? ').replace(',', '.'))
 
     btc_network = BitcoinTestNet()
 
     print('>>> Creating transaction for BitcoinTestNet')
-    print('>>> Sender address:\t', args.s)
-    print('>>> Recipient address:\t', args.r)
-    print('>>> Transaction amount:\t', args.a)
+    print('>>> Sender address:\t', args.sender)
+    print('>>> Recipient address:\t', args.recipient)
+    print('>>> Transaction amount:\t', args.amount)
 
-    wallet = btc_network.get_wallet(private_key=args.p)
-    utxo = get_utxo(args.s, args.a)
+    wallet = btc_network.get_wallet(private_key=args.private_key)
+    utxo = get_utxo(args.sender, args.amount)
 
     print(f'>>> Found {len(utxo)} UTXO\'s')
     pprint(utxo)
-    transaction = btc_network.initiate_atomic_swap(args.s, args.r, args.a, utxo)
+    transaction = btc_network.initiate_atomic_swap(args.sender, args.recipient, args.amount, utxo)
 
     print('>>> Adding fee and signing')
     transaction.add_fee_and_sign(wallet)
