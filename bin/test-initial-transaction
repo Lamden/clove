@@ -32,7 +32,7 @@ def get_utxo(address, amount):
             for txs in data['txs']:
                 for i, output in enumerate(txs['outputs']):
                     if not output['addresses'] or output['addresses'][0] != address \
-                            or output['script_type'] != 'pay-to-pubkey-hash':
+                            or output['script_type'] != 'pay-to-pubkey-hash' or 'spent_by' in output:
                         continue
                     value = satoshi_to_btc(output['value'])
                     utxo.append(
@@ -46,7 +46,7 @@ def get_utxo(address, amount):
                     total += value
                     if total > amount:
                         return utxo
-            return utxo
+            exit(f'>>> Cannot find enough UTXO\'s. {total:.8f} is all that you\'ve got.')
     except (URLError, HTTPError):
         print('>>> Cannot get UTXO\'s from API')
         return
