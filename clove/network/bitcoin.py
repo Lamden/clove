@@ -198,9 +198,10 @@ class BitcoinTransaction(object):
         """Adding fee to the transaction by decreasing 'change' transaction."""
         if not self.fee:
             self.calculate_fee()
-        if self.tx.vout[0].nValue < self.fee:
+        fee_in_satoshi = btc_to_satoshi(self.fee)
+        if self.tx.vout[0].nValue < fee_in_satoshi:
             raise RuntimeError('Cannot subtract fee from transaction. You need to add more input transactions.')
-        self.tx.vout[0].nValue -= btc_to_satoshi(self.fee)
+        self.tx.vout[0].nValue -= fee_in_satoshi
 
     def show_details(self):
         return {
@@ -280,9 +281,10 @@ class BitcoinInitTransaction(BitcoinTransaction):
         """Adding fee to the transaction by decreasing 'change' transaction."""
         if not self.fee:
             self.calculate_fee()
-        if len(self.tx.vout) == 1 or self.tx.vout[1].nValue < self.fee:
+        fee_in_satoshi = btc_to_satoshi(self.fee)
+        if len(self.tx.vout) == 1 or self.tx.vout[1].nValue < fee_in_satoshi:
             raise RuntimeError('Cannot subtract fee from change transaction. You need to add more input transactions.')
-        self.tx.vout[1].nValue -= btc_to_satoshi(self.fee)
+        self.tx.vout[1].nValue -= fee_in_satoshi
 
     def show_details(self):
         return {
