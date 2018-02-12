@@ -1,14 +1,21 @@
 import json
+import logging
 import socket
 from urllib.error import HTTPError, URLError
 import urllib.request
 
-from bitcoin.core import COIN, CMutableTransaction
+from bitcoin.core import COIN, CMutableTransaction, b2lx
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
     MSG_TX, MsgSerializable, msg_getdata, msg_inv, msg_ping, msg_pong, msg_reject, msg_tx, msg_verack, msg_version
 )
 from bitcoin.net import CInv
+
+from clove.network.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
+from clove.utils.logging import log_debug, log_exception, log_inappropriate_response_messages, log_info
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
 
 
 class BaseNetwork(object):
@@ -21,6 +28,7 @@ class BaseNetwork(object):
     blacklist_nodes = {}
     networks = {}
     test_networks = {}
+    nodes = None
 
     @property
     def default_symbol(self):
@@ -74,41 +82,52 @@ class BaseNetwork(object):
 
         return nodes
 
+    def get_all_nodes(self) -> list:
+        return [node for seed in self.seeds for node in self.get_nodes(seed)]
+
     def connect(self, timeout=2):
+        if self.nodes is None:
+            self.nodes = self.get_all_nodes()
+
         if self.connection is None:
-            for seed in self.seeds:
-                nodes = self.filter_blacklisted_nodes(self.get_nodes(seed))
-                for node in nodes:
-                    self.update_blacklist(node)
+            nodes = self.filter_blacklisted_nodes(self.nodes)
+            for node in nodes:
+                self.update_blacklist(node)
+                try:
+                    self.connection = socket.create_connection(
+                        address=(node, self.port),
+                        timeout=timeout
+                    )
+                    self.connection.send(self.version_packet())
+                    self.connection.settimeout(0.2)
                     try:
-                        self.connection = socket.create_connection(
-                            address=(node, self.port),
-                            timeout=timeout
+                        self.protocol_version = MsgSerializable.from_bytes(
+                            self.clean_message(self.connection.recv(1024), b'version')
                         )
-                        self.connection.send(self.version_packet())
-                        self.connection.settimeout(0.2)
-                        try:
-                            self.protocol_version = MsgSerializable.from_bytes(
-                                self.clean_message(self.connection.recv(1024), b'version')
-                            )
-                        except SerializationTruncationError:
-                            self.terminate(node)
-                            continue
-
-                        self.connection.send(msg_verack(self.protocol_version.nVersion).to_bytes())
-                        self.connection.settimeout(0.2)
-                        self.connection.recv(1024)
-
-                    except (socket.timeout, ConnectionRefusedError, OSError):
+                    except SerializationTruncationError:
+                        self.terminate(node)
                         continue
-                    return
+
+                    self.connection.send(msg_verack(self.protocol_version.nVersion).to_bytes())
+                    self.connection.settimeout(0.2)
+                    self.connection.recv(1024)
+
+                except (socket.timeout, ConnectionRefusedError, OSError):
+                    self.nodes.remove(node)
+                    continue
+                return
 
     def filter_blacklisted_nodes(self, nodes, max_tries_number=3):
-        return [node for node in nodes if self.blacklist_nodes.get(node, 0) <= max_tries_number]
+        return sorted(
+            [node for node in nodes if self.blacklist_nodes.get(node, 0) <= max_tries_number],
+            key=lambda node: self.blacklist_nodes.get(node, 0)
+        )
 
-    def terminate(self, node=None):
-        if node:
+    def terminate(self, node=None, blacklist=False):
+        if node and blacklist:
             self.update_blacklist(node)
+        elif node:
+            self.nodes.remove(node)
         self.connection.close()
         self.connection = None
 
@@ -167,17 +186,37 @@ class BaseNetwork(object):
     def broadcast_transaction(self, transaction: CMutableTransaction):
         serialized_transaction = transaction.serialize()
         got_data = self.set_inventory(serialized_transaction)
+        transaction_hash = b2lx(transaction.GetHash())
+        node = self.connection.getpeername()[0]
 
-        if got_data and any(el.hash == Hash(serialized_transaction) for el in got_data.inv):
-            message = msg_tx()
-            message.tx = transaction
-            self.connection.sendall(message.to_bytes())
-            self.connection.settimeout(120)
+        if not got_data:
+            return log_exception(
+                logger,
+                ConnectionProblem('Clove could not get connected with any of the nodes for too long.', node)
+            )
+        elif all(el.hash != Hash(serialized_transaction) for el in got_data.inv):
+            return log_exception(logger, UnexpectedResponseFromNode('Unknown error', node))
 
-            responses = self.extract_all_the_responses(self.connection.recv(8192))
-            if any(isinstance(response, msg_reject) for response in responses):
-                NotImplementedError
-            return responses
+        message = msg_tx()
+        message.tx = transaction
+
+        self.connection.sendall(message.to_bytes())
+        log_info(logger, f'[{node}] Transaction {transaction_hash} has just been sent.')
+        self.connection.settimeout(20)
+
+        try:
+            responses = self.extract_all_responses(self.connection.recv(8192))
+        except socket.timeout:
+            log_debug(logger, f'[{node}] Connection timeout. Node is not responding. Connection terminates.')
+            return self.terminate()
+        rejects = [
+            f"{el.message.decode('ascii')} {el.reason.decode('ascii')}"
+            for el in responses if isinstance(el, msg_reject)
+        ]
+        if rejects:
+            return log_exception(logger, TransactionRejected('; '.join(rejects), node))
+
+        return transaction_hash
 
     def set_inventory(self, serialized_transaction) -> msg_getdata:
         message = msg_inv()
@@ -192,26 +231,30 @@ class BaseNetwork(object):
             if self.connection is None:
                 break
 
+            node = self.connection.getpeername()[0]
+
             try:
                 self.connection.sendall(message.to_bytes())
                 self.connection.settimeout(2)
-                messages = self.extract_all_the_responses(self.connection.recv(8192))
+                messages = self.extract_all_responses(self.connection.recv(8192))
             except socket.timeout:
-                self.terminate(node=self.connection.getpeername()[0])
+                self.terminate(node=node)
                 continue
 
             message_getdata = next((message for message in messages if isinstance(message, msg_getdata)), None)
             message_ping = next((message for message in messages if isinstance(message, msg_ping)), None)
 
             if message_getdata:
+                log_info(logger, f'[{node}] Node responded correctly. Sending transaction...')
                 return message_getdata
             elif message_ping:
                 self.connection.send(msg_pong(self.protocol_version.nVersion, message_ping.nonce).to_bytes())
             else:
-                self.terminate(node=self.connection.getpeername()[0])
+                log_inappropriate_response_messages(logger, messages, node)
+                self.terminate(node=node, blacklist=True)
 
     @staticmethod
-    def extract_all_the_responses(buffer: bytes) -> list:
+    def extract_all_responses(buffer: bytes) -> list:
         from bitcoin import params
         prefix = params.MESSAGE_START
         messages = [prefix + message for message in buffer.split(prefix)]
