@@ -176,7 +176,7 @@ class BitcoinTransaction(object):
             )
 
     def create_unsigned_transaction(self):
-        assert self.utxo_value >= self.value
+        assert self.utxo_value >= self.value, 'You want to spend more than you\'ve got. Add more UTXO\'s.'
         self.build_outputs()
         self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list, nLockTime=self.tx_locktime)
 
