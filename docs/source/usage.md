@@ -81,7 +81,7 @@ Alice and Bob exchange their wallet addresses.
         ),
     ]
 
-    transaction = btc_network.initiate_atomic_swap(
+    transaction = btc_network.atomic_swap(
         alice_btc_wallet.get_address(),
         bob_btc_address,
         bitcoins_ammount,

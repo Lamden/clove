@@ -4,12 +4,12 @@ from unittest.mock import patch
 from bitcoin.core import CTransaction, b2x
 from pytest import raises
 
-from clove.network.bitcoin import BitcoinInitTransaction, BitcoinTestNet
+from clove.network.bitcoin import BitcoinAtomicSwapTransaction, BitcoinTestNet
 from clove.utils.bitcoin import btc_to_satoshi
 
 
 def test_swap_contract(alice_wallet, bob_wallet):
-    transaction = BitcoinInitTransaction(
+    transaction = BitcoinAtomicSwapTransaction(
         BitcoinTestNet(),
         alice_wallet.get_address(),
         bob_wallet.get_address(),
@@ -174,3 +174,33 @@ def test_refund_transaction(alice_wallet, signed_transaction):
 
     assert refund_transaction.recipient_address == alice_wallet.get_address()
     assert refund_transaction.value == signed_transaction.value
+
+
+def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_transaction):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    participate_value = 0.5
+    participate_transaction = contract.participate(
+        'btc', bob_wallet.get_address(), alice_wallet.get_address(), participate_value, bob_utxo
+    )
+    participate_transaction.fee_per_kb = 0.002
+    participate_transaction.add_fee_and_sign()
+
+    assert participate_transaction.sender_address == bob_wallet.get_address()
+    assert participate_transaction.recipient_address == alice_wallet.get_address()
+    assert participate_transaction.value == participate_value
+    assert participate_transaction.secret_hash == signed_transaction.secret_hash
+    assert participate_transaction.secret is None
+    assert isinstance(participate_transaction.network, BitcoinTestNet)
+
+    participate_transaction_details = participate_transaction.show_details()
+
+    contract = btc_network.audit_contract(participate_transaction_details['contract_transaction'])
+    redeem_participate_transaction = contract.redeem(alice_wallet, transaction_details['secret'])
+    redeem_participate_transaction.fee_per_kb = 0.002
+    redeem_participate_transaction.add_fee_and_sign()
+
+    assert redeem_participate_transaction.recipient_address == alice_wallet.get_address()
+    assert redeem_participate_transaction.value == participate_value
