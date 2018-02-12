@@ -12,7 +12,7 @@ from bitcoin.messages import (
 from bitcoin.net import CInv
 
 from clove.network.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
-from clove.utils.logging import greenify, log_inappropriate_response_messages, purplify, redify
+from clove.utils.logging import log_debug, log_exception, log_inappropriate_response_messages, log_info
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -118,7 +118,10 @@ class BaseNetwork(object):
                 return
 
     def filter_blacklisted_nodes(self, nodes, max_tries_number=3):
-        return [node for node in nodes if self.blacklist_nodes.get(node, 0) <= max_tries_number]
+        return sorted(
+            [node for node in nodes if self.blacklist_nodes.get(node, 0) <= max_tries_number],
+            key=lambda node: self.blacklist_nodes.get(node, 0)
+        )
 
     def terminate(self, node=None, blacklist=False):
         if node and blacklist:
@@ -184,31 +187,34 @@ class BaseNetwork(object):
         serialized_transaction = transaction.serialize()
         got_data = self.set_inventory(serialized_transaction)
         transaction_hash = b2lx(transaction.GetHash())
+        node = self.connection.getpeername()[0]
 
         if not got_data:
-            return logger.exception(
-                ConnectionProblem(redify('Clove could not get connected with any of the nodes for too long.'))
+            return log_exception(
+                logger,
+                ConnectionProblem('Clove could not get connected with any of the nodes for too long.', node)
             )
         elif all(el.hash != Hash(serialized_transaction) for el in got_data.inv):
-            return logger.exception(UnexpectedResponseFromNode())
+            return log_exception(logger, UnexpectedResponseFromNode('Unknown error', node))
 
         message = msg_tx()
         message.tx = transaction
+
         self.connection.sendall(message.to_bytes())
-        logger.info(greenify(f'Transaction {transaction_hash} has just been sent.'))
+        log_info(logger, f'[{node}] Transaction {transaction_hash} has just been sent.')
         self.connection.settimeout(20)
 
         try:
             responses = self.extract_all_responses(self.connection.recv(8192))
         except socket.timeout:
-            logger.debug(purplify("Connection timeout. Node is not responding. Connection terminates."))
+            log_debug(logger, f'[{node}] Connection timeout. Node is not responding. Connection terminates.')
             return self.terminate()
         rejects = [
             f"{el.message.decode('ascii')} {el.reason.decode('ascii')}"
             for el in responses if isinstance(el, msg_reject)
         ]
         if rejects:
-            return logger.exception(TransactionRejected(redify('; '.join(rejects))))
+            return log_exception(logger, TransactionRejected('; '.join(rejects), node))
 
         return transaction_hash
 
@@ -225,25 +231,27 @@ class BaseNetwork(object):
             if self.connection is None:
                 break
 
+            node = self.connection.getpeername()[0]
+
             try:
                 self.connection.sendall(message.to_bytes())
                 self.connection.settimeout(2)
                 messages = self.extract_all_responses(self.connection.recv(8192))
             except socket.timeout:
-                self.terminate(node=self.connection.getpeername()[0])
+                self.terminate(node=node)
                 continue
 
             message_getdata = next((message for message in messages if isinstance(message, msg_getdata)), None)
             message_ping = next((message for message in messages if isinstance(message, msg_ping)), None)
 
             if message_getdata:
-                logger.info(greenify('Node responded correctly. Sending transaction...'))
+                log_info(logger, f'[{node}] Node responded correctly. Sending transaction...')
                 return message_getdata
             elif message_ping:
                 self.connection.send(msg_pong(self.protocol_version.nVersion, message_ping.nonce).to_bytes())
             else:
-                log_inappropriate_response_messages(logger, messages)
-                self.terminate(node=self.connection.getpeername()[0], blacklist=True)
+                log_inappropriate_response_messages(logger, messages, node)
+                self.terminate(node=node, blacklist=True)
 
     @staticmethod
     def extract_all_responses(buffer: bytes) -> list:

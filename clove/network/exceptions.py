@@ -1,10 +1,16 @@
-class ConnectionProblem(Exception):
+class CloveException(Exception):
+
+    def __init__(self, message=None, node=None):
+        self.message = f'[{node}] {message}' if node else message
+
+
+class ConnectionProblem(CloveException):
     pass
 
 
-class TransactionRejected(Exception):
+class TransactionRejected(CloveException):
     pass
 
 
-class UnexpectedResponseFromNode(Exception):
+class UnexpectedResponseFromNode(CloveException):
     pass

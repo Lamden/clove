@@ -42,8 +42,8 @@ def test_filter_blacklisted_nodes_method():
     network = BaseNetwork()
     network.blacklist_nodes = {'107.150.122.31': 4, '107.170.239.46': 1, '108.144.213.98': 3, '13.113.121.156': 4}
     nodes = list(network.blacklist_nodes.keys()) + ['34.207.248.232']
-    assert network.filter_blacklisted_nodes(nodes) == ['107.170.239.46', '108.144.213.98', '34.207.248.232']
-    assert network.filter_blacklisted_nodes(nodes, max_tries_number=2) == ['107.170.239.46', '34.207.248.232']
+    assert network.filter_blacklisted_nodes(nodes) == ['34.207.248.232', '107.170.239.46', '108.144.213.98']
+    assert network.filter_blacklisted_nodes(nodes, max_tries_number=2) == ['34.207.248.232', '107.170.239.46']
 
 
 def test_extract_all_responses():
