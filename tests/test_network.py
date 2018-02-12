@@ -31,7 +31,7 @@ def test_seeds_valid_dns_address(seed):
 @patch('urllib.request.urlopen')
 def test_fee_per_kb_implementation(request_mock, network):
     if network.symbols[0] in ('BTC', 'LTC', 'DOGE', 'DASH') and not \
-            (network.name.startswith('test-') and network.name != 'test-bitcoin'):
+            (network.is_test_network() and network.name != 'test-bitcoin'):
         network.get_current_fee_per_kb()
     else:
         with pytest.raises(NotImplementedError):
@@ -54,3 +54,26 @@ def test_extract_all_the_responses():
     random_bytes = bytearray(getrandbits(8) for _ in range(10))
     assert BaseNetwork.extract_all_the_responses(getdata + random_bytes + pong) == [msg_getdata(), msg_pong()]
     assert BaseNetwork.extract_all_the_responses(b'') == [] == BaseNetwork.extract_all_the_responses(random_bytes)
+
+
+@mark.parametrize('network', networks)
+def test_symbol_mapping(network):
+    is_test = network.is_test_network()
+    symbol_mapping = network.get_symbol_mapping()
+    assert symbol_mapping
+    for (symbol, mapped_network) in symbol_mapping.items():
+        assert issubclass(mapped_network, BaseNetwork)
+        assert symbol in mapped_network.symbols
+        assert mapped_network.is_test_network() == is_test
+
+
+@mark.parametrize('network', networks)
+def test_get_network_class_by_symbol(network):
+    is_test = network.is_test_network()
+    symbol_mapping = network.get_symbol_mapping()
+    assert symbol_mapping
+    for symbol in symbol_mapping:
+        network_class = network.get_network_class_by_symbol(symbol)
+        assert issubclass(network_class, BaseNetwork)
+        assert symbol in network_class.symbols
+        assert network_class.is_test_network() == is_test

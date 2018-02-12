@@ -219,7 +219,9 @@ class BitcoinTransaction(object):
         }
 
 
-class BitcoinInitTransaction(BitcoinTransaction):
+class BitcoinAtomicSwapTransaction(BitcoinTransaction):
+    init_hours = 48
+    participate_hours = 24
 
     def __init__(
         self,
@@ -228,12 +230,13 @@ class BitcoinInitTransaction(BitcoinTransaction):
         recipient_address: str,
         value: float,
         solvable_utxo: list,
+        secret_hash: str=None,
         tx_locktime: int=0
     ):
         super().__init__(network, recipient_address, value, solvable_utxo, tx_locktime)
         self.sender_address = sender_address
         self.secret = None
-        self.secret_hash = None
+        self.secret_hash = x(secret_hash) if secret_hash else None
         self.locktime = None
         self.contract = None
 
@@ -265,9 +268,12 @@ class BitcoinInitTransaction(BitcoinTransaction):
         self.secret, self.secret_hash = generate_secret_with_hash()
 
     def build_outputs(self):
-        self.generate_hash()
+        if not self.secret_hash:
+            self.generate_hash()
+            self.set_locktime(number_of_hours=self.init_hours)
+        else:
+            self.set_locktime(number_of_hours=self.participate_hours)
 
-        self.set_locktime(number_of_hours=48)
         self.build_atomic_swap_contract()
 
         self.tx_out_list = [CMutableTxOut(btc_to_satoshi(self.value), self.contract), ]
@@ -298,7 +304,7 @@ class BitcoinInitTransaction(BitcoinTransaction):
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.sender_address,
-            'secret': self.secret.hex(),
+            'secret': self.secret.hex() if self.secret else '',
             'secret_hash': self.secret_hash.hex(),
             'size': self.size,
             'size_text': f'{self.size} bytes',
@@ -385,6 +391,18 @@ class BitcoinContract(object):
         transaction.create_unsigned_transaction()
         return transaction
 
+    def participate(self, symbol, sender_address, recipient_address, value, utxo):
+        network_class = self.network.get_network_class_by_symbol(symbol)
+
+        network = network_class()
+        return network.atomic_swap(
+            sender_address,
+            recipient_address,
+            value,
+            utxo,
+            self.secret_hash
+        )
+
     def show_details(self):
         return {
             'transaction_hash': self.transaction_hash,
@@ -418,14 +436,17 @@ class Bitcoin(BaseNetwork):
     def __init__(self):
         SelectParams('mainnet')
 
-    def initiate_atomic_swap(
+    def atomic_swap(
         self,
         sender_address: str,
         recipient_address: str,
         value: float,
-        solvable_utxo: list
-    ) -> BitcoinInitTransaction:
-        transaction = BitcoinInitTransaction(self, sender_address, recipient_address, value, solvable_utxo)
+        solvable_utxo: list,
+        secret_hash: str=None,
+    ) -> BitcoinAtomicSwapTransaction:
+        transaction = BitcoinAtomicSwapTransaction(
+            self, sender_address, recipient_address, value, solvable_utxo, secret_hash
+        )
         transaction.create_unsigned_transaction()
         return transaction
 

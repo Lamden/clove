@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
     print(f'>>> Found {len(utxo)} UTXO\'s')
     pprint(utxo)
-    transaction = btc_network.initiate_atomic_swap(args.sender, args.recipient, args.amount, utxo)
+    transaction = btc_network.atomic_swap(args.sender, args.recipient, args.amount, utxo)
 
     print('>>> Adding fee and signing')
     transaction.add_fee_and_sign(wallet)
