@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
-import json
+import os
 from pprint import pprint
-from urllib.error import HTTPError, URLError
-import urllib.request
-
-from clove.network import BitcoinTestNet
+import sys
 
 from script_utils import get_transaction_from_address
+
+from clove.network import BitcoinTestNet
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
-from pprint import pprint
 import os
+from pprint import pprint
 import sys
 
-from clove.network import BitcoinTestNet
-
 from script_utils import get_transaction_from_address
+
+from clove.network import BitcoinTestNet
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
