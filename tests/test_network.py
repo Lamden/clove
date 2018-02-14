@@ -1,13 +1,14 @@
 from random import getrandbits
 from unittest.mock import patch
 
+import bitcoin
 from bitcoin.messages import msg_getdata, msg_pong
 import pytest
 from pytest import mark
 from validators import domain
 
 from clove.network import __all__ as networks
-from clove.network.base import BaseNetwork
+from clove.network.base import BaseNetwork, auto_switch_params
 
 seeds = [seed for network in networks for seed in network.seeds]
 
@@ -20,6 +21,8 @@ def test_network_field_types(network):
     assert isinstance(network.seeds, tuple)
     assert isinstance(network.port, int)
     assert isinstance(network.blacklist_nodes, dict)
+    assert isinstance(network.message_start, bytes)
+    assert isinstance(network.base58_prefixes, dict)
 
 
 @mark.parametrize('seed', seeds)
@@ -47,13 +50,14 @@ def test_filter_blacklisted_nodes_method():
 
 
 def test_extract_all_responses():
+    bitcoin_network = networks[0]
     getdata = b'\xf9\xbe\xb4\xd9getdata\x00\x00\x00\x00\x00\x01\x00\x00\x00\x14\x06\xe0X\x00'
     pong = b'\xf9\xbe\xb4\xd9pong\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00~\xf0\xcab\x00' \
            b'\x00\x00\x00\x00\x00\x00\x00'
-    assert BaseNetwork.extract_all_responses(getdata) == [msg_getdata()]
+    assert bitcoin_network.extract_all_responses(getdata) == [msg_getdata()]
     random_bytes = bytearray(getrandbits(8) for _ in range(10))
-    assert BaseNetwork.extract_all_responses(getdata + random_bytes + pong) == [msg_getdata(), msg_pong()]
-    assert BaseNetwork.extract_all_responses(b'') == [] == BaseNetwork.extract_all_responses(random_bytes)
+    assert bitcoin_network.extract_all_responses(getdata + random_bytes + pong) == [msg_getdata(), msg_pong()]
+    assert bitcoin_network.extract_all_responses(b'') == [] == bitcoin_network.extract_all_responses(random_bytes)
 
 
 @mark.parametrize('network', networks)
@@ -77,3 +81,21 @@ def test_get_network_class_by_symbol(network):
         assert issubclass(network_class, BaseNetwork)
         assert symbol in network_class.symbols
         assert network_class.is_test_network() == is_test
+
+
+@auto_switch_params
+def simple_params_name_return(network):
+    return bitcoin.params.NAME
+
+
+@mark.parametrize('network', networks)
+def test_auto_switch_params_decorator(network):
+
+    if network.name == 'bitcoin':
+        assert simple_params_name_return(network) == 'mainnet'
+    elif network.name == 'test-bitcoin':
+        assert simple_params_name_return(network) == 'testnet'
+    else:
+        assert simple_params_name_return(network) == network.name
+
+    bitcoin.SelectParams('mainnet')

@@ -61,14 +61,10 @@ def test_bitcoin_wallet_address_correct():
         )
 ])
 def test_get_bitcoin_wallet_via_network(kwargs):
-    btc_network = Bitcoin()
-    wallet = btc_network.get_wallet(**kwargs)
-
+    wallet = Bitcoin.get_wallet(**kwargs)
     assert isinstance(wallet, BitcoinWallet)
 
 
 def test_get_new_bitcoin_wallet_via_network():
-    btc_network = Bitcoin()
-    wallet = btc_network.get_new_wallet()
-
+    wallet = Bitcoin.get_new_wallet()
     assert isinstance(wallet, BitcoinWallet)

@@ -1,9 +1,11 @@
+from functools import wraps
 import json
 import logging
 import socket
 from urllib.error import HTTPError, URLError
 import urllib.request
 
+from bitcoin import SelectParams, params
 from bitcoin.core import COIN, CMutableTransaction, b2lx
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
@@ -13,9 +15,23 @@ from bitcoin.net import CInv
 
 from clove.network.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.utils.logging import log_debug, log_exception, log_inappropriate_response_messages, log_info
+from clove.utils.network import generate_params_object
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
+
+
+def auto_switch_params(f):
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        if args and hasattr(args[0], 'switch_params'):
+            args[0].switch_params()
+        elif len(args) > 1 and hasattr(args[1], 'switch_params'):
+            args[1].switch_params()
+        elif kwargs.get('network'):
+            kwargs['network'].switch_params()
+        return f(*args, **kwargs)
+    return wrapped
 
 
 class BaseNetwork(object):
@@ -29,6 +45,24 @@ class BaseNetwork(object):
     networks = {}
     test_networks = {}
     nodes = None
+    message_start = b''
+    base58_prefixes = {}
+
+    @classmethod
+    def switch_params(cls):
+        if cls.name == 'bitcoin':
+            SelectParams('mainnet')
+        elif cls.name == 'test-bitcoin':
+            SelectParams('testnet')
+        else:
+            SelectParams(
+                name=cls.name,
+                generic_params_object=generate_params_object(
+                    name=cls.name,
+                    message_start=cls.message_start,
+                    base58_prefixes=cls.base58_prefixes,
+                )
+            )
 
     @property
     def default_symbol(self):
@@ -143,9 +177,9 @@ class BaseNetwork(object):
         packet.addrTo.ip, packet.addrTo.port = self.connection.getpeername()
         return packet.to_bytes()
 
-    @staticmethod
-    def clean_message(message: bytes, command: bytes) -> bytes:
-        from bitcoin import params
+    @classmethod
+    @auto_switch_params
+    def clean_message(cls, message: bytes, command: bytes) -> bytes:
         messages = reversed(message.split(params.MESSAGE_START))
         message = next((message for message in messages if command in message), b'')
         return params.MESSAGE_START + message
@@ -165,8 +199,10 @@ class BaseNetwork(object):
     def get_wallet():
         raise NotImplementedError
 
-    def get_new_wallet(self):
-        return self.get_wallet()
+    @classmethod
+    @auto_switch_params
+    def get_new_wallet(cls):
+        return cls.get_wallet()
 
     @classmethod
     def get_current_fee_per_kb(cls) -> float:
@@ -253,9 +289,9 @@ class BaseNetwork(object):
                 log_inappropriate_response_messages(logger, messages, node)
                 self.terminate(node=node, blacklist=True)
 
-    @staticmethod
-    def extract_all_responses(buffer: bytes) -> list:
-        from bitcoin import params
+    @classmethod
+    @auto_switch_params
+    def extract_all_responses(cls, buffer: bytes) -> list:
         prefix = params.MESSAGE_START
         messages = [prefix + message for message in buffer.split(prefix)]
         responses = []
