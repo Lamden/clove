@@ -17,6 +17,12 @@ class Litecoin(Bitcoin):
         'dnsseed.koin-project.com',
     )
     port = 9333
+    message_start = b'\xfb\xc0\xb6\xdb'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 48,
+        'SCRIPT_ADDR': 5,
+        'SECRET_KEY': 176
+    }
 
 
 class LitecoinTestNet(Litecoin):
@@ -32,3 +38,9 @@ class LitecoinTestNet(Litecoin):
         'dnsseed-testnet.thrasher.io',
     )
     port = 19335
+    message_start = b'\xfd\xd2\xc8\xf1'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 111,
+        'SCRIPT_ADDR': 196,
+        'SECRET_KEY': 239
+    }

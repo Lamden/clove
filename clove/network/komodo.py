@@ -14,6 +14,12 @@ class Komodo(Bitcoin):
         'seeds.komodo.mewhub.com',
     )
     port = 7770
+    message_start = b'\xf9\xee\xe4\x8d'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 60,
+        'SCRIPT_ADDR': 85,
+        'SECRET_KEY': 188
+    }
 
 
 class KomodoTestNet(Komodo):
@@ -26,3 +32,9 @@ class KomodoTestNet(Komodo):
     # TODO Gather testing dns seeds
     seeds = ()
     port = 17779
+    message_start = b'\x5A\x1F\x7E\x62'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 0,
+        'SCRIPT_ADDR': 5,
+        'SECRET_KEY': 128
+    }
