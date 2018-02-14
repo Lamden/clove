@@ -38,7 +38,7 @@ setup(
     dependency_links=[
         # waiting for this fix to be released:
         # https://github.com/petertodd/python-bitcoinlib/commit/1a089d67f5a0b64ae9f2ffcac786b87b56a0551b
-        'https://github.com/petertodd/python-bitcoinlib/archive/master.zip#egg=python_bitcoinlib'
+        'https://github.com/lamden/python-bitcoinlib/archive/master.zip#egg=python_bitcoinlib'
     ],
     url='https://github.com/Landen/clove',
     download_url='https://github.com/Landen/clove/tarball/' + __version__,
