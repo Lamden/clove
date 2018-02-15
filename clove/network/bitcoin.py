@@ -114,7 +114,7 @@ class Utxo(object):
 
 class BitcoinTransaction(object):
 
-    @auto_switch_params
+    @auto_switch_params(1)
     def __init__(self, network, recipient_address: str, value: float, solvable_utxo: list, tx_locktime: int=0):
         self.recipient_address = recipient_address
         self.value = value
@@ -312,7 +312,7 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
 
 class BitcoinContract(object):
 
-    @auto_switch_params
+    @auto_switch_params(1)
     def __init__(self, network, raw_transaction: str):
         self.network = network
         self.symbol = self.network.default_symbol
@@ -437,7 +437,7 @@ class Bitcoin(BaseNetwork):
         'SECRET_KEY': 128
     }
 
-    @auto_switch_params
+    @auto_switch_params()
     def atomic_swap(
         self,
         sender_address: str,
@@ -452,12 +452,12 @@ class Bitcoin(BaseNetwork):
         transaction.create_unsigned_transaction()
         return transaction
 
-    @auto_switch_params
+    @auto_switch_params()
     def audit_contract(self, raw_transaction: str) -> BitcoinContract:
         return BitcoinContract(self, raw_transaction)
 
     @classmethod
-    @auto_switch_params
+    @auto_switch_params()
     def get_wallet(cls, private_key=None, encrypted_private_key=None, password=None):
         return BitcoinWallet(private_key, encrypted_private_key, password)
 

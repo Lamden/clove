@@ -83,7 +83,7 @@ def test_get_network_class_by_symbol(network):
         assert network_class.is_test_network() == is_test
 
 
-@auto_switch_params
+@auto_switch_params()
 def simple_params_name_return(network):
     return bitcoin.params.NAME
 

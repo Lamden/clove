@@ -1,4 +1,3 @@
-from functools import wraps
 import json
 import logging
 import socket
@@ -21,17 +20,16 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 
-def auto_switch_params(f):
-    @wraps(f)
-    def wrapped(*args, **kwargs):
-        if args and hasattr(args[0], 'switch_params'):
-            args[0].switch_params()
-        elif len(args) > 1 and hasattr(args[1], 'switch_params'):
-            args[1].switch_params()
-        elif kwargs.get('network'):
-            kwargs['network'].switch_params()
-        return f(*args, **kwargs)
-    return wrapped
+def auto_switch_params(args_index: int = 0):
+    def wrap(f):
+        def wrapped(*args, **kwargs):
+            if 'network' in kwargs.keys():
+                kwargs['network'].switch_params()
+            else:
+                args[args_index].switch_params()
+            return f(*args, **kwargs)
+        return wrapped
+    return wrap
 
 
 class BaseNetwork(object):
@@ -178,7 +176,7 @@ class BaseNetwork(object):
         return packet.to_bytes()
 
     @classmethod
-    @auto_switch_params
+    @auto_switch_params()
     def clean_message(cls, message: bytes, command: bytes) -> bytes:
         messages = reversed(message.split(params.MESSAGE_START))
         message = next((message for message in messages if command in message), b'')
@@ -200,7 +198,7 @@ class BaseNetwork(object):
         raise NotImplementedError
 
     @classmethod
-    @auto_switch_params
+    @auto_switch_params()
     def get_new_wallet(cls):
         return cls.get_wallet()
 
@@ -290,7 +288,7 @@ class BaseNetwork(object):
                 self.terminate(node=node, blacklist=True)
 
     @classmethod
-    @auto_switch_params
+    @auto_switch_params()
     def extract_all_responses(cls, buffer: bytes) -> list:
         prefix = params.MESSAGE_START
         messages = [prefix + message for message in buffer.split(prefix)]
