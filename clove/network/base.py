@@ -23,7 +23,7 @@ logger = logging.getLogger()
 def auto_switch_params(args_index: int = 0):
     def wrap(f):
         def wrapped(*args, **kwargs):
-            if 'network' in kwargs.keys():
+            if 'network' in kwargs:
                 kwargs['network'].switch_params()
             else:
                 args[args_index].switch_params()
@@ -117,6 +117,7 @@ class BaseNetwork(object):
     def get_all_nodes(self) -> list:
         return [node for seed in self.seeds for node in self.get_nodes(seed)]
 
+    @auto_switch_params()
     def connect(self, timeout=2):
         if self.nodes is None:
             self.nodes = self.get_all_nodes()
@@ -182,6 +183,7 @@ class BaseNetwork(object):
         message = next((message for message in messages if command in message), b'')
         return params.MESSAGE_START + message
 
+    @auto_switch_params()
     def ping(self):
         self.connect()
         self.connection.send(msg_ping().to_bytes())
@@ -217,6 +219,7 @@ class BaseNetwork(object):
         except (URLError, HTTPError):
             return
 
+    @auto_switch_params()
     def broadcast_transaction(self, transaction: CMutableTransaction):
         serialized_transaction = transaction.serialize()
         got_data = self.set_inventory(serialized_transaction)
@@ -252,6 +255,7 @@ class BaseNetwork(object):
 
         return transaction_hash
 
+    @auto_switch_params()
     def set_inventory(self, serialized_transaction) -> msg_getdata:
         message = msg_inv()
         inventory = CInv()

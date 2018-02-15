@@ -32,13 +32,13 @@ if __name__ == '__main__':
     contract = btc_network.audit_contract(tx_hex)
     pprint(contract.show_details())
 
-    utxo = get_utxo(wallet.get_address(), args.amount)
+    utxo = get_utxo(wallet.address, args.amount)
     print(f'>>> Found {len(utxo)} UTXO\'s')
     pprint(utxo)
 
     participate_transaction = contract.participate(
         args.network.lower(),
-        wallet.get_address(),
+        wallet.address,
         args.recipient,
         args.amount,
         utxo

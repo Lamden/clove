@@ -40,15 +40,13 @@ class BitcoinWallet(object):
             )
 
         self.public_key = self.private_key.pub
+        self.address = str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
 
     def get_private_key(self) -> str:
         return str(self.private_key)
 
     def get_public_key(self) -> CPubKey:
         return self.public_key
-
-    def get_address(self) -> str:
-        return str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
 
     @staticmethod
     def encrypt_private_key(private_key: str, password: str) -> bytes:

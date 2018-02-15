@@ -19,7 +19,7 @@
 
     alice_ltc_wallet = ltc_network.get_new_wallet()
 
-    alice_ltc_wallet.get_address()
+    alice_ltc_wallet.address
     '1FiLXtspLcEU5uHr9mFDT556tXE8znTkxj'
 
     alice_ltc_wallet.get_private_key()
@@ -33,7 +33,7 @@
 
     alice_btc_wallet = btc_network.get_wallet(private_key='cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe')
 
-    alice_btc_wallet.get_address()
+    alice_btc_wallet.address
     'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM'
 
 [**Bob**] can use his existing bitcoin wallet by passing his private key
@@ -44,7 +44,7 @@
 
     bob_btc_wallet = btc_network.get_wallet(private_key='cRoFBWMvcLXrLsYFt794NRBEPUgMLf5AmnJ7VQwiEenc34z7zSpK')
 
-    bob_btc_wallet.get_address()
+    bob_btc_wallet.address
     'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1'
 
 [**Bob**] have to prepare his litecoin wallet
@@ -55,7 +55,7 @@
 
     bob_ltc_wallet = ltc_network.get_wallet(private_key='cTVuBqcjryCdHiCfFxkY5ycNPH2RYNrbmgrTVXBsLKG8xR2My3j2')
 
-    bob_ltc_wallet.get_address()
+    bob_ltc_wallet.address
     'muE6kHtUcKABwUWEkN47t5kWTMRM7NpnxV'
 
 ## 2. Communication
@@ -82,7 +82,7 @@ Alice and Bob exchange their wallet addresses.
     ]
 
     transaction = btc_network.atomic_swap(
-        alice_btc_wallet.get_address(),
+        alice_btc_wallet.address,
         bob_btc_address,
         bitcoins_ammount,
         solvable_utxo
