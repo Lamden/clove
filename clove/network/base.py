@@ -4,7 +4,8 @@ import socket
 from urllib.error import HTTPError, URLError
 import urllib.request
 
-from bitcoin import SelectParams, params
+import bitcoin
+from bitcoin import SelectParams
 from bitcoin.core import COIN, CMutableTransaction, b2lx
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
@@ -179,9 +180,9 @@ class BaseNetwork(object):
     @classmethod
     @auto_switch_params()
     def clean_message(cls, message: bytes, command: bytes) -> bytes:
-        messages = reversed(message.split(params.MESSAGE_START))
+        messages = reversed(message.split(bitcoin.params.MESSAGE_START))
         message = next((message for message in messages if command in message), b'')
-        return params.MESSAGE_START + message
+        return bitcoin.params.MESSAGE_START + message
 
     @auto_switch_params()
     def ping(self):
@@ -294,7 +295,7 @@ class BaseNetwork(object):
     @classmethod
     @auto_switch_params()
     def extract_all_responses(cls, buffer: bytes) -> list:
-        prefix = params.MESSAGE_START
+        prefix = bitcoin.params.MESSAGE_START
         messages = [prefix + message for message in buffer.split(prefix)]
         responses = []
         for message in messages:
