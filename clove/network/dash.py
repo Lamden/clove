@@ -16,6 +16,12 @@ class Dash(Bitcoin):
         'dnsseed.dashpay.io',
     )
     port = 9999
+    message_start = b'\xbf\x0c\x6b\xbd'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 76,
+        'SCRIPT_ADDR': 16,
+        'SECRET_KEY': 204
+    }
 
 
 class DashTestNet(Dash):
@@ -30,3 +36,9 @@ class DashTestNet(Dash):
         'test.dnsseed.masternode.io',
     )
     port = 19999
+    message_start = b'\xce\xe2\xca\xff'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 140,
+        'SCRIPT_ADDR': 19,
+        'SECRET_KEY': 239
+    }

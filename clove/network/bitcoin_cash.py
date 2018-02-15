@@ -18,6 +18,12 @@ class BitcoinCash(Bitcoin):
         'seeder.criptolayer.net',
     )
     port = 8333
+    message_start = b'\xe3\xe1\xf3\xe8'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 0,
+        'SCRIPT_ADDR': 5,
+        'SECRET_KEY': 128
+    }
 
 
 class BitcoinCashTestNet(BitcoinCash):
@@ -35,3 +41,9 @@ class BitcoinCashTestNet(BitcoinCash):
         'testnet-seeder.criptolayer.net',
     )
     port = 18333
+    message_start = b'\xf4\xe5\xf3\xf4'
+    base58_prefixes = {
+        'PUBKEY_ADDR': 111,
+        'SCRIPT_ADDR': 196,
+        'SECRET_KEY': 239
+    }
