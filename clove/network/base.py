@@ -69,7 +69,7 @@ class BaseNetwork(object):
 
     @classmethod
     def is_test_network(cls):
-        return cls.name.startswith('test-')
+        return cls.name and cls.name.startswith('test-')
 
     @classmethod
     def get_network_class_by_symbol(cls, symbol):
