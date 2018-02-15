@@ -11,8 +11,8 @@ from clove.utils.bitcoin import btc_to_satoshi
 def test_swap_contract(alice_wallet, bob_wallet):
     transaction = BitcoinAtomicSwapTransaction(
         BitcoinTestNet(),
-        alice_wallet.get_address(),
-        bob_wallet.get_address(),
+        alice_wallet.address,
+        bob_wallet.address,
         0.5,
         solvable_utxo=[]
     )
@@ -159,7 +159,7 @@ def test_redeem_transaction(bob_wallet, signed_transaction):
     redeem_transaction.fee_per_kb = 0.002
     redeem_transaction.add_fee_and_sign()
 
-    assert redeem_transaction.recipient_address == bob_wallet.get_address()
+    assert redeem_transaction.recipient_address == bob_wallet.address
     assert redeem_transaction.value == signed_transaction.value
 
 
@@ -172,7 +172,7 @@ def test_refund_transaction(alice_wallet, signed_transaction):
     refund_transaction.fee_per_kb = 0.002
     refund_transaction.add_fee_and_sign()
 
-    assert refund_transaction.recipient_address == alice_wallet.get_address()
+    assert refund_transaction.recipient_address == alice_wallet.address
     assert refund_transaction.value == signed_transaction.value
 
 
@@ -183,13 +183,13 @@ def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_tran
     contract = btc_network.audit_contract(transaction_details['contract_transaction'])
     participate_value = 0.5
     participate_transaction = contract.participate(
-        'btc', bob_wallet.get_address(), alice_wallet.get_address(), participate_value, bob_utxo
+        'btc', bob_wallet.address, alice_wallet.address, participate_value, bob_utxo
     )
     participate_transaction.fee_per_kb = 0.002
     participate_transaction.add_fee_and_sign()
 
-    assert participate_transaction.sender_address == bob_wallet.get_address()
-    assert participate_transaction.recipient_address == alice_wallet.get_address()
+    assert participate_transaction.sender_address == bob_wallet.address
+    assert participate_transaction.recipient_address == alice_wallet.address
     assert participate_transaction.value == participate_value
     assert participate_transaction.secret_hash == signed_transaction.secret_hash
     assert participate_transaction.secret is None
@@ -202,5 +202,5 @@ def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_tran
     redeem_participate_transaction.fee_per_kb = 0.002
     redeem_participate_transaction.add_fee_and_sign()
 
-    assert redeem_participate_transaction.recipient_address == alice_wallet.get_address()
+    assert redeem_participate_transaction.recipient_address == alice_wallet.address
     assert redeem_participate_transaction.value == participate_value

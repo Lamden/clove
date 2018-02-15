@@ -47,8 +47,8 @@ def bob_utxo(bob_wallet):
 def unsigned_transaction(alice_wallet, bob_wallet, alice_utxo):
     btc_network = BitcoinTestNet()
     transaction = btc_network.atomic_swap(
-        alice_wallet.get_address(),
-        bob_wallet.get_address(),
+        alice_wallet.address,
+        bob_wallet.address,
         0.7,
         alice_utxo
     )

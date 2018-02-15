@@ -9,7 +9,6 @@ import urllib.request
 
 from Crypto import Random
 from Crypto.Cipher import AES
-from bitcoin import SelectParams
 from bitcoin.core import (
     CMutableTransaction, CMutableTxIn, CMutableTxOut, COutPoint, CTransaction, b2lx, b2x, lx, script, x
 )
@@ -17,17 +16,14 @@ from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 
-from clove.network.base import BaseNetwork
+from clove.network.base import BaseNetwork, auto_switch_params
 from clove.utils.bitcoin import btc_to_satoshi, satoshi_to_btc
 from clove.utils.hashing import generate_secret_with_hash
 
 
 class BitcoinWallet(object):
 
-    def __init__(self, private_key=None, encrypted_private_key=None, password=None, testnet=False):
-        if testnet:
-            SelectParams('testnet')
-
+    def __init__(self, private_key=None, encrypted_private_key=None, password=None):
         if private_key is None and encrypted_private_key is None:
             _, secret_hash = generate_secret_with_hash()
             self.private_key = CBitcoinSecret.from_secret_bytes(secret=secret_hash)
@@ -44,15 +40,13 @@ class BitcoinWallet(object):
             )
 
         self.public_key = self.private_key.pub
+        self.address = str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
 
     def get_private_key(self) -> str:
         return str(self.private_key)
 
     def get_public_key(self) -> CPubKey:
         return self.public_key
-
-    def get_address(self) -> str:
-        return str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
 
     @staticmethod
     def encrypt_private_key(private_key: str, password: str) -> bytes:
@@ -118,6 +112,7 @@ class Utxo(object):
 
 class BitcoinTransaction(object):
 
+    @auto_switch_params(1)
     def __init__(self, network, recipient_address: str, value: float, solvable_utxo: list, tx_locktime: int=0):
         self.recipient_address = recipient_address
         self.value = value
@@ -315,6 +310,7 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
 
 class BitcoinContract(object):
 
+    @auto_switch_params(1)
     def __init__(self, network, raw_transaction: str):
         self.network = network
         self.symbol = self.network.default_symbol
@@ -439,9 +435,7 @@ class Bitcoin(BaseNetwork):
         'SECRET_KEY': 128
     }
 
-    def __init__(self):
-        SelectParams('mainnet')
-
+    @auto_switch_params()
     def atomic_swap(
         self,
         sender_address: str,
@@ -456,11 +450,13 @@ class Bitcoin(BaseNetwork):
         transaction.create_unsigned_transaction()
         return transaction
 
+    @auto_switch_params()
     def audit_contract(self, raw_transaction: str) -> BitcoinContract:
         return BitcoinContract(self, raw_transaction)
 
-    @staticmethod
-    def get_wallet(private_key=None, encrypted_private_key=None, password=None):
+    @classmethod
+    @auto_switch_params()
+    def get_wallet(cls, private_key=None, encrypted_private_key=None, password=None):
         return BitcoinWallet(private_key, encrypted_private_key, password)
 
 
@@ -484,13 +480,6 @@ class BitcoinTestNet(Bitcoin):
         'SCRIPT_ADDR': 196,
         'SECRET_KEY': 239
     }
-
-    def __init__(self):
-        SelectParams('testnet')
-
-    @staticmethod
-    def get_wallet(private_key=None, encrypted_private_key=None, password=None):
-        return BitcoinWallet(private_key, encrypted_private_key, password, testnet=True)
 
     @classmethod
     def get_current_fee_per_kb(cls) -> float:

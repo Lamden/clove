@@ -31,7 +31,7 @@ def test_password_encryption():
 def test_bitcoin_wallet(wallet):
     assert isinstance(wallet.private_key, CBitcoinSecret)
     assert isinstance(wallet.public_key, CPubKey)
-    assert isinstance(wallet.get_address(), str)
+    assert isinstance(wallet.address, str)
     assert isinstance(wallet.get_private_key(), str)
     assert wallet.public_key == wallet.get_public_key()
     assert wallet.private_key.pub == wallet.public_key
@@ -46,7 +46,7 @@ def test_bitcoin_wallet_not_initialized_if_key_provided_whilst_password_not():
 
 
 def test_bitcoin_wallet_address_correct():
-    address = BitcoinWallet().get_address()
+    address = BitcoinWallet().address
     assert address.startswith('1')
     assert encode(decode(address)) == address
 
@@ -61,14 +61,10 @@ def test_bitcoin_wallet_address_correct():
         )
 ])
 def test_get_bitcoin_wallet_via_network(kwargs):
-    btc_network = Bitcoin()
-    wallet = btc_network.get_wallet(**kwargs)
-
+    wallet = Bitcoin.get_wallet(**kwargs)
     assert isinstance(wallet, BitcoinWallet)
 
 
 def test_get_new_bitcoin_wallet_via_network():
-    btc_network = Bitcoin()
-    wallet = btc_network.get_new_wallet()
-
+    wallet = Bitcoin.get_new_wallet()
     assert isinstance(wallet, BitcoinWallet)

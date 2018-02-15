@@ -4,6 +4,7 @@ import socket
 from urllib.error import HTTPError, URLError
 import urllib.request
 
+from bitcoin import SelectParams, params
 from bitcoin.core import COIN, CMutableTransaction, b2lx
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
@@ -13,9 +14,22 @@ from bitcoin.net import CInv
 
 from clove.network.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.utils.logging import log_debug, log_exception, log_inappropriate_response_messages, log_info
+from clove.utils.network import generate_params_object
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
+
+
+def auto_switch_params(args_index: int = 0):
+    def wrap(f):
+        def wrapped(*args, **kwargs):
+            if 'network' in kwargs:
+                kwargs['network'].switch_params()
+            else:
+                args[args_index].switch_params()
+            return f(*args, **kwargs)
+        return wrapped
+    return wrap
 
 
 class BaseNetwork(object):
@@ -29,6 +43,24 @@ class BaseNetwork(object):
     networks = {}
     test_networks = {}
     nodes = None
+    message_start = b''
+    base58_prefixes = {}
+
+    @classmethod
+    def switch_params(cls):
+        if cls.name == 'bitcoin':
+            SelectParams('mainnet')
+        elif cls.name == 'test-bitcoin':
+            SelectParams('testnet')
+        else:
+            SelectParams(
+                name=cls.name,
+                generic_params_object=generate_params_object(
+                    name=cls.name,
+                    message_start=cls.message_start,
+                    base58_prefixes=cls.base58_prefixes,
+                )
+            )
 
     @property
     def default_symbol(self):
@@ -85,6 +117,7 @@ class BaseNetwork(object):
     def get_all_nodes(self) -> list:
         return [node for seed in self.seeds for node in self.get_nodes(seed)]
 
+    @auto_switch_params()
     def connect(self, timeout=2):
         if self.nodes is None:
             self.nodes = self.get_all_nodes()
@@ -143,13 +176,14 @@ class BaseNetwork(object):
         packet.addrTo.ip, packet.addrTo.port = self.connection.getpeername()
         return packet.to_bytes()
 
-    @staticmethod
-    def clean_message(message: bytes, command: bytes) -> bytes:
-        from bitcoin import params
+    @classmethod
+    @auto_switch_params()
+    def clean_message(cls, message: bytes, command: bytes) -> bytes:
         messages = reversed(message.split(params.MESSAGE_START))
         message = next((message for message in messages if command in message), b'')
         return params.MESSAGE_START + message
 
+    @auto_switch_params()
     def ping(self):
         self.connect()
         self.connection.send(msg_ping().to_bytes())
@@ -165,8 +199,10 @@ class BaseNetwork(object):
     def get_wallet():
         raise NotImplementedError
 
-    def get_new_wallet(self):
-        return self.get_wallet()
+    @classmethod
+    @auto_switch_params()
+    def get_new_wallet(cls):
+        return cls.get_wallet()
 
     @classmethod
     def get_current_fee_per_kb(cls) -> float:
@@ -183,6 +219,7 @@ class BaseNetwork(object):
         except (URLError, HTTPError):
             return
 
+    @auto_switch_params()
     def broadcast_transaction(self, transaction: CMutableTransaction):
         serialized_transaction = transaction.serialize()
         got_data = self.set_inventory(serialized_transaction)
@@ -218,6 +255,7 @@ class BaseNetwork(object):
 
         return transaction_hash
 
+    @auto_switch_params()
     def set_inventory(self, serialized_transaction) -> msg_getdata:
         message = msg_inv()
         inventory = CInv()
@@ -253,9 +291,9 @@ class BaseNetwork(object):
                 log_inappropriate_response_messages(logger, messages, node)
                 self.terminate(node=node, blacklist=True)
 
-    @staticmethod
-    def extract_all_responses(buffer: bytes) -> list:
-        from bitcoin import params
+    @classmethod
+    @auto_switch_params()
+    def extract_all_responses(cls, buffer: bytes) -> list:
         prefix = params.MESSAGE_START
         messages = [prefix + message for message in buffer.split(prefix)]
         responses = []
