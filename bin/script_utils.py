@@ -5,13 +5,52 @@ import random
 from urllib.error import HTTPError, URLError
 import urllib.request
 
-from clove.network.bitcoin import Utxo
+from colorama import Fore, Style
+
+from clove.network.base import BaseNetwork
+from clove.network.bitcoin import BitcoinTestNet, Utxo
 from clove.utils.bitcoin import satoshi_to_btc
 
 
-def get_transaction_from_address(address):
-    print('>>> Searching for transaction:', address)
-    api_url = f'https://api.blockcypher.com/v1/btc/test3/txs/{address}?limit=50&includeHex=true'
+def print_section(*args):
+    print(Fore.GREEN, '▶', ' '.join(map(str, args)), Style.RESET_ALL)
+
+
+def print_error(*args):
+    print(Fore.RED, '●', ' '.join(map(str, args)), Style.RESET_ALL)
+
+
+def get_network(symbol):
+    if symbol not in ('BTC', 'BTC_TESTNET', 'LTC', 'DOGE', 'DASH'):
+        print_error(symbol, 'network in unsupported')
+        exit(1)
+    testnet = symbol.endswith('_TESTNET')
+    if testnet:
+        symbol = symbol.replace('_TESTNET', '')
+        return BitcoinTestNet.get_network_class_by_symbol(symbol)()
+    return BaseNetwork.get_network_class_by_symbol(symbol)()
+
+
+def api_network_symbol(symbol):
+    SYMBOL_API_MAP = {
+        'BTC': 'btc/main',
+        'BTC_TESTNET': 'btc/test3',
+        'LTC': 'ltc/main',
+        'DOGE': 'doge/main',
+        'DASH': 'dash/main',
+    }
+    return SYMBOL_API_MAP[symbol]
+
+
+def print_tx_address(symbol, tx):
+    symbol_url = symbol.lower().replace('_', '-')
+    print(f'https://live.blockcypher.com/{symbol_url}/tx/{tx}/')
+
+
+def get_transaction_from_address(network, address):
+    print_section('Searching for transaction:', address)
+    api_network = api_network_symbol(network)
+    api_url = f'https://api.blockcypher.com/v1/{api_network}/txs/{address}?limit=50&includeHex=true'
     try:
         with urllib.request.urlopen(api_url) as url:
             if url.status != 200:
@@ -19,14 +58,16 @@ def get_transaction_from_address(address):
             data = json.loads(url.read().decode())
             return data['hex']
     except (URLError, HTTPError):
-        print('>>> Cannot find such transaction')
-        exit()
+        print_section('Cannot find such transaction')
+        exit(1)
 
 
-def get_utxo(address, amount):
-    print('>>> Searching for UTXO\'s')
+def get_utxo(network, address, amount):
+    print_section('Searching for UTXO\'s')
+    api_network = api_network_symbol(network)
     api_url = \
-        f'https://api.blockcypher.com/v1/btc/test3/addrs/{address}/full?limit=50?unspentOnly=true&includeScript=true'
+        f'https://api.blockcypher.com/v1/{api_network}/addrs/{address}/'\
+        'full?limit=50?unspentOnly=true&includeScript=true'
     utxo = []
     total = 0
     try:
@@ -53,7 +94,8 @@ def get_utxo(address, amount):
                     total += value
                     if total > amount:
                         return utxo
-            exit(f'>>> Cannot find enough UTXO\'s. {total:.8f} is all that you\'ve got.')
+            print_error(f'Cannot find enough UTXO\'s. {total:.8f} is all that you\'ve got.')
+            exit(1)
     except (URLError, HTTPError):
-        print('>>> Cannot get UTXO\'s from API')
+        print_section('Cannot get UTXO\'s from API')
         return
