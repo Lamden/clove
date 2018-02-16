@@ -12,13 +12,16 @@ from bitcoin.messages import (
     MSG_TX, MsgSerializable, msg_getdata, msg_inv, msg_ping, msg_pong, msg_reject, msg_tx, msg_verack, msg_version
 )
 from bitcoin.net import CInv
+import coloredlogs
 
 from clove.network.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
-from clove.utils.logging import log_debug, log_exception, log_inappropriate_response_messages, log_info
+from clove.utils.logging import log_inappropriate_response_messages
 from clove.utils.network import generate_params_object
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
+
+coloredlogs.install(logger=logger, level=logging.DEBUG)
 
 
 def auto_switch_params(args_index: int = 0):
@@ -228,31 +231,30 @@ class BaseNetwork(object):
         node = self.connection.getpeername()[0]
 
         if not got_data:
-            return log_exception(
-                logger,
+            return logger.exception(
                 ConnectionProblem('Clove could not get connected with any of the nodes for too long.', node)
             )
         elif all(el.hash != Hash(serialized_transaction) for el in got_data.inv):
-            return log_exception(logger, UnexpectedResponseFromNode('Unknown error', node))
+            return logger.exception(UnexpectedResponseFromNode('Unknown error', node))
 
         message = msg_tx()
         message.tx = transaction
 
         self.connection.sendall(message.to_bytes())
-        log_info(logger, f'[{node}] Transaction {transaction_hash} has just been sent.')
+        logger.info(f'[{node}] Transaction {transaction_hash} has just been sent.')
         self.connection.settimeout(20)
 
         try:
             responses = self.extract_all_responses(self.connection.recv(8192))
         except socket.timeout:
-            log_debug(logger, f'[{node}] Connection timeout. Node is not responding. Connection terminates.')
+            logger.debug(f'[{node}] Connection timeout. Node is not responding. Connection terminates.')
             return self.terminate()
         rejects = [
             f"{el.message.decode('ascii')} {el.reason.decode('ascii')}"
             for el in responses if isinstance(el, msg_reject)
         ]
         if rejects:
-            return log_exception(logger, TransactionRejected('; '.join(rejects), node))
+            return logger.exception(TransactionRejected('; '.join(rejects), node))
 
         return transaction_hash
 
@@ -284,7 +286,7 @@ class BaseNetwork(object):
             message_ping = next((message for message in messages if isinstance(message, msg_ping)), None)
 
             if message_getdata:
-                log_info(logger, f'[{node}] Node responded correctly. Sending transaction...')
+                logger.info(f'[{node}] Node responded correctly. Sending transaction...')
                 return message_getdata
             elif message_ping:
                 self.connection.send(msg_pong(self.protocol_version.nVersion, message_ping.nonce).to_bytes())

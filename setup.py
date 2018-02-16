@@ -18,6 +18,7 @@ setup(
     long_description=long_description,
     install_requires=[
         'colorama==0.3.9',
+        'coloredlogs==9.0',
         'pycrypto==2.6.1',
         'python_bitcoinlib',
     ],
