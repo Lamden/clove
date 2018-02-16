@@ -270,7 +270,9 @@ class BaseNetwork(object):
         while True:
             self.connect()
             if self.connection is None:
-                break
+                self.blacklist_nodes = {}
+                self.nodes = None
+                continue
 
             node = self.connection.getpeername()[0]
 
