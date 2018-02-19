@@ -175,7 +175,7 @@ class BaseNetwork(object):
             self.blacklist_nodes[node] = 1
 
     def version_packet(self):
-        packet = msg_version()
+        packet = msg_version(170002)
         packet.addrFrom.ip, packet.addrFrom.port = self.connection.getsockname()
         packet.addrTo.ip, packet.addrTo.port = self.connection.getpeername()
         return packet.to_bytes()
@@ -304,7 +304,9 @@ class BaseNetwork(object):
         responses = []
         for message in messages:
             try:
-                responses.append(MsgSerializable.from_bytes(message))
+                deserialized_msg = MsgSerializable.from_bytes(message)
+                if deserialized_msg:
+                    responses.append(deserialized_msg)
             except (SerializationTruncationError, SerializationError, ValueError):
                 pass
         return responses
