@@ -2,6 +2,7 @@ import base64
 from datetime import datetime, timedelta
 from hashlib import sha256
 import json
+import logging
 import struct
 import sys
 from urllib.error import HTTPError, URLError
@@ -15,10 +16,17 @@ from bitcoin.core import (
 from bitcoin.core.key import CPubKey
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
+import coloredlogs
 
+from clove.constants import COLORED_LOGS_STYLES, TRANSACTION_BROADCASTING_MAX_ATTEMPTS
 from clove.network.base import BaseNetwork, auto_switch_params
 from clove.utils.bitcoin import btc_to_satoshi, satoshi_to_btc
 from clove.utils.hashing import generate_secret_with_hash
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
+
+coloredlogs.install(logger=logger, level=logging.DEBUG, level_styles=COLORED_LOGS_STYLES)
 
 
 class BitcoinWallet(object):
@@ -176,7 +184,20 @@ class BitcoinTransaction(object):
         self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list, nLockTime=self.tx_locktime)
 
     def publish(self):
-        return self.network.broadcast_transaction(self.tx)
+        for attempt in range(1, TRANSACTION_BROADCASTING_MAX_ATTEMPTS + 1):
+            transaction_hash = self.network.broadcast_transaction(self.tx)
+
+            if transaction_hash is None:
+                logger.warning('Transaction broadcast attempt no. %s failed. Retrying...', attempt)
+                continue
+
+            logger.info('Transaction broadcast is successful. End of broadcasting process.')
+            return transaction_hash
+
+        logger.warning(
+            '%s attempts to broadcast transaction failed. Broadcasting process terminates!',
+            TRANSACTION_BROADCASTING_MAX_ATTEMPTS
+        )
 
     @property
     def size(self) -> int:

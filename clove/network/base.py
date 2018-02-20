@@ -1,6 +1,7 @@
 import json
 import logging
 import socket
+from time import time
 from urllib.error import HTTPError, URLError
 import urllib.request
 
@@ -14,14 +15,15 @@ from bitcoin.messages import (
 from bitcoin.net import CInv
 import coloredlogs
 
-from clove.network.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
+from clove.constants import COLORED_LOGS_STYLES, NODE_COMMUNICATION_TIMEOUT
+from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.utils.logging import log_inappropriate_response_messages
 from clove.utils.network import generate_params_object, recvall
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
-coloredlogs.install(logger=logger, level=logging.DEBUG)
+coloredlogs.install(logger=logger, level=logging.DEBUG, level_styles=COLORED_LOGS_STYLES)
 
 
 def auto_switch_params(args_index: int = 0):
@@ -143,7 +145,7 @@ class BaseNetwork(object):
                     self.connection.settimeout(timeout)
                 except (socket.timeout, ConnectionRefusedError, OSError) as e:
                     logger.debug('[%s] Could not establish connection to this node', node)
-                    logger.exception(e)
+                    logger.debug(e)
                     self.terminate(node)
 
                 messages = recvall(self.connection, 1024)
@@ -154,7 +156,7 @@ class BaseNetwork(object):
                     )
                 except (socket.timeout, SerializationError, SerializationTruncationError) as e:
                     logger.debug('[%s] Failed to get version packet from node', node)
-                    logger.exception(e)
+                    logger.debug(e)
                     self.terminate(node)
                     continue
 
@@ -165,7 +167,7 @@ class BaseNetwork(object):
                     self.connection.settimeout(timeout)
                 except (socket.timeout, ConnectionRefusedError, OSError) as e:
                     logger.debug('[%s] Failed to send version acknowledge message', node)
-                    logger.exception(e)
+                    logger.debug(e)
                     self.terminate(node)
                     continue
 
@@ -241,19 +243,27 @@ class BaseNetwork(object):
         except (URLError, HTTPError):
             return
 
+    def get_current_node(self):
+        if self.connection:
+            return self.connection.getpeername()[0]
+
     @auto_switch_params()
     def broadcast_transaction(self, transaction: CMutableTransaction):
         serialized_transaction = transaction.serialize()
-        got_data = self.set_inventory(serialized_transaction)
-        transaction_hash = b2lx(transaction.GetHash())
-        node = self.connection.getpeername()[0]
 
-        if not got_data:
-            return logger.exception(
+        get_data = self.set_inventory(serialized_transaction)
+        transaction_hash = b2lx(transaction.GetHash())
+        node = self.get_current_node()
+
+        if not get_data:
+            logger.debug(
                 ConnectionProblem('Clove could not get connected with any of the nodes for too long.', node)
             )
-        elif all(el.hash != Hash(serialized_transaction) for el in got_data.inv):
-            return logger.exception(UnexpectedResponseFromNode('Unknown error', node))
+            return self.reset_connection()
+
+        elif all(el.hash != Hash(serialized_transaction) for el in get_data.inv):
+            logger.debug(UnexpectedResponseFromNode('Unknown error', node))
+            return self.reset_connection()
 
         message = msg_tx()
         message.tx = transaction
@@ -262,18 +272,21 @@ class BaseNetwork(object):
         self.connection.settimeout(20)
 
         try:
-            responses = self.extract_all_responses(recvall(self.connection, 8192))
+            responses = self.extract_all_responses(recvall(self.connection, 8192), node)
         except socket.timeout:
             logger.debug('[%s] Connection timeout. Node is not responding. Connection terminates.', node)
-            return self.terminate()
+            return self.reset_connection()
+
         rejects = [
             f"{el.message.decode('ascii')} {el.reason.decode('ascii')}"
             for el in responses if isinstance(el, msg_reject)
         ]
         if rejects:
-            return logger.exception(TransactionRejected('; '.join(rejects), node))
+            logger.debug(TransactionRejected('; '.join(rejects), node))
+            return self.reset_connection()
 
         logger.info('[%s] Transaction %s has just been sent.', node, transaction_hash)
+        logger.info('[%s] Transaction broadcast is successful. End of broadcasting process.', node)
         return transaction_hash
 
     @auto_switch_params()
@@ -285,19 +298,20 @@ class BaseNetwork(object):
         inventory.hash = hash_transaction
         message.inv.append(inventory)
 
-        while True:
+        timeout = time() + NODE_COMMUNICATION_TIMEOUT
+
+        while time() < timeout:
             self.connect()
             if self.connection is None:
-                self.blacklist_nodes = {}
-                self.nodes = None
+                self.reset_connection()
                 continue
 
-            node = self.connection.getpeername()[0]
+            node = self.get_current_node()
 
             try:
                 self.connection.sendall(message.to_bytes())
                 self.connection.settimeout(2)
-                messages = self.extract_all_responses(recvall(self.connection, 8192))
+                messages = self.extract_all_responses(recvall(self.connection, 8192), node)
             except socket.timeout:
                 self.terminate(node=node)
                 continue
@@ -316,7 +330,7 @@ class BaseNetwork(object):
 
     @classmethod
     @auto_switch_params()
-    def extract_all_responses(cls, buffer: bytes) -> list:
+    def extract_all_responses(cls, buffer: bytes, node: str = None) -> list:
         prefix = bitcoin.params.MESSAGE_START
         messages = [prefix + message for message in buffer.split(prefix) if message]
         responses = []
@@ -326,5 +340,12 @@ class BaseNetwork(object):
                 if deserialized_msg:
                     responses.append(deserialized_msg)
             except (SerializationTruncationError, SerializationError, ValueError) as e:
-                logger.debug('Could not deserialize: %s', e)
+                logger.debug('[%s] Could not deserialize: %s', node, e)
         return responses
+
+    def reset_connection(self):
+        if self.connection:
+            self.connection.close()
+            self.connection = None
+        self.blacklist_nodes = {}
+        self.nodes = None
