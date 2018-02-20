@@ -4,7 +4,6 @@ from hashlib import sha256
 import json
 import logging
 import struct
-import sys
 from urllib.error import HTTPError, URLError
 import urllib.request
 
@@ -201,8 +200,8 @@ class BitcoinTransaction(object):
 
     @property
     def size(self) -> int:
-        """Returns the size of a transaction represented in byte."""
-        return sys.getsizeof(self.tx.serialize())
+        """Returns the size of a transaction represented in bytes."""
+        return len(self.tx.serialize())
 
     def calculate_fee(self):
         """Calculating fee for given transaction based on transaction size and estimated fee per kb."""
