@@ -459,6 +459,20 @@ class Bitcoin(BaseNetwork):
     def get_wallet(cls, private_key=None, encrypted_private_key=None, password=None):
         return BitcoinWallet(private_key, encrypted_private_key, password)
 
+    @staticmethod
+    def extract_secret(raw_transaction: str) -> str:
+        tx = CTransaction.deserialize(x(raw_transaction))
+
+        if not tx.vin:
+            raise ValueError('Given transaction has no inputs.')
+
+        secret_tx_in = tx.vin[0]
+        script_ops = list(secret_tx_in.scriptSig)
+        if script_ops[-1] == 1:
+            return b2x(script_ops[-2])
+
+        raise ValueError('Unable to extract secret from given transaction.')
+
 
 class BitcoinTestNet(Bitcoin):
     """

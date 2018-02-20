@@ -204,3 +204,19 @@ def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_tran
 
     assert redeem_participate_transaction.recipient_address == alice_wallet.address
     assert redeem_participate_transaction.value == participate_value
+
+
+def test_extract_secret(bob_wallet, signed_transaction):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    redeem_transaction = contract.redeem(bob_wallet, transaction_details['secret'])
+    redeem_transaction.fee_per_kb = 0.002
+    redeem_transaction.add_fee_and_sign()
+
+    redeem_details = redeem_transaction.show_details()
+
+    secret = btc_network.extract_secret(redeem_details['transaction'])
+
+    assert secret == transaction_details['secret']
