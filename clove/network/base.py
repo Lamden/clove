@@ -145,7 +145,7 @@ class BaseNetwork(object):
                     self.connection.settimeout(timeout)
                 except (socket.timeout, ConnectionRefusedError, OSError) as e:
                     logger.debug('[%s] Could not establish connection to this node', node)
-                    logger.exception(e)
+                    logger.debug(e)
                     self.terminate(node)
 
                 messages = recvall(self.connection, 1024)
@@ -156,7 +156,7 @@ class BaseNetwork(object):
                     )
                 except (socket.timeout, SerializationError, SerializationTruncationError) as e:
                     logger.debug('[%s] Failed to get version packet from node', node)
-                    logger.exception(e)
+                    logger.debug(e)
                     self.terminate(node)
                     continue
 
@@ -167,7 +167,7 @@ class BaseNetwork(object):
                     self.connection.settimeout(timeout)
                 except (socket.timeout, ConnectionRefusedError, OSError) as e:
                     logger.debug('[%s] Failed to send version acknowledge message', node)
-                    logger.exception(e)
+                    logger.debug(e)
                     self.terminate(node)
                     continue
 
@@ -256,14 +256,14 @@ class BaseNetwork(object):
         node = self.get_current_node()
 
         if not get_data:
-            logger.exception(
+            logger.debug(
                 ConnectionProblem('Clove could not get connected with any of the nodes for too long.', node)
             )
-            self.reset()
-            raise ConnectionProblem
+            return self.reset_connection()
+
         elif all(el.hash != Hash(serialized_transaction) for el in get_data.inv):
-            logger.exception(UnexpectedResponseFromNode('Unknown error', node))
-            raise UnexpectedResponseFromNode
+            logger.debug(UnexpectedResponseFromNode('Unknown error', node))
+            return self.reset_connection()
 
         message = msg_tx()
         message.tx = transaction
@@ -275,19 +275,19 @@ class BaseNetwork(object):
             responses = self.extract_all_responses(recvall(self.connection, 8192), node)
         except socket.timeout:
             logger.debug('[%s] Connection timeout. Node is not responding. Connection terminates.', node)
-            self.reset()
-            raise ConnectionProblem
+            return self.reset_connection()
 
         rejects = [
             f"{el.message.decode('ascii')} {el.reason.decode('ascii')}"
             for el in responses if isinstance(el, msg_reject)
         ]
         if rejects:
-            logger.exception(TransactionRejected('; '.join(rejects), node))
-            raise TransactionRejected
+            logger.debug(TransactionRejected('; '.join(rejects), node))
+            return self.reset_connection()
 
         logger.info('[%s] Transaction %s has just been sent.', node, transaction_hash)
-        return node, transaction_hash
+        logger.info('[%s] Transaction broadcast is successful. End of broadcasting process.', node)
+        return transaction_hash
 
     @auto_switch_params()
     def set_inventory(self, serialized_transaction) -> msg_getdata:
@@ -303,10 +303,10 @@ class BaseNetwork(object):
         while time() < timeout:
             self.connect()
             if self.connection is None:
-                self.reset()
+                self.reset_connection()
                 continue
 
-            node = self.connection.getpeername()[0]
+            node = self.get_current_node()
 
             try:
                 self.connection.sendall(message.to_bytes())
@@ -328,9 +328,6 @@ class BaseNetwork(object):
                 log_inappropriate_response_messages(logger, messages, node)
                 self.terminate(node=node, blacklist=True)
 
-        self.reset()
-        raise ConnectionProblem
-
     @classmethod
     @auto_switch_params()
     def extract_all_responses(cls, buffer: bytes, node: str = None) -> list:
@@ -346,9 +343,9 @@ class BaseNetwork(object):
                 logger.debug('[%s] Could not deserialize: %s', node, e)
         return responses
 
-    def reset(self):
+    def reset_connection(self):
         if self.connection:
             self.connection.close()
+            self.connection = None
         self.blacklist_nodes = {}
         self.nodes = None
-        self.connection = None

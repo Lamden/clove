@@ -19,7 +19,6 @@ from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret, P2PKHBitcoinAddress
 import coloredlogs
 
 from clove.constants import COLORED_LOGS_STYLES, TRANSACTION_BROADCASTING_MAX_ATTEMPTS
-from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.network.base import BaseNetwork, auto_switch_params
 from clove.utils.bitcoin import btc_to_satoshi, satoshi_to_btc
 from clove.utils.hashing import generate_secret_with_hash
@@ -186,13 +185,19 @@ class BitcoinTransaction(object):
 
     def publish(self):
         for attempt in range(1, TRANSACTION_BROADCASTING_MAX_ATTEMPTS + 1):
-            try:
-                node, transaction_hash = self.network.broadcast_transaction(self.tx)
-            except (ConnectionProblem, UnexpectedResponseFromNode, TransactionRejected):
+            transaction_hash = self.network.broadcast_transaction(self.tx)
+
+            if transaction_hash is None:
                 logger.warning('Transaction broadcast attempt no. %s failed. Retrying...', attempt)
                 continue
-            logger.info('[%s] Transaction broadcast is successful. End of broadcasting process.', node)
+
+            logger.info('Transaction broadcast is successful. End of broadcasting process.')
             return transaction_hash
+
+        logger.warning(
+            '%s attempts to broadcast transaction failed. Broadcasting process terminates!',
+            TRANSACTION_BROADCASTING_MAX_ATTEMPTS
+        )
 
     @property
     def size(self) -> int:
