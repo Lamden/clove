@@ -1,3 +1,5 @@
+import time
+
 from bitcoin import GenericParams
 
 
@@ -20,3 +22,8 @@ def generate_params_object(
     params_obj.NAME = name
 
     return params_obj
+
+
+def recvall(sock, n=1024):
+    time.sleep(0.1)
+    return sock.recv(n)

@@ -5,7 +5,7 @@ import os
 from pprint import pprint
 import sys
 
-from script_utils import get_network, get_transaction_from_address, print_section, print_tx_address
+from script_utils import get_network, get_transaction_from_address, print_error, print_section, print_tx_address
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
@@ -39,7 +39,9 @@ if __name__ == '__main__':
         exit('Bye!')
 
     print_section('Publishing transaction')
-    refund_transaction.publish()
+    if not refund_transaction.publish():
+        print_error('Something went wrong, transaction was NOT published.')
+        exit(1)
 
     print_section('Transaction published!')
     print_tx_address(args.network, details["transaction_hash"])

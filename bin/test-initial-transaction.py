@@ -5,13 +5,9 @@ import os
 from pprint import pprint
 import sys
 
-from script_utils import get_network, get_utxo, print_section, print_tx_address
+from script_utils import get_network, get_utxo, print_error, print_section, print_tx_address
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-
-ALICE_ADDRESS = 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM'
-BOB_ADDRESS = 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1'
-ALICE_PK = 'cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe'
 
 
 if __name__ == '__main__':
@@ -51,7 +47,8 @@ if __name__ == '__main__':
         exit()
 
     print_section('Publishing transaction')
-    transaction.publish()
-
+    if not transaction.publish():
+        print_error('Something went wrong, transaction was NOT published.')
+        exit(1)
     print_section('Transaction published!')
     print_tx_address(args.network, details["transaction_hash"])
