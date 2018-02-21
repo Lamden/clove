@@ -39,7 +39,6 @@ class BaseNetwork(object):
     blacklist_nodes = {}
     networks = {}
     test_networks = {}
-    nodes = None
     message_start = b''
     base58_prefixes = {}
 
@@ -112,57 +111,55 @@ class BaseNetwork(object):
         logger.debug('Got %s nodes', len(nodes))
         return nodes
 
-    def get_all_nodes(self) -> list:
-        return [node for seed in self.seeds for node in self.get_nodes(seed)]
-
     @auto_switch_params()
-    def connect(self, timeout=2):
-
-        if self.nodes is None:
-            self.nodes = self.get_all_nodes()
+    def connect(self, timeout=2) -> str:
 
         if self.connection is None:
-            nodes = self.filter_blacklisted_nodes(self.nodes)
-            for node in nodes:
-                self.update_blacklist(node)
 
-                try:
-                    self.connection = socket.create_connection(
-                        address=(node, self.port),
-                        timeout=timeout
-                    )
-                    logger.debug('[%s] Connection established, sending version packet', node)
-                    self.connection.send(self.version_packet())
-                    self.connection.settimeout(timeout)
-                except (socket.timeout, ConnectionRefusedError, OSError) as e:
-                    logger.debug('[%s] Could not establish connection to this node', node)
-                    logger.debug(e)
-                    self.terminate(node)
+            for seed in self.seeds:
+                nodes = self.filter_blacklisted_nodes(self.get_nodes(seed))
 
-                messages = recvall(self.connection, 1024)
+                for node in nodes:
+                    self.update_blacklist(node)
 
-                try:
-                    self.protocol_version = MsgSerializable.from_bytes(
-                        self.clean_message(messages, b'version')
-                    )
-                except (socket.timeout, SerializationError, SerializationTruncationError) as e:
-                    logger.debug('[%s] Failed to get version packet from node', node)
-                    logger.debug(e)
-                    self.terminate(node)
-                    continue
+                    try:
+                        self.connection = socket.create_connection(
+                            address=(node, self.port),
+                            timeout=timeout
+                        )
+                        logger.debug('[%s] Connection established, sending version packet', node)
+                        self.connection.send(self.version_packet())
+                        self.connection.settimeout(timeout)
+                    except (socket.timeout, ConnectionRefusedError, OSError) as e:
+                        logger.debug('[%s] Could not establish connection to this node', node)
+                        logger.debug(e)
+                        self.terminate()
+                        continue
 
-                logger.debug('[%s] Got version, sending version acknowledge message', node)
+                    messages = recvall(self.connection, 1024)
 
-                try:
-                    self.connection.send(msg_verack(self.protocol_version.nVersion).to_bytes())
-                    self.connection.settimeout(timeout)
-                except (socket.timeout, ConnectionRefusedError, OSError) as e:
-                    logger.debug('[%s] Failed to send version acknowledge message', node)
-                    logger.debug(e)
-                    self.terminate(node)
-                    continue
+                    try:
+                        self.protocol_version = MsgSerializable.from_bytes(
+                            self.clean_message(messages, b'version')
+                        )
+                    except (socket.timeout, SerializationError, SerializationTruncationError) as e:
+                        logger.debug('[%s] Failed to get version packet from node', node)
+                        logger.debug(e)
+                        self.terminate()
+                        continue
 
-                return
+                    logger.debug('[%s] Got version, sending version acknowledge message', node)
+
+                    try:
+                        self.connection.send(msg_verack(self.protocol_version.nVersion).to_bytes())
+                        self.connection.settimeout(timeout)
+                    except (socket.timeout, ConnectionRefusedError, OSError) as e:
+                        logger.debug('[%s] Failed to send version acknowledge message', node)
+                        logger.debug(e)
+                        self.terminate()
+                        continue
+
+                    return node
 
     def filter_blacklisted_nodes(self, nodes, max_tries_number=3):
         return sorted(
@@ -170,11 +167,9 @@ class BaseNetwork(object):
             key=lambda node: self.blacklist_nodes.get(node, 0)
         )
 
-    def terminate(self, node=None, blacklist=False):
-        if node and blacklist:
+    def terminate(self, node=None):
+        if node:
             self.update_blacklist(node)
-        elif node:
-            self.nodes.remove(node)
         if self.connection:
             self.connection.close()
             self.connection = None
@@ -199,8 +194,13 @@ class BaseNetwork(object):
         return bitcoin.params.MESSAGE_START + message
 
     @auto_switch_params()
-    def ping(self):
-        self.connect()
+    def ping(self) -> msg_pong:
+        node = self.connect()
+
+        if not node:
+            logger.debug('No connection, couldn\'t ping')
+            return
+
         self.connection.send(msg_ping().to_bytes())
         self.connection.settimeout(0.1)
         pong = None
@@ -310,12 +310,10 @@ class BaseNetwork(object):
         timeout = time() + NODE_COMMUNICATION_TIMEOUT
 
         while time() < timeout:
-            self.connect()
-            if self.connection is None:
+            node = self.connect()
+            if node is None:
                 self.reset_connection()
                 continue
-
-            node = self.get_current_node()
 
             try:
                 self.connection.sendall(message.to_bytes())
@@ -335,7 +333,7 @@ class BaseNetwork(object):
                 self.connection.send(msg_pong(self.protocol_version.nVersion, message_ping.nonce).to_bytes())
             else:
                 log_inappropriate_response_messages(logger, messages, node)
-                self.terminate(node=node, blacklist=True)
+                self.terminate(node=node)
 
     @classmethod
     @auto_switch_params()
@@ -357,4 +355,3 @@ class BaseNetwork(object):
             self.connection.close()
             self.connection = None
         self.blacklist_nodes = {}
-        self.nodes = None
