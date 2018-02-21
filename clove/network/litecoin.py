@@ -11,7 +11,7 @@ class Litecoin(Bitcoin):
     symbols = ('LTC', )
     seeds = (
         'seed-a.litecoin.loshan.co.uk',
-        'dnsseed.thrasher.io',
+        # 'dnsseed.thrasher.io', Last check: 2018-02-21
         'dnsseed.litecointools.com',
         'dnsseed.litecoinpool.org',
         'dnsseed.koin-project.com',
@@ -34,8 +34,8 @@ class LitecoinTestNet(Litecoin):
     name = 'test-litecoin'
     seeds = (
         'testnet-seed.litecointools.com',
-        'seed-b.litecoin.loshan.co.uk',
-        'dnsseed-testnet.thrasher.io',
+        # 'seed-b.litecoin.loshan.co.uk', Last check: 2018-02-21
+        # 'dnsseed-testnet.thrasher.io', Last check: 2018-02-21
     )
     port = 19335
     message_start = b'\xfd\xd2\xc8\xf1'

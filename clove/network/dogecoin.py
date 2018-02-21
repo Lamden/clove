@@ -10,10 +10,10 @@ class Dogecoin(Bitcoin):
     name = 'dogecoin'
     symbols = ('DOGE', )
     seeds = (
-        'seed.dogecoin.com',
+        # 'seed.dogecoin.com', Last check: 2018-02-21
         'seed.multidoge.org',
-        'seed2.multidoge.org',
-        'seed.doger.dogecoin.com',
+        # 'seed2.multidoge.org', Last check: 2018-02-21
+        # 'seed.doger.dogecoin.com', Last check: 2018-02-21
     )
     port = 22556
     message_start = b'\xc0\xc0\xc0\xc0'

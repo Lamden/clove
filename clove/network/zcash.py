@@ -11,7 +11,7 @@ class Zcash(Bitcoin):
     symbols = ('ZEC', )
     seeds = (
         'dnsseed.z.cash',
-        'dnsseed.str4d.xyz',
+        # 'dnsseed.str4d.xyz', Last check: 2018-02-21
         'dnsseed.znodes.org',
     )
     port = 18233
