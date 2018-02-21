@@ -2,6 +2,8 @@ import time
 
 from bitcoin import GenericParams
 
+from clove.utils.logging import logger
+
 
 def generate_params_object(
     message_start=b'', default_port=None, rpc_port=None,
@@ -26,4 +28,8 @@ def generate_params_object(
 
 def recvall(sock, n=1024):
     time.sleep(0.1)
-    return sock.recv(n)
+    try:
+        return sock.recv(n)
+    except ConnectionResetError:
+        logger.debug('Connection reset by peer')
+        return

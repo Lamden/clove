@@ -1,29 +1,20 @@
-import json
-import logging
 import socket
 from time import time
-from urllib.error import HTTPError, URLError
-import urllib.request
 
 import bitcoin
 from bitcoin import SelectParams
-from bitcoin.core import COIN, CMutableTransaction, b2lx
+from bitcoin.core import CMutableTransaction, b2lx
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
     MSG_TX, MsgSerializable, msg_getdata, msg_inv, msg_ping, msg_pong, msg_reject, msg_tx, msg_verack, msg_version
 )
 from bitcoin.net import CInv
-import coloredlogs
 
-from clove.constants import COLORED_LOGS_STYLES, NODE_COMMUNICATION_TIMEOUT
+from clove.constants import API_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT
 from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
-from clove.utils.logging import log_inappropriate_response_messages
+from clove.utils.external_source import get_last_transactions, get_transaction_fee, get_transaction_size
+from clove.utils.logging import log_inappropriate_response_messages, logger
 from clove.utils.network import generate_params_object, recvall
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger()
-
-coloredlogs.install(logger=logger, level=logging.DEBUG, level_styles=COLORED_LOGS_STYLES)
 
 
 def auto_switch_params(args_index: int = 0):
@@ -230,18 +221,36 @@ class BaseNetwork(object):
 
     @classmethod
     def get_current_fee_per_kb(cls) -> float:
-        """Returns current high priority (1-2 blocks) fee estimates."""
-        symbol = cls.symbols[0].lower()
-        if symbol not in ('btc', 'ltc', 'doge', 'dash') or cls.is_test_network():
+        """Returns current fee based on last transactions."""
+
+        if cls.is_test_network():
             raise NotImplementedError
-        try:
-            with urllib.request.urlopen(f'https://api.blockcypher.com/v1/{symbol}/main') as url:
-                if url.status != 200:
-                    return
-                data = json.loads(url.read().decode())
-                return data['high_fee_per_kb'] / COIN
-        except (URLError, HTTPError):
-            return
+
+        # counting fee based on n transactions (max 10)
+        tx_limit = 5
+        network = cls.symbols[0].lower()
+
+        if network not in API_SUPPORTED_NETWORKS:
+            raise NotImplementedError
+
+        last_transactions = get_last_transactions(network)[:tx_limit]
+
+        fees = []
+
+        for tx_hash in last_transactions:
+
+            tx_size = get_transaction_size(network, tx_hash)
+            if not tx_size:
+                continue
+
+            tx_fee = get_transaction_fee(network, tx_hash)
+            if not tx_fee:
+                continue
+
+            tx_fee_per_kb = (tx_fee * 1000) / tx_size
+            fees.append(tx_fee_per_kb)
+
+        return round(sum(fees) / len(fees), 8) if fees else None
 
     def get_current_node(self):
         if self.connection:
