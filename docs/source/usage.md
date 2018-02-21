@@ -11,7 +11,7 @@
 
 ## 1. Wallets setup
 
-[**Alice**] have to create a new litecoin wallet
+[**Alice**] has to create a new litecoin wallet
 
     from clove.network import LitecoinTestNet
 
@@ -25,7 +25,7 @@
     alice_ltc_wallet.get_private_key()
     'L15kFZg4MdoX2kqXEeEZMjbbVEdZzt1zL2vU59ynrtEf6GB16B3c'
 
-[**Alice**] have to prepare her bitcoin wallet
+[**Alice**] has to prepare her bitcoin wallet
 
     from clove.network import BitcoinTestNet
 
@@ -47,7 +47,7 @@
     bob_btc_wallet.address
     'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1'
 
-[**Bob**] have to prepare his litecoin wallet
+[**Bob**] has to prepare his litecoin wallet
 
     from clove.network import LitecoinTestNet
 
@@ -64,15 +64,13 @@ Alice and Bob exchange their wallet addresses.
 
 ## 3. Alice is initializing an atomic swap transaction
 
-[**Alice**] have to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://api.blockcypher.com/v1/btc/test3/txs/6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8?limit=50&includeHex=true)
+[**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://api.blockcypher.com/v1/btc/test3/txs/6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8?limit=50&includeHex=true)
 
     from clove.network.bitcoin import Utxo
 
-    bob_btc_address = 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1'
-
     bitcoins_ammount = 2
 
-    solvable_utxo = [
+    initial_utxo_list = [
         Utxo(
             tx_id='6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',
             vout=1,
@@ -81,16 +79,16 @@ Alice and Bob exchange their wallet addresses.
         ),
     ]
 
-    transaction = btc_network.atomic_swap(
+    initial_transaction = btc_network.atomic_swap(
         alice_btc_wallet.address,
-        bob_btc_address,
+        bob_btc_wallet.address,
         bitcoins_ammount,
-        solvable_utxo
+        initial_utxo_list
     )
 
-    transaction.add_fee_and_sign(alice_btc_wallet)
+    initial_transaction.add_fee_and_sign(alice_btc_wallet)
 
-    transaction.show_details()
+    initial_transaction.show_details()
     {'contract': '63a820260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc08876a9143f8870a5633e4fdac612fba47525fef082bbe961670a31353138313738363830b17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac',
      'contract_transaction': '0100000001b88ae2db0538ea2470b9b8f9cf80dbc5de9e90f1beeb70de6c971a8bd866cd6e010000006b483045022100803d409feeb1e1973fa95cfff7c52fa3dc1dd0017be2a13a0a5a6d28d012e26602203ce867a442a004a71571e6fa34a3151f1cb453ecc233c881592deec14cc3dcf6012103142762372a0f6f2b4718cdee32fa1a3cc2465d3379312e8875ee5f9193158177ffffffff0200c2eb0b000000006363a820260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc08876a9143f8870a5633e4fdac612fba47525fef082bbe961670a31353138313738363830b17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac7ab4b304000000001976a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac00000000',
      'contract_transaction_hash': 'bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f',
@@ -108,10 +106,127 @@ Alice and Bob exchange their wallet addresses.
      'value': 2,
      'value_text': '2.00000000 BTC'}
 
-     transaction.publish()
+     initial_transaction.publish()
      'bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f'
 
 
 ## 4. Communication
 
-[**Alice**] sends her transaction hash `bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f` to Bob.
+[**Alice**] sends hers transaction hash `bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f` to Bob.
+
+
+## 5. Contract creation
+
+[**Bob**] needs to create contract in network of coins he wants to receive (i.e. Alice's network), in our case in Bitecoin network.
+As Bob has transaction hash from Alice, he can get full serialized transaction. But for testing purposes we can get it from `initial_transaction` object.  
+    
+    alice_contract = btc_network.audit_contract(initial_transaction.show_details()['contract_transaction'])
+    alice_contract.show_details()
+
+    {'locktime': datetime.datetime(2018, 2, 24, 15, 36, 19),
+     'recipient_address': 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1',
+     'refund_address': 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM',
+     'secret_hash': '260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc0',
+     'transaction_hash': 'bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f',
+     'value': 2,
+     'value_text': '2.00000000 BTC'}
+     
+     
+## 6. Participation 
+
+[**Bob**] has to create parallel transaction from point 3 but in his network (i.e. Litecoin network). We call it `participate_transaction`.
+
+    litecoin_ammount = 10
+    participate_utxo_list = [
+        Utxo(
+            tx_id='326416caec1af6b18eda4cc9ef8c858b3d1905446f03223f8981d32523171bd8',
+            vout=1,
+            value=24.99964200,
+            tx_script='76a9147ef1467725632defd311766e3dbb21e2014847cd88ac',
+        ),
+    ]
+    participate_transaction = contract.participate(
+        'ltc',
+        bob_ltc_wallet.address,
+        alice_ltc_wallet.address,
+        litecoin_ammount,
+        participate_utxo_list
+    )
+    
+    # For now add_fee_and_sign is not fully implemented for LTC network, hack this in such a way:
+    participate_transaction.fee = 0.001
+    participate_transaction.add_fee_and_sign(bob_ltc_wallet)
+                                                             
+    
+    participate_transaction.show_details()
+    {'contract': '63a8209fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b98876a9143dfd3bba567574ba0508d01a96e89300af292b066704d56f955ab17576a9147ef1467725632defd311766e3dbb21e2014847cd6888ac',
+     'contract_transaction': '0100000001592390d5c9c19b7f2f27edfdd44043b4065e48ccdb67900145745d068221e5bd010000008a47304402205d83ec607e68d83187b3a45d42f2e27aadd1e41444973c8a8d72c8d58368bf94022046eb2af543207633dc57bd7c965985f578bbf8eaa6a601d0b482b432de50b23a01410443a2fbd871baafd35a6304fe9b93db0ec09f100631259feb933c2752b8fc8cf4ad8a04016345c17117146109dd69744fb32e8d032dd11a426f43a3fa76b403a60000000002005a6202000000005d63a8209fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b98876a9143dfd3bba567574ba0508d01a96e89300af292b066704d56f955ab17576a9147ef1467725632defd311766e3dbb21e2014847cd6888aca814a11a000000001976a9147ef1467725632defd311766e3dbb21e2014847cd88ac00000000',
+     'fee': 0.001,
+     'fee_per_kb': 0.0,
+     'fee_per_kb_text': '0.00000000 LTC / 1 kB',
+     'fee_text': '0.00100000 LTC',
+     'locktime': datetime.datetime(2018, 2, 24, 15, 48, 53, 117091),
+     'recipient_address': 'mmAisiQMtih4hEVe5xYtVJyQJSXHo7VWwM',
+     'refund_address': 'ms6AUKhqnVgFppPjcLYkvRxEuy6cMqGL7P',
+     'secret': '',
+     'secret_hash': '9fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b9',
+     'size': 358,
+     'size_text': '358 bytes',
+     'transaction_hash': '4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12',
+     'value': 10,
+     'value_text': '10.00000000 LTC'}
+    
+    participate_transaction.publish()
+   
+ 
+## 7. Communication
+
+[**Bob**] sends his transaction hash `4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12` to Alice.
+
+
+## 8. Contract creation
+
+[**Alice**] needs to create contract in network of coins she wants to receive (i.e. Bob's network), in our case in Litecoin network.
+As Alice has transaction hash from Bob, she can get full serialized transaction. But for testing purposes we can get it from `participate_transaction` object.  
+    
+    bob_contract = ltc_network.audit_contract(participate_transaction.show_details()['contract_transaction'])
+    bob_contract.show_details()
+    
+    {'locktime': datetime.datetime(2018, 2, 24, 15, 48, 53),
+     'recipient_address': 'mmAisiQMtih4hEVe5xYtVJyQJSXHo7VWwM',
+     'refund_address': 'ms6AUKhqnVgFppPjcLYkvRxEuy6cMqGL7P',
+     'secret_hash': '9fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b9',
+     'transaction_hash': '4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12',
+     'value': 10.0,
+     'value_text': '10.00000000 LTC'}
+
+
+## 9. First redeem transaction
+
+[**Alice**] can now collect coins she wants, thus she creates redeem transaction.
+    
+    alice_redeem = bob_contract.redeem(secret=initial_transaction.show_details()['secret'], wallet=alice_ltc_wallet)
+ 
+    # For now add_fee_and_sign is not fully implemented for LTC network, hack this in such a way:
+    alice_redeem.fee = 0.001
+    alice_redeem.add_fee_and_sign()
+    alice_redeem.publish()
+    
+[**Alice**] should get litecoins just after redeem transaction is published.
+    
+    
+## 10. Secret passing
+
+[**Alice**] should pass the secret of `initial_transaction` to Bob.
+
+    secret = ltc_network.extract_secret(alice_redeem.show_details()['transaction'])
+    
+## 11. Second redeem transaction
+
+[**Bob**] can now collect coins he wants, thus he creates redeem transaction.
+
+    bob_redeem = alice_contract.redeem(secret=secret, wallet=bob_btc_wallet)
+    bob_redeem.add_fee_and_sign()
+    bob_redeem.publish()
+
+[**Bob**] should get bitcoins just after redeem transaction is published.
