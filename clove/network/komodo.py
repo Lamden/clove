@@ -11,7 +11,7 @@ class Komodo(Bitcoin):
     symbols = ('KMD', )
     seeds = (
         'seeds.komodoplatform.com',
-        'seeds.komodo.mewhub.com',
+        # 'seeds.komodo.mewhub.com', Last check: 2018-02-21
     )
     port = 7770
     message_start = b'\xf9\xee\xe4\x8d'

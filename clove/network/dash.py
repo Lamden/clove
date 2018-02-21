@@ -13,7 +13,7 @@ class Dash(Bitcoin):
         'dnsseed.dash.org',
         'dnsseed.dashdot.io',
         'dnsseed.masternode.io',
-        'dnsseed.dashpay.io',
+        # 'dnsseed.dashpay.io', Last check: 2018-02-21
     )
     port = 9999
     message_start = b'\xbf\x0c\x6b\xbd'
@@ -32,7 +32,7 @@ class DashTestNet(Dash):
     """
     name = 'test-dash'
     seeds = (
-        'testnet-seed.dashdot.io',
+        # 'testnet-seed.dashdot.io', Last check: 2018-02-21
         'test.dnsseed.masternode.io',
     )
     port = 19999

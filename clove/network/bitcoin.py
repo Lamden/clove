@@ -503,7 +503,7 @@ class BitcoinTestNet(Bitcoin):
     name = 'test-bitcoin'
     seeds = (
         'testnet-seed.bitcoin.jonasschnelli.ch',
-        'seed.tbtc.petertodd.org',
+        # 'seed.tbtc.petertodd.org', Last check: 2018-02-21
         'seed.testnet.bitcoin.sprovoost.nl',
         'testnet-seed.bluematt.me',
     )
