@@ -36,7 +36,7 @@ def test_seeds_valid_dns_address(seed):
 @patch('clove.network.base.get_transaction_size', side_effect=[200, 300, 700])
 @patch('clove.network.base.get_transaction_fee', side_effect=[0.02, 0.03, 0.07])
 def test_fee_per_kb_implementation(fee_mock, size_mock, transactions_mock, network):
-    if network.name == 'test-bitcoin':
+    if network.name in ('test-bitcoin', 'dogecoin'):
         return
     if network.is_test_network() or network.symbols[0].lower() not in API_SUPPORTED_NETWORKS:
         with pytest.raises(NotImplementedError):

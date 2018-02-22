@@ -1,5 +1,4 @@
 from datetime import datetime
-from unittest.mock import patch
 
 from bitcoin.core import CTransaction, b2x
 from pytest import raises
@@ -97,11 +96,11 @@ def test_show_details(signed_transaction):
     assert sorted(details.keys()) == sorted(str_fields + date_fields + int_fields + float_fields)
 
 
-@patch('clove.network.base.BaseNetwork.get_current_fee_per_kb', return_value=0.002)
-def test_transaction_fee(fee_per_kb_mock, unsigned_transaction):
+def test_transaction_fee(unsigned_transaction):
 
     assert type(unsigned_transaction.size) == int
 
+    unsigned_transaction.fee_per_kb = 0.002
     unsigned_transaction.add_fee()
     assert type(unsigned_transaction.fee) == float
     assert unsigned_transaction.fee < 1, 'Transaction fee should be in main units'

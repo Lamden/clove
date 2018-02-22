@@ -1,3 +1,9 @@
+import json
+from urllib.error import HTTPError, URLError
+import urllib.request
+
+from bitcoin.core import COIN
+
 from clove.network.bitcoin import Bitcoin
 
 
@@ -23,6 +29,17 @@ class Dogecoin(Bitcoin):
         'SECRET_KEY': 158
     }
 
+    @classmethod
+    def get_current_fee_per_kb(cls) -> float:
+        try:
+            with urllib.request.urlopen('https://api.blockcypher.com/v1/doge/main') as url:
+                if url.status != 200:
+                    return
+                data = json.loads(url.read().decode())
+                return data['high_fee_per_kb'] / COIN
+        except (URLError, HTTPError):
+            return
+
 
 class DogecoinTestNet(Dogecoin):
     """
@@ -41,3 +58,7 @@ class DogecoinTestNet(Dogecoin):
         'SCRIPT_ADDR': 196,
         'SECRET_KEY': 241
     }
+
+    @classmethod
+    def get_current_fee_per_kb(cls) -> float:
+        raise NotImplementedError

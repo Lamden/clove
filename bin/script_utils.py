@@ -2,6 +2,7 @@
 
 import json
 import random
+import time
 from urllib.error import HTTPError, URLError
 import urllib.request
 
@@ -62,12 +63,16 @@ def get_transaction_from_address(network, address):
         exit(1)
 
 
-def get_utxo(network, address, amount):
-    print_section('Searching for UTXO\'s')
+def get_utxo(network, address, amount, api_url=None):
     api_network = api_network_symbol(network)
-    api_url = \
+    api_url = api_url or \
         f'https://api.blockcypher.com/v1/{api_network}/addrs/{address}/'\
-        'full?limit=50?unspentOnly=true&includeScript=true'
+        'full?limit=20&unspentOnly=true&includeScript=true'
+    if 'outstart' in api_url:
+        page = round(int(api_url.split('outstart=')[1].split('&')[0]) / 20) + 1
+        print_section(f'Searching for UTXO\'s on page {page}')
+    else:
+        print_section('Searching for UTXO\'s')
     utxo = []
     total = 0
     try:
@@ -76,6 +81,9 @@ def get_utxo(network, address, amount):
                 return
             data = json.loads(url.read().decode())
             # try to use different transactions each time
+            if 'txs' not in data:
+                # hack for pagination support
+                data['txs'] = [data, ]
             random.shuffle(data['txs'])
             for txs in data['txs']:
                 for i, output in enumerate(txs['outputs']):
@@ -94,8 +102,11 @@ def get_utxo(network, address, amount):
                     total += value
                     if total > amount:
                         return utxo
+            if data['txs'][0]['next_outputs']:
+                time.sleep(0.5)
+                return get_utxo(network, address, amount, data['txs'][0]['next_outputs'])
             print_error(f'Cannot find enough UTXO\'s. {total:.8f} is all that you\'ve got.')
             exit(1)
-    except (URLError, HTTPError):
-        print_section('Cannot get UTXO\'s from API')
-        return
+    except (URLError, HTTPError) as e:
+        print_error(f'Cannot get UTXO\'s from API {e}')
+        exit(1)
