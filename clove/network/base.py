@@ -136,7 +136,7 @@ class BaseNetwork(object):
 
                 try:
                     message = MsgSerializable.from_bytes(raw_message)
-                except (SerializationError, SerializationTruncationError):
+                except (SerializationError, SerializationTruncationError, ValueError):
                     partial_message = raw_message
                     continue
 
@@ -172,14 +172,16 @@ class BaseNetwork(object):
                 address=(node, self.port),
                 timeout=timeout
             )
-        except (socket.timeout, ConnectionRefusedError, OSError) as e:
+        except (socket.timeout, ConnectionRefusedError, OSError):
             logger.debug('[%s] Could not establish connection to this node', node)
+            return
+
         logger.debug('[%s] Connection established, sending version packet', node)
         if self.send_version():
             return self.connection
 
     @auto_switch_params()
-    def connect(self, timeout=2) -> str:
+    def connect(self) -> str:
 
         if self.connection:
             if self.send_ping():
