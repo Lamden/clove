@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from bitcoin.core import CTransaction, b2x
+from bitcoin.core import CTransaction, b2x, script
 from pytest import raises
 
 from clove.network.bitcoin import BitcoinAtomicSwapTransaction, BitcoinTestNet
@@ -117,7 +117,10 @@ def test_audit_contract(signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
-    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    contract = btc_network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
     contract_details = contract.show_details()
 
     assert contract.locktime == signed_transaction.locktime.replace(microsecond=0)
@@ -135,25 +138,40 @@ def test_audit_contract_empty_transaction():
     with raises(
         ValueError, match='Given transaction has no outputs.'
     ):
-        btc_network.audit_contract(tx)
+        btc_network.audit_contract('', tx)
 
 
 def test_audit_contract_invalid_transaction(signed_transaction):
     btc_network = BitcoinTestNet()
     signed_transaction.tx.vout.pop(0)
-    tx = signed_transaction.show_details()['contract_transaction']
+    transaction_details = signed_transaction.show_details()
 
     with raises(
         ValueError, match='Given transaction is not a valid contract.'
     ):
-        btc_network.audit_contract(tx)
+        btc_network.audit_contract(transaction_details['contract'], transaction_details['contract_transaction'])
+
+
+def test_audit_contract_non_matching_contract(signed_transaction):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = script.CScript([script.OP_TRUE]).hex()
+
+    with raises(
+        ValueError, match='Given transaction is not a valid contract.'
+    ):
+        btc_network.audit_contract(contract, transaction_details['contract_transaction'])
 
 
 def test_redeem_transaction(bob_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
-    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    contract = btc_network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
     redeem_transaction = contract.redeem(bob_wallet, transaction_details['secret'])
     redeem_transaction.fee_per_kb = 0.002
     redeem_transaction.add_fee_and_sign()
@@ -166,7 +184,10 @@ def test_refund_transaction(alice_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
-    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    contract = btc_network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
     refund_transaction = contract.refund(alice_wallet)
     refund_transaction.fee_per_kb = 0.002
     refund_transaction.add_fee_and_sign()
@@ -179,7 +200,10 @@ def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_tran
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
-    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    contract = btc_network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
     participate_value = 0.5
     participate_transaction = contract.participate(
         'btc', bob_wallet.address, alice_wallet.address, participate_value, bob_utxo
@@ -196,7 +220,10 @@ def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_tran
 
     participate_transaction_details = participate_transaction.show_details()
 
-    contract = btc_network.audit_contract(participate_transaction_details['contract_transaction'])
+    contract = btc_network.audit_contract(
+        participate_transaction_details['contract'],
+        participate_transaction_details['contract_transaction']
+    )
     redeem_participate_transaction = contract.redeem(alice_wallet, transaction_details['secret'])
     redeem_participate_transaction.fee_per_kb = 0.002
     redeem_participate_transaction.add_fee_and_sign()
@@ -209,7 +236,10 @@ def test_extract_secret(bob_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
-    contract = btc_network.audit_contract(transaction_details['contract_transaction'])
+    contract = btc_network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
     redeem_transaction = contract.redeem(bob_wallet, transaction_details['secret'])
     redeem_transaction.fee_per_kb = 0.002
     redeem_transaction.add_fee_and_sign()

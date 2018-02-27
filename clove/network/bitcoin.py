@@ -75,7 +75,7 @@ class BitcoinWallet(object):
 
 class Utxo(object):
 
-    def __init__(self, tx_id, vout, value, tx_script, wallet=None, secret=None, refund=False):
+    def __init__(self, tx_id, vout, value, tx_script, wallet=None, secret=None, refund=False, contract=None):
         self.tx_id = tx_id
         self.vout = vout
         self.value = value
@@ -83,6 +83,7 @@ class Utxo(object):
         self.wallet = wallet
         self.secret = secret
         self.refund = refund
+        self.contract = contract
 
     @property
     def outpoint(self):
@@ -98,12 +99,12 @@ class Utxo(object):
 
     @property
     def unsigned_script_sig(self):
-        if self.refund:
-            return [script.OP_FALSE]
-        elif self.secret:
-            return [x(self.secret), script.OP_TRUE]
-        else:
-            return []
+        if self.contract:
+            if self.refund:
+                return [script.OP_FALSE, x(self.contract)]
+            elif self.secret:
+                return [x(self.secret), script.OP_TRUE, x(self.contract)]
+        return []
 
     def __repr__(self):
         return "Utxo(tx_id='{}', vout='{}', value='{}', tx_script='{}', wallet={}, secret={}, refund={})".format(
@@ -164,7 +165,20 @@ class BitcoinTransaction(object):
                 raise RuntimeError('Cannot sign transaction without a wallet.')
 
             tx_script = utxo.parsed_script
-            sig_hash = script.SignatureHash(tx_script, self.tx, tx_index, script.SIGHASH_ALL)
+            if utxo.contract:
+                sig_hash = script.SignatureHash(
+                    script.CScript.fromhex(utxo.contract),
+                    self.tx,
+                    tx_index,
+                    script.SIGHASH_ALL
+                )
+            else:
+                sig_hash = script.SignatureHash(
+                    tx_script,
+                    self.tx,
+                    tx_index,
+                    script.SIGHASH_ALL
+                )
             sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
             script_sig = [sig, wallet.private_key.pub] + utxo.unsigned_script_sig
             tx_in.scriptSig = script.CScript(script_sig)
@@ -291,7 +305,9 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
 
         self.build_atomic_swap_contract()
 
-        self.tx_out_list = [CMutableTxOut(btc_to_satoshi(self.value), self.contract), ]
+        contract_p2sh = self.contract.to_p2sh_scriptPubKey()
+
+        self.tx_out_list = [CMutableTxOut(btc_to_satoshi(self.value), contract_p2sh), ]
         if self.utxo_value > self.value:
             change = self.utxo_value - self.value
             self.tx_out_list.append(
@@ -331,17 +347,21 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
 class BitcoinContract(object):
 
     @auto_switch_params(1)
-    def __init__(self, network, raw_transaction: str):
+    def __init__(self, network, contract: str, raw_transaction: str):
         self.network = network
         self.symbol = self.network.default_symbol
+        self.contract = contract
         self.tx = CTransaction.deserialize(x(raw_transaction))
 
         if not self.tx.vout:
             raise ValueError('Given transaction has no outputs.')
 
         contract_tx_out = self.tx.vout[0]
-        script_ops = list(contract_tx_out.scriptPubKey)
-        if self.is_valid_contract_script(script_ops):
+        contract_script = script.CScript.fromhex(self.contract)
+        valid_p2sh = contract_script.to_p2sh_scriptPubKey() == contract_tx_out.scriptPubKey
+
+        script_ops = list(contract_script)
+        if valid_p2sh and self.is_valid_contract_script(script_ops):
             self.recipient_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[6]))
             self.refund_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[13]))
             self.locktime_timestamp = int.from_bytes(script_ops[8], byteorder='little')
@@ -375,7 +395,7 @@ class BitcoinContract(object):
 
         return is_valid
 
-    def get_contract_utxo(self, wallet=None, secret=None, refund=False):
+    def get_contract_utxo(self, wallet=None, secret=None, refund=False, contract=None):
         return Utxo(
             tx_id=self.transaction_hash,
             vout=0,
@@ -383,7 +403,8 @@ class BitcoinContract(object):
             tx_script=self.tx.vout[0].scriptPubKey.hex(),
             wallet=wallet,
             secret=secret,
-            refund=refund
+            refund=refund,
+            contract=contract,
         )
 
     def redeem(self, wallet, secret):
@@ -391,7 +412,7 @@ class BitcoinContract(object):
             network=self.network,
             recipient_address=self.recipient_address,
             value=self.value,
-            solvable_utxo=[self.get_contract_utxo(wallet, secret)]
+            solvable_utxo=[self.get_contract_utxo(wallet, secret, contract=self.contract)]
         )
         transaction.create_unsigned_transaction()
         return transaction
@@ -401,7 +422,7 @@ class BitcoinContract(object):
             network=self.network,
             recipient_address=self.refund_address,
             value=self.value,
-            solvable_utxo=[self.get_contract_utxo(wallet, refund=True)],
+            solvable_utxo=[self.get_contract_utxo(wallet, refund=True, contract=self.contract)],
             tx_locktime=self.locktime_timestamp,
         )
         transaction.create_unsigned_transaction()
@@ -471,8 +492,8 @@ class Bitcoin(BaseNetwork):
         return transaction
 
     @auto_switch_params()
-    def audit_contract(self, raw_transaction: str) -> BitcoinContract:
-        return BitcoinContract(self, raw_transaction)
+    def audit_contract(self, contract: str, raw_transaction: str) -> BitcoinContract:
+        return BitcoinContract(self, contract, raw_transaction)
 
     @classmethod
     @auto_switch_params()
@@ -488,8 +509,8 @@ class Bitcoin(BaseNetwork):
 
         secret_tx_in = tx.vin[0]
         script_ops = list(secret_tx_in.scriptSig)
-        if script_ops[-1] == 1:
-            return b2x(script_ops[-2])
+        if script_ops[-2] == 1:
+            return b2x(script_ops[-3])
 
         raise ValueError('Unable to extract secret from given transaction.')
 
