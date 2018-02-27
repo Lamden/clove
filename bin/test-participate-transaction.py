@@ -16,6 +16,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Redeem atomic swap transaction.")
     parser.add_argument('-tx', '--transaction', help='Contract transaction address', type=str, required=True)
+    parser.add_argument('-c', '--contract', help='Contract', type=str, required=True)
     parser.add_argument('-r', '--recipient', help='Recipient address', type=str, required=True)
     parser.add_argument('-p', '--private-key', help='Private key', type=str, required=True)
     parser.add_argument('-n', '--network', help='Network for creating transaction in', type=str, required=True)
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     print_section('Found transaction:', tx_hex)
 
     print_section('Transaction audit...')
-    contract = network.audit_contract(tx_hex)
+    contract = network.audit_contract(args.contract, tx_hex)
     pprint(contract.show_details())
 
     utxo = get_utxo(args.network, wallet.get_address(), args.amount)

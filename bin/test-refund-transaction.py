@@ -14,6 +14,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Refund contract transaction.")
     parser.add_argument('-tx', '--transaction', help='Transaction address', type=str, required=True)
+    parser.add_argument('-c', '--contract', help='Contract', type=str, required=True)
     parser.add_argument('-p', '--private-key', help='Private key', type=str, required=True)
     parser.add_argument('-n', '--network', help='Network for creating transaction in', type=str, required=True)
 
@@ -22,7 +23,7 @@ if __name__ == '__main__':
     network = get_network(args.network)
     wallet = network.get_wallet(private_key=args.private_key)
     tx = get_transaction_from_address(args.network, args.transaction)
-    contract = network.audit_contract(tx)
+    contract = network.audit_contract(args.contract, tx)
 
     print_section('Contract details:')
     pprint(contract.show_details())
