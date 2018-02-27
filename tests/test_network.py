@@ -1,8 +1,6 @@
-from random import getrandbits
 from unittest.mock import patch
 
 import bitcoin
-from bitcoin.messages import msg_getdata, msg_pong
 import pytest
 from pytest import mark
 from validators import domain
@@ -51,17 +49,6 @@ def test_filter_blacklisted_nodes_method():
     nodes = list(network.blacklist_nodes.keys()) + ['34.207.248.232']
     assert network.filter_blacklisted_nodes(nodes) == ['34.207.248.232', '107.170.239.46', '108.144.213.98']
     assert network.filter_blacklisted_nodes(nodes, max_tries_number=2) == ['34.207.248.232', '107.170.239.46']
-
-
-def test_extract_all_responses():
-    bitcoin_network = networks[0]
-    getdata = b'\xf9\xbe\xb4\xd9getdata\x00\x00\x00\x00\x00\x01\x00\x00\x00\x14\x06\xe0X\x00'
-    pong = b'\xf9\xbe\xb4\xd9pong\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00~\xf0\xcab\x00' \
-           b'\x00\x00\x00\x00\x00\x00\x00'
-    assert bitcoin_network.extract_all_responses(getdata) == [msg_getdata()]
-    random_bytes = bytearray(getrandbits(8) for _ in range(10))
-    assert bitcoin_network.extract_all_responses(getdata + random_bytes + pong) == [msg_getdata(), msg_pong()]
-    assert bitcoin_network.extract_all_responses(b'') == [] == bitcoin_network.extract_all_responses(random_bytes)
 
 
 @mark.parametrize('network', networks)

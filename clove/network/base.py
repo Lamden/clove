@@ -1,5 +1,5 @@
 import socket
-from time import time
+from time import sleep, time
 
 import bitcoin
 from bitcoin import SelectParams
@@ -13,8 +13,8 @@ from bitcoin.net import CInv
 from clove.constants import API_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT
 from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.utils.external_source import get_last_transactions, get_transaction_fee, get_transaction_size
-from clove.utils.logging import log_inappropriate_response_messages, logger
-from clove.utils.network import generate_params_object, recvall
+from clove.utils.logging import logger
+from clove.utils.network import generate_params_object
 
 
 def auto_switch_params(args_index: int = 0):
@@ -112,54 +112,103 @@ class BaseNetwork(object):
         return nodes
 
     @auto_switch_params()
-    def connect(self, timeout=2) -> str:
+    def capture_messages(self, expected_message_types: list, timeout: int=20, buf_size: int=1024,
+                         ignore_empty: bool=False) -> list:
 
-        if self.connection is None:
+        deadline = time() + timeout
+        found = []
+        partial_message = None
 
-            for seed in self.seeds:
-                nodes = self.filter_blacklisted_nodes(self.get_nodes(seed))
+        while expected_message_types and time() < deadline:
 
-                for node in nodes:
-                    self.update_blacklist(node)
+            try:
+                received_data = self.connection.recv(buf_size)
+                if partial_message:
+                    received_data = partial_message + received_data
+            except socket.timeout:
+                continue
 
-                    try:
-                        self.connection = socket.create_connection(
-                            address=(node, self.port),
-                            timeout=timeout
-                        )
-                        logger.debug('[%s] Connection established, sending version packet', node)
-                        self.connection.send(self.version_packet())
-                        self.connection.settimeout(timeout)
-                    except (socket.timeout, ConnectionRefusedError, OSError) as e:
-                        logger.debug('[%s] Could not establish connection to this node', node)
-                        logger.debug(e)
-                        self.terminate()
-                        continue
+            if not received_data:
+                sleep(0.1)
+                continue
 
-                    messages = recvall(self.connection, 1024)
+            for raw_message in self.split_message(received_data):
 
-                    try:
-                        self.protocol_version = MsgSerializable.from_bytes(
-                            self.clean_message(messages, b'version')
-                        )
-                    except (socket.timeout, SerializationError, SerializationTruncationError) as e:
-                        logger.debug('[%s] Failed to get version packet from node', node)
-                        logger.debug(e)
-                        self.terminate()
-                        continue
+                try:
+                    message = MsgSerializable.from_bytes(raw_message)
+                except (SerializationError, SerializationTruncationError, ValueError):
+                    partial_message = raw_message
+                    continue
 
-                    logger.debug('[%s] Got version, sending version acknowledge message', node)
+                partial_message = None
+                if not message:
+                    # unknown message type, skipping
+                    continue
 
-                    try:
-                        self.connection.send(msg_verack(self.protocol_version.nVersion).to_bytes())
-                        self.connection.settimeout(timeout)
-                    except (socket.timeout, ConnectionRefusedError, OSError) as e:
-                        logger.debug('[%s] Failed to send version acknowledge message', node)
-                        logger.debug(e)
-                        self.terminate()
-                        continue
+                msg_type = type(message)
 
-                    return node
+                if msg_type is msg_ping:
+                    logger.debug('Got ping, sending pong.')
+                    self.send_pong(message)
+                elif msg_type is msg_version:
+                    logger.debug('Saving version')
+                    self.protocol_version = message
+
+                if msg_type in expected_message_types:
+                    found.append(message)
+                    del expected_message_types[expected_message_types.index(msg_type)]
+                    logger.debug('Found %s, %s more to catch', msg_type.command.upper(), len(expected_message_types))
+
+        if not expected_message_types:
+            return found
+
+        if not ignore_empty:
+            logger.error('Not all messages could be captured')
+
+    @auto_switch_params()
+    def create_connection(self, node, timeout=2):
+        try:
+            self.connection = socket.create_connection(
+                address=(node, self.port),
+                timeout=timeout
+            )
+        except (socket.timeout, ConnectionRefusedError, OSError):
+            logger.debug('[%s] Could not establish connection to this node', node)
+            return
+
+        logger.debug('[%s] Connection established, sending version packet', node)
+        if self.send_version():
+            return self.connection
+
+    @auto_switch_params()
+    def connect(self) -> str:
+
+        if self.connection and self.send_ping():
+            # already connected
+            return self.get_current_node()
+
+        for seed in self.seeds:
+            nodes = self.filter_blacklisted_nodes(self.get_nodes(seed))
+
+            for node in nodes:
+
+                if not self.create_connection(node):
+                    self.terminate(node)
+                    continue
+
+                messages = self.capture_messages([msg_version, msg_verack])
+                if not messages:
+                    logger.debug('[%s] Failed to get version or version acknowledge message from node', node)
+                    self.terminate(node)
+                    continue
+
+                logger.debug('[%s] Got version, sending version acknowledge message', node)
+
+                if not self.send_verack():
+                    self.terminate(node)
+                    continue
+
+                return node
 
     def filter_blacklisted_nodes(self, nodes, max_tries_number=3):
         return sorted(
@@ -180,35 +229,124 @@ class BaseNetwork(object):
         except KeyError:
             self.blacklist_nodes[node] = 1
 
+    @auto_switch_params()
     def version_packet(self):
         packet = msg_version(170002)
         packet.addrFrom.ip, packet.addrFrom.port = self.connection.getsockname()
         packet.addrTo.ip, packet.addrTo.port = self.connection.getpeername()
-        return packet.to_bytes()
+        return packet
 
     @classmethod
     @auto_switch_params()
-    def clean_message(cls, message: bytes, command: bytes) -> bytes:
-        messages = message.split(bitcoin.params.MESSAGE_START)
-        message = next((message for message in messages if command in message), b'')
-        return bitcoin.params.MESSAGE_START + message
+    def split_message(cls, received_data: bytes) -> list:
+        return [
+            bitcoin.params.MESSAGE_START + m for m in received_data.split(bitcoin.params.MESSAGE_START) if m
+        ]
 
     @auto_switch_params()
-    def ping(self) -> msg_pong:
-        node = self.connect()
+    def send_message(self, msg: object, timeout: int=2) -> bool:
+        try:
+            self.connection.settimeout(timeout)
+            self.connection.send(msg.to_bytes())
+        except (socket.timeout, ConnectionRefusedError, OSError) as e:
+            logger.debug('Failed to send %s message', msg.command.decode())
+            logger.debug(e)
+            return False
+        return True
 
-        if not node:
-            logger.debug('No connection, couldn\'t ping')
+    @auto_switch_params()
+    def send_ping(self, timeout: int=1) -> bool:
+        if not self.send_message(msg_ping(), timeout):
+            return False
+        if self.capture_messages([msg_pong, ]):
+            return True
+        return False
+
+    @auto_switch_params()
+    def send_pong(self, ping, timeout: int=1) -> bool:
+        return self.send_message(
+            msg_pong(self.protocol_version.nVersion, ping.nonce), timeout
+        )
+
+    @auto_switch_params()
+    def send_verack(self, timeout: int=2) -> bool:
+        return self.send_message(
+            msg_verack(self.protocol_version.nVersion), timeout
+        )
+
+    def send_version(self, timeout: int=2) -> bool:
+        return self.send_message(
+            self.version_packet(), timeout
+        )
+
+    @auto_switch_params()
+    def broadcast_transaction(self, transaction: CMutableTransaction):
+        serialized_transaction = transaction.serialize()
+
+        get_data = self.send_inventory(serialized_transaction)
+        if not get_data:
+            logger.debug(
+                ConnectionProblem('Clove could not get connected with any of the nodes for too long.')
+            )
+            return self.reset_connection()
+
+        node = self.get_current_node()
+
+        if all(el.hash != Hash(serialized_transaction) for el in get_data.inv):
+            logger.debug(UnexpectedResponseFromNode('Node did not ask for our transaction', node))
+            return self.reset_connection()
+
+        message = msg_tx()
+        message.tx = transaction
+
+        if not self.send_message(message, 20):
             return
 
-        self.connection.send(msg_ping().to_bytes())
-        self.connection.settimeout(0.1)
-        pong = None
-        try:
-            pong = MsgSerializable.from_bytes(self.clean_message(recvall(self.connection, 1024), b'pong'))
-        except SerializationTruncationError:
-            pass
-        return pong
+        logger.info('[%s] Looking for reject message.', node)
+        messages = self.capture_messages([msg_reject, ], timeout=5, buf_size=8192, ignore_empty=True)
+        if messages:
+            logger.debug(TransactionRejected(messages[0], node))
+            return self.reset_connection()
+        logger.info('[%s] Reject message not found.', node)
+
+        transaction_hash = b2lx(transaction.GetHash())
+        logger.info('[%s] Transaction %s has just been sent.', node, transaction_hash)
+        return transaction_hash
+
+    @auto_switch_params()
+    def send_inventory(self, serialized_transaction) -> msg_getdata:
+        message = msg_inv()
+        inventory = CInv()
+        inventory.type = MSG_TX
+        hash_transaction = Hash(serialized_transaction)
+        inventory.hash = hash_transaction
+        message.inv.append(inventory)
+
+        timeout = time() + NODE_COMMUNICATION_TIMEOUT
+
+        while time() < timeout:
+            node = self.connect()
+            if node is None:
+                self.reset_connection()
+                continue
+
+            if not self.send_message(message):
+                self.terminate(node)
+                continue
+
+            messages = self.capture_messages([msg_getdata, ])
+            if not messages:
+                self.terminate(node)
+                continue
+
+            logger.info('[%s] Node responded correctly.', node)
+            return messages[0]
+
+    def reset_connection(self):
+        if self.connection:
+            self.connection.close()
+            self.connection = None
+        self.blacklist_nodes = {}
 
     @staticmethod
     def get_wallet():
@@ -255,103 +393,3 @@ class BaseNetwork(object):
     def get_current_node(self):
         if self.connection:
             return self.connection.getpeername()[0]
-
-    @auto_switch_params()
-    def broadcast_transaction(self, transaction: CMutableTransaction):
-        serialized_transaction = transaction.serialize()
-
-        get_data = self.set_inventory(serialized_transaction)
-        transaction_hash = b2lx(transaction.GetHash())
-        node = self.get_current_node()
-
-        if not get_data:
-            logger.debug(
-                ConnectionProblem('Clove could not get connected with any of the nodes for too long.', node)
-            )
-            return self.reset_connection()
-
-        elif all(el.hash != Hash(serialized_transaction) for el in get_data.inv):
-            logger.debug(UnexpectedResponseFromNode('Unknown error', node))
-            return self.reset_connection()
-
-        message = msg_tx()
-        message.tx = transaction
-
-        self.connection.sendall(message.to_bytes())
-        self.connection.settimeout(20)
-
-        try:
-            responses = self.extract_all_responses(recvall(self.connection, 8192), node)
-        except socket.timeout:
-            logger.debug('[%s] Connection timeout. Node is not responding. Connection terminates.', node)
-            return self.reset_connection()
-
-        rejects = [
-            f"{el.message.decode('ascii')} {el.reason.decode('ascii')}"
-            for el in responses if isinstance(el, msg_reject)
-        ]
-        if rejects:
-            logger.debug(TransactionRejected('; '.join(rejects), node))
-            return self.reset_connection()
-
-        logger.info('[%s] Transaction %s has just been sent.', node, transaction_hash)
-        logger.info('[%s] Transaction broadcast is successful. End of broadcasting process.', node)
-        return transaction_hash
-
-    @auto_switch_params()
-    def set_inventory(self, serialized_transaction) -> msg_getdata:
-        message = msg_inv()
-        inventory = CInv()
-        inventory.type = MSG_TX
-        hash_transaction = Hash(serialized_transaction)
-        inventory.hash = hash_transaction
-        message.inv.append(inventory)
-
-        timeout = time() + NODE_COMMUNICATION_TIMEOUT
-
-        while time() < timeout:
-            node = self.connect()
-            if node is None:
-                self.reset_connection()
-                continue
-
-            try:
-                self.connection.sendall(message.to_bytes())
-                self.connection.settimeout(2)
-                messages = self.extract_all_responses(recvall(self.connection, 8192), node)
-            except socket.timeout:
-                self.terminate(node=node)
-                continue
-
-            message_getdata = next((message for message in messages if isinstance(message, msg_getdata)), None)
-            message_ping = next((message for message in messages if isinstance(message, msg_ping)), None)
-
-            if message_getdata:
-                logger.info('[%s] Node responded correctly. Sending transaction...', node)
-                return message_getdata
-            elif message_ping:
-                self.connection.send(msg_pong(self.protocol_version.nVersion, message_ping.nonce).to_bytes())
-            else:
-                log_inappropriate_response_messages(logger, messages, node)
-                self.terminate(node=node)
-
-    @classmethod
-    @auto_switch_params()
-    def extract_all_responses(cls, buffer: bytes, node: str = None) -> list:
-        prefix = bitcoin.params.MESSAGE_START
-        messages = [prefix + message for message in buffer.split(prefix) if message]
-        responses = []
-        for message in messages:
-            try:
-                deserialized_msg = MsgSerializable.from_bytes(message)
-                if deserialized_msg:
-                    responses.append(deserialized_msg)
-            except (SerializationTruncationError, SerializationError, ValueError) as e:
-                logger.debug('[%s] Could not deserialize: %s', node, e)
-        return responses
-
-    def reset_connection(self):
-        if self.connection:
-            self.connection.close()
-            self.connection = None
-        self.blacklist_nodes = {}
