@@ -112,14 +112,14 @@ class BaseNetwork(object):
         return nodes
 
     @auto_switch_params()
-    def capture_messages(self, type_to_capture: list, timeout: int=20, buf_size: int=1024,
+    def capture_messages(self, expected_message_types: list, timeout: int=20, buf_size: int=1024,
                          ignore_empty: bool=False) -> list:
 
         deadline = time() + timeout
         found = []
         partial_message = None
 
-        while type_to_capture and time() < deadline:
+        while expected_message_types and time() < deadline:
 
             try:
                 received_data = self.connection.recv(buf_size)
@@ -154,12 +154,12 @@ class BaseNetwork(object):
                     logger.debug('Saving version')
                     self.protocol_version = message
 
-                if msg_type in type_to_capture:
+                if msg_type in expected_message_types:
                     found.append(message)
-                    del type_to_capture[type_to_capture.index(msg_type)]
-                    logger.debug('Found %s, %s more to catch', msg_type.command.upper(), len(type_to_capture))
+                    del expected_message_types[expected_message_types.index(msg_type)]
+                    logger.debug('Found %s, %s more to catch', msg_type.command.upper(), len(expected_message_types))
 
-        if not type_to_capture:
+        if not expected_message_types:
             return found
 
         if not ignore_empty:
@@ -183,10 +183,9 @@ class BaseNetwork(object):
     @auto_switch_params()
     def connect(self) -> str:
 
-        if self.connection:
-            if self.send_ping():
-                # already connected
-                return self.get_current_node()
+        if self.connection and self.send_ping():
+            # already connected
+            return self.get_current_node()
 
         for seed in self.seeds:
             nodes = self.filter_blacklisted_nodes(self.get_nodes(seed))
@@ -230,11 +229,12 @@ class BaseNetwork(object):
         except KeyError:
             self.blacklist_nodes[node] = 1
 
+    @auto_switch_params()
     def version_packet(self):
         packet = msg_version(170002)
         packet.addrFrom.ip, packet.addrFrom.port = self.connection.getsockname()
         packet.addrTo.ip, packet.addrTo.port = self.connection.getpeername()
-        return packet.to_bytes()
+        return packet
 
     @classmethod
     @auto_switch_params()
@@ -244,19 +244,19 @@ class BaseNetwork(object):
         ]
 
     @auto_switch_params()
-    def send_message(self, msg: bytes, timeout: int=2) -> bool:
+    def send_message(self, msg: object, timeout: int=2) -> bool:
         try:
             self.connection.settimeout(timeout)
-            self.connection.send(msg)
+            self.connection.send(msg.to_bytes())
         except (socket.timeout, ConnectionRefusedError, OSError) as e:
-            logger.debug('Failed to send %s message', msg.command)
+            logger.debug('Failed to send %s message', msg.command.decode())
             logger.debug(e)
             return False
         return True
 
     @auto_switch_params()
     def send_ping(self, timeout: int=1) -> bool:
-        if not self.send_message(msg_ping().to_bytes(), timeout):
+        if not self.send_message(msg_ping(), timeout):
             return False
         if self.capture_messages([msg_pong, ]):
             return True
@@ -265,48 +265,19 @@ class BaseNetwork(object):
     @auto_switch_params()
     def send_pong(self, ping, timeout: int=1) -> bool:
         return self.send_message(
-            msg_pong(self.protocol_version.nVersion, ping.nonce).to_bytes(), timeout
+            msg_pong(self.protocol_version.nVersion, ping.nonce), timeout
         )
 
     @auto_switch_params()
     def send_verack(self, timeout: int=2) -> bool:
         return self.send_message(
-            msg_verack(self.protocol_version.nVersion).to_bytes(), timeout
+            msg_verack(self.protocol_version.nVersion), timeout
         )
 
     def send_version(self, timeout: int=2) -> bool:
         return self.send_message(
             self.version_packet(), timeout
         )
-
-    @auto_switch_params()
-    def send_inventory(self, serialized_transaction) -> msg_getdata:
-        message = msg_inv()
-        inventory = CInv()
-        inventory.type = MSG_TX
-        hash_transaction = Hash(serialized_transaction)
-        inventory.hash = hash_transaction
-        message.inv.append(inventory)
-
-        timeout = time() + NODE_COMMUNICATION_TIMEOUT
-
-        while time() < timeout:
-            node = self.connect()
-            if node is None:
-                self.reset_connection()
-                continue
-
-            if not self.send_message(message.to_bytes()):
-                self.terminate(node)
-                continue
-
-            messages = self.capture_messages([msg_getdata, ])
-            if not messages:
-                self.terminate(node)
-                continue
-
-            logger.info('[%s] Node responded correctly.', node)
-            return messages[0]
 
     @auto_switch_params()
     def broadcast_transaction(self, transaction: CMutableTransaction):
@@ -328,7 +299,7 @@ class BaseNetwork(object):
         message = msg_tx()
         message.tx = transaction
 
-        if not self.send_message(message.to_bytes(), 20):
+        if not self.send_message(message, 20):
             return
 
         logger.info('[%s] Looking for reject message.', node)
@@ -341,6 +312,35 @@ class BaseNetwork(object):
         transaction_hash = b2lx(transaction.GetHash())
         logger.info('[%s] Transaction %s has just been sent.', node, transaction_hash)
         return transaction_hash
+
+    @auto_switch_params()
+    def send_inventory(self, serialized_transaction) -> msg_getdata:
+        message = msg_inv()
+        inventory = CInv()
+        inventory.type = MSG_TX
+        hash_transaction = Hash(serialized_transaction)
+        inventory.hash = hash_transaction
+        message.inv.append(inventory)
+
+        timeout = time() + NODE_COMMUNICATION_TIMEOUT
+
+        while time() < timeout:
+            node = self.connect()
+            if node is None:
+                self.reset_connection()
+                continue
+
+            if not self.send_message(message):
+                self.terminate(node)
+                continue
+
+            messages = self.capture_messages([msg_getdata, ])
+            if not messages:
+                self.terminate(node)
+                continue
+
+            logger.info('[%s] Node responded correctly.', node)
+            return messages[0]
 
     def reset_connection(self):
         if self.connection:
