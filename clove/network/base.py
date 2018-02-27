@@ -156,7 +156,7 @@ class BaseNetwork(object):
 
                 if msg_type in expected_message_types:
                     found.append(message)
-                    del expected_message_types[expected_message_types.index(msg_type)]
+                    expected_message_types.remove(msg_type)
                     logger.debug('Found %s, %s more to catch', msg_type.command.upper(), len(expected_message_types))
 
         if not expected_message_types:
