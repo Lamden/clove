@@ -11,7 +11,7 @@ TRANSACTION_BROADCASTING_MAX_ATTEMPTS = 10
 API_SUPPORTED_NETWORKS = (
     '1337', '2give', '42', '8bit', 'abc', 'ac', 'adc', 'aeg', 'anc', 'arco',
     'arg', 'atms', 'atom', 'b3', 'bash', 'bay', 'bcc', 'bee2', 'bela', 'bitb',
-    'blitz', 'blk', 'block', 'boli', 'brit', 'bro', 'bsd', 'bta', 'btci',
+    'blitz', 'blk', 'block', 'boli', 'brit', 'bro', 'bsd', 'bta', 'btc', 'btci',
     'btd', 'btdx', 'btg', 'btm', 'btx', 'bucks', 'bxt', 'byc', 'byz', 'bzl',
     'cach', 'cann', 'c2', 'carbon', 'cbx', 'ccc', 'ccn', 'chao', 'chbt', 'civ',
     'club', 'cnc', 'cno', 'colx', 'corg', 'cpc', 'cqst', 'crea', 'crypt',
