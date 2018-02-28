@@ -5,7 +5,7 @@ import os
 from pprint import pprint
 import sys
 
-from bin.script_utils import (
+from script_utils import (
     get_network, get_transaction_from_address, get_utxo, print_error, print_section, print_tx_address
 )
 
