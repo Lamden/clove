@@ -1,3 +1,4 @@
+from datetime import datetime
 from http.client import HTTPResponse
 import json
 from typing import Optional
@@ -44,4 +45,9 @@ def get_transaction_fee(network: str, tx_hash: str) -> Optional[float]:
         logger.debug('Could not get transaction %s fee for %s network', tx_hash, network)
         return
     tx_details = json.loads(resp.read().decode())
+    logger.debug(
+        'Found transaction from %s with fees %.8f',
+        datetime.fromtimestamp(tx_details['timestamp']).isoformat(),
+        tx_details['fees'],
+    )
     return tx_details['fees']
