@@ -5,6 +5,8 @@ from typing import Optional
 from urllib.error import HTTPError, URLError
 import urllib.request
 
+from bitcoin.core import COIN
+
 from clove.utils.logging import logger
 
 
@@ -51,3 +53,37 @@ def get_transaction_fee(network: str, tx_hash: str) -> Optional[float]:
         tx_details['fees'],
     )
     return tx_details['fees']
+
+
+def get_fee_from_last_transactions(network: str, tx_limit: int=5) -> Optional[float]:
+    """Counting fee based on tx_limit transactions (max 10)"""
+
+    last_transactions = get_last_transactions(network)[:tx_limit]
+
+    fees = []
+
+    for tx_hash in last_transactions:
+
+        tx_size = get_transaction_size(network, tx_hash)
+        if not tx_size:
+            continue
+
+        tx_fee = get_transaction_fee(network, tx_hash)
+        if not tx_fee:
+            continue
+
+        tx_fee_per_kb = (tx_fee * 1000) / tx_size
+        fees.append(tx_fee_per_kb)
+
+    return round(sum(fees) / len(fees), 8) if fees else None
+
+
+def get_fee_from_blockcypher(network: str, testnet: bool=False) -> Optional[float]:
+    """Returns current high priority (1-2 blocks) fee estimates."""
+    subnet = 'test3' if testnet else 'main'
+    resp = clove_req(f'https://api.blockcypher.com/v1/{network}/{subnet}')
+    if resp.status != 200:
+        logger.debug('Unexpected status code from blockcypher: %d', resp.status)
+        return
+    data = json.loads(resp.read().decode())
+    return data['high_fee_per_kb'] / COIN

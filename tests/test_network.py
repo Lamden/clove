@@ -30,17 +30,21 @@ def test_seeds_valid_dns_address(seed):
 
 
 @mark.parametrize('network', networks)
-@patch('clove.network.base.get_last_transactions', return_value=['aaa', 'bbb', 'ccc'])
-@patch('clove.network.base.get_transaction_size', side_effect=[200, 300, 700])
-@patch('clove.network.base.get_transaction_fee', side_effect=[0.02, 0.03, 0.07])
-def test_fee_per_kb_implementation(fee_mock, size_mock, transactions_mock, network):
-    if network.name in ('test-bitcoin', 'dogecoin', 'raven'):
+@patch('clove.network.ravencoin.Ravencoin.get_current_fee_per_kb', side_effect=[0.01, ])
+@patch('clove.network.base.get_fee_from_last_transactions', side_effect=[0.01, ])
+@patch('clove.network.base.get_fee_from_blockcypher', side_effect=[0.01, ])
+def test_fee_per_kb_implementation(blockcyphe_mock, api_mock, ravencoin_mock, network):
+    # networks supported by blockcypher or with own methods for getting fee
+    if network.name in ('bitcoin', 'test-bitcoin', 'litecoin', 'dogecoin', 'dash', 'raven'):
+        assert network.get_current_fee_per_kb() == 0.01
         return
+
     if network.is_test_network() or network.symbols[0].lower() not in API_SUPPORTED_NETWORKS:
         with pytest.raises(NotImplementedError):
             network.get_current_fee_per_kb()
-    else:
-        assert network.get_current_fee_per_kb() == 0.1
+        return
+
+    assert network.get_current_fee_per_kb() == 0.01
 
 
 def test_filter_blacklisted_nodes_method():

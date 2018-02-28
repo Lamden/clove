@@ -1,5 +1,6 @@
 import socket
 from time import sleep, time
+from typing import Optional
 
 import bitcoin
 from bitcoin import SelectParams
@@ -12,7 +13,7 @@ from bitcoin.net import CInv
 
 from clove.constants import API_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT
 from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
-from clove.utils.external_source import get_last_transactions, get_transaction_fee, get_transaction_size
+from clove.utils.external_source import get_fee_from_blockcypher, get_fee_from_last_transactions
 from clove.utils.logging import logger
 from clove.utils.network import generate_params_object
 
@@ -358,37 +359,20 @@ class BaseNetwork(object):
         return cls.get_wallet()
 
     @classmethod
-    def get_current_fee_per_kb(cls) -> float:
+    def get_current_fee_per_kb(cls) -> Optional[float]:
         """Returns current fee based on last transactions."""
 
-        if cls.is_test_network():
+        if cls.is_test_network() and cls.name != 'test-bitcoin':
             raise NotImplementedError
 
-        # counting fee based on n transactions (max 10)
-        tx_limit = 5
         network = cls.symbols[0].lower()
+        if network in ('btc', 'ltc', 'doge', 'dash'):
+            return get_fee_from_blockcypher(network, testnet=cls.is_test_network())
 
         if network not in API_SUPPORTED_NETWORKS:
             raise NotImplementedError
 
-        last_transactions = get_last_transactions(network)[:tx_limit]
-
-        fees = []
-
-        for tx_hash in last_transactions:
-
-            tx_size = get_transaction_size(network, tx_hash)
-            if not tx_size:
-                continue
-
-            tx_fee = get_transaction_fee(network, tx_hash)
-            if not tx_fee:
-                continue
-
-            tx_fee_per_kb = (tx_fee * 1000) / tx_size
-            fees.append(tx_fee_per_kb)
-
-        return round(sum(fees) / len(fees), 8) if fees else None
+        return get_fee_from_last_transactions(network)
 
     def get_current_node(self):
         if self.connection:

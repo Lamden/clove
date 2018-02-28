@@ -1,11 +1,8 @@
 import base64
 from datetime import datetime, timedelta
 from hashlib import sha256
-import json
 import logging
 import struct
-from urllib.error import HTTPError, URLError
-import urllib.request
 
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -535,15 +532,3 @@ class BitcoinTestNet(Bitcoin):
         'SCRIPT_ADDR': 196,
         'SECRET_KEY': 239
     }
-
-    @classmethod
-    def get_current_fee_per_kb(cls) -> float:
-        """Returns current high priority (1-2 blocks) fee estimates."""
-        try:
-            with urllib.request.urlopen('https://api.blockcypher.com/v1/btc/test3') as url:
-                if url.status != 200:
-                    return
-                data = json.loads(url.read().decode())
-                return satoshi_to_btc(data['high_fee_per_kb'])
-        except (URLError, HTTPError):
-            return
