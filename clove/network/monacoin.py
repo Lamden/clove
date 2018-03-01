@@ -1,4 +1,6 @@
-from clove.network.bitcoin import Bitcoin
+from bitcoin.wallet import CBitcoinSecretError
+
+from clove.network.bitcoin import Bitcoin, auto_switch_params
 
 
 class Monacoin(Bitcoin):
@@ -19,6 +21,16 @@ class Monacoin(Bitcoin):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 176
     }
+    old_secret_key = 178
+
+    @classmethod
+    @auto_switch_params()
+    def get_wallet(cls, *args, **kwargs):
+        try:
+            return super().get_wallet(*args, **kwargs)
+        except CBitcoinSecretError:
+            cls.base58_prefixes['SECRET_KEY'] = cls.old_secret_key
+            return super().get_wallet(*args, **kwargs)
 
 
 class MonacoinTestNet(Monacoin):
