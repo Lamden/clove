@@ -28,7 +28,7 @@ chainparams_test_patterns = [
 
 main_message_start_pattern = re.compile('pchMessageStart\[4\] = {(.*?),(.*?),(.*?),(.*?)};', re.S)
 main_message_start_test_pattern = re.compile(
-    'if (fTestNet).*?'
+    'if \(fTestNet\).*?'
     'pchMessageStart\[0\] = (.*?);.*?'
     'pchMessageStart\[1\] = (.*?);.*?'
     'pchMessageStart\[2\] = (.*?);.*?'
