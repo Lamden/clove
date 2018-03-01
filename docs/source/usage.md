@@ -3,72 +3,92 @@
 
 ## Assumptions
 
-* Alice has 3 bitcoins and wants to buy 10 litecoins
-* Alice doesn't have a litecoin wallet
-* Bob has 15 litecoins and wants to buy 2 bitcoins
-* Bob has a bitcoin wallet
+* Alice has over 2 monacoins and wants to buy 100 dogecoins
+* Alice doesn't have a dogecoin wallet
+* Bob has over 1000 dogecoins and wants to buy around 0.11 monacoin
+* Bob has a monacoin wallet
+
+(2018-03-01) Exchange rate: 100 dogecoins is 0.11 monacoin 
 
 
 ## 1. Wallets setup
 
-[**Alice**] has to create a new litecoin wallet
+[**Alice**] has to create a new dogecoin wallet
 
-    from clove.network import LitecoinTestNet
+    from clove.network import Dogecoin
 
-    ltc_network = LitecoinTestNet()
+    doge_network = Dogecoin()
 
-    alice_ltc_wallet = ltc_network.get_new_wallet()
+    alice_doge_wallet = doge_network.get_new_wallet()
 
-    alice_ltc_wallet.address
-    '1FiLXtspLcEU5uHr9mFDT556tXE8znTkxj'
+    alice_doge_wallet.address
+    'DE8tMBC9qk6a9A5T7NSdog4MJa16JqzZf7'
+https://live.blockcypher.com/doge/address/DE8tMBC9qk6a9A5T7NSdog4MJa16JqzZf7/
 
-    alice_ltc_wallet.get_private_key()
+    alice_doge_wallet.get_private_key()
+    # returns private key; The one below is fake, because of obvious security reasons.
     'L15kFZg4MdoX2kqXEeEZMjbbVEdZzt1zL2vU59ynrtEf6GB16B3c'
 
-[**Alice**] has to prepare her bitcoin wallet
+[**Alice**] has to prepare her monacoin wallet
 
-    from clove.network import BitcoinTestNet
+    from clove.network import Monacoin
 
-    btc_network = BitcoinTestNet()
+    mona_network = Monacoin()
 
-    alice_btc_wallet = btc_network.get_wallet(private_key='cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe')
+    # Alice provides hers private key. The one below is fake, because of obvious security reasons.
+    alice_mona_wallet = mona_network.get_wallet(private_key='cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe')
 
-    alice_btc_wallet.address
-    'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM'
+    alice_mona_wallet.address
+    'MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ'
+https://bchain.info/MONA/addr/MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ
 
-[**Bob**] can use his existing bitcoin wallet by passing his private key
+[**Bob**] can use his existing monacoin wallet by passing his private key
 
-    from clove.network import BitcoinTestNet
+    from clove.network import Monacoin
 
-    btc_network = BitcoinTestNet()
+    mona_network = Monacoin()
 
-    bob_btc_wallet = btc_network.get_wallet(private_key='cRoFBWMvcLXrLsYFt794NRBEPUgMLf5AmnJ7VQwiEenc34z7zSpK')
+    bob_mona_wallet = mona_network.get_wallet(private_key='cRoFBWMvcLXrLsYFt794NRBEPUgMLf5AmnJ7VQwiEenc34z7zSpK')
 
-    bob_btc_wallet.address
-    'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1'
+    bob_mona_wallet.address
+    'MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL'
+https://bchain.info/MONA/addr/MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL
 
-[**Bob**] has to prepare his litecoin wallet
+[**Bob**] has to prepare his dogecoin wallet
 
-    from clove.network import LitecoinTestNet
+    from clove.network import Dogecoin
 
-    ltc_network = LitecoinTestNet()
+    doge_network = Dogecoin()
 
-    bob_ltc_wallet = ltc_network.get_wallet(private_key='cTVuBqcjryCdHiCfFxkY5ycNPH2RYNrbmgrTVXBsLKG8xR2My3j2')
+    # Bob provides his private key. The one below is fake, because of obvious security reasons.
+    bob_doge_wallet = doge_network.get_wallet(private_key='cTVuBqcjryCdHiCfFxkY5ycNPH2RYNrbmgrTVXBsLKG8xR2My3j2')
 
-    bob_ltc_wallet.address
-    'muE6kHtUcKABwUWEkN47t5kWTMRM7NpnxV'
+    bob_doge_wallet.address
+    'DGC1MHWRaQeqn6MTeqkphzUHTeDnZgLvqs'
+https://live.blockcypher.com/doge/address/DGC1MHWRaQeqn6MTeqkphzUHTeDnZgLvqs/
 
 ## 2. Communication
 
 Alice and Bob exchange their wallet addresses.
 
+[**Alice**]'s console input:
+
+    bob_mona_address = 'MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL'
+    bob_doge_address = 'DGC1MHWRaQeqn6MTeqkphzUHTeDnZgLvqs'
+
+[**Bob**]'s console input:
+
+    alice_mona_address = 'MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ'
+    alice_doge_address = 'DE8tMBC9qk6a9A5T7NSdog4MJa16JqzZf7'
+
+
 ## 3. Alice is initializing an atomic swap transaction
 
-[**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://api.blockcypher.com/v1/btc/test3/txs/6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8?limit=50&includeHex=true)
+[**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://api.blockcypher.com/v1/mona/test3/txs/6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8?limit=50&includeHex=true)
 
     from clove.network.bitcoin import Utxo
 
-    bitcoins_ammount = 2
+    monacoins_to_swap = 0.11
 
     initial_utxo_list = [
         Utxo(
@@ -79,165 +99,208 @@ Alice and Bob exchange their wallet addresses.
         ),
     ]
 
-    initial_transaction = btc_network.atomic_swap(
-        alice_btc_wallet.address,
-        bob_btc_wallet.address,
-        bitcoins_ammount,
+    initial_transaction = mona_network.atomic_swap(
+        alice_mona_wallet.address,
+        bob_mona_address,
+        monacoins_to_swap,
         initial_utxo_list
     )
+    
+    # As monacoin is not in the blockcypher we need to add fee manually
+    initial_transaction.fee = 0.001
 
-    initial_transaction.add_fee_and_sign(alice_btc_wallet)
+    initial_transaction.add_fee_and_sign(alice_mona_wallet)
 
-    initial_transaction.show_details()
-    {'contract': '63a820260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc08876a9143f8870a5633e4fdac612fba47525fef082bbe961670a31353138313738363830b17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac',
-     'contract_transaction': '0100000001b88ae2db0538ea2470b9b8f9cf80dbc5de9e90f1beeb70de6c971a8bd866cd6e010000006b483045022100803d409feeb1e1973fa95cfff7c52fa3dc1dd0017be2a13a0a5a6d28d012e26602203ce867a442a004a71571e6fa34a3151f1cb453ecc233c881592deec14cc3dcf6012103142762372a0f6f2b4718cdee32fa1a3cc2465d3379312e8875ee5f9193158177ffffffff0200c2eb0b000000006363a820260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc08876a9143f8870a5633e4fdac612fba47525fef082bbe961670a31353138313738363830b17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac7ab4b304000000001976a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac00000000',
-     'contract_transaction_hash': 'bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f',
-     'fee': 0.00070936,
-     'fee_per_kb': 0.00213021,
-     'fee_per_kb_text': '0.00213021 BTC / 1 kB',
-     'fee_text': '0.00070936 BTC',
-     'locktime': datetime.datetime(2018, 2, 9, 13, 18, 0, 35873),
-     'recipient_address': 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1',
-     'refund_address': 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM',
-     'secret': '6e6f6d706752503031665755414b3678596b507637387535795a4a426a4669633748384c786f71494f5237687a37546e564c474e51566e634467354a72505569',
-     'secret_hash': '260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc0',
-     'size': 333,
-     'size_text': '333 bytes',
-     'value': 2,
-     'value_text': '2.00000000 BTC'}
+    {'contract': '63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704b0749a5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac',
+     'contract_transaction': '0100000001fdbfc816109f4b8f94af5cb00e29f7a3a0ed7a80be671cebf630184c5b23cc9f000000008b483045022100b8ff6dffca1c42a8879c42dae6be9d65f3ba85e7abe9b8a1aefd526b7a39bbdb02207c5778bddc1d04c2018cc6a14c3be63855a9e130511d5180cab7b4124b1e99930141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca0000000002c0d8a7000000000017a914ad1328a445664492aa448635cf48ddf742a04c9487a0160710000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac00000000',
+     'fee': 0.001,
+     'fee_per_kb': 0.0,
+     'fee_per_kb_text': '0.00000000 MONA / 1 kB',
+     'fee_text': '0.00100000 MONA',
+     'locktime': datetime.datetime(2018, 3, 3, 11, 10, 56, 505764),
+     'recipient_address': 'MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL',
+     'refund_address': 'MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ',
+     'secret': '6b4e4943623938384c72685a696b76336177424639436738616c58766737517058717466495639366f433353456c4d36634e71334c36636e42383632337a6a57',
+     'secret_hash': '5de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b',
+     'size': 256,
+     'size_text': '256 bytes',
+     'transaction_hash': '11e4a28f469ed0d6171c6fb541327f9399b9e8ab416b19448de50538ad672601',
+     'value': 0.11,
+     'value_text': '0.11000000 MONA'}
 
      initial_transaction.publish()
-     'bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f'
+     '11e4a28f469ed0d6171c6fb541327f9399b9e8ab416b19448de50538ad672601'
+https://bchain.info/MONA/tx/11e4a28f469ed0d6171c6fb541327f9399b9e8ab416b19448de50538ad672601
 
 
 ## 4. Communication
 
-[**Alice**] sends hers transaction hash `bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f` to Bob.
+[**Alice**] sends hers transaction hash `11e4a28f469ed0d6171c6fb541327f9399b9e8ab416b19448de50538ad672601` to Bob, so he could get `raw_transaction` (e.g. "hex" in raw data of https://bchain.info/MONA/tx/11e4a28f469ed0d6171c6fb541327f9399b9e8ab416b19448de50538ad672601).
+And also she needs to send the contract to Bob (i.e. `63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704b0749a5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac`)
 
 
 ## 5. Contract audit
 
-[**Bob**] needs to create contract in network of coins he wants to receive (i.e. Alice's network), in our case in Bitecoin network.
-As Bob has transaction hash from Alice, he can get full serialized transaction. But for testing purposes we can get it from `initial_transaction` object.  
-    
-    alice_contract = btc_network.audit_contract(
-        contract='63a820260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc08876a9143f8870a5633e4fdac612fba47525fef082bbe961670a31353138313738363830b17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac',
-        raw_transaction='0100000001b88ae2db0538ea2470b9b8f9cf80dbc5de9e90f1beeb70de6c971a8bd866cd6e010000006b483045022100803d409feeb1e1973fa95cfff7c52fa3dc1dd0017be2a13a0a5a6d28d012e26602203ce867a442a004a71571e6fa34a3151f1cb453ecc233c881592deec14cc3dcf6012103142762372a0f6f2b4718cdee32fa1a3cc2465d3379312e8875ee5f9193158177ffffffff0200c2eb0b000000006363a820260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc08876a9143f8870a5633e4fdac612fba47525fef082bbe961670a31353138313738363830b17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac7ab4b304000000001976a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac00000000'
+[**Bob**] needs to create contract in network of coins he wants to receive (i.e. Alice's network), in our case in Monacoin network.
+And also at this point Bob should validate if the data returned in the contract is correct, he should also check if the transaction is present in the blockchain API (e.g. Bchain.info)  
+
+    alice_contract = mona_network.audit_contract(
+        contract='63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704b0749a5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac',
+        raw_transaction='0100000001fdbfc816109f4b8f94af5cb00e29f7a3a0ed7a80be671cebf630184c5b23cc9f000000008b483045022100b8ff6dffca1c42a8879c42dae6be9d65f3ba85e7abe9b8a1aefd526b7a39bbdb02207c5778bddc1d04c2018cc6a14c3be63855a9e130511d5180cab7b4124b1e99930141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca0000000002c0d8a7000000000017a914ad1328a445664492aa448635cf48ddf742a04c9487a0160710000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac00000000',
     )
     alice_contract.show_details()
 
-    {'locktime': datetime.datetime(2018, 2, 24, 15, 36, 19),
-     'recipient_address': 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1',
-     'refund_address': 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM',
-     'secret_hash': '260ab6c77d0f6e3108553b833712ab64e58368210dbe9914ce912dc9a82c8fc0',
-     'transaction_hash': 'bfad3cf3b16c8fb1b71ce88b1a48cb951d339abbb5720a94fbd4d6345ee6e64f',
-     'value': 2,
-     'value_text': '2.00000000 BTC'}
-     
-     
+    {'locktime': datetime.datetime(2018, 3, 3, 11, 10, 56),
+     'recipient_address': 'MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL',
+     'refund_address': 'MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ',
+     'secret_hash': '5de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b',
+     'transaction_hash': '11e4a28f469ed0d6171c6fb541327f9399b9e8ab416b19448de50538ad672601',
+     'value': 0.11,
+     'value_text': '0.11000000 MONA'}
+
+
 ## 6. Participation 
 
-[**Bob**] has to create parallel transaction from point 3 but in his network (i.e. Litecoin network). We call it `participate_transaction`.
+[**Bob**] has to create parallel transaction from point 3 but in his network (i.e. Dogecoin network). We call it `participate_transaction`.
+    
+    from clove.network.bitcoin import Utxo
+    from clove.utils.bitcoin import satoshi_to_btc # blockcypher is showing value in satoshis
 
-    litecoin_ammount = 10
+    dogecoins_to_swap = 100
     participate_utxo_list = [
         Utxo(
-            tx_id='326416caec1af6b18eda4cc9ef8c858b3d1905446f03223f8981d32523171bd8',
+            tx_id='6bf80aed06436018357c1552dd89abcbe0a31907284ffd3c1a025584fc28c3d7',
             vout=1,
-            value=24.99964200,
-            tx_script='76a9147ef1467725632defd311766e3dbb21e2014847cd88ac',
+            value=satoshi_to_btc(98734979196),
+            tx_script='76a91479364cbefe7c9b926792911b3611628102f9314c88ac',
         ),
     ]
     participate_transaction = alice_contract.participate(
-        'ltc',
-        bob_ltc_wallet.address,
-        alice_ltc_wallet.address,
-        litecoin_ammount,
+        'doge',
+        bob_doge_wallet.address,
+        alice_doge_address,
+        dogecoins_to_swap,
         participate_utxo_list
     )
-    
-    # For now add_fee_and_sign is not fully implemented for LTC network, hack this in such a way:
-    participate_transaction.fee = 0.001
-    participate_transaction.add_fee_and_sign(bob_ltc_wallet)
-                                                             
-    
+    participate_transaction = alice_contract.participate(
+        'doge',
+        bob_doge_wallet.address,
+        alice_doge_address,
+        dogecoins_to_swap,
+        participate_utxo_list
+    )
+
+    participate_transaction.add_fee_and_sign(bob_doge_wallet)
+
     participate_transaction.show_details()
-    {'contract': '63a8209fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b98876a9143dfd3bba567574ba0508d01a96e89300af292b066704d56f955ab17576a9147ef1467725632defd311766e3dbb21e2014847cd6888ac',
-     'contract_transaction': '0100000001592390d5c9c19b7f2f27edfdd44043b4065e48ccdb67900145745d068221e5bd010000008a47304402205d83ec607e68d83187b3a45d42f2e27aadd1e41444973c8a8d72c8d58368bf94022046eb2af543207633dc57bd7c965985f578bbf8eaa6a601d0b482b432de50b23a01410443a2fbd871baafd35a6304fe9b93db0ec09f100631259feb933c2752b8fc8cf4ad8a04016345c17117146109dd69744fb32e8d032dd11a426f43a3fa76b403a60000000002005a6202000000005d63a8209fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b98876a9143dfd3bba567574ba0508d01a96e89300af292b066704d56f955ab17576a9147ef1467725632defd311766e3dbb21e2014847cd6888aca814a11a000000001976a9147ef1467725632defd311766e3dbb21e2014847cd88ac00000000',
-     'fee': 0.001,
-     'fee_per_kb': 0.0,
-     'fee_per_kb_text': '0.00000000 LTC / 1 kB',
-     'fee_text': '0.00100000 LTC',
-     'locktime': datetime.datetime(2018, 2, 24, 15, 48, 53, 117091),
-     'recipient_address': 'mmAisiQMtih4hEVe5xYtVJyQJSXHo7VWwM',
-     'refund_address': 'ms6AUKhqnVgFppPjcLYkvRxEuy6cMqGL7P',
-     'secret': '',
-     'secret_hash': '9fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b9',
-     'size': 358,
-     'size_text': '358 bytes',
-     'transaction_hash': '4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12',
-     'value': 10,
-     'value_text': '10.00000000 LTC'}
     
+    {'contract': '63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac',
+     'contract_transaction': '0100000001d7c328fc8455021a3cfd4f280719a3e0cbab89dd52157c3518604306ed0af86b010000008b483045022100b7f28aaa45662e9cb0d355b58e6d0f82d96a1a0245be5312015b7da9eb91f82502201f0d2566bd8c3f2f4da9ba341324a66b4b34957c191a228be0b4792310ebb945014104996266fc2984dee523d985d618da6f4609dd0054e0d6895e8d40278ddf3623f4d059edf51f5a8824623d96bd23d0fd5cc323e89aaa9af56f4afa408e34b7f04e000000000200e40b540200000017a91474e9cf2b2bdb70bb40b4bc3d48743f1e51548017877687f9a8140000001976a91479364cbefe7c9b926792911b3611628102f9314c88ac00000000',
+     'fee': 0.00707846,
+     'fee_per_kb': 0.02775866,
+     'fee_per_kb_text': '0.02775866 DOGE / 1 kB',
+     'fee_text': '0.00707846 DOGE',
+     'locktime': datetime.datetime(2018, 3, 2, 11, 27, 28, 266577),
+     'recipient_address': 'DE8tMBC9qk6a9A5T7NSdog4MJa16JqzZf7',
+     'refund_address': 'DGC1MHWRaQeqn6MTeqkphzUHTeDnZgLvqs',
+     'secret': '',
+     'secret_hash': '5de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b',
+     'size': 256,
+     'size_text': '256 bytes',
+     'transaction_hash': 'c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd05116c9e53de783d92d36',
+     'value': 100,
+     'value_text': '100.00000000 DOGE'}
+
     participate_transaction.publish()
-   
+    'c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd05116c9e53de783d92d36'
+https://live.blockcypher.com/doge/tx/c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd05116c9e53de783d92d36/
  
 ## 7. Communication
 
-[**Bob**] sends his transaction hash `4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12` to Alice.
+[**Bob**] sends his transaction hash `4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12` and contract to Alice.
 
 
 ## 8. Contract audit
 
-[**Alice**] needs to create contract in network of coins she wants to receive (i.e. Bob's network), in our case in Litecoin network.
-As Alice has transaction hash from Bob, she can get full serialized transaction. But for testing purposes we can get it from `participate_transaction` object.  
+[**Alice**] needs to audit contract in network of coins she wants to receive (i.e. Bob's network), in our case in Dogecoin network.
+And also at this point Alice should validate if the data returned in the contract is correct, she should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)  
     
-    bob_contract = ltc_network.audit_contract(
-        contract='63a8209fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b98876a9143dfd3bba567574ba0508d01a96e89300af292b066704d56f955ab17576a9147ef1467725632defd311766e3dbb21e2014847cd6888ac'
-        raw_transaction='0100000001592390d5c9c19b7f2f27edfdd44043b4065e48ccdb67900145745d068221e5bd010000008a47304402205d83ec607e68d83187b3a45d42f2e27aadd1e41444973c8a8d72c8d58368bf94022046eb2af543207633dc57bd7c965985f578bbf8eaa6a601d0b482b432de50b23a01410443a2fbd871baafd35a6304fe9b93db0ec09f100631259feb933c2752b8fc8cf4ad8a04016345c17117146109dd69744fb32e8d032dd11a426f43a3fa76b403a60000000002005a6202000000005d63a8209fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b98876a9143dfd3bba567574ba0508d01a96e89300af292b066704d56f955ab17576a9147ef1467725632defd311766e3dbb21e2014847cd6888aca814a11a000000001976a9147ef1467725632defd311766e3dbb21e2014847cd88ac00000000'
+    bob_contract = doge_network.audit_contract(
+        contract='63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac',
+        raw_transaction='0100000001d7c328fc8455021a3cfd4f280719a3e0cbab89dd52157c3518604306ed0af86b010000008b483045022100b7f28aaa45662e9cb0d355b58e6d0f82d96a1a0245be5312015b7da9eb91f82502201f0d2566bd8c3f2f4da9ba341324a66b4b34957c191a228be0b4792310ebb945014104996266fc2984dee523d985d618da6f4609dd0054e0d6895e8d40278ddf3623f4d059edf51f5a8824623d96bd23d0fd5cc323e89aaa9af56f4afa408e34b7f04e000000000200e40b540200000017a91474e9cf2b2bdb70bb40b4bc3d48743f1e51548017877687f9a8140000001976a91479364cbefe7c9b926792911b3611628102f9314c88ac00000000'
     )
     bob_contract.show_details()
     
-    {'locktime': datetime.datetime(2018, 2, 24, 15, 48, 53),
-     'recipient_address': 'mmAisiQMtih4hEVe5xYtVJyQJSXHo7VWwM',
-     'refund_address': 'ms6AUKhqnVgFppPjcLYkvRxEuy6cMqGL7P',
-     'secret_hash': '9fd0eef32d0a99db45200cac017140e24a9f29fd4b793a5a75bd1596d08a89b9',
-     'transaction_hash': '4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12',
-     'value': 10.0,
-     'value_text': '10.00000000 LTC'}
+    {'locktime': datetime.datetime(2018, 3, 2, 11, 27, 28),
+     'recipient_address': 'DE8tMBC9qk6a9A5T7NSdog4MJa16JqzZf7',
+     'refund_address': 'DGC1MHWRaQeqn6MTeqkphzUHTeDnZgLvqs',
+     'secret_hash': '5de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b',
+     'transaction_hash': 'c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd05116c9e53de783d92d36',
+     'value': 100.0,
+     'value_text': '100.00000000 DOGE'}
 
 
 ## 9. First redeem transaction
 
 [**Alice**] can now collect coins she wants, thus she creates redeem transaction.
     
-    alice_redeem = bob_contract.redeem(secret=initial_transaction.show_details()['secret'], wallet=alice_ltc_wallet)
+    alice_redeem = bob_contract.redeem(secret=initial_transaction.show_details()['secret'], wallet=alice_doge_wallet)
     alice_redeem.add_fee_and_sign()
     
     alice_redeem.show_details()
     
-    {'locktime': datetime.datetime(2018, 2, 24, 15, 55, 42),
-     'transaction': '0100000001222d497dd12edf372cd814bb0f09b958a511e002838343af8891f86ab758542e00000000fd2c014830450221009d1b15bf348b3965bae8da424765c1e1ce11911011e0f0e8a865e1401782c96602202e68592fe6308c10c7a225009a0e5548e5f4115555081fa9a96939d305ab54fb01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4406950564e32496a76383243546a523966704f3945464e5239736932446373453367596649776f365357626b4e4176516d436b5164387878633534554453645948514c5d63a82088e65ab63c0aceb81187eabfd45594268ce6d565d42ed0963fbef48e88d89a158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045ba4965ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac0000000001b80c0400000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000',
-     [some other key-values]...}
+    {'fee': 0.01507825,
+     'fee_per_kb': 0.03896189,
+     'fee_per_kb_text': '0.03896189 DOGE / 1 kB',
+     'fee_text': '0.01507825 DOGE',
+     'recipient_address': 'DE8tMBC9qk6a9A5T7NSdog4MJa16JqzZf7',
+     'size': 387,
+     'size_text': '387 bytes',
+     'transaction': '0100000001362dd983e73de5c91651d08c85f0be575f2bafb2140fc11fe542b61b4a47a9c300000000fd2c01483045022100e89b7a267c252419cf6dbeaa53d0074bce98e5a0d7da0c29ad4f31d8cd1ebfff0220495666315b45b4a5a30e2ea2cba1a20bae2031b607ff21230fea295cd35ce591014104dbe8366e39f93afcd70616e9049ee3eb5e09acdcadb63fb7d488fbb7af9f211e7e36998ba279f68ea01f5f090be8478465ee7dd91085e3f44831b0db032a63f7406b4e4943623938384c72685a696b76336177424639436738616c58766737517058717466495639366f433353456c4d36634e71334c36636e42383632337a6a57514c5d63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac00000000010fe2f453020000001976a91462aef49943f16565b7ff9ef170a0d4bc5397763988ac00000000',
+     'transaction_hash': '980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd',
+     'value': 100.0,
+     'value_text': '100.00000000 DOGE'}
      
     alice_redeem.publish()
+    '980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd'
+https://live.blockcypher.com/doge/tx/980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd/
     
-[**Alice**] should get litecoins just after redeem transaction is published.
+[**Alice**] should get dogecoins just after redeem transaction is published.
     
     
 ## 10. Secret capture
 
-[**Bob**] Bob should track Alice's wallet and search for redeem transaction (Alice can but don't have to send him a transaction address).
-Then Bob should extract the secret himself from that transaction.
+[**Bob**] should track Alice's wallet and search for redeem transaction (Alice can but don't have to send him a transaction address).
+Then Bob should extract the secret himself from that transaction. (e.g. "hex" in https://api.blockcypher.com/v1/doge/main/txs/980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd?limit=50&includeHex=true)
 
-    secret = ltc_network.extract_secret('0100000001222d497dd12edf372cd814bb0f09b958a511e002838343af8891f86ab758542e00000000fd2c014830450221009d1b15bf348b3965bae8da424765c1e1ce11911011e0f0e8a865e1401782c96602202e68592fe6308c10c7a225009a0e5548e5f4115555081fa9a96939d305ab54fb01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4406950564e32496a76383243546a523966704f3945464e5239736932446373453367596649776f365357626b4e4176516d436b5164387878633534554453645948514c5d63a82088e65ab63c0aceb81187eabfd45594268ce6d565d42ed0963fbef48e88d89a158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045ba4965ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac0000000001b80c0400000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000')
+    secret = doge_network.extract_secret('0100000001222d497dd12edf372cd814bb0f09b958a511e002838343af8891f86ab758542e00000000fd2c014830450221009d1b15bf348b3965bae8da424765c1e1ce11911011e0f0e8a865e1401782c96602202e68592fe6308c10c7a225009a0e5548e5f4115555081fa9a96939d305ab54fb01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4406950564e32496a76383243546a523966704f3945464e5239736932446373453367596649776f365357626b4e4176516d436b5164387878633534554453645948514c5d63a82088e65ab63c0aceb81187eabfd45594268ce6d565d42ed0963fbef48e88d89a158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045ba4965ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac0000000001b80c0400000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000')
     
 ## 11. Second redeem transaction
 
 [**Bob**] can now collect coins he wants, thus he creates redeem transaction.
 
-    bob_redeem = alice_contract.redeem(secret=secret, wallet=bob_btc_wallet)
+    bob_redeem = alice_contract.redeem(secret=secret, wallet=bob_mona_wallet)
+    
+    # As monacoin is not in the blockcypher we need to add fee manually
+    bob_redeem.fee = 0.001
     bob_redeem.add_fee_and_sign()
-    bob_redeem.publish()
+    
+    bob_redeem.show_details()
+    {'fee': 0.001,
+     'fee_per_kb': 0.0,
+     'fee_per_kb_text': '0.00000000 MONA / 1 kB',
+     'fee_text': '0.00100000 MONA',
+     'recipient_address': 'MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL',
+     'size': 387,
+     'size_text': '387 bytes',
+     'transaction': '0100000001012667ad3805e58d44196b41abe8b999937f3241b56f1c17d6d09e468fa2e41100000000fd2c01483045022100975ec541ce0395e7cf99fcf7d45203b9751df46b2fb26a561188d113ccd501cc02202e5005f90e1071227b8f07f4347e0d4fa8677edbe25710856611c16c3de7271e01410447408e366d0e979101f776ab10753091b0b62ba9aa609d006263959e030fb2d96e054c1f976a8cddcee5e1a95022cf289be89577ca348c893223d2e648de1abb406b4e4943623938384c72685a696b76336177424639436738616c58766737517058717466495639366f433353456c4d36634e71334c36636e42383632337a6a57514c5d63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704b0749a5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac00000000012052a600000000001976a9141a376f6634e41c22b28bc9ef3336a623717083a488ac00000000',
+     'transaction_hash': 'ea8f02ba968d2f764322453f4e3f9e78b8a257bb06dda28c6cc9e903949975a4',
+     'value': 0.11,
+     'value_text': '0.11000000 MONA'}
 
-[**Bob**] should get bitcoins just after redeem transaction is published.
+    bob_redeem.publish()
+    'ea8f02ba968d2f764322453f4e3f9e78b8a257bb06dda28c6cc9e903949975a4'
+https://bchain.info/MONA/tx/ea8f02ba968d2f764322453f4e3f9e78b8a257bb06dda28c6cc9e903949975a4
+
+
+[**Bob**] should get monacoins just after redeem transaction is published.
