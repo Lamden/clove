@@ -28,6 +28,7 @@ setup(
             'pytest==3.3.2',
             'isort==4.2.15',
             'flake8==3.5.0',
+            'freezegun==0.3.9',
             'validators==0.12.0',
         ],
         'docs': [

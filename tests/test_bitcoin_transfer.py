@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from bitcoin.core import CTransaction, b2x, script
+from freezegun import freeze_time
 from pytest import raises
 
 from clove.network.bitcoin import BitcoinAtomicSwapTransaction, BitcoinTestNet
@@ -188,12 +189,32 @@ def test_refund_transaction(alice_wallet, signed_transaction):
         transaction_details['contract'],
         transaction_details['contract_transaction']
     )
-    refund_transaction = contract.refund(alice_wallet)
+
+    with freeze_time(transaction_details['locktime']):
+        refund_transaction = contract.refund(alice_wallet)
+
     refund_transaction.fee_per_kb = 0.002
     refund_transaction.add_fee_and_sign()
 
     assert refund_transaction.recipient_address == alice_wallet.address
     assert refund_transaction.value == signed_transaction.value
+
+
+def test_refund_not_expired_contract(alice_wallet, signed_transaction):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = btc_network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
+
+    with freeze_time(transaction_details['locktime'] - timedelta(seconds=1)):
+        locktime_string = transaction_details['locktime'].strftime('%Y-%m-%d %H:%M:%S')
+        with raises(
+            RuntimeError, match=f"This contract is still valid! It can't be refunded until {locktime_string}."
+        ):
+            contract.refund(alice_wallet)
 
 
 def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_transaction):
