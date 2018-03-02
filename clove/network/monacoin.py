@@ -21,7 +21,7 @@ class Monacoin(Bitcoin):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 176
     }
-    old_secret_key = 178
+    alternative_secret_key = 178
 
     @classmethod
     @auto_switch_params()
@@ -29,7 +29,8 @@ class Monacoin(Bitcoin):
         try:
             return super().get_wallet(*args, **kwargs)
         except CBitcoinSecretError:
-            cls.base58_prefixes['SECRET_KEY'] = cls.old_secret_key
+            cls.base58_prefixes['SECRET_KEY'], cls.alternative_secret_key = \
+                cls.alternative_secret_key, cls.base58_prefixes['SECRET_KEY']
             return super().get_wallet(*args, **kwargs)
 
 
