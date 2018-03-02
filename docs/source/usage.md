@@ -84,7 +84,7 @@ Alice and Bob exchange their wallet addresses.
 
 ## 3. Alice is initializing an atomic swap transaction
 
-[**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://api.blockcypher.com/v1/mona/test3/txs/6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8?limit=50&includeHex=true)
+[**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://bchain.info/MONA/tx/9fcc235b4c1830f6eb1c67be807aeda0a3f7290eb05caf948f4b9f1016c8bffd)
 
     from clove.network.bitcoin import Utxo
 
@@ -92,10 +92,10 @@ Alice and Bob exchange their wallet addresses.
 
     initial_utxo_list = [
         Utxo(
-            tx_id='6ecd66d88b1a976cde70ebbef1909edec5db80cff9b8b97024ea3805dbe28ab8',
-            vout=1,
-            value=2.78956946,
-            tx_script='76a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac'
+            tx_id='9fcc235b4c1830f6eb1c67be807aeda0a3f7290eb05caf948f4b9f1016c8bffd',
+            vout=0,
+            value=2.8,
+            tx_script='76a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac'
         ),
     ]
 
@@ -182,13 +182,6 @@ And also at this point Bob should validate if the data returned in the contract 
         dogecoins_to_swap,
         participate_utxo_list
     )
-    participate_transaction = alice_contract.participate(
-        'doge',
-        bob_doge_wallet.address,
-        alice_doge_address,
-        dogecoins_to_swap,
-        participate_utxo_list
-    )
 
     participate_transaction.add_fee_and_sign(bob_doge_wallet)
 
@@ -217,7 +210,7 @@ https://live.blockcypher.com/doge/tx/c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd
  
 ## 7. Communication
 
-[**Bob**] sends his transaction hash `4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12` and contract to Alice.
+[**Bob**] sends his transaction hash `4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12` and contract `63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac` to Alice.
 
 
 ## 8. Contract audit
@@ -273,7 +266,7 @@ https://live.blockcypher.com/doge/tx/980ccfd7375a6946c3453178350784e5bf43a8216b0
 [**Bob**] should track Alice's wallet and search for redeem transaction (Alice can but don't have to send him a transaction address).
 Then Bob should extract the secret himself from that transaction. (e.g. "hex" in https://api.blockcypher.com/v1/doge/main/txs/980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd?limit=50&includeHex=true)
 
-    secret = doge_network.extract_secret('0100000001222d497dd12edf372cd814bb0f09b958a511e002838343af8891f86ab758542e00000000fd2c014830450221009d1b15bf348b3965bae8da424765c1e1ce11911011e0f0e8a865e1401782c96602202e68592fe6308c10c7a225009a0e5548e5f4115555081fa9a96939d305ab54fb01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4406950564e32496a76383243546a523966704f3945464e5239736932446373453367596649776f365357626b4e4176516d436b5164387878633534554453645948514c5d63a82088e65ab63c0aceb81187eabfd45594268ce6d565d42ed0963fbef48e88d89a158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045ba4965ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac0000000001b80c0400000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000')
+    secret = doge_network.extract_secret('0100000001362dd983e73de5c91651d08c85f0be575f2bafb2140fc11fe542b61b4a47a9c300000000fd2c01483045022100e89b7a267c252419cf6dbeaa53d0074bce98e5a0d7da0c29ad4f31d8cd1ebfff0220495666315b45b4a5a30e2ea2cba1a20bae2031b607ff21230fea295cd35ce591014104dbe8366e39f93afcd70616e9049ee3eb5e09acdcadb63fb7d488fbb7af9f211e7e36998ba279f68ea01f5f090be8478465ee7dd91085e3f44831b0db032a63f7406b4e4943623938384c72685a696b76336177424639436738616c58766737517058717466495639366f433353456c4d36634e71334c36636e42383632337a6a57514c5d63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac00000000010fe2f453020000001976a91462aef49943f16565b7ff9ef170a0d4bc5397763988ac00000000')
     
 ## 11. Second redeem transaction
 
