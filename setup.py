@@ -40,10 +40,10 @@ setup(
     dependency_links=[
         # waiting for this fix to be released:
         # https://github.com/petertodd/python-bitcoinlib/commit/1a089d67f5a0b64ae9f2ffcac786b87b56a0551b
-        'https://github.com/lamden/python-bitcoinlib/archive/master.zip#egg=python_bitcoinlib'
+        'https://github.com/lamden/python-bitcoinlib/archive/master.zip##egg=python_bitcoinlib-999'
     ],
-    url='https://github.com/Landen/clove',
-    download_url='https://github.com/Landen/clove/tarball/' + __version__,
+    url='https://github.com/Lamden/clove',
+    download_url='https://github.com/Lamden/clove/tarball/' + __version__,
     license='GPLv3',
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -54,5 +54,5 @@ setup(
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     author='Lamden Team',
-    author_email='team@landen.io'
+    author_email='team@lamden.io'
 )
