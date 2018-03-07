@@ -1,6 +1,7 @@
 from bitcoin.wallet import CBitcoinSecretError
 
-from clove.network.bitcoin import Bitcoin, auto_switch_params
+from clove.network.base import auto_switch_params
+from clove.network.bitcoin import Bitcoin
 
 
 class Monacoin(Bitcoin):

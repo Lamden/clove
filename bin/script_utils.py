@@ -9,7 +9,8 @@ import urllib.request
 from colorama import Fore, Style
 
 from clove.network.base import BaseNetwork
-from clove.network.bitcoin import BitcoinTestNet, Utxo
+from clove.network.bitcoin import BitcoinTestNet
+from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import satoshi_to_btc
 
 

@@ -2,7 +2,8 @@ from collections import namedtuple
 
 import pytest
 
-from clove.network.bitcoin import BitcoinTestNet, Utxo
+from clove.network.bitcoin import BitcoinTestNet
+from clove.network.bitcoin.utxo import Utxo
 
 Key = namedtuple('Key', ['secret', 'address'])
 

@@ -4,7 +4,8 @@ from bitcoin.core import CTransaction, b2x, script
 from freezegun import freeze_time
 from pytest import raises
 
-from clove.network.bitcoin import BitcoinAtomicSwapTransaction, BitcoinTestNet
+from clove.network.bitcoin import BitcoinTestNet
+from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.utils.bitcoin import btc_to_satoshi
 
 

@@ -8,7 +8,7 @@ from validators import domain
 from clove.constants import API_SUPPORTED_NETWORKS
 from clove.network import __all__ as networks
 from clove.network.base import BaseNetwork, auto_switch_params
-from clove.network.bitcoin import Utxo
+from clove.network.bitcoin.utxo import Utxo
 
 seeds = [seed for network in networks for seed in network.seeds]
 

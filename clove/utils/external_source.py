@@ -8,6 +8,7 @@ import urllib.request
 
 from bitcoin.core import COIN
 
+from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import satoshi_to_btc
 from clove.utils.logging import logger
 
@@ -106,8 +107,6 @@ cryptoid_api_key = os.getenv('CRYPTOID_API_KEY')
 def get_utxo(
     network: str, address: str, amount: float, use_blockcypher: bool=False, testnet: bool=False
 ) -> Optional[list]:
-    from clove.network.bitcoin import Utxo
-
     if use_blockcypher:
         subnet = 'test3' if testnet else 'main'
         api_url = f'https://api.blockcypher.com/v1/{network}/{subnet}/addrs/{address}' \
