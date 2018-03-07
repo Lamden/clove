@@ -135,6 +135,7 @@ expected_utxo_dicts = [utxo.__dict__ for utxo in expected_utxo]
 
 @mark.parametrize('network', networks)
 @patch('clove.utils.external_source.clove_req_json')
+@patch.dict('os.environ', {'CRYPTOID_API_KEY': 'test_api_key'})
 def test_getting_utxo(json_response, network):
     address = 'testaddress'
     amount = 1.0

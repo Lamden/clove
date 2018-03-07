@@ -6,7 +6,7 @@ from pytest import raises
 
 from clove.network.bitcoin import BitcoinTestNet
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
-from clove.utils.bitcoin import btc_to_satoshi
+from clove.utils.bitcoin import to_base_units
 
 
 def test_swap_contract(alice_wallet, bob_wallet):
@@ -111,7 +111,7 @@ def test_transaction_fee(unsigned_transaction):
     unsigned_transaction.add_fee()
     change_with_fee = unsigned_transaction.tx.vout[1].nValue
 
-    assert change_without_fee - btc_to_satoshi(unsigned_transaction.fee) == change_with_fee
+    assert change_without_fee - to_base_units(unsigned_transaction.fee) == change_with_fee
     assert unsigned_transaction.tx.serialize()
 
 

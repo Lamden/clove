@@ -11,7 +11,7 @@ from colorama import Fore, Style
 from clove.network.base import BaseNetwork
 from clove.network.bitcoin import BitcoinTestNet
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import satoshi_to_btc
+from clove.utils.bitcoin import from_base_units
 
 
 def print_section(*args):
@@ -91,7 +91,7 @@ def get_utxo(network, address, amount, api_url=None):
                     if not output['addresses'] or output['addresses'][0] != address \
                             or output['script_type'] != 'pay-to-pubkey-hash' or 'spent_by' in output:
                         continue
-                    value = satoshi_to_btc(output['value'])
+                    value = from_base_units(output['value'])
                     utxo.append(
                         Utxo(
                             tx_id=txs['hash'],

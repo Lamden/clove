@@ -6,7 +6,7 @@ from bitcoin.wallet import P2PKHBitcoinAddress
 from clove.network.base import auto_switch_params
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import satoshi_to_btc
+from clove.utils.bitcoin import from_base_units
 
 
 class BitcoinContract(object):
@@ -32,7 +32,7 @@ class BitcoinContract(object):
             self.locktime_timestamp = int.from_bytes(script_ops[8], byteorder='little')
             self.locktime = datetime.fromtimestamp(self.locktime_timestamp)
             self.secret_hash = b2x(script_ops[2])
-            self.value = satoshi_to_btc(contract_tx_out.nValue)
+            self.value = from_base_units(contract_tx_out.nValue)
         else:
             raise ValueError('Given transaction is not a valid contract.')
 

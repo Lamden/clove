@@ -1,7 +1,6 @@
 from datetime import datetime
 from http.client import HTTPResponse
 import json
-import os
 from typing import Optional
 from urllib.error import HTTPError, URLError
 import urllib.request
@@ -9,7 +8,7 @@ import urllib.request
 from bitcoin.core import COIN
 
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import satoshi_to_btc
+from clove.utils.bitcoin import from_base_units
 from clove.utils.logging import logger
 
 
@@ -101,11 +100,13 @@ def get_fee_from_blockcypher(network: str, testnet: bool=False) -> Optional[floa
     return data['high_fee_per_kb'] / COIN
 
 
-cryptoid_api_key = os.getenv('CRYPTOID_API_KEY')
-
-
-def get_utxo(
-    network: str, address: str, amount: float, use_blockcypher: bool=False, testnet: bool=False
+def get_utxo_from_api(
+    network: str,
+    address: str,
+    amount: float,
+    use_blockcypher: bool=False,
+    testnet: bool=False,
+    cryptoid_api_key: str=None
 ) -> Optional[list]:
     if use_blockcypher:
         subnet = 'test3' if testnet else 'main'
@@ -113,13 +114,12 @@ def get_utxo(
                   f'?limit=2000&unspentOnly=true&includeScript=true&confirmations=6'
         unspent_key = 'txrefs'
         vout_key = 'tx_output_n'
+    elif cryptoid_api_key is None:
+        raise ValueError('API key for cryptoid is required to get UTXOs.')
     else:
         api_url = f'https://chainz.cryptoid.info/{network}/api.dws?q=unspent&key={cryptoid_api_key}&active={address}'
         unspent_key = 'unspent_outputs'
         vout_key = 'tx_ouput_n'
-
-    utxo = []
-    total = 0
 
     data = clove_req_json(api_url)
     if data is None:
@@ -128,13 +128,16 @@ def get_utxo(
 
     unspent = data.get(unspent_key, [])
 
-    if not use_blockcypher:
-        for output in unspent:
-            output['value'] = int(output['value'])
+    for output in unspent:
+        output['value'] = int(output['value'])
 
     unspent = sorted(unspent, key=lambda k: k['value'], reverse=True)
+
+    utxo = []
+    total = 0
+
     for output in unspent:
-        value = satoshi_to_btc(output['value'])
+        value = from_base_units(output['value'])
         utxo.append(
             Utxo(
                 tx_id=output['tx_hash'],
@@ -147,4 +150,4 @@ def get_utxo(
         if total > amount:
             return utxo
 
-    logger.debug(f'Cannot find enough UTXO\'s. Found {total:.8f} from {amount:.8f}.')
+    logger.debug(f'Cannot find enough UTXO\'s. Found %.8f from %.8f.', total, amount)

@@ -8,7 +8,7 @@ from bitcoin.wallet import CBitcoinAddress
 from clove.constants import TRANSACTION_BROADCASTING_MAX_ATTEMPTS
 from clove.network.base import auto_switch_params
 from clove.network.bitcoin.wallet import BitcoinWallet
-from clove.utils.bitcoin import btc_to_satoshi
+from clove.utils.bitcoin import to_base_units
 from clove.utils.hashing import generate_secret_with_hash
 from clove.utils.logging import logger
 
@@ -34,7 +34,7 @@ class BitcoinTransaction(object):
 
     def build_outputs(self):
         self.tx_out_list = [
-            CMutableTxOut(btc_to_satoshi(self.value), CBitcoinAddress(self.recipient_address).to_scriptPubKey())
+            CMutableTxOut(to_base_units(self.value), CBitcoinAddress(self.recipient_address).to_scriptPubKey())
         ]
 
     def add_fee_and_sign(self, default_wallet=None):
@@ -122,7 +122,7 @@ class BitcoinTransaction(object):
         """Adding fee to the transaction by decreasing 'change' transaction."""
         if not self.fee:
             self.calculate_fee()
-        fee_in_satoshi = btc_to_satoshi(self.fee)
+        fee_in_satoshi = to_base_units(self.fee)
         if self.tx.vout[0].nValue < fee_in_satoshi:
             raise RuntimeError('Cannot subtract fee from transaction. You need to add more input transactions.')
         self.tx.vout[0].nValue -= fee_in_satoshi
@@ -202,18 +202,18 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
 
         contract_p2sh = self.contract.to_p2sh_scriptPubKey()
 
-        self.tx_out_list = [CMutableTxOut(btc_to_satoshi(self.value), contract_p2sh), ]
+        self.tx_out_list = [CMutableTxOut(to_base_units(self.value), contract_p2sh), ]
         if self.utxo_value > self.value:
             change = self.utxo_value - self.value
             self.tx_out_list.append(
-                CMutableTxOut(btc_to_satoshi(change), CBitcoinAddress(self.sender_address).to_scriptPubKey())
+                CMutableTxOut(to_base_units(change), CBitcoinAddress(self.sender_address).to_scriptPubKey())
             )
 
     def add_fee(self):
         """Adding fee to the transaction by decreasing 'change' transaction."""
         if not self.fee:
             self.calculate_fee()
-        fee_in_satoshi = btc_to_satoshi(self.fee)
+        fee_in_satoshi = to_base_units(self.fee)
         if len(self.tx.vout) == 1 or self.tx.vout[1].nValue < fee_in_satoshi:
             raise RuntimeError('Cannot subtract fee from change transaction. You need to add more input transactions.')
         self.tx.vout[1].nValue -= fee_in_satoshi

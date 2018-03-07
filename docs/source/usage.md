@@ -164,14 +164,14 @@ And also at this point Bob should validate if the data returned in the contract 
 [**Bob**] has to create parallel transaction from point 3 but in his network (i.e. Dogecoin network). We call it `participate_transaction`.
 
     from clove.network.bitcoin.utxo import Utxo
-    from clove.utils.bitcoin import satoshi_to_btc # blockcypher is showing value in satoshis
+    from clove.utils.bitcoin import from_base_units # blockcypher is showing value in satoshis
 
     dogecoins_to_swap = 100
     participate_utxo_list = [
         Utxo(
             tx_id='6bf80aed06436018357c1552dd89abcbe0a31907284ffd3c1a025584fc28c3d7',
             vout=1,
-            value=satoshi_to_btc(98734979196),
+            value=from_base_units(98734979196),
             tx_script='76a91479364cbefe7c9b926792911b3611628102f9314c88ac',
         ),
     ]
