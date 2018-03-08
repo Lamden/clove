@@ -86,6 +86,9 @@ Alice and Bob exchange their wallet addresses.
 
 [**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://bchain.info/MONA/tx/9fcc235b4c1830f6eb1c67be807aeda0a3f7290eb05caf948f4b9f1016c8bffd)
 
+For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs UTXOs can also be gathered automatically.
+See an exmaple in [Participation](#6-participation)
+
     from clove.network.bitcoin.utxo import Utxo
 
     monacoins_to_swap = 0.11
@@ -175,6 +178,13 @@ And also at this point Bob should validate if the data returned in the contract 
             tx_script='76a91479364cbefe7c9b926792911b3611628102f9314c88ac',
         ),
     ]
+
+For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs the UTXOs can also be gathered automatically.
+
+    participate_utxo_list = doge_network.get_utxo(bob_doge_wallet.address, dogecoins_to_swap)
+
+With the list of UTXOs `particapate_transaction` can be created.
+
     participate_transaction = alice_contract.participate(
         'doge',
         bob_doge_wallet.address,
