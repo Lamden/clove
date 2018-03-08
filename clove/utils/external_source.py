@@ -7,6 +7,8 @@ import urllib.request
 
 from bitcoin.core import COIN
 
+from clove.network.bitcoin.utxo import Utxo
+from clove.utils.bitcoin import from_base_units
 from clove.utils.logging import logger
 
 
@@ -20,6 +22,15 @@ def clove_req(url: str) -> Optional[HTTPResponse]:
         logger.exception(e)
         return
     return resp
+
+
+def clove_req_json(url: str):
+    """Make a request with Clove user-agent header and return json response"""
+    resp = clove_req(url)
+    if not resp or resp.status != 200:
+        return
+
+    return json.loads(resp.read().decode())
 
 
 def get_last_transactions(network: str) -> Optional[list]:
@@ -87,3 +98,56 @@ def get_fee_from_blockcypher(network: str, testnet: bool=False) -> Optional[floa
         return
     data = json.loads(resp.read().decode())
     return data['high_fee_per_kb'] / COIN
+
+
+def get_utxo_from_api(
+    network: str,
+    address: str,
+    amount: float,
+    use_blockcypher: bool=False,
+    testnet: bool=False,
+    cryptoid_api_key: str=None
+) -> Optional[list]:
+    if use_blockcypher:
+        subnet = 'test3' if testnet else 'main'
+        api_url = f'https://api.blockcypher.com/v1/{network}/{subnet}/addrs/{address}' \
+                  f'?limit=2000&unspentOnly=true&includeScript=true&confirmations=6'
+        unspent_key = 'txrefs'
+        vout_key = 'tx_output_n'
+    elif cryptoid_api_key is None:
+        raise ValueError('API key for cryptoid is required to get UTXOs.')
+    else:
+        api_url = f'https://chainz.cryptoid.info/{network}/api.dws?q=unspent&key={cryptoid_api_key}&active={address}'
+        unspent_key = 'unspent_outputs'
+        vout_key = 'tx_ouput_n'
+
+    data = clove_req_json(api_url)
+    if data is None:
+        logger.debug('Could not get UTXOs for address %s in %s network', address, network)
+        return
+
+    unspent = data.get(unspent_key, [])
+
+    for output in unspent:
+        output['value'] = int(output['value'])
+
+    unspent = sorted(unspent, key=lambda k: k['value'], reverse=True)
+
+    utxo = []
+    total = 0
+
+    for output in unspent:
+        value = from_base_units(output['value'])
+        utxo.append(
+            Utxo(
+                tx_id=output['tx_hash'],
+                vout=output[vout_key],
+                value=value,
+                tx_script=output['script'],
+            )
+        )
+        total += value
+        if total > amount:
+            return utxo
+
+    logger.debug(f'Cannot find enough UTXO\'s. Found %.8f from %.8f.', total, amount)

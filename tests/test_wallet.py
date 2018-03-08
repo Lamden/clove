@@ -3,7 +3,8 @@ from bitcoin.core.key import CPubKey
 from bitcoin.wallet import CBitcoinSecret
 from pytest import mark, raises
 
-from clove.network.bitcoin import Bitcoin, BitcoinWallet
+from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.wallet import BitcoinWallet
 
 
 def test_password_encryption():

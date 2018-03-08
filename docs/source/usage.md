@@ -8,7 +8,7 @@
 * Bob has over 1000 dogecoins and wants to buy around 0.11 monacoin
 * Bob has a monacoin wallet
 
-(2018-03-01) Exchange rate: 100 dogecoins is 0.11 monacoin 
+(2018-03-01) Exchange rate: 100 dogecoins is 0.11 monacoin
 
 
 ## 1. Wallets setup
@@ -86,7 +86,7 @@ Alice and Bob exchange their wallet addresses.
 
 [**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [link](https://bchain.info/MONA/tx/9fcc235b4c1830f6eb1c67be807aeda0a3f7290eb05caf948f4b9f1016c8bffd)
 
-    from clove.network.bitcoin import Utxo
+    from clove.network.bitcoin.utxo import Utxo
 
     monacoins_to_swap = 0.11
 
@@ -105,7 +105,7 @@ Alice and Bob exchange their wallet addresses.
         monacoins_to_swap,
         initial_utxo_list
     )
-    
+
     # As monacoin is not in the blockcypher we need to add fee manually
     initial_transaction.fee = 0.001
 
@@ -142,7 +142,7 @@ And also she needs to send the contract to Bob (i.e. `63a8205de2198a39122100c417
 ## 5. Contract audit
 
 [**Bob**] needs to create contract in network of coins he wants to receive (i.e. Alice's network), in our case in Monacoin network.
-And also at this point Bob should validate if the data returned in the contract is correct, he should also check if the transaction is present in the blockchain API (e.g. Bchain.info)  
+And also at this point Bob should validate if the data returned in the contract is correct, he should also check if the transaction is present in the blockchain API (e.g. Bchain.info)
 
     alice_contract = mona_network.audit_contract(
         contract='63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704b0749a5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac',
@@ -159,19 +159,19 @@ And also at this point Bob should validate if the data returned in the contract 
      'value_text': '0.11000000 MONA'}
 
 
-## 6. Participation 
+## 6. Participation
 
 [**Bob**] has to create parallel transaction from point 3 but in his network (i.e. Dogecoin network). We call it `participate_transaction`.
-    
-    from clove.network.bitcoin import Utxo
-    from clove.utils.bitcoin import satoshi_to_btc # blockcypher is showing value in satoshis
+
+    from clove.network.bitcoin.utxo import Utxo
+    from clove.utils.bitcoin import from_base_units # blockcypher is showing value in satoshis
 
     dogecoins_to_swap = 100
     participate_utxo_list = [
         Utxo(
             tx_id='6bf80aed06436018357c1552dd89abcbe0a31907284ffd3c1a025584fc28c3d7',
             vout=1,
-            value=satoshi_to_btc(98734979196),
+            value=from_base_units(98734979196),
             tx_script='76a91479364cbefe7c9b926792911b3611628102f9314c88ac',
         ),
     ]
@@ -186,7 +186,7 @@ And also at this point Bob should validate if the data returned in the contract 
     participate_transaction.add_fee_and_sign(bob_doge_wallet)
 
     participate_transaction.show_details()
-    
+
     {'contract': '63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac',
      'contract_transaction': '0100000001d7c328fc8455021a3cfd4f280719a3e0cbab89dd52157c3518604306ed0af86b010000008b483045022100b7f28aaa45662e9cb0d355b58e6d0f82d96a1a0245be5312015b7da9eb91f82502201f0d2566bd8c3f2f4da9ba341324a66b4b34957c191a228be0b4792310ebb945014104996266fc2984dee523d985d618da6f4609dd0054e0d6895e8d40278ddf3623f4d059edf51f5a8824623d96bd23d0fd5cc323e89aaa9af56f4afa408e34b7f04e000000000200e40b540200000017a91474e9cf2b2bdb70bb40b4bc3d48743f1e51548017877687f9a8140000001976a91479364cbefe7c9b926792911b3611628102f9314c88ac00000000',
      'fee': 0.00707846,
@@ -207,7 +207,7 @@ And also at this point Bob should validate if the data returned in the contract 
     participate_transaction.publish()
     'c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd05116c9e53de783d92d36'
 https://live.blockcypher.com/doge/tx/c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd05116c9e53de783d92d36/
- 
+
 ## 7. Communication
 
 [**Bob**] sends his transaction hash `4168d4ac41debc550f6af6f5cb3ab37ab68aff624f562012a120379c026f6b12` and contract `63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac` to Alice.
@@ -216,14 +216,14 @@ https://live.blockcypher.com/doge/tx/c3a9474a1bb642e51fc10f14b2af2b5f57bef0858cd
 ## 8. Contract audit
 
 [**Alice**] needs to audit contract in network of coins she wants to receive (i.e. Bob's network), in our case in Dogecoin network.
-And also at this point Alice should validate if the data returned in the contract is correct, she should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)  
-    
+And also at this point Alice should validate if the data returned in the contract is correct, she should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)
+
     bob_contract = doge_network.audit_contract(
         contract='63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac',
         raw_transaction='0100000001d7c328fc8455021a3cfd4f280719a3e0cbab89dd52157c3518604306ed0af86b010000008b483045022100b7f28aaa45662e9cb0d355b58e6d0f82d96a1a0245be5312015b7da9eb91f82502201f0d2566bd8c3f2f4da9ba341324a66b4b34957c191a228be0b4792310ebb945014104996266fc2984dee523d985d618da6f4609dd0054e0d6895e8d40278ddf3623f4d059edf51f5a8824623d96bd23d0fd5cc323e89aaa9af56f4afa408e34b7f04e000000000200e40b540200000017a91474e9cf2b2bdb70bb40b4bc3d48743f1e51548017877687f9a8140000001976a91479364cbefe7c9b926792911b3611628102f9314c88ac00000000'
     )
     bob_contract.show_details()
-    
+
     {'locktime': datetime.datetime(2018, 3, 2, 11, 27, 28),
      'recipient_address': 'DE8tMBC9qk6a9A5T7NSdog4MJa16JqzZf7',
      'refund_address': 'DGC1MHWRaQeqn6MTeqkphzUHTeDnZgLvqs',
@@ -236,12 +236,12 @@ And also at this point Alice should validate if the data returned in the contrac
 ## 9. First redeem transaction
 
 [**Alice**] can now collect coins she wants, thus she creates redeem transaction.
-    
+
     alice_redeem = bob_contract.redeem(secret=initial_transaction.show_details()['secret'], wallet=alice_doge_wallet)
     alice_redeem.add_fee_and_sign()
-    
+
     alice_redeem.show_details()
-    
+
     {'fee': 0.01507825,
      'fee_per_kb': 0.03896189,
      'fee_per_kb_text': '0.03896189 DOGE / 1 kB',
@@ -253,31 +253,31 @@ And also at this point Alice should validate if the data returned in the contrac
      'transaction_hash': '980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd',
      'value': 100.0,
      'value_text': '100.00000000 DOGE'}
-     
+
     alice_redeem.publish()
     '980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd'
 https://live.blockcypher.com/doge/tx/980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd/
-    
+
 [**Alice**] should get dogecoins just after redeem transaction is published.
-    
-    
+
+
 ## 10. Secret capture
 
 [**Bob**] should track Alice's wallet and search for redeem transaction (Alice can but don't have to send him a transaction address).
 Then Bob should extract the secret himself from that transaction. (e.g. "hex" in https://api.blockcypher.com/v1/doge/main/txs/980ccfd7375a6946c3453178350784e5bf43a8216b039e513521805551a464dd?limit=50&includeHex=true)
 
     secret = doge_network.extract_secret('0100000001362dd983e73de5c91651d08c85f0be575f2bafb2140fc11fe542b61b4a47a9c300000000fd2c01483045022100e89b7a267c252419cf6dbeaa53d0074bce98e5a0d7da0c29ad4f31d8cd1ebfff0220495666315b45b4a5a30e2ea2cba1a20bae2031b607ff21230fea295cd35ce591014104dbe8366e39f93afcd70616e9049ee3eb5e09acdcadb63fb7d488fbb7af9f211e7e36998ba279f68ea01f5f090be8478465ee7dd91085e3f44831b0db032a63f7406b4e4943623938384c72685a696b76336177424639436738616c58766737517058717466495639366f433353456c4d36634e71334c36636e42383632337a6a57514c5d63a8205de2198a39122100c4179933a4d577151445f400383aa6563d7fe2967cb54f8b8876a91462aef49943f16565b7ff9ef170a0d4bc5397763967041027995ab17576a91479364cbefe7c9b926792911b3611628102f9314c6888ac00000000010fe2f453020000001976a91462aef49943f16565b7ff9ef170a0d4bc5397763988ac00000000')
-    
+
 ## 11. Second redeem transaction
 
 [**Bob**] can now collect coins he wants, thus he creates redeem transaction.
 
     bob_redeem = alice_contract.redeem(secret=secret, wallet=bob_mona_wallet)
-    
+
     # As monacoin is not in the blockcypher we need to add fee manually
     bob_redeem.fee = 0.001
     bob_redeem.add_fee_and_sign()
-    
+
     bob_redeem.show_details()
     {'fee': 0.001,
      'fee_per_kb': 0.0,

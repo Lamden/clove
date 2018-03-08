@@ -1,9 +1,9 @@
 from bitcoin.core import COIN
 
 
-def satoshi_to_btc(value):
+def from_base_units(value):
     return value / COIN
 
 
-def btc_to_satoshi(value):
+def to_base_units(value):
     return round(value * COIN)
