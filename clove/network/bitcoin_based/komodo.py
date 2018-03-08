@@ -20,21 +20,3 @@ class Komodo(Bitcoin):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 188
     }
-
-
-class KomodoTestNet(Komodo):
-    """
-    Class with all the necessary KMD testing network information based on
-    https://github.com/jl777/komodo/blob/master/src/chainparams.cpp
-    (date of access: 01/18/2018)
-    """
-    name = 'test-komodo'
-    # TODO Gather testing dns seeds
-    seeds = ()
-    port = 17779
-    message_start = b'\x5A\x1F\x7E\x62'
-    base58_prefixes = {
-        'PUBKEY_ADDR': 0,
-        'SCRIPT_ADDR': 5,
-        'SECRET_KEY': 128
-    }

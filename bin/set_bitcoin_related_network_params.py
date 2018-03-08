@@ -218,8 +218,8 @@ def extract_from_curly_brackets(line):
 
 if __name__ == '__main__':
     base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    network_dir = os.path.join(base_dir, 'clove/network/')
-    files = glob.glob(network_dir+'*')
+    network_dir = os.path.join(base_dir, 'clove/network/bitcoin_based/')
+    files = sorted(glob.glob(network_dir+'*'))
     for file_path in files:
         if not os.path.isfile(file_path):
             continue
