@@ -53,8 +53,9 @@ def test_show_details(signed_transaction):
 
     str_fields = (
         'contract',
+        'contract_address',
         'contract_transaction',
-        'transaction_hash',
+        'transaction_address',
         'recipient_address',
         'refund_address',
         'secret',
@@ -271,3 +272,6 @@ def test_extract_secret(bob_wallet, signed_transaction):
     secret = btc_network.extract_secret(redeem_details['transaction'])
 
     assert secret == transaction_details['secret']
+
+    # extracting secret from scriptSig
+    assert secret == btc_network.extract_secret(scriptsig=redeem_transaction.tx.vin[0].scriptSig.hex())

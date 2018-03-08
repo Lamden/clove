@@ -20,7 +20,7 @@ class Litecoin(Bitcoin):
     message_start = b'\xfb\xc0\xb6\xdb'
     base58_prefixes = {
         'PUBKEY_ADDR': 48,
-        'SCRIPT_ADDR': 5,
+        'SCRIPT_ADDR': 50,
         'SECRET_KEY': 176
     }
 
@@ -41,6 +41,6 @@ class LitecoinTestNet(Litecoin):
     message_start = b'\xfd\xd2\xc8\xf1'
     base58_prefixes = {
         'PUBKEY_ADDR': 111,
-        'SCRIPT_ADDR': 196,
+        'SCRIPT_ADDR': 58,
         'SECRET_KEY': 239
     }

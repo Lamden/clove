@@ -8,7 +8,7 @@ NODE_COMMUNICATION_TIMEOUT = 2 * 60
 TRANSACTION_BROADCASTING_MAX_ATTEMPTS = 10
 
 
-API_SUPPORTED_NETWORKS = (
+CRYPTOID_SUPPORTED_NETWORKS = (
     '1337', '2give', '42', '8bit', 'abc', 'ac', 'adc', 'aeg', 'anc', 'arco',
     'arg', 'atms', 'atom', 'b3', 'bash', 'bay', 'bcc', 'bee2', 'bela', 'bitb',
     'blitz', 'blk', 'block', 'boli', 'brit', 'bro', 'bsd', 'bta', 'btc', 'btci',

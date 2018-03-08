@@ -12,7 +12,7 @@ from bitcoin.messages import (
 )
 from bitcoin.net import CInv
 
-from clove.constants import API_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT
+from clove.constants import CRYPTOID_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT
 from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.utils.external_source import get_fee_from_blockcypher, get_fee_from_last_transactions, get_utxo_from_api
 from clove.utils.logging import logger
@@ -312,9 +312,9 @@ class BaseNetwork(object):
             return self.reset_connection()
         logger.info('[%s] Reject message not found.', node)
 
-        transaction_hash = b2lx(transaction.GetHash())
-        logger.info('[%s] Transaction %s has just been sent.', node, transaction_hash)
-        return transaction_hash
+        transaction_address = b2lx(transaction.GetHash())
+        logger.info('[%s] Transaction %s has just been sent.', node, transaction_address)
+        return transaction_address
 
     @auto_switch_params()
     def send_inventory(self, serialized_transaction) -> msg_getdata:
@@ -371,7 +371,7 @@ class BaseNetwork(object):
         if network in ('btc', 'ltc', 'doge', 'dash'):
             return get_fee_from_blockcypher(network, testnet=cls.is_test_network())
 
-        if network not in API_SUPPORTED_NETWORKS:
+        if network not in CRYPTOID_SUPPORTED_NETWORKS:
             raise NotImplementedError
 
         return get_fee_from_last_transactions(network)
@@ -389,7 +389,7 @@ class BaseNetwork(object):
         if network == 'doge' or cls.name == 'test-bitcoin':
             return get_utxo_from_api(network, address, amount, use_blockcypher=True, testnet=cls.is_test_network())
 
-        if network not in API_SUPPORTED_NETWORKS:
+        if network not in CRYPTOID_SUPPORTED_NETWORKS:
             raise NotImplementedError
 
         api_key = os.getenv('CRYPTOID_API_KEY')

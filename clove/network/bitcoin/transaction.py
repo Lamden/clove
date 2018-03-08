@@ -93,14 +93,14 @@ class BitcoinTransaction(object):
 
     def publish(self):
         for attempt in range(1, TRANSACTION_BROADCASTING_MAX_ATTEMPTS + 1):
-            transaction_hash = self.network.broadcast_transaction(self.tx)
+            transaction_address = self.network.broadcast_transaction(self.tx)
 
-            if transaction_hash is None:
+            if transaction_address is None:
                 logger.warning('Transaction broadcast attempt no. %s failed. Retrying...', attempt)
                 continue
 
             logger.info('Transaction broadcast is successful. End of broadcasting process.')
-            return transaction_hash
+            return transaction_address
 
         logger.warning(
             '%s attempts to broadcast transaction failed. Broadcasting process terminates!',
@@ -130,7 +130,7 @@ class BitcoinTransaction(object):
     def show_details(self):
         return {
             'transaction': b2x(self.tx.serialize()),
-            'transaction_hash': b2lx(self.tx.GetHash()),
+            'transaction_address': b2lx(self.tx.GetHash()),
             'fee': self.fee,
             'fee_per_kb': self.fee_per_kb,
             'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',
@@ -221,8 +221,9 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
     def show_details(self):
         return {
             'contract': self.contract.hex(),
+            'contract_address': str(CBitcoinAddress.from_scriptPubKey(self.contract.to_p2sh_scriptPubKey())),
             'contract_transaction': b2x(self.tx.serialize()),
-            'transaction_hash': b2lx(self.tx.GetHash()),
+            'transaction_address': b2lx(self.tx.GetHash()),
             'fee': self.fee,
             'fee_per_kb': self.fee_per_kb,
             'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',

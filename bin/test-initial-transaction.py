@@ -51,4 +51,4 @@ if __name__ == '__main__':
         print_error('Something went wrong, transaction was NOT published.')
         exit(1)
     print_section('Transaction published!')
-    print_tx_address(args.network, details["transaction_hash"])
+    print_tx_address(args.network, details["transaction_address"])

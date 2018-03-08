@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from bitcoin.core import CTransaction, b2lx, b2x, script, x
-from bitcoin.wallet import P2PKHBitcoinAddress
+from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 
 from clove.network.base import auto_switch_params
 from clove.network.bitcoin.transaction import BitcoinTransaction
@@ -23,7 +23,9 @@ class BitcoinContract(object):
 
         contract_tx_out = self.tx.vout[0]
         contract_script = script.CScript.fromhex(self.contract)
-        valid_p2sh = contract_script.to_p2sh_scriptPubKey() == contract_tx_out.scriptPubKey
+        script_pub_key = contract_script.to_p2sh_scriptPubKey()
+        valid_p2sh = script_pub_key == contract_tx_out.scriptPubKey
+        self.address = str(CBitcoinAddress.from_scriptPubKey(script_pub_key))
 
         script_ops = list(contract_script)
         if valid_p2sh and self.is_valid_contract_script(script_ops):
@@ -37,7 +39,7 @@ class BitcoinContract(object):
             raise ValueError('Given transaction is not a valid contract.')
 
     @property
-    def transaction_hash(self):
+    def transaction_address(self):
         return b2lx(self.tx.GetHash())
 
     @staticmethod
@@ -62,7 +64,7 @@ class BitcoinContract(object):
 
     def get_contract_utxo(self, wallet=None, secret=None, refund=False, contract=None):
         return Utxo(
-            tx_id=self.transaction_hash,
+            tx_id=self.transaction_address,
             vout=0,
             value=self.value,
             tx_script=self.tx.vout[0].scriptPubKey.hex(),
@@ -110,7 +112,8 @@ class BitcoinContract(object):
 
     def show_details(self):
         return {
-            'transaction_hash': self.transaction_hash,
+            'contract_address': self.address,
+            'transaction_address': self.transaction_address,
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.refund_address,

@@ -6,7 +6,7 @@ import pytest
 from pytest import mark
 from validators import domain
 
-from clove.constants import API_SUPPORTED_NETWORKS
+from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
 from clove.network import __all__ as networks
 from clove.network.base import BaseNetwork, auto_switch_params
 from clove.network.bitcoin.utxo import Utxo
@@ -43,7 +43,7 @@ def test_fee_per_kb_implementation(blockcyphe_mock, api_mock, ravencoin_mock, ne
         assert network.get_current_fee_per_kb() == 0.01
         return
 
-    if network.is_test_network() or network.symbols[0].lower() not in API_SUPPORTED_NETWORKS:
+    if network.is_test_network() or network.symbols[0].lower() not in CRYPTOID_SUPPORTED_NETWORKS:
         with pytest.raises(NotImplementedError):
             network.get_current_fee_per_kb()
         return
@@ -153,7 +153,7 @@ def test_getting_utxo(json_response, network):
         assert json_response.call_args[0][0].startswith('https://api.blockcypher.com')
         return
 
-    if network.is_test_network() or symbol not in API_SUPPORTED_NETWORKS:
+    if network.is_test_network() or symbol not in CRYPTOID_SUPPORTED_NETWORKS:
         with pytest.raises(NotImplementedError):
             network.get_utxo(address, amount)
         return
