@@ -30,6 +30,7 @@ setup(
             'flake8==3.5.0',
             'freezegun==0.3.9',
             'validators==0.12.0',
+            'pytest-cov==2.5.1',
         ],
         'docs': [
             'Sphinx==1.6.6',
