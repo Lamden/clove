@@ -4,6 +4,7 @@ from bitcoin.core import CTransaction, b2x, script
 from freezegun import freeze_time
 from pytest import raises
 
+from clove.constants import SIGNATURE_SIZE
 from clove.network.bitcoin import BitcoinTestNet
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.utils.bitcoin import to_base_units
@@ -114,6 +115,15 @@ def test_transaction_fee(unsigned_transaction):
 
     assert change_without_fee - to_base_units(unsigned_transaction.fee) == change_with_fee
     assert unsigned_transaction.tx.serialize()
+
+
+def test_calculate_fee_with_signature_size(unsigned_transaction):
+
+    fee_per_kb = 0.002
+    unsigned_transaction.fee_per_kb = fee_per_kb
+    unsigned_transaction.calculate_fee(add_sig_size=True)
+    size_after_sign = unsigned_transaction.size + (SIGNATURE_SIZE * len(unsigned_transaction.tx_in_list))
+    assert unsigned_transaction.fee == round(size_after_sign/1000 * fee_per_kb, 8)
 
 
 def test_audit_contract(signed_transaction):

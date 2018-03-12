@@ -5,7 +5,7 @@ from bitcoin.core import CMutableTransaction, CMutableTxOut, b2lx, b2x, script, 
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress
 
-from clove.constants import TRANSACTION_BROADCASTING_MAX_ATTEMPTS
+from clove.constants import SIGNATURE_SIZE, TRANSACTION_BROADCASTING_MAX_ATTEMPTS
 from clove.network.base import auto_switch_params
 from clove.network.bitcoin.wallet import BitcoinWallet
 from clove.utils.bitcoin import to_base_units
@@ -112,11 +112,14 @@ class BitcoinTransaction(object):
         """Returns the size of a transaction represented in bytes."""
         return len(self.tx.serialize())
 
-    def calculate_fee(self):
+    def calculate_fee(self, add_sig_size=False):
         """Calculating fee for given transaction based on transaction size and estimated fee per kb."""
         if not self.fee_per_kb:
             self.fee_per_kb = self.network.get_current_fee_per_kb()
-        self.fee = round((self.fee_per_kb / 1000) * self.size, 8)
+        size = self.size
+        if add_sig_size:
+            size += len(self.tx_in_list) * SIGNATURE_SIZE
+        self.fee = round((self.fee_per_kb / 1000) * size, 8)
 
     def add_fee(self):
         """Adding fee to the transaction by decreasing 'change' transaction."""
