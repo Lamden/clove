@@ -35,6 +35,7 @@ class BaseNetwork(object):
     name = None
     symbols = ()
     seeds = ()
+    nodes = ()
     port = None
     connection = None
     protocol_version = None

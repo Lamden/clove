@@ -1,3 +1,4 @@
+import ipaddress
 from unittest.mock import patch
 
 import bitcoin
@@ -10,28 +11,30 @@ from clove.network import __all__ as networks
 from clove.network.base import BaseNetwork, auto_switch_params
 from clove.network.bitcoin.utxo import Utxo
 
-seeds = [seed for network in networks for seed in network.seeds]
-
 
 @mark.parametrize('network', networks)
-def test_network_field_types(network):
+def test_bitcoin_based_network_definitions(network):
     assert isinstance(network.name, str)
     assert isinstance(network.symbols, tuple)
     assert isinstance(network().default_symbol, str)
-    assert isinstance(network.seeds, tuple)
+    assert getattr(network, 'seeds') or getattr(network, 'nodes'), f'[{network.__name__}] no seeds and nodes'
+    if network.nodes:
+        assert isinstance(network.nodes, tuple)
+        assert not network.seeds, f'{network}: use nodes or seeds, not both.'
+        for node in network.nodes:
+            assert ipaddress.ip_address(node)
+    else:
+        assert isinstance(network.seeds, tuple)
+        for seed in network.seeds:
+            assert domain(seed)
     assert isinstance(network.port, int)
     assert isinstance(network.blacklist_nodes, dict)
     assert isinstance(network.message_start, bytes)
     assert isinstance(network.base58_prefixes, dict)
 
 
-@mark.parametrize('seed', seeds)
-def test_seeds_valid_dns_address(seed):
-    assert domain(seed) is True
-
-
 @mark.parametrize('network', networks)
-@patch('clove.network.ravencoin.Ravencoin.get_current_fee_per_kb', side_effect=[0.01, ])
+@patch('clove.network.bitcoin_based.ravencoin.Ravencoin.get_current_fee_per_kb', side_effect=[0.01, ])
 @patch('clove.network.base.get_fee_from_last_transactions', side_effect=[0.01, ])
 @patch('clove.network.base.get_fee_from_blockcypher', side_effect=[0.01, ])
 def test_fee_per_kb_implementation(blockcyphe_mock, api_mock, ravencoin_mock, network):

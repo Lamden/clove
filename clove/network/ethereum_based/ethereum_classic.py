@@ -3,7 +3,7 @@ import web3
 from clove.network.ethereum import Ethereum
 
 
-class Ethereum_Classic(Ethereum):
+class EthereumClassic(Ethereum):
     """
     Class with all the necessary ETH network information and transaction building.
     """
