@@ -14,11 +14,14 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description="Redeem atomic swap transaction.")
+    parser = argparse.ArgumentParser(description="Creating participate transaction.")
     parser.add_argument('-tx', '--transaction', help='Contract transaction address', type=str, required=True)
     parser.add_argument('-c', '--contract', help='Contract', type=str, required=True)
     parser.add_argument('-r', '--recipient', help='Recipient address', type=str, required=True)
     parser.add_argument('-p', '--private-key', help='Private key', type=str, required=True)
+    parser.add_argument(
+        '-in', '--initial-network', help='Initial transaction network', type=str, required=True
+    )
     parser.add_argument('-n', '--network', help='Network for creating transaction in', type=str, required=True)
     parser.add_argument('-a', '--amount', help='Transaction amount', type=float, required=True)
     args = parser.parse_args()
@@ -26,7 +29,7 @@ if __name__ == '__main__':
     network = get_network(args.network)
     wallet = network.get_wallet(private_key=args.private_key)
 
-    tx_hex = get_transaction_from_address(args.network, args.transaction)
+    tx_hex = get_transaction_from_address(args.init_network, args.transaction)
     print_section('Found transaction:', tx_hex)
 
     print_section('Transaction audit...')
