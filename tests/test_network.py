@@ -10,6 +10,7 @@ from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
 from clove.network import __all__ as networks
 from clove.network.base import BaseNetwork, auto_switch_params
 from clove.network.bitcoin.utxo import Utxo
+from clove.utils.search import get_network_object
 
 
 @mark.parametrize('network', networks)
@@ -211,3 +212,18 @@ def test_auto_switch_params_decorator(network):
         assert simple_params_name_return(network) == network.name
 
     bitcoin.SelectParams('mainnet')
+
+
+@mark.parametrize('network', networks)
+def test_get_network_obj_on_existing_networks(network):
+    symbol = network.symbols[0]
+    is_test_network = network.is_test_network()
+    network_object = get_network_object(symbol, testnet=is_test_network)
+
+    assert type(network_object) == network
+    assert network_object.symbols[0] == symbol
+    assert network_object.is_test_network() == is_test_network
+
+
+def test_get_network_obj_on_not_existing_network():
+    assert get_network_object('NON_EXISTING_NETWORK_SYMBOL') is None
