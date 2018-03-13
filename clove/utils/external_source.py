@@ -7,6 +7,7 @@ import urllib.request
 
 from bitcoin.core import COIN
 
+from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import from_base_units
 from clove.utils.logging import logger
@@ -151,3 +152,94 @@ def get_utxo_from_api(
             return utxo
 
     logger.debug(f'Cannot find enough UTXO\'s. Found %.8f from %.8f.', total, amount)
+
+
+def extract_scriptsig_from_redeem_transaction(
+    network: str,
+    contract_address: str,
+    testnet: bool=False,
+    cryptoid_api_key: str=None,
+) -> Optional[str]:
+
+    network = network.lower()
+
+    if network != 'btc' and testnet:
+        raise NotImplementedError
+
+    if network in ('btc', 'doge', 'dash'):
+        return extract_scriptsig_blockcypher(network, contract_address, testnet)
+
+    if network == 'rvn':
+        return extract_scriptsig_raven(contract_address, testnet)
+
+    if network not in CRYPTOID_SUPPORTED_NETWORKS:
+        raise NotImplementedError
+
+    return extract_scriptsig_cryptoid(network, contract_address, testnet, cryptoid_api_key)
+
+
+def extract_scriptsig_blockcypher(network: str, contract_address: str, testnet: bool=False) -> Optional[str]:
+    subnet = 'test3' if testnet else 'main'
+    data = clove_req_json(f'https://api.blockcypher.com/v1/{network}/{subnet}/addrs/{contract_address}/full')
+    if not data:
+        logger.debug('Unexpected response from blockcypher')
+        raise ValueError('Unexpected response from blockcypher')
+
+    transactions = data['txs']
+    if len(transactions) == 1:
+        logger.debug('Contract was not redeemed yet.')
+        return
+
+    return transactions[0]['inputs'][0]['script']
+
+
+def extract_scriptsig_cryptoid(
+    network: str,
+    contract_address: str,
+    testnet: bool=False,
+    cryptoid_api_key: str=None,
+) -> Optional[str]:
+
+    if not cryptoid_api_key:
+        raise ValueError('API key for cryptoid is required.')
+
+    url = f'https://chainz.cryptoid.info/ltc/api.dws?q=multiaddr&active={contract_address}&key={cryptoid_api_key}'
+    data = clove_req_json(url)
+    if not data:
+        logger.debug('Unexpected response from cryptoid')
+        raise ValueError('Unexpected response from cryptoid')
+
+    transactions = data['txs']
+    if len(transactions) == 1:
+        logger.debug('Contract was not redeemed yet.')
+        return
+
+    redeem_tx_hash = transactions[0]['hash']
+    url = f'https://chainz.cryptoid.info/explorer/tx.raw.dws?coin={network}&id={redeem_tx_hash}'
+    data = clove_req_json(url)
+    if not data:
+        logger.debug('Unexpected response from cryptoid')
+        raise ValueError('Unexpected response from cryptoid')
+
+    return data['vin'][0]['scriptSig']['hex']
+
+
+def extract_scriptsig_raven(contract_address: str, testnet: bool=False) -> Optional[str]:
+
+    data = clove_req_json(f'http://threeeyed.info/ext/getaddress/{contract_address}')
+    if not data:
+        logger.debug('Unexpected response from Ravencoin API.')
+        raise ValueError('Unexpected response from Ravencoin API.')
+
+    transactions = data['last_txs']
+    if len(transactions) == 1:
+        logger.debug('Contract was not redeemed yet.')
+        return
+
+    redeem_tx_hash = transactions[0]['addresses']
+    data = clove_req_json(f'http://threeeyed.info/api/getrawtransaction?txid={redeem_tx_hash}&decrypt=1')
+    if not data:
+        logger.debug('Unexpected response from Ravencoin API.')
+        raise ValueError('Unexpected response from Ravencoin API.')
+
+    return data['vin'][0]['scriptSig']['hex']

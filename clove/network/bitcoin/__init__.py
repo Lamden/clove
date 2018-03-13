@@ -1,11 +1,16 @@
+import os
+from typing import Optional
+
 from bitcoin.core import (
-    CTransaction, b2x, x
+    CTransaction, b2x, script, x
 )
 
 from clove.network.base import BaseNetwork, auto_switch_params
 from clove.network.bitcoin.contract import BitcoinContract
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.network.bitcoin.wallet import BitcoinWallet
+from clove.utils.external_source import extract_scriptsig_from_redeem_transaction
+from clove.utils.logging import logger
 
 
 class Bitcoin(BaseNetwork):
@@ -57,18 +62,53 @@ class Bitcoin(BaseNetwork):
         return BitcoinWallet(private_key, encrypted_private_key, password)
 
     @staticmethod
-    def extract_secret(raw_transaction: str) -> str:
-        tx = CTransaction.deserialize(x(raw_transaction))
+    def extract_secret(raw_transaction: str=None, scriptsig: str=None) -> str:
 
-        if not tx.vin:
-            raise ValueError('Given transaction has no inputs.')
+        if not raw_transaction and not scriptsig:
+            raise ValueError('raw_transaction or scriptsig have to be provided.')
 
-        secret_tx_in = tx.vin[0]
-        script_ops = list(secret_tx_in.scriptSig)
+        if raw_transaction:
+            tx = CTransaction.deserialize(x(raw_transaction))
+
+            if not tx.vin:
+                raise ValueError('Given transaction has no inputs.')
+
+            secret_tx_in = tx.vin[0]
+            script_ops = list(secret_tx_in.scriptSig)
+        else:
+            script_ops = list(script.CScript.fromhex(scriptsig))
+
         if script_ops[-2] == 1:
             return b2x(script_ops[-3])
 
-        raise ValueError('Unable to extract secret from given transaction.')
+        raise ValueError('Unable to extract secret.')
+
+    @classmethod
+    def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
+
+        if cls.is_test_network() and cls.name != 'test-bitcoin':
+            raise NotImplementedError
+
+        try:
+            scriptsig = extract_scriptsig_from_redeem_transaction(
+                network=cls.symbols[0],
+                contract_address=contract_address,
+                testnet=cls.is_test_network(),
+                cryptoid_api_key=os.getenv('CRYPTOID_API_KEY'),
+            )
+        except NotImplementedError:
+            logger.debug('%s: network is not supported', cls.name)
+            return
+        except ValueError as e:
+            logger.debug(e)
+            return
+
+        if scriptsig:
+            try:
+                return cls.extract_secret(scriptsig)
+            except ValueError as e:
+                logger.debug(e)
+                return
 
 
 class BitcoinTestNet(Bitcoin):

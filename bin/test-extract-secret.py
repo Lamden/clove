@@ -4,7 +4,7 @@ import argparse
 import os
 import sys
 
-from script_utils import get_network, get_transaction_from_address, print_section
+from script_utils import get_network, print_section
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
@@ -12,14 +12,15 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Extract secret from transaction.")
-    parser.add_argument('-tx', '--transaction', help='Transaction address', type=str, required=True)
+    parser.add_argument('-c', '--contract-address', help='Contract address', type=str, required=True)
     parser.add_argument('-n', '--network', help='Transaction network', type=str, required=True)
+    parser.add_argument('-k', '--cryptoid-api-key', help='Cryptoid API Key', type=str, required=False)
 
     args = parser.parse_args()
 
-    tx = get_transaction_from_address(args.network, args.transaction)
-
     network = get_network(args.network)
-    secret = network.extract_secret(tx)
+    if args.cryptoid_api_key:
+        os.environ['CRYPTOID_API_KEY'] = args.cryptoid_api_key
+    secret = network.extract_secret_from_redeem_transaction(args.contract_address)
 
     print_section('Secret:', secret)
