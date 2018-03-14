@@ -14,3 +14,7 @@ class TransactionRejected(CloveException):
 
 class UnexpectedResponseFromNode(CloveException):
     pass
+
+
+class ImpossibleDeserialization(CloveException):
+    pass

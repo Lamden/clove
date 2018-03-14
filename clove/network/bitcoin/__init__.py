@@ -1,14 +1,13 @@
 import os
 from typing import Optional
 
-from bitcoin.core import (
-    CTransaction, b2x, script, x
-)
+from bitcoin.core import b2x, script
 
 from clove.network.base import BaseNetwork, auto_switch_params
 from clove.network.bitcoin.contract import BitcoinContract
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.network.bitcoin.wallet import BitcoinWallet
+from clove.utils.bitcoin import deserialize_raw_transaction
 from clove.utils.external_source import extract_scriptsig_from_redeem_transaction
 from clove.utils.logging import logger
 
@@ -68,7 +67,7 @@ class Bitcoin(BaseNetwork):
             raise ValueError('raw_transaction or scriptsig have to be provided.')
 
         if raw_transaction:
-            tx = CTransaction.deserialize(x(raw_transaction))
+            tx = deserialize_raw_transaction(raw_transaction)
 
             if not tx.vin:
                 raise ValueError('Given transaction has no inputs.')
