@@ -5,9 +5,7 @@ import os
 from pprint import pprint
 import sys
 
-from script_utils import (
-    get_network, get_transaction_from_address, get_utxo, print_error, print_section, print_tx_address
-)
+from script_utils import get_network, get_transaction_from_address, print_error, print_section, print_tx_address
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
@@ -29,14 +27,17 @@ if __name__ == '__main__':
     network = get_network(args.network)
     wallet = network.get_wallet(private_key=args.private_key)
 
-    tx_hex = get_transaction_from_address(args.init_network, args.transaction)
+    tx_hex = get_transaction_from_address(args.initial_network, args.transaction)
     print_section('Found transaction:', tx_hex)
 
     print_section('Transaction audit...')
     contract = network.audit_contract(args.contract, tx_hex)
     pprint(contract.show_details())
 
-    utxo = get_utxo(args.network, wallet.address, args.amount)
+    utxo = network.get_utxo(wallet.address, args.amount)
+    if not utxo:
+        print_error('UTXO not found')
+        exit(1)
     print_section(f'Found {len(utxo)} UTXO\'s')
     pprint(utxo)
 
