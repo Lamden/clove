@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from bitcoin.core import CTransaction, b2lx, b2x, script, x
+from bitcoin.core import b2lx, b2x, script
 from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 
 from clove.network.base import auto_switch_params
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import from_base_units
+from clove.utils.bitcoin import deserialize_raw_transaction, from_base_units
 
 
 class BitcoinContract(object):
@@ -16,7 +16,7 @@ class BitcoinContract(object):
         self.network = network
         self.symbol = self.network.default_symbol
         self.contract = contract
-        self.tx = CTransaction.deserialize(x(raw_transaction))
+        self.tx = deserialize_raw_transaction(raw_transaction)
 
         if not self.tx.vout:
             raise ValueError('Given transaction has no outputs.')
