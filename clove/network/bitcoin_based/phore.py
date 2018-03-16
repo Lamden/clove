@@ -19,3 +19,4 @@ class Phore(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 13,
         'SECRET_KEY': 212
     }
+    source_code_url = 'http://www.github.com/phoreproject/Phore/blob/master/src/chainparams.cpp'

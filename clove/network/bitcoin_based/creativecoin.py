@@ -17,6 +17,7 @@ class CreativeCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 176
     }
+    source_code_url = 'https://github.com/creativechain/creativechain-core/blob/master/src/chainparams.cpp'
 
 
 class CreativeCoinTestNet(CreativeCoin):

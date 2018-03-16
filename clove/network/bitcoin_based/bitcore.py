@@ -19,6 +19,7 @@ class Bitcore(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 128
     }
+    source_code_url = 'http://www.github.com/LIMXTEC/BitCore/blob/master/src/chainparams.cpp'
 
 
 class BitcoreTestNet(Bitcore):

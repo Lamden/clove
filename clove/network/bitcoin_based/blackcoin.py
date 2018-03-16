@@ -17,5 +17,6 @@ class BlackCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 153
     }
+    source_code_url = 'https://github.com/CoinBlack/blackcoin/blob/master/src/chainparams.cpp'
 
 # Has no testnet

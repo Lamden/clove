@@ -20,6 +20,7 @@ class MindCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 178
     }
+    source_code_url = 'https://github.com/mindcointeam/mindcoin/blob/master/src/net.cpp'
 
 
 # Has no testnet

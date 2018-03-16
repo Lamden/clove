@@ -20,5 +20,6 @@ class ToaCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 23,
         'SECRET_KEY': 193
     }
+    source_code_url = 'https://github.com/toacoin/TOA/blob/master/src/net.cpp'
 
 # no test net

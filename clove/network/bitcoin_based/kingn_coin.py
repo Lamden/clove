@@ -17,6 +17,7 @@ class KingNCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 173
     }
+    source_code_url = 'https://github.com/ulandort/kingncoin-source/blob/master/src/net.cpp'
 
 
 # Has no testnet

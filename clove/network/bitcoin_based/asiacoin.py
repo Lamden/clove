@@ -17,5 +17,6 @@ class AsiaCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 151
     }
+    source_code_url = 'https://github.com/AsiaCoin/AsiaCoinFix/blob/master/src/net.cpp'
 
 # Has no testnet

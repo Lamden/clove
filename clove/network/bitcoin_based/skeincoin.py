@@ -20,3 +20,4 @@ class Skeincoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 12,
         'SECRET_KEY': 226
     }
+    source_code_url = 'http://www.github.com/skeincoin/skeincoin/blob/master/src/chainparams.cpp'

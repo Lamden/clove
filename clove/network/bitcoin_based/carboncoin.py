@@ -18,6 +18,7 @@ class Carboncoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 175
     }
+    source_code_url = 'http://www.github.com/carboncointrust/CarboncoinCore/blob/master/src/chainparams.cpp'
 
 
 class CarboncoinTestNet(Carboncoin):

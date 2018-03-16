@@ -20,6 +20,7 @@ class Myriad(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 9,
         'SECRET_KEY': 178
     }
+    source_code_url = 'http://www.github.com/myriadteam/myriadcoin/blob/master/src/chainparams.cpp'
 
 
 class MyriadTestNet(Myriad):

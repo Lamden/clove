@@ -19,6 +19,7 @@ class Anoncoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 151
     }
+    source_code_url = 'https://github.com/Anoncoin/anoncoin/blob/master/src/chainparams.cpp'
 
 
 # No testnet

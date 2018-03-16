@@ -19,3 +19,4 @@ class OKCash(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 183
     }
+    source_code_url = 'http://www.github.com/okcashpro/okcash/blob/master/src/chainparams.cpp'

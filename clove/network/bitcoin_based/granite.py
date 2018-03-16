@@ -31,3 +31,4 @@ class Granite(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 166
     }
+    source_code_url = 'http://www.github.com/chrysophylax69/granite/blob/master/src/net.cpp'

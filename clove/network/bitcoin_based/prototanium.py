@@ -18,6 +18,7 @@ class Prototanium(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 30,
         'SECRET_KEY': 239
     }
+    source_code_url = 'https://github.com/Prototanium/Pr/blob/master/src/chainparams.cpp'
 
 
 class PrototaniumTestNet(Prototanium):

@@ -22,5 +22,6 @@ class VPNCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 199
     }
+    source_code_url = 'https://github.com/Bit-Net/vash/blob/master/src/net.cpp'
 
 # no testnet

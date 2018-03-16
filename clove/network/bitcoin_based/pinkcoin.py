@@ -22,6 +22,7 @@ class Pinkcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 131
     }
+    source_code_url = 'https://github.com/pinkdev/pink2/blob/master/src/net.cpp'
 
 
 # Has no testnet

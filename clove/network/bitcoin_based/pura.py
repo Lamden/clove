@@ -44,5 +44,6 @@ class Pura(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 16,
         'SECRET_KEY': 150
     }
+    source_code_url = 'https://github.com/puracore/pura/blob/master/src/chainparamsseeds.h'
 
 # no testnet

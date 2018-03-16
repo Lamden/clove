@@ -17,3 +17,4 @@ class Guncoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 167
     }
+    source_code_url = 'https://github.com/guncoin/guncoin/blob/master-1.4/src/chainparams.cpp'

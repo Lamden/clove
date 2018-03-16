@@ -22,6 +22,7 @@ class Monacoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 176
     }
+    source_code_url = 'https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp'
     alternative_secret_key = 178
 
     @classmethod

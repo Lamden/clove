@@ -27,6 +27,7 @@ class Crown(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 128
     }
+    source_code_url = 'https://github.com/Crowndev/crowncoin/blob/master/src/chainparams.cpp'
 
 
 class CrownTestNet(Crown):

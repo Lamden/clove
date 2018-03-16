@@ -18,6 +18,7 @@ class Bata(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 188
     }
+    source_code_url = 'http://www.github.com/BTA-BATA/BATA-SOURCE/blob/master/src/chainparams.cpp'
 
 
 class BataTestNet(Bata):

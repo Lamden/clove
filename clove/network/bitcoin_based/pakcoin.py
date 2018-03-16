@@ -18,3 +18,4 @@ class Pakcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 183
     }
+    source_code_url = 'http://www.github.com/pakcoin-project/pakcoin/blob/master/src/net.cpp'

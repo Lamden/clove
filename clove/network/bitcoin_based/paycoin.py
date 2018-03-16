@@ -20,3 +20,4 @@ class PayCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 117,
         'SECRET_KEY': 183
     }
+    source_code_url = 'https://github.com/PaycoinFoundation/paycoin/blob/master/src/net.cpp'

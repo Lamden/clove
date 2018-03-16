@@ -18,3 +18,4 @@ class Blocknet(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 154
     }
+    source_code_url = 'https://github.com/BlocknetDX/BlockDX/blob/master/src/chainparams.cpp'

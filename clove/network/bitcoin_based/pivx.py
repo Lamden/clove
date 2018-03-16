@@ -18,6 +18,7 @@ class PIVX(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 13,
         'SECRET_KEY': 212
     }
+    source_code_url = 'http://www.github.com/PIVX-Project/PIVX/blob/master/src/chainparams.cpp'
 
 
 class PIVXTestNet(PIVX):

@@ -19,6 +19,7 @@ class Viacoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 33,
         'SECRET_KEY': 199
     }
+    source_code_url = 'http://www.github.com/viacoin/viacoin/blob/master/src/chainparams.cpp'
 
 
 class ViacoinTestNet(Viacoin):

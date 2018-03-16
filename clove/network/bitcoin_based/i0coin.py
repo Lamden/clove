@@ -18,3 +18,4 @@ class I0Coin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 128
     }
+    source_code_url = 'http://www.github.com/domob1812/i0coin/blob/master/src/chainparams.cpp'

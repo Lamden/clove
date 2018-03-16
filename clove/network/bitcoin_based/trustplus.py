@@ -18,3 +18,4 @@ class TrustPlus(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 193
     }
+    source_code_url = 'https://github.com/TrustPlus/TrustPlus/blob/master/src/net.cpp'

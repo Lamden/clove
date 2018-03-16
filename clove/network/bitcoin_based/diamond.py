@@ -18,6 +18,7 @@ class Diamond(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 218
     }
+    source_code_url = 'http://www.github.com/DMDcoin/Diamond/blob/master/src/chainparams.cpp'
 
 
 class DiamondTestNet(Diamond):

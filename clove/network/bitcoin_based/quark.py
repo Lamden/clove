@@ -18,6 +18,7 @@ class Quark(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 9,
         'SECRET_KEY': 186
     }
+    source_code_url = 'https://github.com/quark-project/quark/blob/master/src/chainparams.cpp'
 
 
 class QuarkTestNet(Quark):

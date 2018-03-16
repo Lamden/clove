@@ -17,3 +17,4 @@ class Pesetacoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 22,
         'SECRET_KEY': 175
     }
+    source_code_url = 'https://github.com/FundacionPesetacoin/Pesetacoin-0.9.1-Oficial/blob/master/src/chainparams.cpp'

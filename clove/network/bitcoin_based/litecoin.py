@@ -23,6 +23,7 @@ class Litecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 50,
         'SECRET_KEY': 176
     }
+    source_code_url = 'https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp'
 
 
 class LitecoinTestNet(Litecoin):

@@ -19,6 +19,7 @@ class Zoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 7,
         'SECRET_KEY': 208
     }
+    source_code_url = 'http://www.github.com/zoinofficial/zoin/blob/master/src/chainparams.cpp'
 
 
 class ZoinTestNet(Zoin):

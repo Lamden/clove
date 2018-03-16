@@ -18,3 +18,4 @@ class Vivo(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 10,
         'SECRET_KEY': 198
     }
+    source_code_url = 'http://www.github.com/vivocoin/vivo/blob/master/src/chainparams.cpp'

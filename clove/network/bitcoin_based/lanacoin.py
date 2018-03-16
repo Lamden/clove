@@ -20,6 +20,7 @@ class LanaCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 176
     }
+    source_code_url = 'http://www.github.com/LanaCoin/lanacoin/blob/master/src/chainparams.cpp'
 
 
 class LanaCoinTestNet(LanaCoin):

@@ -22,6 +22,7 @@ class Linx(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 203
     }
+    source_code_url = 'https://github.com/linX-project/linX/blob/master/src/net.cpp'
 
 
 class LinxTestNet(Linx):

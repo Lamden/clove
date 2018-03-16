@@ -33,3 +33,4 @@ class Wincoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 83,
         'SECRET_KEY': 201
     }
+    source_code_url = 'https://github.com/wincoinofficial/wincoin/blob/master/src/net.cpp'

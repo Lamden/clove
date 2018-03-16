@@ -18,5 +18,6 @@ class Gambit(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 97,
         'SECRET_KEY': 166
     }
+    source_code_url = 'https://github.com/collincrypto/gambitcrypto/blob/master/src/net.cpp'
 
 # no testnet

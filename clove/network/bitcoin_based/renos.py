@@ -18,3 +18,4 @@ class Renos(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 150
     }
+    source_code_url = 'http://www.github.com/RenosCoin/RenosCoin/blob/master/src/chainparams.cpp'

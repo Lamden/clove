@@ -18,6 +18,7 @@ class DollarOnline(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 90,
         'SECRET_KEY': 158
     }
+    source_code_url = 'https://github.com/dollar-online/dollar/blob/master/src/net.cpp'
 
 
 # No Testnet

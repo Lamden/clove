@@ -22,6 +22,7 @@ class CannaCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 156
     }
+    source_code_url = 'https://github.com/Cannacoin-Project/Cannacoin/blob/Proof-of-Stake/src/net.cpp'
 
 
 class CannaCoinTestNet(CannaCoin):

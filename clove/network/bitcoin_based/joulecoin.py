@@ -19,3 +19,4 @@ class Joulecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 11,
         'SECRET_KEY': 143
     }
+    source_code_url = 'http://www.github.com/joulecoin/joulecoin/blob/master/src/chainparams.cpp'

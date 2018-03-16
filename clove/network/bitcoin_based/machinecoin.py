@@ -18,6 +18,7 @@ class Machinecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 178
     }
+    source_code_url = 'http://www.github.com/machinecoin-project/machinecoin-core/blob/master/src/chainparams.cpp'
 
 
 class MachinecoinTestNet(Machinecoin):

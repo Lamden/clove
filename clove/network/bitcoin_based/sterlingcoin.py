@@ -45,5 +45,6 @@ class Sterlingcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 191
     }
+    source_code_url = 'https://github.com/Sterlingcoin/Sterlingcoin-1.6.0.1-Release/blob/master/src/net.cpp'
 
 # no testnet

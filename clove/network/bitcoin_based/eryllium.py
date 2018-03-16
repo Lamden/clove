@@ -18,5 +18,6 @@ class Eryllium(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 20,
         'SECRET_KEY': 161
     }
+    source_code_url = 'https://github.com/Eryllium/project/blob/master/src/net.cpp'
 
 # no testnet

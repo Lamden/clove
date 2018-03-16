@@ -18,3 +18,4 @@ class ExperiencePoints(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 20,
         'SECRET_KEY': 203
     }
+    source_code_url = 'https://github.com/eXperiencePoints/XPCoin/blob/master/src/net.cpp'

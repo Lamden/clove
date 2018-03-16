@@ -18,6 +18,7 @@ class DotCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 128
     }
+    source_code_url = 'https://github.com/cryptopianz/dot/blob/master/src/net.cpp'
 
 
 # Has no Testnet

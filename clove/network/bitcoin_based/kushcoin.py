@@ -17,6 +17,7 @@ class KushCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 20,
         'SECRET_KEY': 173
     }
+    source_code_url = 'https://github.com/kushcoin-project/kushcoin/blob/master/src/net.cpp'
 
 
 # Has no testnet

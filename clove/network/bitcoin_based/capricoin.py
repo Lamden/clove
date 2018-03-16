@@ -28,6 +28,7 @@ class Capricoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 35,
         'SECRET_KEY': 156
     }
+    source_code_url = 'https://github.com/capricoinofficial/capricoin/blob/master/src/net.cpp'
 
 
 # Has no Testnet

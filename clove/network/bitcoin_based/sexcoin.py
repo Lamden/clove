@@ -18,6 +18,7 @@ class Sexcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 190
     }
+    source_code_url = 'http://www.github.com/sexcoin-project/sexcoin/blob/master/src/chainparams.cpp'
 
 
 class SexcoinTestNet(Sexcoin):

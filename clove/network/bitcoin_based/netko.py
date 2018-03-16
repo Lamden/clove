@@ -19,3 +19,4 @@ class Netko(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 177
     }
+    source_code_url = 'http://www.github.com/netkotech/netko/blob/master/src/chainparams.cpp'

@@ -18,3 +18,4 @@ class Rubycoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 188
     }
+    source_code_url = 'http://www.github.com/rubycoinorg/rubycoin/blob/master/src/chainparams.cpp'

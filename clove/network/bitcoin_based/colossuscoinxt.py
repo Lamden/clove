@@ -17,5 +17,6 @@ class ColossusCoinXT(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 13,
         'SECRET_KEY': 212
     }
+    source_code_url = 'https://github.com/ColossusCoinXT/ColossusCoinXT/blob/master/src/chainparams.cpp'
 
 # no testnet

@@ -18,3 +18,4 @@ class Pandacoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 22,
         'SECRET_KEY': 183
     }
+    source_code_url = 'http://www.github.com/DigitalPandacoin/pandacoin/blob/master/src/net.cpp'

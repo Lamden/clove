@@ -19,3 +19,4 @@ class Digitalcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 158
     }
+    source_code_url = 'http://www.github.com/lomtax/digitalcoin/blob/master/src/chainparams.cpp'
