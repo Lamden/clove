@@ -190,8 +190,20 @@ class BaseNetwork(object):
             # already connected
             return self.get_current_node()
 
+        if self.nodes:
+            # fake seed node to enter the seed nodes loop
+            self.seeds = (None, )
+
         for seed in self.seeds:
-            nodes = self.filter_blacklisted_nodes(self.get_nodes(seed))
+
+            if seed is None:
+                # get hardcoded nodes
+                nodes = self.nodes
+            else:
+                # get nodes from seed node
+                nodes = self.get_nodes(seed)
+
+            nodes = self.filter_blacklisted_nodes(nodes)
 
             for node in nodes:
 
