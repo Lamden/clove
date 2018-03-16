@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class MindCoin(Bitcoin):
+class MindCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary MindCoin network information based on
     https://github.com/mindcointeam/mindcoin/blob/master/src/net.cpp

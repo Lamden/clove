@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Trollcoin(Bitcoin):
+class Trollcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary  Trollcoin (TROLL) network information based on
     https://github.com/TrustPlus/TrustPlus/blob/master/src/net.cpp

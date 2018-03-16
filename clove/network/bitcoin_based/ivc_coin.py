@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class IVCCoin(Bitcoin):
+class IVCCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary IVC_Coin network information based on
     https://github.com/invictus2082/invictus/blob/master/src/chainparams.cpp

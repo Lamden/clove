@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class HoboNickels(Bitcoin):
+class HoboNickels(BitcoinBaseNetwork):
     """
     Class with all the necessary HoboNickels network information based on
     https://github.com/crypto-expert/hobonickels/blob/master/src/net.cpp

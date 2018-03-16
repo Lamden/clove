@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Particl(Bitcoin):
+class Particl(BitcoinBaseNetwork):
     """
     Class with all the necessary Particl PART network information based on
     https://github.com/particl/particl-core/blob/master/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class BitSend(Bitcoin):
+class BitSend(BitcoinBaseNetwork):
     """
     Class with all the necessary BSD network information based on
     http://www.github.com/LIMXTEC/BitSend/blob/master/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class PIVX(Bitcoin):
+class PIVX(BitcoinBaseNetwork):
     """
     Class with all the necessary PIVX network information based on
     http://www.github.com/PIVX-Project/PIVX/blob/master/src/chainparams.cpp

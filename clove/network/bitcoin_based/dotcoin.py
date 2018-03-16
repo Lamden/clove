@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class DotCoin(Bitcoin):
+class DotCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary DotCoin network information based on
     https://github.com/cryptopianz/dot/blob/master/src/net.cpp

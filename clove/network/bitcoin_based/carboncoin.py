@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Carboncoin(Bitcoin):
+class Carboncoin(BitcoinBaseNetwork):
     """
     Class with all the necessary CARBON network information based on
     http://www.github.com/carboncointrust/CarboncoinCore/blob/master/src/chainparams.cpp

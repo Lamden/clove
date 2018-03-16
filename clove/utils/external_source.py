@@ -7,7 +7,7 @@ import urllib.request
 
 from bitcoin.core import COIN
 
-from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
+from clove.constants import BLOCKCYPHER_SUPPORTED_NETWORKS, CRYPTOID_SUPPORTED_NETWORKS, NETWORKS_WITH_API
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import from_base_units
 from clove.utils.logging import logger
@@ -32,6 +32,22 @@ def clove_req_json(url: str):
         return
 
     return json.loads(resp.read().decode())
+
+
+def get_transaction(network: str, tx_hash: str, testnet: bool=False) -> Optional[dict]:
+
+    symbol = network.lower()
+    if symbol not in NETWORKS_WITH_API:
+        raise ValueError('This network has not API.')
+
+    if symbol in BLOCKCYPHER_SUPPORTED_NETWORKS:
+        if testnet and symbol != 'btc':
+            raise ValueError('Only BTC testnet is supported')
+        network_url = 'test3' if testnet else 'main'
+        api_url = f'https://api.blockcypher.com/v1/{symbol}/{network_url}/txs/{tx_hash}?limit=50&includeHex=true'
+        return clove_req_json(api_url)
+
+    return clove_req(f'https://chainz.cryptoid.info/{symbol}/api.dws?q=txinfo&t={tx_hash}')
 
 
 def get_last_transactions(network: str) -> Optional[list]:

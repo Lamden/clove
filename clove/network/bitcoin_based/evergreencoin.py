@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class EverGreenCoin(Bitcoin):
+class EverGreenCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary EverGreenCoin network information based on
     https://github.com/evergreencoindev/evergreencoin/blob/master/src/net.cpp

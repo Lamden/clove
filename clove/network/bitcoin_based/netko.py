@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Netko(Bitcoin):
+class Netko(BitcoinBaseNetwork):
     """
     Class with all the necessary NETKO network information based on
     http://www.github.com/netkotech/netko/blob/master/src/chainparams.cpp

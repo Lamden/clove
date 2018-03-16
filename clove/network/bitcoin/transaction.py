@@ -6,9 +6,8 @@ from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress
 
 from clove.constants import SIGNATURE_SIZE, TRANSACTION_BROADCASTING_MAX_ATTEMPTS
-from clove.network.base import auto_switch_params
 from clove.network.bitcoin.wallet import BitcoinWallet
-from clove.utils.bitcoin import to_base_units
+from clove.utils.bitcoin import auto_switch_params, to_base_units
 from clove.utils.hashing import generate_secret_with_hash
 from clove.utils.logging import logger
 

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Pura(Bitcoin):
+class Pura(BitcoinBaseNetwork):
     """
     Class with all the necessary Pura (PURA) network information based on
     https://github.com/puracore/pura/blob/master/src/chainparamsseeds.h

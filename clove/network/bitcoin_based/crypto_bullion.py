@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class CryptoBullion(Bitcoin):
+class CryptoBullion(BitcoinBaseNetwork):
     """
     Class with all the necessary CryptoBullion network information based on
     https://github.com/cryptogenicbonds/cryptobullion-cbx/blob/master/src/net.cpp

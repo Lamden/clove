@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class SolarCoin(Bitcoin):
+class SolarCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary SLR network information based on
     http://www.github.com/onsightit/solarcoin/blob/master/src/chainparams.cpp

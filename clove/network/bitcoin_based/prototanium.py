@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Prototanium(Bitcoin):
+class Prototanium(BitcoinBaseNetwork):
     """
     Class with all the necessary Prototanium network information based on
     https://github.com/Prototanium/Pr/blob/master/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Viacoin(Bitcoin):
+class Viacoin(BitcoinBaseNetwork):
     """
     Class with all the necessary VIA network information based on
     http://www.github.com/viacoin/viacoin/blob/master/src/chainparams.cpp

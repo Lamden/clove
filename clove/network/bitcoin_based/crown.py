@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Crown(Bitcoin):
+class Crown(BitcoinBaseNetwork):
     """
     Class with all the necessary Crown network information based on
     https://github.com/Crowndev/crowncoin/blob/master/src/chainparams.cpp

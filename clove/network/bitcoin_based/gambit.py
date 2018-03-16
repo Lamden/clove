@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Gambit(Bitcoin):
+class Gambit(BitcoinBaseNetwork):
     """
     Class with all the necessary Gambit (GAM) network information based on
     https://github.com/collincrypto/gambitcrypto/blob/master/src/net.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Eryllium(Bitcoin):
+class Eryllium(BitcoinBaseNetwork):
     """
     Class with all the necessary Eryllium (ERY) network information based on
     https://github.com/Eryllium/project/blob/master/src/net.cpp

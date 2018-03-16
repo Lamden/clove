@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Capricoin(Bitcoin):
+class Capricoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Capricoin network information based on
     https://github.com/capricoinofficial/capricoin/blob/master/src/net.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class TajCoin(Bitcoin):
+class TajCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary TAJ network information based on
     http://www.github.com/Taj-Coin/tajcoin/blob/master/src/chainparams.cpp

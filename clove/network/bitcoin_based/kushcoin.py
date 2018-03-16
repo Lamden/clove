@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class KushCoin(Bitcoin):
+class KushCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary KushCoin network information based on
     https://github.com/kushcoin-project/kushcoin/blob/master/src/net.cpp

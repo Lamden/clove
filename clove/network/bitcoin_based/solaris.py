@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Solaris(Bitcoin):
+class Solaris(BitcoinBaseNetwork):
     """
     Class with all the necessary XLR network information based on
     http://www.github.com/Solaris-Project/Solaris/blob/master/src/chainparams.cpp

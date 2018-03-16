@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Photon(Bitcoin):
+class Photon(BitcoinBaseNetwork):
     """
     Class with all the necessary PHO network information based on
     http://www.github.com/photonproject/photon/blob/master/src/net.cpp

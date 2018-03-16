@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Europecoin(Bitcoin):
+class Europecoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Europecoin network information based on
     https://github.com/LIMXTEC/Europecoin-V3/blob/master/src/chainparams.cpp

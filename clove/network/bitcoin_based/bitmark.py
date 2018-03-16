@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Bitmark(Bitcoin):
+class Bitmark(BitcoinBaseNetwork):
     """
     Class with all the necessary Bitmark network information based on
     https://github.com/project-bitmark/bitmark/blob/master/src/chainparams.cpp

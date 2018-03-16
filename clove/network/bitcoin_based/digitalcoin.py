@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Digitalcoin(Bitcoin):
+class Digitalcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary DGC network information based on
     http://www.github.com/lomtax/digitalcoin/blob/master/src/chainparams.cpp

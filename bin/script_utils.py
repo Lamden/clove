@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 
-import json
-from urllib.error import HTTPError, URLError
-import urllib.request
-
 from colorama import Fore, Style
 
-from clove.network.base import BaseNetwork
-from clove.network.bitcoin import BitcoinTestNet
+from clove.utils.external_source import get_transaction
+from clove.utils.search import get_network_object
 
 
 def print_section(*args):
@@ -19,22 +15,10 @@ def print_error(*args):
 
 
 def get_network(symbol):
-    testnet = symbol.endswith('_TESTNET')
+    testnet = symbol.endswith('-TESTNET')
     if testnet:
-        symbol = symbol.replace('_TESTNET', '')
-        return BitcoinTestNet.get_network_class_by_symbol(symbol)()
-    return BaseNetwork.get_network_class_by_symbol(symbol)()
-
-
-def api_network_symbol(symbol):
-    SYMBOL_API_MAP = {
-        'BTC': 'btc/main',
-        'BTC_TESTNET': 'btc/test3',
-        'LTC': 'ltc/main',
-        'DOGE': 'doge/main',
-        'DASH': 'dash/main',
-    }
-    return SYMBOL_API_MAP[symbol]
+        symbol = symbol[:-8]
+    return get_network_object(symbol, testnet)
 
 
 def print_tx_address(symbol, tx):
@@ -42,16 +26,11 @@ def print_tx_address(symbol, tx):
     print(f'https://live.blockcypher.com/{symbol_url}/tx/{tx}/')
 
 
-def get_transaction_from_address(network, address):
+def get_transaction_from_address(symbol, address):
     print_section('Searching for transaction:', address)
-    api_network = api_network_symbol(network)
-    api_url = f'https://api.blockcypher.com/v1/{api_network}/txs/{address}?limit=50&includeHex=true'
-    try:
-        with urllib.request.urlopen(api_url) as url:
-            if url.status != 200:
-                return
-            data = json.loads(url.read().decode())
-            return data['hex']
-    except (URLError, HTTPError):
+    network = get_network(symbol)
+    tx = get_transaction(network.default_symbol, address, network.is_test_network())
+    if not tx:
         print_section('Cannot find such transaction')
         exit(1)
+    return tx['hex']

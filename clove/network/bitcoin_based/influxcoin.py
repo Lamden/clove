@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Influxcoin(Bitcoin):
+class Influxcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Influxcoin network information based on
     https://github.com/chainworksindustries/influx/blob/master/src/net.cpp

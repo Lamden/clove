@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class TrustPlus(Bitcoin):
+class TrustPlus(BitcoinBaseNetwork):
     """
     Class with all the necessary  TrustPlus (TRUST) network information based on
     https://github.com/TrustPlus/TrustPlus/blob/master/src/net.cpp

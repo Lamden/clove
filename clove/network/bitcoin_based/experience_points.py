@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class ExperiencePoints(Bitcoin):
+class ExperiencePoints(BitcoinBaseNetwork):
     """
     Class with all the necessary Experience Points XP network information based on
     https://github.com/eXperiencePoints/XPCoin/blob/master/src/net.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class VPNCoin(Bitcoin):
+class VPNCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary VPNCoin (VASH) network information based on
     https://github.com/Bit-Net/vash/blob/master/src/net.cpp

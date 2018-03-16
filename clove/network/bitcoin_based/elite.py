@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Elite(Bitcoin):
+class Elite(BitcoinBaseNetwork):
     """
     Class with all the necessary 1337 network information based on
     https://github.com/xenonflux/1337/blob/master/src/net.cpp

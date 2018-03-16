@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Syscoin(Bitcoin):
+class Syscoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Syscoin SYS network information based on
     https://github.com/syscoin/syscoin/blob/master/src/net.cpp

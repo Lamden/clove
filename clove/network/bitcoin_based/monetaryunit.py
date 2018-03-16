@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class MonetaryUnit(Bitcoin):
+class MonetaryUnit(BitcoinBaseNetwork):
     """
     Class with all the necessary MonetaryUnit network information based on
     https://github.com/muecoin/MUECore/blob/master/src/chainparams.cpp

@@ -9,6 +9,10 @@ TRANSACTION_BROADCASTING_MAX_ATTEMPTS = 10
 
 SIGNATURE_SIZE = 110
 
+BLOCKCYPHER_SUPPORTED_NETWORKS = (
+    'btc', 'ltc', 'doge', 'dash'
+)
+
 CRYPTOID_SUPPORTED_NETWORKS = (
     '1337', '2give', '42', '8bit', 'abc', 'ac', 'adc', 'aeg', 'anc', 'arco',
     'arg', 'atms', 'atom', 'b3', 'bash', 'bay', 'bcc', 'bee2', 'bela', 'bitb',
@@ -39,3 +43,5 @@ CRYPTOID_SUPPORTED_NETWORKS = (
     'xc', 'xcs', 'xjo', 'xlr', 'xmg', 'xmy', 'xp', 'xpy', 'xqn', 'xspec',
     'xst', 'xstc', 'xto', 'xvp', 'xzc', 'zeit', 'zet', 'zoi'
 )
+
+NETWORKS_WITH_API = BLOCKCYPHER_SUPPORTED_NETWORKS + CRYPTOID_SUPPORTED_NETWORKS

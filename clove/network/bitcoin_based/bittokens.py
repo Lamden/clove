@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class BitTokens(Bitcoin):
+class BitTokens(BitcoinBaseNetwork):
     """
     Class with all the necessary BXT network information based on
     http://www.github.com/BitTokens/BitToken/blob/master/src/chainparams.cpp

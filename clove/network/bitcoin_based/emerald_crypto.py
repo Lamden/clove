@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class EmeraldCrypto(Bitcoin):
+class EmeraldCrypto(BitcoinBaseNetwork):
     """
     Class with all the necessary EMD network information based on
     http://www.github.com/crypto-currency/Emerald/blob/master/src/net.cpp

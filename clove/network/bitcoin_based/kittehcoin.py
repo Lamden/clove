@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Kittehcoin(Bitcoin):
+class Kittehcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Kittehcoin network information based on
     https://github.com/kittehcoin/kittehcoin/blob/master/src/net.cpp

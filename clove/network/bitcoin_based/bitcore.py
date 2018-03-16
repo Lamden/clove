@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Bitcore(Bitcoin):
+class Bitcore(BitcoinBaseNetwork):
     """
     Class with all the necessary BTX network information based on
     http://www.github.com/LIMXTEC/BitCore/blob/master/src/chainparams.cpp

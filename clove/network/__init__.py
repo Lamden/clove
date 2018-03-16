@@ -1,5 +1,4 @@
 from clove.network.bitcoin import Bitcoin, BitcoinTestNet
-
 from clove.network.bitcoin_based.anoncoin import Anoncoin
 from clove.network.bitcoin_based.aquariuscoin import AquariusCoin
 from clove.network.bitcoin_based.asiacoin import AsiaCoin
@@ -140,7 +139,6 @@ from clove.network.bitcoin_based.zcoin import ZCoin, ZCoinTestNet
 from clove.network.bitcoin_based.zeitcoin import Zeitcoin
 from clove.network.bitcoin_based.zetacoin import Zetacoin, ZetacoinTestNet
 from clove.network.bitcoin_based.zoin import Zoin, ZoinTestNet
-
 
 BITCOIN_BASES = [
     Bitcoin, BitcoinTestNet,

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Zeitcoin(Bitcoin):
+class Zeitcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary ZEIT network information based on
     https://github.com/zeitcoin/zeitcoin/blob/master/src/net.cpp

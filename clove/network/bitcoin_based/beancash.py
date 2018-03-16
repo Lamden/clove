@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class BeanCash(Bitcoin):
+class BeanCash(BitcoinBaseNetwork):
     """
     Class with all the necessary BITB network information based on
     http://www.github.com/TeamBitBean/bitbean-core/blob/master/src/chainparams.cpp

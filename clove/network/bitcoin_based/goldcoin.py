@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Goldcoin(Bitcoin):
+class Goldcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Goldcoin network information based on
     https://github.com/dmdcoin/diamond/blob/master/src/chainparams.cpp

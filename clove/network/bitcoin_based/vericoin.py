@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class VeriCoin(Bitcoin):
+class VeriCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary VRC network information based on
     https://github.com/vericoin/vericoin/blob/master/src/net.cpp

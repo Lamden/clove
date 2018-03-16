@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Zoin(Bitcoin):
+class Zoin(BitcoinBaseNetwork):
     """
     Class with all the necessary ZOI network information based on
     http://www.github.com/zoinofficial/zoin/blob/master/src/chainparams.cpp

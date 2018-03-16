@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Skeincoin(Bitcoin):
+class Skeincoin(BitcoinBaseNetwork):
     """
     Class with all the necessary SKC network information based on
     http://www.github.com/skeincoin/skeincoin/blob/master/src/chainparams.cpp

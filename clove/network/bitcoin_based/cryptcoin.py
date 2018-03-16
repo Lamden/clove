@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class CryptCoin(Bitcoin):
+class CryptCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary CryptCoin network information based on
     https://github.com/cryptcointeam/cryptcoin/blob/master/src/net.cpp

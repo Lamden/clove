@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class ToaCoin(Bitcoin):
+class ToaCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary ToaCoin network information based on
     https://github.com/toacoin/TOA/blob/master/src/net.cpp

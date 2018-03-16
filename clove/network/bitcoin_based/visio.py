@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Visio(Bitcoin):
+class Visio(BitcoinBaseNetwork):
     """
     Class with all the necessary VISIO network information based on
     http://www.github.com/Fladirmacht/visioX/blob/master/src/chainparams.cpp

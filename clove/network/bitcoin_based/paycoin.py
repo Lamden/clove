@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class PayCoin(Bitcoin):
+class PayCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary PayCoin network information based on
     https://github.com/PaycoinFoundation/paycoin/blob/master/src/net.cpp

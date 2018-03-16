@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class MasterSwiscoin(Bitcoin):
+class MasterSwiscoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Master Swiscoin network information based on
     https://github.com/SCNPay/Swiscoin-Master/blob/master/src/net.cpp

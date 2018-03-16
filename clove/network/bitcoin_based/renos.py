@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Renos(Bitcoin):
+class Renos(BitcoinBaseNetwork):
     """
     Class with all the necessary RNS network information based on
     http://www.github.com/RenosCoin/RenosCoin/blob/master/src/chainparams.cpp

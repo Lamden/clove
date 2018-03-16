@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Potcoin(Bitcoin):
+class Potcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Potcoin (POT) network information based on
     https://github.com/potcoin/Potcoin/blob/master/src/net.cpp

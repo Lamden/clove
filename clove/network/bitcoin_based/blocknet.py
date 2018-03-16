@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Blocknet(Bitcoin):
+class Blocknet(BitcoinBaseNetwork):
     """
     Class with all the necessary Blocknet (BLOCK) network information based on
     https://github.com/BlocknetDX/BlockDX/blob/master/src/chainparams.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Curecoin(Bitcoin):
+class Curecoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Curecoin network information based on
     https://github.com/cygnusxi/curecoinsource/blob/master/src/net.cpp

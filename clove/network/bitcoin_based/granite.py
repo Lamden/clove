@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Granite(Bitcoin):
+class Granite(BitcoinBaseNetwork):
     """
     Class with all the necessary GRN network information based on
     http://www.github.com/chrysophylax69/granite/blob/master/src/net.cpp

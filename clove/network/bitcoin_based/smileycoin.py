@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class SmileyCoin(Bitcoin):
+class SmileyCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary SmileyCoin network information based on
     https://github.com/tutor-web/smileyCoin/blob/post-2017-wallet/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class InsaneCoin(Bitcoin):
+class InsaneCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary INSN network information based on
     http://www.github.com/CryptoCoderz/INSN/blob/master/src/chainparams.cpp

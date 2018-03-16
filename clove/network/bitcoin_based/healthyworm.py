@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class HealthyWormCoin(Bitcoin):
+class HealthyWormCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary HealthyWormCoin network information based on
     https://github.com/HealthyWormDotCom/HealthyWorm/blob/master/src/net.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Pesetacoin(Bitcoin):
+class Pesetacoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Pesetacoin (PTC) network information based on
     https://github.com/FundacionPesetacoin/Pesetacoin-0.9.1-Oficial/blob/master/src/chainparams.cpp

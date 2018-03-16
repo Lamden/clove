@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class UniformFiscalObject(Bitcoin):
+class UniformFiscalObject(BitcoinBaseNetwork):
     """
     Class with all the necessary Uniform Fiscal Object (UFO) network information based on
     https://github.com/UFOCoins/ufo/blob/master-0.12/src/chainparams.cpp

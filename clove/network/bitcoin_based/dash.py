@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Dash(Bitcoin):
+class Dash(BitcoinBaseNetwork):
     """
     Class with all the necessary DASH network information based on
     https://github.com/dashpay/dash/blob/master/src/chainparams.cpp

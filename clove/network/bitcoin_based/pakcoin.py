@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Pakcoin(Bitcoin):
+class Pakcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary PAK network information based on
     http://www.github.com/pakcoin-project/pakcoin/blob/master/src/net.cpp

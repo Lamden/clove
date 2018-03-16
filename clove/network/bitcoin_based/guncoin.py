@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Guncoin(Bitcoin):
+class Guncoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Guncoin network information based on
     https://github.com/guncoin/guncoin/blob/master-1.4/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Riecoin(Bitcoin):
+class Riecoin(BitcoinBaseNetwork):
     """
     Class with all the necessary RIC network information based on
     http://www.github.com/riecoin/riecoin/blob/master/src/chainparams.cpp

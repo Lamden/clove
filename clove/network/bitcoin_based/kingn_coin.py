@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class KingNCoin(Bitcoin):
+class KingNCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary KingN Coin network information based on
     https://github.com/ulandort/kingncoin-source/blob/master/src/net.cpp

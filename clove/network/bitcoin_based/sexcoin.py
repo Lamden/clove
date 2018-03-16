@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Sexcoin(Bitcoin):
+class Sexcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary SXC network information based on
     http://www.github.com/sexcoin-project/sexcoin/blob/master/src/chainparams.cpp

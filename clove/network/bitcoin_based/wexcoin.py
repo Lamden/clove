@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Wexcoin(Bitcoin):
+class Wexcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Wexcoin network information based on
     https://github.com/wexcoinofficial/wexcoin/blob/master/src/net.cpp
