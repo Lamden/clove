@@ -4,7 +4,7 @@ from clove.network.bitcoin.base import BitcoinBaseNetwork
 class Goldcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Goldcoin network information based on
-    https://github.com/dmdcoin/diamond/blob/master/src/chainparams.cpp
+    https://github.com/goldcoin/goldcoin/blob/master/src/net.cpp
     (date of access: 02/15/2018)
     """
     name = 'goldcoin'
@@ -17,5 +17,6 @@ class Goldcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 218
     }
+    source_code_url = 'https://github.com/goldcoin/goldcoin/blob/master/src/net.cpp'
 
 # no testnet

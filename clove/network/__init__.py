@@ -44,7 +44,6 @@ from clove.network.bitcoin_based.europecoin import Europecoin
 from clove.network.bitcoin_based.evergreencoin import EverGreenCoin
 from clove.network.bitcoin_based.experience_points import ExperiencePoints
 from clove.network.bitcoin_based.gambit import Gambit
-from clove.network.bitcoin_based.globalcoin import GlobalCoin
 from clove.network.bitcoin_based.goldcoin import Goldcoin
 from clove.network.bitcoin_based.granite import Granite
 from clove.network.bitcoin_based.greencoin import Greencoin
@@ -88,7 +87,7 @@ from clove.network.bitcoin_based.pakcoin import Pakcoin
 from clove.network.bitcoin_based.pandacoin import Pandacoin
 from clove.network.bitcoin_based.particl import Particl, ParticlTestNet
 from clove.network.bitcoin_based.paycoin import PayCoin
-from clove.network.bitcoin_based.peer_coin import Peercoin
+from clove.network.bitcoin_based.peercoin import Peercoin, PeercoinTestNet
 from clove.network.bitcoin_based.pesetacoin import Pesetacoin
 from clove.network.bitcoin_based.phore import Phore
 from clove.network.bitcoin_based.photon import Photon, PhotonTestNet
@@ -121,7 +120,6 @@ from clove.network.bitcoin_based.tao import Tao, TaoTestNet
 from clove.network.bitcoin_based.teslacoin import TeslaCoin
 from clove.network.bitcoin_based.theresa_may_coin import Theresamaycoin
 from clove.network.bitcoin_based.toacoin import ToaCoin
-from clove.network.bitcoin_based.trollcoin import Trollcoin
 from clove.network.bitcoin_based.trustplus import TrustPlus
 from clove.network.bitcoin_based.two_give import TwoGIVE
 from clove.network.bitcoin_based.uniform_fiscal_object import UniformFiscalObject
@@ -187,7 +185,6 @@ BITCOIN_BASES = [
     EverGreenCoin,
     ExperiencePoints,
     Gambit,
-    GlobalCoin,
     Goldcoin,
     Granite,
     Greencoin,
@@ -231,7 +228,7 @@ BITCOIN_BASES = [
     Pandacoin,
     Particl, ParticlTestNet,
     PayCoin,
-    Peercoin,
+    Peercoin, PeercoinTestNet,
     Pesetacoin,
     Phore,
     Photon, PhotonTestNet,
@@ -264,7 +261,6 @@ BITCOIN_BASES = [
     TeslaCoin,
     Theresamaycoin,
     ToaCoin,
-    Trollcoin,
     TrustPlus,
     TwoGIVE,
     UniformFiscalObject,

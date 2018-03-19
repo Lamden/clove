@@ -20,5 +20,6 @@ class IVCCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 117
     }
+    source_code_url = 'https://github.com/invictus2082/invictus/blob/master/src/chainparams.cpp'
 
 # no testnet

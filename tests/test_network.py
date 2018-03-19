@@ -33,6 +33,7 @@ def test_bitcoin_based_network_definitions(network):
     assert isinstance(network.blacklist_nodes, dict)
     assert isinstance(network.message_start, bytes)
     assert isinstance(network.base58_prefixes, dict)
+    assert isinstance(network.source_code_url, str)
 
 
 @mark.parametrize('network', networks)

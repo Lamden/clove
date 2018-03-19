@@ -86,6 +86,6 @@ class Influxcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 230
     }
-
+    source_code_url = 'https://github.com/chainworksindustries/influx/blob/master/src/net.cpp'
 
 # Has no Testnet
