@@ -3,10 +3,9 @@ from datetime import datetime
 from bitcoin.core import b2lx, b2x, script
 from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 
-from clove.network.base import auto_switch_params
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import deserialize_raw_transaction, from_base_units
+from clove.utils.bitcoin import auto_switch_params, deserialize_raw_transaction, from_base_units
 
 
 class BitcoinContract(object):

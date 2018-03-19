@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class NobleCoin(Bitcoin):
+class NobleCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary NobleCoin network information based on
     https://github.com/noblecoinnobl/noblecoin/blob/master/src/net.cpp

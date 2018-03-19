@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Devcoin(Bitcoin):
+class Devcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Devcoin network information based on
     https://github.com/coinzen/devcoin/blob/master/src/net.cpp

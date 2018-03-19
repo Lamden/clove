@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class IOcoin(Bitcoin):
+class IOcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary IOcoin network information based on
     https://github.com/IOCoin/iocoin/blob/master/src/net.cpp

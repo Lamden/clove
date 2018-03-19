@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class CannabisCoin(Bitcoin):
+class CannabisCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary CANN network information based on
     http://www.github.com/cannabiscoindev/cannabiscoin420/blob/master/src/net.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Digibyte(Bitcoin):
+class Digibyte(BitcoinBaseNetwork):
     """
     Class with all the necessary DGB network information based on
     https://github.com/digibyte/digibyte/blob/master/src/chainparams.cpp

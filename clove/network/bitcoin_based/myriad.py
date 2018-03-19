@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Myriad(Bitcoin):
+class Myriad(BitcoinBaseNetwork):
     """
     Class with all the necessary XMY network information based on
     http://www.github.com/myriadteam/myriadcoin/blob/master/src/chainparams.cpp

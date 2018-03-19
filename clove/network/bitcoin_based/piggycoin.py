@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Piggycoin(Bitcoin):
+class Piggycoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Piggycoin network information based on
     https://github.com/piggycoin/newpiggycoin/blob/master/src/net.cpp

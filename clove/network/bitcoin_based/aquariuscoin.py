@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class AquariusCoin(Bitcoin):
+class AquariusCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary ARCO network information based on
     http://www.github.com/AquariusNetwork/ARCO/blob/master/src/chainparams.cpp

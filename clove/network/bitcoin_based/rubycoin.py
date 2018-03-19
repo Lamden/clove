@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Rubycoin(Bitcoin):
+class Rubycoin(BitcoinBaseNetwork):
     """
     Class with all the necessary RBY network information based on
     http://www.github.com/rubycoinorg/rubycoin/blob/master/src/chainparams.cpp

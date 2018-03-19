@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Linx(Bitcoin):
+class Linx(BitcoinBaseNetwork):
     """
     Class with all the necessary Linx network information based on
     https://github.com/linX-project/linX/blob/master/src/net.cpp

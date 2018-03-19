@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Theresamaycoin(Bitcoin):
+class Theresamaycoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Theresa May Coin (MAY) network information based on
     https://github.com/zulufourm1ke/theresamaycoin-v1.0.1.0/blob/master/src/net.cpp

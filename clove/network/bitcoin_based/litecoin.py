@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Litecoin(Bitcoin):
+class Litecoin(BitcoinBaseNetwork):
     """
     Class with all the necessary LTC network information based on
     https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp

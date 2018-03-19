@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class ZCoin(Bitcoin):
+class ZCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary XZC network information based on
     http://www.github.com/zcoinofficial/zcoin/blob/master/src/chainparams.cpp

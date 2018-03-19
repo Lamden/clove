@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Vertcoin(Bitcoin):
+class Vertcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary VTC network information based on
     https://github.com/vertcoin-project/vertcoin-core/blob/master/src/chainparams.cpp

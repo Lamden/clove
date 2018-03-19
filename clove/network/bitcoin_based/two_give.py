@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class TwoGIVE(Bitcoin):
+class TwoGIVE(BitcoinBaseNetwork):
     """
     Class with all the necessary  2GIVE (2GIVE) network information based on
     https://github.com/LittleDuke/2GIVE/blob/master/src/net.cpp

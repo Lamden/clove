@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Vivo(Bitcoin):
+class Vivo(BitcoinBaseNetwork):
     """
     Class with all the necessary VIVO network information based on
     http://www.github.com/vivocoin/vivo/blob/master/src/chainparams.cpp

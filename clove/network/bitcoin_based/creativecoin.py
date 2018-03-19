@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class CreativeCoin(Bitcoin):
+class CreativeCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary CreativeCoin (CREA) network information based on
     https://github.com/creativechain/creativechain-core/blob/master/src/chainparams.cpp

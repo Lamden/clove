@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class LUXCoin(Bitcoin):
+class LUXCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary LUX network information based on
     https://github.com/216k155/lux/blob/master/src/chainparams.cpp

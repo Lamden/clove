@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Diamond(Bitcoin):
+class Diamond(BitcoinBaseNetwork):
     """
     Class with all the necessary DMD network information based on
     http://www.github.com/DMDcoin/Diamond/blob/master/src/chainparams.cpp

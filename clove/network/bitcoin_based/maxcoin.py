@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class MaxCoin(Bitcoin):
+class MaxCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary MaxCoin network information based on
     https://github.com/Max-Coin/maxcoin/blob/master/src/net.cpp

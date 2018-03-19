@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class DollarOnline(Bitcoin):
+class DollarOnline(BitcoinBaseNetwork):
     """
     Class with all the necessary DollarOnline network information based on
     https://github.com/dollar-online/dollar/blob/master/src/net.cpp

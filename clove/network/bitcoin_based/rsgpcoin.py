@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class RSGPcoin(Bitcoin):
+class RSGPcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary RSGPcoin network information based on
     https://github.com/ulandort/rsgprepo/blob/master/src/net.cpp

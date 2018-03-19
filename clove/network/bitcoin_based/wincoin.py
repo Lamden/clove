@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Wincoin(Bitcoin):
+class Wincoin(BitcoinBaseNetwork):
     """
     Class with all the necessary WC network information based on
     https://github.com/wincoinofficial/wincoin/blob/master/src/net.cpp

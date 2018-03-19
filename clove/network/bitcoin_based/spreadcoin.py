@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class SpreadCoin(Bitcoin):
+class SpreadCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary SpreadCoin network information based on
     https://github.com/spreadcoin/spreadcoin/blob/master/src/net.cpp

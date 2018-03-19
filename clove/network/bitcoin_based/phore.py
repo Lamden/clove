@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Phore(Bitcoin):
+class Phore(BitcoinBaseNetwork):
     """
     Class with all the necessary PHR network information based on
     http://www.github.com/phoreproject/Phore/blob/master/src/chainparams.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Peercoin(Bitcoin):
+class Peercoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Peercoin (PPC) network information based on
     https://github.com/peercoin/peercoin/blob/master/src/net.cpp

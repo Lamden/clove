@@ -8,8 +8,9 @@ from validators import domain
 
 from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
 from clove.network import __all__ as networks
-from clove.network.base import BaseNetwork, auto_switch_params
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.network.bitcoin.utxo import Utxo
+from clove.utils.bitcoin import auto_switch_params
 from clove.utils.search import get_network_object
 
 
@@ -36,8 +37,8 @@ def test_bitcoin_based_network_definitions(network):
 
 @mark.parametrize('network', networks)
 @patch('clove.network.bitcoin_based.ravencoin.Ravencoin.get_current_fee_per_kb', side_effect=[0.01, ])
-@patch('clove.network.base.get_fee_from_last_transactions', side_effect=[0.01, ])
-@patch('clove.network.base.get_fee_from_blockcypher', side_effect=[0.01, ])
+@patch('clove.network.bitcoin.base.get_fee_from_last_transactions', side_effect=[0.01, ])
+@patch('clove.network.bitcoin.base.get_fee_from_blockcypher', side_effect=[0.01, ])
 def test_fee_per_kb_implementation(blockcyphe_mock, api_mock, ravencoin_mock, network):
     # networks supported by blockcypher or with own methods for getting fee
     if network.name in ('bitcoin', 'test-bitcoin', 'litecoin', 'dogecoin', 'dash', 'raven'):
@@ -166,7 +167,7 @@ def test_getting_utxo(json_response, network):
 
 
 def test_filter_blacklisted_nodes_method():
-    network = BaseNetwork()
+    network = BitcoinBaseNetwork()
     network.blacklist_nodes = {'107.150.122.31': 4, '107.170.239.46': 1, '108.144.213.98': 3, '13.113.121.156': 4}
     nodes = list(network.blacklist_nodes.keys()) + ['34.207.248.232']
     assert network.filter_blacklisted_nodes(nodes) == ['34.207.248.232', '107.170.239.46', '108.144.213.98']
@@ -179,7 +180,7 @@ def test_symbol_mapping(network):
     symbol_mapping = network.get_symbol_mapping()
     assert symbol_mapping
     for (symbol, mapped_network) in symbol_mapping.items():
-        assert issubclass(mapped_network, BaseNetwork)
+        assert issubclass(mapped_network, BitcoinBaseNetwork)
         assert symbol in mapped_network.symbols
         assert mapped_network.is_test_network() == is_test
 
@@ -191,7 +192,7 @@ def test_get_network_class_by_symbol(network):
     assert symbol_mapping
     for symbol in symbol_mapping:
         network_class = network.get_network_class_by_symbol(symbol)
-        assert issubclass(network_class, BaseNetwork)
+        assert issubclass(network_class, BitcoinBaseNetwork)
         assert symbol in network_class.symbols
         assert network_class.is_test_network() == is_test
 

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Sterlingcoin(Bitcoin):
+class Sterlingcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Sterlingcoin (SLG) network information based on
     https://github.com/Sterlingcoin/Sterlingcoin-1.6.0.1-Release/blob/master/src/net.cpp

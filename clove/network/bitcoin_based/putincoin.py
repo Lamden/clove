@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class PutinCoin(Bitcoin):
+class PutinCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary PutinCoin network information based on
     https://github.com/putincoinput/putincoin/blob/master/src/net.cpp

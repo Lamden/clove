@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class OKCash(Bitcoin):
+class OKCash(BitcoinBaseNetwork):
     """
     Class with all the necessary OK network information based on
     http://www.github.com/okcashpro/okcash/blob/master/src/chainparams.cpp

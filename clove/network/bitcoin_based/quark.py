@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Quark(Bitcoin):
+class Quark(BitcoinBaseNetwork):
     """
     Class with all the necessary Quark (QRK) network information based on
     https://github.com/quark-project/quark/blob/master/src/chainparams.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Saffroncoin(Bitcoin):
+class Saffroncoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Saffroncoin network information based on
     https://github.com/saffroncoin/saffroncoin/blob/master/src/chainparams.cpp

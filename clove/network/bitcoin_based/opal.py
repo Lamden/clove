@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Opal(Bitcoin):
+class Opal(BitcoinBaseNetwork):
     """
     Class with all the necessary Opal network information based on
     https://github.com/OpalCoin/OpalCoin/blob/master/src/net.cpp

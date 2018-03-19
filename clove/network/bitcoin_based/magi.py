@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Magi(Bitcoin):
+class Magi(BitcoinBaseNetwork):
     """
     Class with all the necessary Magi (XMG) network information based on
     https://github.com/magi-project/magi/blob/master/src/net.cpp

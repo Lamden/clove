@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class BitcoinGold(Bitcoin):
+class BitcoinGold(BitcoinBaseNetwork):
     """
     Class with all the necessary BTG network information based on
     https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp

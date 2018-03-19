@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class AudioCoin(Bitcoin):
+class AudioCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary ADC network information based on
     http://www.github.com/aurovine/audiocoin/blob/master/src/chainparams.cpp

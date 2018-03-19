@@ -3,12 +3,12 @@ from typing import Optional
 
 from bitcoin.core import COIN
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.utils.external_source import clove_req
 from clove.utils.logging import logger
 
 
-class Ravencoin(Bitcoin):
+class Ravencoin(BitcoinBaseNetwork):
     """
     Class with all the necessary RVN network information based on
     https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp

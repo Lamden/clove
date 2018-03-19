@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Navcoin(Bitcoin):
+class Navcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary NAV Coin (NAV) network information based on
     https://github.com/NAVCoin/navcoin-core/blob/master/src/chainparams.cpp

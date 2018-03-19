@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class TeslaCoin(Bitcoin):
+class TeslaCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary TeslaCoin network information based on
     https://github.com/teslacoinfoundation/teslacoin-v.3.3/blob/master/src/net.cpp

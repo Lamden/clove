@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Eternity(Bitcoin):
+class Eternity(BitcoinBaseNetwork):
     """
     Class with all the necessary ENT network information based on
     http://www.github.com/eternity-group/eternity/blob/master/src/chainparams.cpp

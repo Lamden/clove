@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class AsiaCoin(Bitcoin):
+class AsiaCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary AsiaCoin network information based on
     https://github.com/AsiaCoin/AsiaCoinFix/blob/master/src/net.cpp

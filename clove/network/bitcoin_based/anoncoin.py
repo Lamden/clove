@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Anoncoin(Bitcoin):
+class Anoncoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Anoncoin network information based on
     https://github.com/Anoncoin/anoncoin/blob/master/src/chainparams.cpp

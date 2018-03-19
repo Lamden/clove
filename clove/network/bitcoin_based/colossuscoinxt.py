@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class ColossusCoinXT(Bitcoin):
+class ColossusCoinXT(BitcoinBaseNetwork):
     """
     Class with all the necessary ColossusCoinXT (COLX) network information based on
     https://github.com/ColossusCoinXT/ColossusCoinXT/blob/master/src/chainparams.cpp

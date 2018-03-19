@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Dopecoin(Bitcoin):
+class Dopecoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Dopecoin (DOPE) network information based on
     https://github.com/dopecoin-dev/DopeCoinGold/blob/master/src/chainparams.cpp

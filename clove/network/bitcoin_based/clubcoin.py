@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class ClubCoin(Bitcoin):
+class ClubCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary CLUB network information based on
     http://www.github.com/BitClubDev/ClubCoin/blob/master/src/chainparams.cpp

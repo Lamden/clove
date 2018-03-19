@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Shilling(Bitcoin):
+class Shilling(BitcoinBaseNetwork):
     """
     Class with all the necessary SH network information based on
     http://www.github.com/yavwa/Shilling/blob/master/src/net.cpp

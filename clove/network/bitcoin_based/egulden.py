@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class EGulden(Bitcoin):
+class EGulden(BitcoinBaseNetwork):
     """
     Class with all the necessary eGulden (EFL) network information based on
     https://github.com/Electronic-Gulden-Foundation/egulden/blob/master/src/chainparams.cpp

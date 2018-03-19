@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Machinecoin(Bitcoin):
+class Machinecoin(BitcoinBaseNetwork):
     """
     Class with all the necessary MAC network information based on
     http://www.github.com/machinecoin-project/machinecoin-core/blob/master/src/chainparams.cpp

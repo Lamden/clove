@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Greencoin(Bitcoin):
+class Greencoin(BitcoinBaseNetwork):
     """
     Class with all the necessary GRE network information based on
     http://www.github.com/greencoin-dev/GreenCoinV2/blob/master/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Unobtanium(Bitcoin):
+class Unobtanium(BitcoinBaseNetwork):
     """
     Class with all the necessary UNO network information based on
     http://www.github.com/unobtanium-official/Unobtanium/blob/master/src/chainparams.cpp

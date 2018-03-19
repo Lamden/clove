@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Zetacoin(Bitcoin):
+class Zetacoin(BitcoinBaseNetwork):
     """
     Class with all the necessary ZET network information based on
     http://www.github.com/zetacoin/zetacoin/blob/master/src/chainparams.cpp

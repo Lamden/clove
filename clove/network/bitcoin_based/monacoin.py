@@ -1,10 +1,10 @@
 from bitcoin.wallet import CBitcoinSecretError
 
-from clove.network.base import auto_switch_params
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.utils.bitcoin import auto_switch_params
 
 
-class Monacoin(Bitcoin):
+class Monacoin(BitcoinBaseNetwork):
     """
     Class with all the necessary MONA network information based on
     https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp

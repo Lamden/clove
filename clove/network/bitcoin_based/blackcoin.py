@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class BlackCoin(Bitcoin):
+class BlackCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary BlackCoin network information based on
     https://github.com/CoinBlack/blackcoin/blob/master/src/chainparams.cpp

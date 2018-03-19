@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Bata(Bitcoin):
+class Bata(BitcoinBaseNetwork):
     """
     Class with all the necessary BTA network information based on
     http://www.github.com/BTA-BATA/BATA-SOURCE/blob/master/src/chainparams.cpp

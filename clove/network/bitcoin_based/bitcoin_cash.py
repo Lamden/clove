@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class BitcoinCash(Bitcoin):
+class BitcoinCash(BitcoinBaseNetwork):
     """
     Class with all the necessary BCH network information based on
     https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class NevaCoin(Bitcoin):
+class NevaCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary NEVA network information based on
     http://www.github.com/Nevacoin/nevacoin/blob/master/src/chainparams.cpp

@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Pandacoin(Bitcoin):
+class Pandacoin(BitcoinBaseNetwork):
     """
     Class with all the necessary PND network information based on
     http://www.github.com/DigitalPandacoin/pandacoin/blob/master/src/net.cpp

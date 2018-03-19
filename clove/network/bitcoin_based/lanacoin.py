@@ -1,8 +1,8 @@
 
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class LanaCoin(Bitcoin):
+class LanaCoin(BitcoinBaseNetwork):
     """
     Class with all the necessary LANA network information based on
     http://www.github.com/LanaCoin/lanacoin/blob/master/src/chainparams.cpp

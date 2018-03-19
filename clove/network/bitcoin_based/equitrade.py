@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Equitrade(Bitcoin):
+class Equitrade(BitcoinBaseNetwork):
     """
     Class with all the necessary Equitrade network information based on
     https://github.com/equitrader/equitrade/blob/master/src/net.cpp

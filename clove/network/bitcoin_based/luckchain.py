@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class LuckChain(Bitcoin):
+class LuckChain(BitcoinBaseNetwork):
     """
     Class with all the necessary LuckChain network information based on
     https://github.com/luckbash/bash/blob/master/src/net.cpp

@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Pinkcoin(Bitcoin):
+class Pinkcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Pinkcoin network information based on
     https://github.com/pinkdev/pink2/blob/master/src/net.cpp

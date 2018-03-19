@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Tao(Bitcoin):
+class Tao(BitcoinBaseNetwork):
     """
     Class with all the necessary Tao (XTO) network information based on
     https://github.com/taoblockchain/tao-core/blob/master/src/chainparams.cpp

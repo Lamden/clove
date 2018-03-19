@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class NPCcoin(Bitcoin):
+class NPCcoin(BitcoinBaseNetwork):
     """
     Class with all the necessary NPCcoin network information based on
     https://github.com/npccoin/npccoin/blob/master/src/net.cpp

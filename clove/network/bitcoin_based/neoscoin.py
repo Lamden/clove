@@ -1,7 +1,7 @@
-from clove.network.bitcoin import Bitcoin
+from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Neoscoin(Bitcoin):
+class Neoscoin(BitcoinBaseNetwork):
     """
     Class with all the necessary Neoscoin (NEOS) network information based on
     https://github.com/neoscoin/neos-core/blob/master/src/chainparams.cpp
