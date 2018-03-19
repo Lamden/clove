@@ -36,6 +36,12 @@ def test_bitcoin_based_network_definitions(network):
     assert isinstance(network.source_code_url, str)
 
 
+def test_network_source_code_url_is_unique():
+    mainnet_networks = [network for network in networks if not network.is_test_network()]
+    source_code_urls_of_networks = set([network.source_code_url for network in mainnet_networks])
+    assert len(mainnet_networks) == len(source_code_urls_of_networks)
+
+
 @mark.parametrize('network', networks)
 @patch('clove.network.bitcoin_based.ravencoin.Ravencoin.get_current_fee_per_kb', side_effect=[0.01, ])
 @patch('clove.network.bitcoin.base.get_fee_from_last_transactions', side_effect=[0.01, ])
