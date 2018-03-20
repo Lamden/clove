@@ -36,10 +36,16 @@ for filename in networks:
     bitcoin_classes.append(class_names)
     print(f'from clove.network.bitcoin_based.{filename[:-3]} import {class_names}')
 
-print('\nBITCOIN_BASES = [')
+print('from clove.network.ethereum import Ethereum, EthereumTestnet')
+
+print('\nBITCOIN_BASED = (')
 print('    Bitcoin, BitcoinTestNet,')
 for classes in bitcoin_classes:
     print(f'    {classes},')
-print(']')
+print(')\n')
 
-print('\n__all__ = BITCOIN_BASES')
+print('ETHEREUM_BASED = (')
+print('    Ethereum, EthereumTestnet,')
+print(')')
+
+print('\n__all__ = BITCOIN_BASED + ETHEREUM_BASED')

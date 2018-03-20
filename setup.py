@@ -19,8 +19,9 @@ setup(
     install_requires=[
         'colorama==0.3.9',
         'coloredlogs==9.0',
-        'pycrypto==2.6.1',
         'python_bitcoinlib',
+        'ethereum==2.3.0',
+        'web3==4.0.0b11',
     ],
     extras_require={
         'testing': [
@@ -42,7 +43,7 @@ setup(
     dependency_links=[
         # waiting for this fix to be released:
         # https://github.com/petertodd/python-bitcoinlib/commit/1a089d67f5a0b64ae9f2ffcac786b87b56a0551b
-        'https://github.com/lamden/python-bitcoinlib/archive/master.zip##egg=python_bitcoinlib-999'
+        'https://github.com/lamden/python-bitcoinlib/archive/master.zip#egg=python_bitcoinlib-999'
     ],
     url='https://github.com/Lamden/clove',
     download_url='https://github.com/Lamden/clove/tarball/' + __version__,

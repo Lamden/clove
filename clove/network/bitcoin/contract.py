@@ -46,7 +46,7 @@ class BitcoinContract(object):
         try:
             is_valid = (
                 script_ops[0] == script.OP_IF
-                and script_ops[1] == script.OP_SHA256
+                and script_ops[1] == script.OP_RIPEMD160
                 and script_ops[3] == script_ops[15] == script.OP_EQUALVERIFY
                 and script_ops[4] == script_ops[11] == script.OP_DUP
                 and script_ops[5] == script_ops[12] == script.OP_HASH160
