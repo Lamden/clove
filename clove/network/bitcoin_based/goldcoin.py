@@ -11,11 +11,11 @@ class Goldcoin(BitcoinBaseNetwork):
     symbols = ('GLD', )
     seeds = ("seed.gldcoin.com", "vps.gldcoin.com", )
     port = 8121
-    message_start = b'\xe4\xe8\xbd\xfd'
+    message_start = b'\xfb\xc0\xb6\xdb'
     base58_prefixes = {
-        'PUBKEY_ADDR': 90,
-        'SCRIPT_ADDR': 8,
-        'SECRET_KEY': 218
+        'PUBKEY_ADDR': 32,
+        'SCRIPT_ADDR': 5,
+        'SECRET_KEY': 160
     }
     source_code_url = 'https://github.com/goldcoin/goldcoin/blob/master/src/net.cpp'
 
