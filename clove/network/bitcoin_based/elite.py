@@ -19,3 +19,4 @@ class Elite(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 176
     }
+    source_code_url = 'https://github.com/xenonflux/1337/blob/master/src/net.cpp'

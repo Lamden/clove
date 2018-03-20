@@ -19,6 +19,7 @@ class ZCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 7,
         'SECRET_KEY': 210
     }
+    source_code_url = 'http://www.github.com/zcoinofficial/zcoin/blob/master/src/chainparams.cpp'
 
 
 class ZCoinTestNet(ZCoin):

@@ -18,6 +18,7 @@ class Tao(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 3,
         'SECRET_KEY': 76
     }
+    source_code_url = 'https://github.com/taoblockchain/tao-core/blob/master/src/chainparams.cpp'
 
 
 class TaoTestNet(Tao):

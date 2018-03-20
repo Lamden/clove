@@ -18,3 +18,4 @@ class VeriCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 132,
         'SECRET_KEY': 198
     }
+    source_code_url = 'https://github.com/vericoin/vericoin/blob/master/src/net.cpp'

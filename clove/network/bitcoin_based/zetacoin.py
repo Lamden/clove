@@ -21,6 +21,7 @@ class Zetacoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 9,
         'SECRET_KEY': 224
     }
+    source_code_url = 'http://www.github.com/zetacoin/zetacoin/blob/master/src/chainparams.cpp'
 
 
 class ZetacoinTestNet(Zetacoin):

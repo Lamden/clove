@@ -18,3 +18,4 @@ class UniformFiscalObject(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 155
     }
+    source_code_url = 'https://github.com/UFOCoins/ufo/blob/master-0.12/src/chainparams.cpp'

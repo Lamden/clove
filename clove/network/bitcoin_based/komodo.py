@@ -20,3 +20,4 @@ class Komodo(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 188
     }
+    source_code_url = 'https://github.com/jl777/komodo/blob/master/src/chainparams.cpp'

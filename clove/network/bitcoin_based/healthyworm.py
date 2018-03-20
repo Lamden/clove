@@ -17,3 +17,4 @@ class HealthyWormCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 117,
         'SECRET_KEY': 201
     }
+    source_code_url = 'https://github.com/HealthyWormDotCom/HealthyWorm/blob/master/src/net.cpp'

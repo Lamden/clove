@@ -18,3 +18,4 @@ class SwagBucks(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 125,
         'SECRET_KEY': 153
     }
+    source_code_url = 'http://www.github.com/pinkmagicdev/SwagBucks/blob/master/src/chainparams.cpp'

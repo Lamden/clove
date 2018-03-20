@@ -18,3 +18,4 @@ class Theresamaycoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 178
     }
+    source_code_url = 'https://github.com/zulufourm1ke/theresamaycoin-v1.0.1.0/blob/master/src/net.cpp'

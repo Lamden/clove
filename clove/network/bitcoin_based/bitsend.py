@@ -20,6 +20,7 @@ class BitSend(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 204
     }
+    source_code_url = 'http://www.github.com/LIMXTEC/BitSend/blob/master/src/chainparams.cpp'
 
 
 class BitSendTestNet(BitSend):

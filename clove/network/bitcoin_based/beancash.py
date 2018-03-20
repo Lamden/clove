@@ -19,3 +19,4 @@ class BeanCash(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 131
     }
+    source_code_url = 'http://www.github.com/TeamBitBean/bitbean-core/blob/master/src/chainparams.cpp'

@@ -43,6 +43,7 @@ class EverGreenCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 161
     }
+    source_code_url = 'https://github.com/evergreencoindev/evergreencoin/blob/master/src/net.cpp'
 
 
 # Has no Testnet

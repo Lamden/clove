@@ -24,6 +24,7 @@ class BitcoinCash(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 128
     }
+    source_code_url = 'https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/src/chainparams.cpp'
 
 
 class BitcoinCashTestNet(BitcoinCash):

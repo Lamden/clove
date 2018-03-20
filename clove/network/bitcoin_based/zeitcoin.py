@@ -18,3 +18,4 @@ class Zeitcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 179
     }
+    source_code_url = 'https://github.com/zeitcoin/zeitcoin/blob/master/src/net.cpp'

@@ -17,5 +17,6 @@ class Neoscoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 177
     }
+    source_code_url = 'https://github.com/neoscoin/neos-core/blob/master/src/chainparams.cpp'
 
 # no testnet

@@ -17,9 +17,10 @@ class Peercoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 117,
         'SECRET_KEY': 183
     }
+    source_code_url = 'https://github.com/peercoin/peercoin/blob/master/src/net.cpp'
 
 
-class Peercoin(Peercoin):
+class PeercoinTestNet(Peercoin):
     """
     Class with all the necessary Peercoin (PPC) testing network information based on
     https://github.com/peercoin/peercoin/blob/master/src/net.cpp

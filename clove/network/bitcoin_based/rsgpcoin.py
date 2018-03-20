@@ -17,6 +17,7 @@ class RSGPcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 188
     }
+    source_code_url = 'https://github.com/ulandort/rsgprepo/blob/master/src/net.cpp'
 
 
 # Has no testnet

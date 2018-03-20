@@ -17,5 +17,6 @@ class CryptCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 162
     }
+    source_code_url = 'https://github.com/cryptcointeam/cryptcoin/blob/master/src/net.cpp'
 
 # Has no 27114

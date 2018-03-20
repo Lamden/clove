@@ -18,5 +18,6 @@ class MasterSwiscoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 20,
         'SECRET_KEY': 253
     }
+    source_code_url = 'https://github.com/SCNPay/Swiscoin-Master/blob/master/src/net.cpp'
 
 # no testnet

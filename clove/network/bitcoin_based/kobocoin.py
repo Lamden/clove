@@ -20,3 +20,4 @@ class Kobocoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 163
     }
+    source_code_url = 'https://github.com/kobocoin/Kobocoin/blob/master/src/net.cpp'

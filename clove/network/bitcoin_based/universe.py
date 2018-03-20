@@ -17,5 +17,6 @@ class Universe(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 196
     }
+    source_code_url = 'https://github.com/UniverseUNI/Universe-UNI/blob/master/src/net.cpp'
 
 # no testnet

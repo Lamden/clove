@@ -19,3 +19,4 @@ class Shilling(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 191
     }
+    source_code_url = 'http://www.github.com/yavwa/Shilling/blob/master/src/net.cpp'

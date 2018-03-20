@@ -29,3 +29,4 @@ class Wexcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 35,
         'SECRET_KEY': 204
     }
+    source_code_url = 'https://github.com/wexcoinofficial/wexcoin/blob/master/src/net.cpp'

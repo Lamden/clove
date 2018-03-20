@@ -18,6 +18,7 @@ class Equitrade(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 20,
         'SECRET_KEY': 161
     }
+    source_code_url = 'https://github.com/equitrader/equitrade/blob/master/src/net.cpp'
 
 
 # Equitrade has no Testnet

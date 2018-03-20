@@ -18,3 +18,4 @@ class Syscoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 191
     }
+    source_code_url = 'https://github.com/syscoin/syscoin/blob/master/src/net.cpp'

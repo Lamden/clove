@@ -22,3 +22,4 @@ class AquariusCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 151
     }
+    source_code_url = 'http://www.github.com/AquariusNetwork/ARCO/blob/master/src/chainparams.cpp'

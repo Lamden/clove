@@ -27,6 +27,7 @@ class Ravencoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 122,
         'SECRET_KEY': 128
     }
+    source_code_url = 'https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp'
 
     @classmethod
     def get_current_fee_per_kb(cls) -> Optional[float]:

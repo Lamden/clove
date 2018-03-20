@@ -24,6 +24,7 @@ class TeslaCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 139
     }
+    source_code_url = 'https://github.com/teslacoinfoundation/teslacoin-v.3.3/blob/master/src/net.cpp'
 
 
 # has no testnet

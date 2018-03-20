@@ -22,6 +22,7 @@ class Dogecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 22,
         'SECRET_KEY': 158
     }
+    source_code_url = 'https://github.com/dogecoin/dogecoin/blob/master/src/chainparams.cpp'
 
 
 class DogecoinTestNet(Dogecoin):

@@ -31,3 +31,4 @@ class Europecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 168
     }
+    source_code_url = 'https://github.com/LIMXTEC/Europecoin-V3/blob/master/src/chainparams.cpp'

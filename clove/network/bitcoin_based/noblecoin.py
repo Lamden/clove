@@ -17,6 +17,7 @@ class NobleCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 149
     }
+    source_code_url = 'https://github.com/noblecoinnobl/noblecoin/blob/master/src/net.cpp'
 
 
 # Has no testnet

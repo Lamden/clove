@@ -20,3 +20,4 @@ class Kittehcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 22,
         'SECRET_KEY': 173
     }
+    source_code_url = 'https://github.com/kittehcoin/kittehcoin/blob/master/src/net.cpp'

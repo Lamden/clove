@@ -19,5 +19,6 @@ class IOcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 231
     }
+    source_code_url = 'https://github.com/IOCoin/iocoin/blob/master/src/net.cpp'
 
 # no testnet

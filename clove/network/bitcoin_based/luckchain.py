@@ -36,6 +36,7 @@ class LuckChain(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 153
     }
+    source_code_url = 'https://github.com/luckbash/bash/blob/master/src/net.cpp'
 
 
 # Has no testnet

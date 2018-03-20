@@ -20,6 +20,7 @@ class Piggycoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 246
     }
+    source_code_url = 'https://github.com/piggycoin/newpiggycoin/blob/master/src/net.cpp'
 
 
 # Has no testnet

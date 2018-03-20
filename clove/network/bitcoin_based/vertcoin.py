@@ -25,6 +25,7 @@ class Vertcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 128
     }
+    source_code_url = 'https://github.com/vertcoin-project/vertcoin-core/blob/master/src/chainparams.cpp'
 
 
 class VertcoinTestNet(Vertcoin):

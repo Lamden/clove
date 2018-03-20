@@ -17,3 +17,4 @@ class Potcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 183
     }
+    source_code_url = 'https://github.com/potcoin/Potcoin/blob/master/src/net.cpp'

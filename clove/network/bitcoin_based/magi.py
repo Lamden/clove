@@ -18,6 +18,7 @@ class Magi(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 148
     }
+    source_code_url = 'https://github.com/magi-project/magi/blob/master/src/net.cpp'
 
 
 class MagiTestNet(Magi):

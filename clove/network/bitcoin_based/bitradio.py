@@ -18,3 +18,4 @@ class Bitradio(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 102,
         'SECRET_KEY': 128
     }
+    source_code_url = 'http://www.github.com/thebitradio/Bitradio/blob/master/src/chainparams.cpp'

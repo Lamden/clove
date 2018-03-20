@@ -22,3 +22,4 @@ class TajCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 111
     }
+    source_code_url = 'http://www.github.com/Taj-Coin/tajcoin/blob/master/src/chainparams.cpp'

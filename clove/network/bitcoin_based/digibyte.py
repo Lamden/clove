@@ -18,3 +18,4 @@ class Digibyte(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 63,
         'SECRET_KEY': 128
     }
+    source_code_url = 'https://github.com/digibyte/digibyte/blob/master/src/chainparams.cpp'

@@ -18,6 +18,7 @@ class Particl(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 60,
         'SECRET_KEY': 108
     }
+    source_code_url = 'https://github.com/particl/particl-core/blob/master/src/chainparams.cpp'
 
 
 class ParticlTestNet(Particl):

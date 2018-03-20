@@ -19,6 +19,7 @@ class Unobtanium(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 30,
         'SECRET_KEY': 224
     }
+    source_code_url = 'http://www.github.com/unobtanium-official/Unobtanium/blob/master/src/chainparams.cpp'
 
 
 class UnobtaniumTestNet(Unobtanium):

@@ -17,5 +17,6 @@ class Dopecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 158
     }
+    source_code_url = 'https://github.com/dopecoin-dev/DopeCoinGold/blob/master/src/chainparams.cpp'
 
 # no testnet

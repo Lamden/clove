@@ -20,3 +20,4 @@ class Greencoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 166
     }
+    source_code_url = 'http://www.github.com/greencoin-dev/GreenCoinV2/blob/master/src/chainparams.cpp'

@@ -18,6 +18,7 @@ class HoboNickels(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 162
     }
+    source_code_url = 'https://github.com/crypto-expert/hobonickels/blob/master/src/net.cpp'
 
 
 # Has no Testnet

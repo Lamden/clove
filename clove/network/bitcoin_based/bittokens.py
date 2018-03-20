@@ -18,3 +18,4 @@ class BitTokens(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 153
     }
+    source_code_url = 'http://www.github.com/BitTokens/BitToken/blob/master/src/chainparams.cpp'

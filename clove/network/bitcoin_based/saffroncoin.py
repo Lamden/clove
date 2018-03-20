@@ -17,3 +17,4 @@ class Saffroncoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 177
     }
+    source_code_url = 'https://github.com/saffroncoin/saffroncoin/blob/master/src/chainparams.cpp'

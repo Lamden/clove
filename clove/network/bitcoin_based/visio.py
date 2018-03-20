@@ -19,3 +19,4 @@ class Visio(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 125,
         'SECRET_KEY': 191
     }
+    source_code_url = 'http://www.github.com/Fladirmacht/visioX/blob/master/src/chainparams.cpp'

@@ -28,6 +28,7 @@ class EGulden(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 176
     }
+    source_code_url = 'https://github.com/Electronic-Gulden-Foundation/egulden/blob/master/src/chainparams.cpp'
 
 
 class EGuldenTestNet(EGulden):

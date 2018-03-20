@@ -33,6 +33,13 @@ def test_bitcoin_based_network_definitions(network):
     assert isinstance(network.blacklist_nodes, dict)
     assert isinstance(network.message_start, bytes)
     assert isinstance(network.base58_prefixes, dict)
+    assert isinstance(network.source_code_url, str)
+
+
+def test_network_source_code_url_is_unique():
+    mainnet_networks = [network for network in networks if not network.is_test_network()]
+    source_code_urls_of_networks = set([network.source_code_url for network in mainnet_networks])
+    assert len(mainnet_networks) == len(source_code_urls_of_networks)
 
 
 @mark.parametrize('network', networks)

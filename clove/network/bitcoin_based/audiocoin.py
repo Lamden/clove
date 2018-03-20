@@ -19,6 +19,7 @@ class AudioCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 125,
         'SECRET_KEY': 151
     }
+    source_code_url = 'http://www.github.com/aurovine/audiocoin/blob/master/src/chainparams.cpp'
 
 
 class AudioCoinTestNet(AudioCoin):

@@ -17,3 +17,4 @@ class LUXCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 48,
         'SECRET_KEY': 155
     }
+    source_code_url = 'https://github.com/216k155/lux/blob/master/src/chainparams.cpp'

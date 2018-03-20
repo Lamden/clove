@@ -17,5 +17,6 @@ class Mooncoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 22,
         'SECRET_KEY': 131
     }
+    source_code_url = 'https://github.com/mooncoincore/wallet/blob/master/src/chainparams.cpp'
 
 # no testnet

@@ -17,6 +17,7 @@ class Curecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 30,
         'SECRET_KEY': 253
     }
+    source_code_url = 'https://github.com/cygnusxi/curecoinsource/blob/master/src/net.cpp'
 
 
 # Has no Testnet

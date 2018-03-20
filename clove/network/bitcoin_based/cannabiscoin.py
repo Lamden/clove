@@ -18,3 +18,4 @@ class CannabisCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 156
     }
+    source_code_url = 'http://www.github.com/cannabiscoindev/cannabiscoin420/blob/master/src/net.cpp'

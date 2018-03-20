@@ -18,3 +18,4 @@ class EmeraldCrypto(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 162
     }
+    source_code_url = 'http://www.github.com/crypto-currency/Emerald/blob/master/src/net.cpp'

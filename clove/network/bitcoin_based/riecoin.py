@@ -18,3 +18,4 @@ class Riecoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 128
     }
+    source_code_url = 'http://www.github.com/riecoin/riecoin/blob/master/src/chainparams.cpp'

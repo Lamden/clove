@@ -19,3 +19,4 @@ class InsaneCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 57,
         'SECRET_KEY': 55
     }
+    source_code_url = 'http://www.github.com/CryptoCoderz/INSN/blob/master/src/chainparams.cpp'

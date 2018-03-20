@@ -19,3 +19,4 @@ class ClubCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 153
     }
+    source_code_url = 'http://www.github.com/BitClubDev/ClubCoin/blob/master/src/chainparams.cpp'

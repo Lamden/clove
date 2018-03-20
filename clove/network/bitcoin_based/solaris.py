@@ -23,6 +23,7 @@ class Solaris(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 13,
         'SECRET_KEY': 212
     }
+    source_code_url = 'http://www.github.com/Solaris-Project/Solaris/blob/master/src/chainparams.cpp'
 
 
 class SolarisTestNet(Solaris):

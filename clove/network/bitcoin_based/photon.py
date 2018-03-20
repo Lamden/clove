@@ -20,6 +20,7 @@ class Photon(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 7,
         'SECRET_KEY': 154
     }
+    source_code_url = 'http://www.github.com/photonproject/photon/blob/master/src/net.cpp'
 
 
 class PhotonTestNet(Photon):

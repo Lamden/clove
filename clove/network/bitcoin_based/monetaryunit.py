@@ -20,6 +20,7 @@ class MonetaryUnit(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 76,
         'SECRET_KEY': 126
     }
+    source_code_url = 'https://github.com/muecoin/MUECore/blob/master/src/chainparams.cpp'
 
 
 class MonetaryUnitTestNet(MonetaryUnit):

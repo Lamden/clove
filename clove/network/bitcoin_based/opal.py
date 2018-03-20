@@ -19,3 +19,4 @@ class Opal(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 28,
         'SECRET_KEY': 243
     }
+    source_code_url = 'https://github.com/OpalCoin/OpalCoin/blob/master/src/net.cpp'

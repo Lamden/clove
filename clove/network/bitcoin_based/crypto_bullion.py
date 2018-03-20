@@ -17,5 +17,6 @@ class CryptoBullion(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 139
     }
+    source_code_url = 'https://github.com/cryptogenicbonds/cryptobullion-cbx/blob/master/src/net.cpp'
 
 # Has no Testnet

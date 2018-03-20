@@ -25,3 +25,4 @@ class Bitmark(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 213
     }
+    source_code_url = 'https://github.com/project-bitmark/bitmark/blob/master/src/chainparams.cpp'

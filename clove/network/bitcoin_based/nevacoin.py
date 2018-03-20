@@ -19,6 +19,7 @@ class NevaCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 177
     }
+    source_code_url = 'http://www.github.com/Nevacoin/nevacoin/blob/master/src/chainparams.cpp'
 
 
 class NevaCoinTestNet(NevaCoin):

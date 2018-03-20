@@ -18,3 +18,4 @@ class MaxCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 112,
         'SECRET_KEY': 238
     }
+    source_code_url = 'https://github.com/Max-Coin/maxcoin/blob/master/src/net.cpp'

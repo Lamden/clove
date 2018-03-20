@@ -17,3 +17,4 @@ class TwoGIVE(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 139
     }
+    source_code_url = 'https://github.com/LittleDuke/2GIVE/blob/master/src/net.cpp'

@@ -17,5 +17,6 @@ class SmileyCoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 153
     }
+    source_code_url = 'https://github.com/tutor-web/smileyCoin/blob/post-2017-wallet/src/chainparams.cpp'
 
 # no testnet

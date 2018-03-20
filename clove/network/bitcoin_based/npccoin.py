@@ -17,5 +17,6 @@ class NPCcoin(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 85,
         'SECRET_KEY': 181
     }
+    source_code_url = 'https://github.com/npccoin/npccoin/blob/master/src/net.cpp'
 
 # no testnet

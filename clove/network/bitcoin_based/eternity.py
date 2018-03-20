@@ -18,6 +18,7 @@ class Eternity(BitcoinBaseNetwork):
         'SCRIPT_ADDR': 8,
         'SECRET_KEY': 101
     }
+    source_code_url = 'http://www.github.com/eternity-group/eternity/blob/master/src/chainparams.cpp'
 
 
 class EternityTestNet(Eternity):
