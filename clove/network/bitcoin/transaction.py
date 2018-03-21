@@ -21,6 +21,8 @@ class BitcoinTransaction(object):
         self.network = network
         self.symbol = network.default_symbol
 
+        self.validate_address()
+
         self.solvable_utxo = solvable_utxo
         self.utxo_value = sum(utxo.value for utxo in self.solvable_utxo)
         self.tx_in_list = [utxo.tx_in for utxo in self.solvable_utxo]
@@ -30,6 +32,10 @@ class BitcoinTransaction(object):
         self.tx_locktime = tx_locktime
         self.fee = 0.0
         self.fee_per_kb = 0.0
+
+    def validate_address(self):
+        if not self.network.is_valid_address(self.recipient_address):
+            raise ValueError('Given recipient address is invalid.')
 
     def build_outputs(self):
         self.tx_out_list = [
@@ -159,12 +165,22 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
         secret_hash: str=None,
         tx_locktime: int=0
     ):
-        super().__init__(network, recipient_address, value, solvable_utxo, tx_locktime)
         self.sender_address = sender_address
+        super().__init__(network, recipient_address, value, solvable_utxo, tx_locktime)
         self.secret = None
         self.secret_hash = x(secret_hash) if secret_hash else None
         self.locktime = None
         self.contract = None
+
+    def validate_address(self):
+        invalid_recipient = not self.network.is_valid_address(self.recipient_address)
+        invalid_sender = not self.network.is_valid_address(self.sender_address)
+        if invalid_recipient and invalid_sender:
+            raise ValueError('Given recipient and sender addresses are invalid.')
+        elif invalid_recipient:
+            raise ValueError('Given recipient address is invalid.')
+        elif invalid_sender:
+            raise ValueError('Given sender address is invalid.')
 
     def build_atomic_swap_contract(self):
         self.contract = script.CScript([
