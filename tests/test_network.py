@@ -235,3 +235,20 @@ def test_get_network_obj_on_existing_networks(network):
 
 def test_get_network_obj_on_not_existing_network():
     assert get_network_object('NON_EXISTING_NETWORK_SYMBOL') is None
+
+
+@mark.parametrize('network_symbol,address,is_valid', [
+    ('LTC', 'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq', True),
+    ('BTC', '13iNsKgMfVJQaYVFqp5ojuudxKkVCMtkoa', True),
+    ('MONA', 'MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ', True),
+    ('LTC', '13iNsKgMfVJQaYVFqp5ojuudxKkVCMtkoa', False),
+    ('LTC', '123', False),
+    ('BTC', 'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq', False),
+    ('BTC', '123', False),
+    ('BTC', '', False),
+    ('BTC', 'non_hex_characters', False),
+
+])
+def test_valid_address(network_symbol, address, is_valid):
+    network = get_network_object(network_symbol)
+    assert network.is_valid_address(address) == is_valid

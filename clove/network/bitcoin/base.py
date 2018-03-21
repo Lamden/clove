@@ -5,12 +5,14 @@ from typing import Optional
 
 import bitcoin
 from bitcoin import SelectParams
+from bitcoin.base58 import Base58ChecksumError, InvalidBase58Error
 from bitcoin.core import CMutableTransaction, b2lx, b2x, script
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
     MSG_TX, MsgSerializable, msg_getdata, msg_inv, msg_ping, msg_pong, msg_reject, msg_tx, msg_verack, msg_version
 )
 from bitcoin.net import CInv
+from bitcoin.wallet import CBitcoinAddress, CBitcoinAddressError
 
 from clove.constants import BLOCKCYPHER_SUPPORTED_NETWORKS, CRYPTOID_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT
 from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
@@ -429,3 +431,13 @@ class BitcoinBaseNetwork(BaseNetwork):
             except ValueError as e:
                 logger.debug(e)
                 return
+
+    @classmethod
+    @auto_switch_params()
+    def is_valid_address(cls, address: str) -> bool:
+        try:
+            CBitcoinAddress(address)
+        except (CBitcoinAddressError, Base58ChecksumError, InvalidBase58Error):
+            return False
+
+        return True

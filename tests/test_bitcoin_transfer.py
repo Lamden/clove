@@ -6,7 +6,7 @@ from pytest import raises
 
 from clove.constants import SIGNATURE_SIZE
 from clove.network.bitcoin import BitcoinTestNet
-from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
+from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction, BitcoinTransaction
 from clove.utils.bitcoin import to_base_units
 
 
@@ -124,6 +124,26 @@ def test_calculate_fee_with_signature_size(unsigned_transaction):
     unsigned_transaction.calculate_fee(add_sig_size=True)
     size_after_sign = unsigned_transaction.size + (SIGNATURE_SIZE * len(unsigned_transaction.tx_in_list))
     assert unsigned_transaction.fee == round(size_after_sign/1000 * fee_per_kb, 8)
+
+
+def test_transaction_with_invalid_recipient_address():
+    with raises(ValueError, match='Given recipient address is invalid.'):
+        BitcoinTransaction(BitcoinTestNet(), 'invalid_address', 0.01, [])
+
+
+def test_swap_transaction_with_invalid_recipient_address(bob_wallet):
+    with raises(ValueError, match='Given recipient address is invalid.'):
+        BitcoinAtomicSwapTransaction(BitcoinTestNet(), bob_wallet.address, 'invalid_address', 0.01, [])
+
+
+def test_swap_transaction_with_invalid_sender_address(bob_wallet):
+    with raises(ValueError, match='Given sender address is invalid.'):
+        BitcoinAtomicSwapTransaction(BitcoinTestNet(), 'invalid_address', bob_wallet.address, 0.01, [])
+
+
+def test_swap_transaction_with_invalid_recipient_and_sender_addresses():
+    with raises(ValueError, match='Given recipient and sender addresses are invalid.'):
+        BitcoinAtomicSwapTransaction(BitcoinTestNet(), 'invalid_address', 'address_123', 0.01, [])
 
 
 def test_audit_contract(signed_transaction):
