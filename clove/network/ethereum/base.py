@@ -9,6 +9,7 @@ import rlp
 from web3 import HTTPProvider, Web3
 
 from clove.network.base import BaseNetwork
+from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
 
 
 class EthereumBaseNetwork(BaseNetwork):
@@ -180,7 +181,12 @@ class EthereumBaseNetwork(BaseNetwork):
 
         unix_time_until_expiration = int((datetime.now() + timedelta(hours=hours_to_expiration)).timestamp())
 
-        return unix_time_until_expiration, secret_hash, recipient_address
+        return {
+            'locktime': unix_time_until_expiration,
+            'secret': secret,
+            'secret_hash': secret_hash,
+            'recipient_address': recipient_address,
+        }
 
     def initial_transaction(
         self,
@@ -190,7 +196,7 @@ class EthereumBaseNetwork(BaseNetwork):
         gas_limit: int=None,
         gas_price: int=None,
         token_address: str=None,
-    ) -> Transaction:
+    ) -> EthereumAtomicSwapTransaction:
 
         payload = self.atomic_swap(recipient_address, hours_to_expiration=48)
         if token_address:
@@ -201,7 +207,11 @@ class EthereumBaseNetwork(BaseNetwork):
             abi = self.eth_abi
 
         contract = self.web3.eth.contract(address=contract_address, abi=abi)
-        initiate_func = contract.functions.initiate(*payload)
+        initiate_func = contract.functions.initiate(
+            payload['locktime'],
+            payload['secret_hash'],
+            payload['recipient_address']
+        )
 
         if gas_limit is None:
             gas_limit = initiate_func.estimateGas()
@@ -216,7 +226,22 @@ class EthereumBaseNetwork(BaseNetwork):
         if gas_price:
             tx_dict['gasPrice'] = gas_price
 
-        return initiate_func.buildTransaction(tx_dict)
+        tx_dict = initiate_func.buildTransaction(tx_dict)
+
+        tx = Transaction(
+            nonce=tx_dict['nonce'],
+            gasprice=tx_dict['gasPrice'],
+            startgas=tx_dict['gas'],
+            to=tx_dict['to'],
+            value=tx_dict['value'],
+            data=Web3.toBytes(hexstr=tx_dict['data']),
+        )
+        return EthereumAtomicSwapTransaction(
+            self,
+            tx,
+            payload['secret'],
+            payload['secret_hash'],
+        )
 
     @staticmethod
     def sign(transaction: Transaction, private_key: str) -> Transaction:
