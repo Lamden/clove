@@ -1,3 +1,5 @@
+from typing import Optional
+
 import rlp
 from web3 import Web3
 
@@ -19,12 +21,12 @@ class EthereumTransaction(object):
         details['value_text'] = f'{value_text:.18f} {self.network.default_symbol}'
         return details
 
-    def publish(self):
+    def publish(self) -> Optional[str]:
         try:
             self.network.web3.eth.sendRawTransaction(self.raw_transaction)
         except ValueError:
-            return False
-        return True
+            return
+        return Web3.toHex(self.tx.hash)
 
 
 class EthereumAtomicSwapTransaction(EthereumTransaction):

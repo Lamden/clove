@@ -213,13 +213,9 @@ class EthereumBaseNetwork(BaseNetwork):
             payload['recipient_address']
         )
 
-        if gas_limit is None:
-            gas_limit = initiate_func.estimateGas()
-
         tx_dict = {
             'nonce': self.web3.eth.getTransactionCount(sender_address),
             'from': sender_address,
-            'gas': gas_limit,
             'value': value,
         }
 
@@ -227,11 +223,15 @@ class EthereumBaseNetwork(BaseNetwork):
             tx_dict['gasPrice'] = gas_price
 
         tx_dict = initiate_func.buildTransaction(tx_dict)
+        if not gas_limit:
+            gas_limit = initiate_func.estimateGas({
+                key: value for key, value in tx_dict.items() if key not in ('to', 'data')
+            })
 
         tx = Transaction(
             nonce=tx_dict['nonce'],
             gasprice=tx_dict['gasPrice'],
-            startgas=tx_dict['gas'],
+            startgas=gas_limit,
             to=tx_dict['to'],
             value=tx_dict['value'],
             data=Web3.toBytes(hexstr=tx_dict['data']),
