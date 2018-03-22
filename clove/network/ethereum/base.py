@@ -23,7 +23,7 @@ class EthereumBaseNetwork(BaseNetwork):
     token_swap_contract_address = None
 
     # downloaded from 'Contract ABI' at etherscan.io
-    abi = [{
+    eth_abi = [{
         'constant': False,
         'inputs': [{
             'name': '_hash',
@@ -64,6 +64,53 @@ class EthereumBaseNetwork(BaseNetwork):
         'type': 'function'
     }]
 
+    token_abi = [{
+        "constant": False,
+        "inputs": [{
+            "name": "_expiration",
+            "type": "uint256"
+        }, {
+            "name": "_hash",
+            "type": "bytes20"
+        }, {
+            "name": "_participant",
+            "type": "address"
+        }, {
+            "name": "_token",
+            "type": "address"
+        }, {
+            "name": "_value",
+            "type": "uint256"
+        }],
+        "name": "initiate",
+        "outputs": [],
+        "payable": False,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "constant": False,
+        "inputs": [{
+            "name": "_hash",
+            "type": "bytes20"
+        }],
+        "name": "refund",
+        "outputs": [],
+        "payable": False,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "constant": False,
+        "inputs": [{
+            "name": "_secret",
+            "type": "bytes32"
+        }],
+        "name": "redeem",
+        "outputs": [],
+        "payable": False,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }]
+
     def __init__(self):
 
         self.web3 = Web3(HTTPProvider(self.infura_endpoint))
@@ -93,8 +140,8 @@ class EthereumBaseNetwork(BaseNetwork):
     @staticmethod
     def unify_address(address):
         assert len(address) in (40, 42), 'Provided address is not properly formatted.'
-        if len(address) == 42:
-            address = address[2:]
+        if len(address) == 40:
+            address = '0x' + address
         int(address, 16)
         return address
 
@@ -104,7 +151,7 @@ class EthereumBaseNetwork(BaseNetwork):
         hours_to_expiration: int,
         secret: bytes=None,
         secret_hash: bytes=None,
-    ) -> bytes:
+    ) -> tuple:
 
         recipient_address = self.unify_address(recipient_address)
 
@@ -126,19 +173,14 @@ class EthereumBaseNetwork(BaseNetwork):
                 secret_hash.hex()
             except SyntaxError:
                 raise ValueError('Incorrect value of secret_hash argument')
-            method_id = self.participate
         else:
             h = hashlib.new('ripemd160')
             h.update(secret)
-            secret_hash = h.digest().hex()
-            method_id = self.initiate
+            secret_hash = h.digest()
 
         unix_time_until_expiration = int((datetime.now() + timedelta(hours=hours_to_expiration)).timestamp())
-        expiration_arg = hex(unix_time_until_expiration)[2:].zfill(64)
-        recipient_arg = recipient_address.zfill(64)
-        secret_arg = secret_hash.ljust(64, '0')
 
-        return Web3.toBytes(text=f'{method_id}{expiration_arg}{secret_arg}{recipient_arg}')
+        return unix_time_until_expiration, secret_hash, recipient_address
 
     def initial_transaction(
         self,
@@ -151,20 +193,30 @@ class EthereumBaseNetwork(BaseNetwork):
     ) -> Transaction:
 
         payload = self.atomic_swap(recipient_address, hours_to_expiration=48)
-        if self.token_address:
+        if token_address:
             contract_address = self.token_swap_contract_address
+            abi = self.token_abi
         else:
             contract_address = self.eth_swap_contract_address
+            abi = self.eth_abi
 
-        contract = self.web3.eth.contract(address=contract_address, abi=self.abi)
-        return contract.functions.initiate.buildTransaction(
-            nonce=self.web3.eth.getTransactionCount(sender_address),
-            gasprice=gas_price,
-            to=recipient_address,
-            startgas=gas_limit,
-            data=payload,
-            value=value,
-        )
+        contract = self.web3.eth.contract(address=contract_address, abi=abi)
+        initiate_func = contract.functions.initiate(*payload)
+
+        if gas_limit is None:
+            gas_limit = initiate_func.estimateGas()
+
+        tx_dict = {
+            'nonce': self.web3.eth.getTransactionCount(sender_address),
+            'from': sender_address,
+            'gas': gas_limit,
+            'value': value,
+        }
+
+        if gas_price:
+            tx_dict['gasPrice'] = gas_price
+
+        return initiate_func.buildTransaction(tx_dict)
 
     @staticmethod
     def sign(transaction: Transaction, private_key: str) -> Transaction:
