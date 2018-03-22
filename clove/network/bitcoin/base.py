@@ -420,17 +420,16 @@ class BitcoinBaseNetwork(BaseNetwork):
             )
         except NotImplementedError:
             logger.debug('%s: network is not supported', cls.name)
-            return
+            raise
         except ValueError as e:
             logger.debug(e)
-            return
+            raise
 
-        if scriptsig:
-            try:
-                return cls.extract_secret(scriptsig)
-            except ValueError as e:
-                logger.debug(e)
-                return
+        try:
+            return cls.extract_secret(scriptsig=scriptsig)
+        except ValueError as e:
+            logger.debug(e)
+            raise
 
     @classmethod
     @auto_switch_params()
