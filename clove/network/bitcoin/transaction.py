@@ -5,11 +5,10 @@ from bitcoin.core import CMutableTransaction, CMutableTxOut, b2lx, b2x, script, 
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
 from bitcoin.wallet import CBitcoinAddress
 
-from clove.constants import SIGNATURE_SIZE, TRANSACTION_BROADCASTING_MAX_ATTEMPTS
+from clove.constants import SIGNATURE_SIZE
 from clove.network.bitcoin.wallet import BitcoinWallet
 from clove.utils.bitcoin import auto_switch_params, to_base_units
 from clove.utils.hashing import generate_secret_with_hash
-from clove.utils.logging import logger
 
 
 class BitcoinTransaction(object):
@@ -97,20 +96,7 @@ class BitcoinTransaction(object):
         self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list, nLockTime=self.tx_locktime)
 
     def publish(self):
-        for attempt in range(1, TRANSACTION_BROADCASTING_MAX_ATTEMPTS + 1):
-            transaction_address = self.network.broadcast_transaction(self.tx)
-
-            if transaction_address is None:
-                logger.warning('Transaction broadcast attempt no. %s failed. Retrying...', attempt)
-                continue
-
-            logger.info('Transaction broadcast is successful. End of broadcasting process.')
-            return transaction_address
-
-        logger.warning(
-            '%s attempts to broadcast transaction failed. Broadcasting process terminates!',
-            TRANSACTION_BROADCASTING_MAX_ATTEMPTS
-        )
+        return self.network.publish(self.raw_transaction)
 
     @property
     def size(self) -> int:
@@ -135,10 +121,18 @@ class BitcoinTransaction(object):
             raise RuntimeError('Cannot subtract fee from transaction. You need to add more input transactions.')
         self.tx.vout[0].nValue -= fee_in_satoshi
 
+    @property
+    def raw_transaction(self):
+        return b2x(self.tx.serialize())
+
+    @property
+    def address(self):
+        return b2lx(self.tx.GetHash())
+
     def show_details(self):
         return {
-            'transaction': b2x(self.tx.serialize()),
-            'transaction_address': b2lx(self.tx.GetHash()),
+            'transaction': self.raw_transaction,
+            'transaction_address': self.address,
             'fee': self.fee,
             'fee_per_kb': self.fee_per_kb,
             'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',
@@ -240,8 +234,8 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
         return {
             'contract': self.contract.hex(),
             'contract_address': str(CBitcoinAddress.from_scriptPubKey(self.contract.to_p2sh_scriptPubKey())),
-            'contract_transaction': b2x(self.tx.serialize()),
-            'transaction_address': b2lx(self.tx.GetHash()),
+            'contract_transaction': self.raw_transaction,
+            'transaction_address': self.address,
             'fee': self.fee,
             'fee_per_kb': self.fee_per_kb,
             'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',

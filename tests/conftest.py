@@ -1,5 +1,9 @@
 from collections import namedtuple
+from contextlib import contextmanager
+from io import BytesIO
+from unittest.mock import MagicMock, patch
 
+from bitcoin.messages import msg_getdata, msg_reject, msg_verack, msg_version
 import pytest
 
 from clove.network.bitcoin import BitcoinTestNet
@@ -62,3 +66,38 @@ def signed_transaction(unsigned_transaction):
     transaction.fee_per_kb = 0.002
     transaction.add_fee_and_sign()
     return transaction
+
+
+@contextmanager
+@pytest.fixture
+def connection_mock(signed_transaction):
+    connection = MagicMock()
+
+    connection.getsockname.return_value = ('127.0.0.1', 8800)
+    connection.getpeername.return_value = ('127.0.0.1', 8800)
+    connection.getpeername.return_value = ('127.0.0.1', 8800)
+
+    protocol_version = 6002
+    version = msg_version(protocol_version).to_bytes()
+    verack = msg_verack(protocol_version).to_bytes()
+
+    getdata = msg_getdata(protocol_version)
+    getdata = getdata.msg_deser(BytesIO(b'\x01\x01\x00\x00\x00' + signed_transaction.tx.GetHash())).to_bytes()
+
+    connection.recv.side_effect = (
+        version + verack,
+        getdata,
+    )
+
+    capture = BitcoinTestNet.capture_messages
+
+    def capture_messages_mock(*args, **kwargs):
+        if msg_reject in args[1]:
+            return None
+        else:
+            return capture(*args, **kwargs)
+
+    with patch('socket.create_connection', return_value=connection):
+        with patch('socket.gethostbyname_ex', return_value=(None, None, ['127.0.0.1'])):
+            with patch.object(BitcoinTestNet, 'capture_messages', new=capture_messages_mock):
+                yield
