@@ -97,16 +97,31 @@ class BitcoinContract(object):
         transaction.create_unsigned_transaction()
         return transaction
 
-    def participate(self, symbol, sender_address, recipient_address, value, utxo):
+    def participate(
+        self,
+        symbol: str,
+        sender_address: str,
+        recipient_address: str,
+        value: int,
+        utxo: list=None,
+        token_address: str=None,
+    ):
         network_class = self.network.get_network_class_by_symbol(symbol)
-
         network = network_class()
+        if network.bitcoin_based:
+            return network.atomic_swap(
+                sender_address,
+                recipient_address,
+                value,
+                utxo,
+                self.secret_hash,
+            )
         return network.atomic_swap(
             sender_address,
             recipient_address,
             value,
-            utxo,
-            self.secret_hash
+            self.secret_hash,
+            token_address,
         )
 
     def show_details(self):

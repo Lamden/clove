@@ -39,8 +39,6 @@ class BitcoinBaseNetwork(BaseNetwork):
     connection = None
     protocol_version = None
     blacklist_nodes = {}
-    networks = {}
-    test_networks = {}
     message_start = b''
     base58_prefixes = {}
     bitcoin_based = True

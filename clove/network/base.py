@@ -2,6 +2,8 @@ class BaseNetwork(object):
 
     name = None
     symbols = ()
+    networks = {}
+    test_networks = {}
     bitcoin_based = None
     ethereum_based = None
 

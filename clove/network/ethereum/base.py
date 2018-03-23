@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-import hashlib
 import os
 import secrets
 from typing import Union
@@ -9,6 +7,7 @@ import rlp
 from web3 import HTTPProvider, Web3
 
 from clove.network.base import BaseNetwork
+from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
 
 
@@ -132,7 +131,16 @@ class EthereumBaseNetwork(BaseNetwork):
 
     @staticmethod
     def method_id(method) -> str:
-        return Web3.sha3(method.encode('ascii'))[2:10]
+        return Web3.sha3(text=method)[0:4].hex()
+
+    def get_method_name(self, method_id):
+        return {
+            self.initiate: 'initiate',
+            self.participate: 'participate',
+            self.redeem: 'redeem',
+            self.refund: 'refund',
+            self.swaps: 'swaps',
+        }[method_id]
 
     @staticmethod
     def generate_secret() -> bytes:
@@ -148,114 +156,42 @@ class EthereumBaseNetwork(BaseNetwork):
 
     def atomic_swap(
         self,
-        recipient_address: str,
-        hours_to_expiration: int,
-        secret: bytes=None,
-        secret_hash: bytes=None,
-    ) -> tuple:
-
-        recipient_address = self.unify_address(recipient_address)
-
-        if secret is not None and secret_hash is not None:
-            raise ValueError('Provide secret or secret_hash argument, not both.')
-
-        if secret:
-            assert len(secret) == 32, 'Secret provided must be 32 bytes'
-            try:
-                secret.hex()
-            except SyntaxError:
-                raise ValueError('Incorrect value of secret argument')
-
-        else:
-            secret = self.generate_secret()
-
-        if secret_hash:
-            try:
-                secret_hash.hex()
-            except SyntaxError:
-                raise ValueError('Incorrect value of secret_hash argument')
-        else:
-            h = hashlib.new('ripemd160')
-            h.update(secret)
-            secret_hash = h.digest()
-
-        unix_time_until_expiration = int((datetime.now() + timedelta(hours=hours_to_expiration)).timestamp())
-
-        return {
-            'locktime': unix_time_until_expiration,
-            'secret': secret,
-            'secret_hash': secret_hash,
-            'recipient_address': recipient_address,
-        }
-
-    def initial_transaction(
-        self,
         sender_address: str,
         recipient_address: str,
         value: float,
-        gas_limit: int=None,
-        gas_price: int=None,
+        secret_hash: bytes=None,
         token_address: str=None,
+        gas_price: int=None,
+        gas_limit: int=None,
     ) -> EthereumAtomicSwapTransaction:
 
-        payload = self.atomic_swap(recipient_address, hours_to_expiration=48)
-        if token_address:
-            contract_address = self.token_swap_contract_address
-            abi = self.token_abi
-        else:
-            contract_address = self.eth_swap_contract_address
-            abi = self.eth_abi
-
-        contract = self.web3.eth.contract(address=contract_address, abi=abi)
-        initiate_func = contract.functions.initiate(
-            payload['locktime'],
-            payload['secret_hash'],
-            payload['recipient_address']
-        )
-
-        tx_dict = {
-            'nonce': self.web3.eth.getTransactionCount(sender_address),
-            'from': sender_address,
-            'value': value,
-        }
-
-        if gas_price:
-            tx_dict['gasPrice'] = gas_price
-
-        tx_dict = initiate_func.buildTransaction(tx_dict)
-        if not gas_limit:
-            gas_limit = initiate_func.estimateGas({
-                key: value for key, value in tx_dict.items() if key not in ('to', 'data')
-            })
-
-        tx = Transaction(
-            nonce=tx_dict['nonce'],
-            gasprice=tx_dict['gasPrice'],
-            startgas=gas_limit,
-            to=tx_dict['to'],
-            value=tx_dict['value'],
-            data=Web3.toBytes(hexstr=tx_dict['data']),
-        )
-        return EthereumAtomicSwapTransaction(
+        transaction = EthereumAtomicSwapTransaction(
             self,
-            tx,
-            payload['secret'],
-            payload['secret_hash'],
+            sender_address,
+            recipient_address,
+            value,
+            secret_hash,
+            token_address,
+            gas_price,
+            gas_limit,
         )
+        return transaction
 
     @staticmethod
     def sign(transaction: Transaction, private_key: str) -> Transaction:
         transaction.sign(private_key)
         return transaction
 
+    def audit_contract(self, tx_address: str) -> EthereumContract:
+        tx_dict = self.web3.eth.getTransaction(tx_address)
+        return EthereumContract(self, tx_dict)
+
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:
         return Web3.toHex(rlp.encode(transaction))
 
     def broadcast_transaction(self, transaction: Union[str, Transaction]) -> bool:
-
         raw_transaction = transaction if isinstance(transaction, str) else self.get_raw_transaction(transaction)
-
         try:
             self.web3.eth.sendRawTransaction(raw_transaction)
         except ValueError:
