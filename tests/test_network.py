@@ -7,9 +7,10 @@ from pytest import mark
 from validators import domain
 
 from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
-from clove.network import __all__ as networks
+from clove.network import BITCOIN_BASED as networks
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.network.bitcoin.utxo import Utxo
+from clove.network.ethereum.base import EthereumBaseNetwork
 from clove.utils.bitcoin import auto_switch_params
 from clove.utils.search import get_network_object
 
@@ -187,7 +188,10 @@ def test_symbol_mapping(network):
     symbol_mapping = network.get_symbol_mapping()
     assert symbol_mapping
     for (symbol, mapped_network) in symbol_mapping.items():
-        assert issubclass(mapped_network, BitcoinBaseNetwork)
+        if mapped_network.bitcoin_based:
+            assert issubclass(mapped_network, BitcoinBaseNetwork)
+        else:
+            assert issubclass(mapped_network, EthereumBaseNetwork)
         assert symbol in mapped_network.symbols
         assert mapped_network.is_test_network() == is_test
 
@@ -199,7 +203,10 @@ def test_get_network_class_by_symbol(network):
     assert symbol_mapping
     for symbol in symbol_mapping:
         network_class = network.get_network_class_by_symbol(symbol)
-        assert issubclass(network_class, BitcoinBaseNetwork)
+        if network_class.bitcoin_based:
+            assert issubclass(network_class, BitcoinBaseNetwork)
+        else:
+            assert issubclass(network_class, EthereumBaseNetwork)
         assert symbol in network_class.symbols
         assert network_class.is_test_network() == is_test
 
