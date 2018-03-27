@@ -86,7 +86,7 @@ class BitcoinContract(object):
     def refund(self, wallet):
         if self.locktime > datetime.utcnow():
             locktime_string = self.locktime.strftime('%Y-%m-%d %H:%M:%S')
-            raise RuntimeError(f"This contract is still valid! It can't be refunded until {locktime_string}.")
+            raise RuntimeError(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
         transaction = BitcoinTransaction(
             network=self.network,
             recipient_address=self.refund_address,
