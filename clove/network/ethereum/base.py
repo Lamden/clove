@@ -1,9 +1,13 @@
 import os
 from typing import Union
 
+from eth_abi import decode_abi
 from ethereum.transactions import Transaction
 import rlp
 from web3 import HTTPProvider, Web3
+from web3.utils.abi import get_abi_input_types
+from web3.utils.contracts import find_matching_fn_abi
+from web3.utils.datastructures import AttributeDict
 
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
@@ -116,8 +120,7 @@ class EthereumBaseNetwork(BaseNetwork):
 
         # Method IDs for transaction building. Built on the fly for developer reference (keeping away from magics)
         self.initiate = self.method_id('initiate(uint256,bytes20,address)')
-        self.participate = self.method_id('participate(uint256,bytes20,address)')
-        self.redeem = self.method_id('redeem(bytes32,bytes20)')
+        self.redeem = self.method_id('redeem(bytes32)')
         self.refund = self.method_id('refund(bytes20)')
 
     @property
@@ -131,13 +134,15 @@ class EthereumBaseNetwork(BaseNetwork):
     def method_id(method) -> str:
         return Web3.sha3(text=method)[0:4].hex()
 
+    @staticmethod
+    def extract_method_id(tx_input: str):
+        return tx_input[2:10]
+
     def get_method_name(self, method_id):
         return {
             self.initiate: 'initiate',
-            self.participate: 'participate',
             self.redeem: 'redeem',
             self.refund: 'refund',
-            self.swaps: 'swaps',
         }[method_id]
 
     @staticmethod
@@ -176,9 +181,27 @@ class EthereumBaseNetwork(BaseNetwork):
         transaction.sign(private_key)
         return transaction
 
+    def get_transaction(self, tx_address: str) -> AttributeDict:
+        return self.web3.eth.getTransaction(tx_address)
+
     def audit_contract(self, tx_address: str) -> EthereumContract:
-        tx_dict = self.web3.eth.getTransaction(tx_address)
+        tx_dict = self.get_transaction(tx_address)
         return EthereumContract(self, tx_dict)
+
+    def extract_secret_from_redeem_transaction(self, tx_address: str) -> str:
+        tx_dict = self.get_transaction(tx_address)
+        method_id = self.extract_method_id(tx_dict['input'])
+        if method_id != self.redeem:
+            raise ValueError('Not a redeem transaction.')
+        contract_address = tx_dict['to']
+        if contract_address == self.eth_swap_contract_address:
+            abi = self.eth_abi
+        else:
+            abi = self.token_abi
+        method_name = self.get_method_name(method_id)
+        input_types = get_abi_input_types(find_matching_fn_abi(abi, fn_identifier=method_name))
+        input_values = decode_abi(input_types, Web3.toBytes(hexstr=tx_dict['input'][10:]))
+        return input_values[0].hex()
 
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:

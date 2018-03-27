@@ -5,12 +5,84 @@ import os
 from unittest.mock import MagicMock, patch
 
 from bitcoin.messages import msg_getdata, msg_reject, msg_verack, msg_version
+from hexbytes.main import HexBytes
 import pytest
+from web3.utils.datastructures import AttributeDict
 
 from clove.network.bitcoin import BitcoinTestNet
 from clove.network.bitcoin.utxo import Utxo
 
 Key = namedtuple('Key', ['secret', 'address'])
+
+
+eth_initial_transaction = AttributeDict({
+    'blockHash': HexBytes('0xebb8d4e62dc5b0732bee6e2c3946c5a972988f41fbac321eb73311930a936804'),
+    'blockNumber': 6600435,
+    'chainId': None,
+    'condition': None,
+    'creates': None,
+    'from': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+    'gas': 126221,
+    'gasPrice': 14959965017,
+    'hash': HexBytes('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41'),
+    'input': (
+        '0xeb8ae1ed000000000000000000000000000000000000000000000000000000005abe25ea10ff9'
+        '72f3d8181f603aa7f6b4bc172de730fec2b00000000000000000000000000000000000000000000'
+        '0000d867f293ba129629a9f9355fa285b8d3711a9092'
+    ),
+    'nonce': 16,
+    'publicKey': HexBytes(
+        '0x76c4f5810736d1d9b9964863abc339dce70ace058db5c820e5fdec26e0840f36f9adcb150e521'
+        '6213bc301f3a6b71a178c81ddd34a361d696c8cb03970590d4f'
+    ),
+    'r': HexBytes('0x7a4e11ea96640fb0ab255960cea6afcf16732246ce1dadeec52eb6a8d59c2e05'),
+    'raw': HexBytes(
+        '0xf8ca1085037baef3598301ed0d949f7e5402ed0858ea0c5914d44b900a42c89547b80cb864eb8'
+        'ae1ed000000000000000000000000000000000000000000000000000000005abe25ea10ff972f3d'
+        '8181f603aa7f6b4bc172de730fec2b000000000000000000000000000000000000000000000000d'
+        '867f293ba129629a9f9355fa285b8d3711a90921ba07a4e11ea96640fb0ab255960cea6afcf1673'
+        '2246ce1dadeec52eb6a8d59c2e05a06f47ffe2bc88915013295be61c503bc52762fe4f7826fa249'
+        '0b2d302a11bff85'
+    ),
+    's': HexBytes('0x6f47ffe2bc88915013295be61c503bc52762fe4f7826fa2490b2d302a11bff85'),
+    'standardV': 0,
+    'to': '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8',
+    'transactionIndex': 0,
+    'v': 27,
+    'value': 12
+})
+
+eth_redeem_tranaction = AttributeDict({
+    'blockHash': HexBytes('0x4a1f01ed71161e103d0fc4a82ec2facdc1b685e3a597fca07bb9b822b74ed686'),
+    'blockNumber': 6612187,
+    'chainId': None,
+    'condition': None,
+    'creates': None,
+    'from': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+    'gas': 100000,
+    'gasPrice': 1000000000,
+    'hash': HexBytes('0x89b0d28e93ce55da4adab989cd48a524402eb154b23e1777f82e715589aba317'),
+    'input': '0xeda1122c1e5a567ab04cc900c3da01d1b61c1a3755d648410963c3d0767ed2e0138e03a1',
+    'nonce': 14,
+    'publicKey': HexBytes(
+        '0x579c6126677857d4d5a227ed47efbd9742e26f60449e8ea6a536c0dd9b2fb6f'
+        'b14e0fddc7cb06fd78d2c6c3ef4d1b72e488096504817ed7ac252b2453cbfab56'
+    ),
+    'r': HexBytes('0x9ca27c2d31c663c0202851eea34e39b90311173916101bf3c3437f0fa23e54e9'),
+    'raw': HexBytes(
+        '0xf8880e843b9aca00830186a0949f7e5402ed0858ea0c5914d44b900a42c8954'
+        '7b880a4eda1122c1e5a567ab04cc900c3da01d1b61c1a3755d648410963c3d076'
+        '7ed2e0138e03a11ca09ca27c2d31c663c0202851eea34e39b90311173916101bf'
+        '3c3437f0fa23e54e9a022ae2c66a04f526f17d6cbb2bf873fbbb5c3bf68bfdebf'
+        'd08fbdd2b9088283a0'
+    ),
+    's': HexBytes('0x22ae2c66a04f526f17d6cbb2bf873fbbb5c3bf68bfdebfd08fbdd2b9088283a0'),
+    'standardV': 1,
+    'to': '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8',
+    'transactionIndex': 3,
+    'v': 28,
+    'value': 0,
+})
 
 
 @pytest.fixture
