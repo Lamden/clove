@@ -41,7 +41,7 @@ class BitcoinWallet(object):
         """Encrypt private key with the password."""
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
-        encrypted_private_key = base64.b64encode(iv + cipher.encrypt(private_key))
+        encrypted_private_key = base64.b64encode(iv + cipher.encrypt(bytes(private_key.encode('utf-8'))))
         return encrypted_private_key
 
     @staticmethod

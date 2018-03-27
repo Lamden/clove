@@ -4,7 +4,9 @@ import argparse
 import os
 import sys
 
-from script_utils import get_network, print_section
+from script_utils import print_section
+
+from clove.utils.search import get_network_by_symbol
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
@@ -18,7 +20,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    network = get_network(args.network)
+    network = get_network_by_symbol(args.network)
     if args.cryptoid_api_key:
         os.environ['CRYPTOID_API_KEY'] = args.cryptoid_api_key
     secret = network.extract_secret_from_redeem_transaction(args.contract_address)

@@ -179,7 +179,7 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
     def build_atomic_swap_contract(self):
         self.contract = script.CScript([
             script.OP_IF,
-            script.OP_SHA256,
+            script.OP_RIPEMD160,
             self.secret_hash,
             script.OP_EQUALVERIFY,
             script.OP_DUP,

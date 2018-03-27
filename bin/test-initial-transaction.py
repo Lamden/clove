@@ -5,7 +5,9 @@ import os
 from pprint import pprint
 import sys
 
-from script_utils import get_network, print_error, print_section, print_tx_address
+from script_utils import print_error, print_section, print_tx_address
+
+from clove.utils.search import get_network_by_symbol
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
@@ -20,7 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--private-key', help='Private key', type=str, required=True)
     args = parser.parse_args()
 
-    network = get_network(args.network)
+    network = get_network_by_symbol(args.network)
 
     print_section('Creating transaction for', args.network)
     print_section('Sender address:\t', args.sender)

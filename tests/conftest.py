@@ -1,6 +1,7 @@
 from collections import namedtuple
 from contextlib import contextmanager
 from io import BytesIO
+import os
 from unittest.mock import MagicMock, patch
 
 from bitcoin.messages import msg_getdata, msg_reject, msg_verack, msg_version
@@ -101,3 +102,10 @@ def connection_mock(signed_transaction):
         with patch('socket.gethostbyname_ex', return_value=(None, None, ['127.0.0.1'])):
             with patch.object(BitcoinTestNet, 'capture_messages', new=capture_messages_mock):
                 yield
+
+
+@pytest.fixture
+def infura_token():
+    os.environ['INFURA_TOKEN'] = 'WsUXSFPvO9t86xDAAhNi'
+    return
+    del os.environ['INFURA_TOKEN']

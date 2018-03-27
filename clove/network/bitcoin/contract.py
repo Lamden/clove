@@ -46,7 +46,7 @@ class BitcoinContract(object):
         try:
             is_valid = (
                 script_ops[0] == script.OP_IF
-                and script_ops[1] == script.OP_SHA256
+                and script_ops[1] == script.OP_RIPEMD160
                 and script_ops[3] == script_ops[15] == script.OP_EQUALVERIFY
                 and script_ops[4] == script_ops[11] == script.OP_DUP
                 and script_ops[5] == script_ops[12] == script.OP_HASH160
@@ -97,16 +97,30 @@ class BitcoinContract(object):
         transaction.create_unsigned_transaction()
         return transaction
 
-    def participate(self, symbol, sender_address, recipient_address, value, utxo):
-        network_class = self.network.get_network_class_by_symbol(symbol)
-
-        network = network_class()
+    def participate(
+        self,
+        symbol: str,
+        sender_address: str,
+        recipient_address: str,
+        value: int,
+        utxo: list=None,
+        token_address: str=None,
+    ):
+        network = self.network.get_network_by_symbol(symbol)
+        if network.bitcoin_based:
+            return network.atomic_swap(
+                sender_address,
+                recipient_address,
+                value,
+                utxo,
+                self.secret_hash,
+            )
         return network.atomic_swap(
             sender_address,
             recipient_address,
             value,
-            utxo,
-            self.secret_hash
+            self.secret_hash,
+            token_address,
         )
 
     def show_details(self):

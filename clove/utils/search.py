@@ -1,10 +1,8 @@
-from clove.network import Bitcoin, BitcoinTestNet
+from clove.network.base import BaseNetwork
 
 
-def get_network_object(symbol: str, testnet: bool = False):
+def get_network_by_symbol(symbol: str):
     try:
-        if testnet:
-            return BitcoinTestNet.get_network_class_by_symbol(symbol)()
-        return Bitcoin.get_network_class_by_symbol(symbol)()
+        return BaseNetwork.get_network_by_symbol(symbol)
     except RuntimeError:
         return
