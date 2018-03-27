@@ -2,6 +2,10 @@ class BaseNetwork(object):
 
     name = None
     symbols = ()
+    networks = {}
+    test_networks = {}
+    bitcoin_based = None
+    ethereum_based = None
 
     @property
     def default_symbol(self):
@@ -13,35 +17,24 @@ class BaseNetwork(object):
         return cls.name and cls.name.startswith('test-')
 
     @classmethod
-    def get_network_class_by_symbol(cls, symbol):
-        symbol_mapping = cls.get_symbol_mapping()
+    def get_network_by_symbol(cls, symbol):
 
-        symbol = symbol.upper()
-        if symbol not in symbol_mapping:
-            raise RuntimeError(f'{symbol} network is not supported.')
-
-        return symbol_mapping[symbol]
-
-    @classmethod
-    def get_symbol_mapping(cls):
         if not cls.networks:
             cls.set_symbol_mapping()
 
-        if cls.is_test_network():
-            return cls.test_networks
-        return cls.networks
+        symbol = symbol.upper()
+
+        if symbol not in cls.networks:
+            raise RuntimeError(f'{symbol} network is not supported.')
+
+        return cls.networks[symbol]()
 
     @classmethod
     def set_symbol_mapping(cls):
-        from clove.network import __all__
-        cls.networks = cls.create_symbol_mapping(__all__)
-        cls.test_networks = cls.create_symbol_mapping(__all__, testnet=True)
-
-    @staticmethod
-    def create_symbol_mapping(networks, testnet=False):
-        return {
-            symbol.upper(): network
-            for network in networks
-            for symbol in network.symbols
-            if network.is_test_network() == testnet
-        }
+        from clove.network import __all__ as networks
+        for network in networks:
+            for symbol in network.symbols:
+                if network.is_test_network():
+                    cls.networks[f'{symbol.upper()}-TESTNET'] = network
+                else:
+                    cls.networks[f'{symbol.upper()}'] = network

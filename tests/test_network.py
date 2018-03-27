@@ -7,12 +7,12 @@ from pytest import mark
 from validators import domain
 
 from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
+from clove.network import BITCOIN_BASED as networks
 from clove.network import BitcoinTestNet
-from clove.network import __all__ as networks
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import auto_switch_params
-from clove.utils.search import get_network_object
+from clove.utils.search import get_network_by_symbol
 
 
 @mark.parametrize('network', networks)
@@ -182,29 +182,6 @@ def test_filter_blacklisted_nodes_method():
     assert network.filter_blacklisted_nodes(nodes, max_tries_number=2) == ['34.207.248.232', '107.170.239.46']
 
 
-@mark.parametrize('network', networks)
-def test_symbol_mapping(network):
-    is_test = network.is_test_network()
-    symbol_mapping = network.get_symbol_mapping()
-    assert symbol_mapping
-    for (symbol, mapped_network) in symbol_mapping.items():
-        assert issubclass(mapped_network, BitcoinBaseNetwork)
-        assert symbol in mapped_network.symbols
-        assert mapped_network.is_test_network() == is_test
-
-
-@mark.parametrize('network', networks)
-def test_get_network_class_by_symbol(network):
-    is_test = network.is_test_network()
-    symbol_mapping = network.get_symbol_mapping()
-    assert symbol_mapping
-    for symbol in symbol_mapping:
-        network_class = network.get_network_class_by_symbol(symbol)
-        assert issubclass(network_class, BitcoinBaseNetwork)
-        assert symbol in network_class.symbols
-        assert network_class.is_test_network() == is_test
-
-
 @auto_switch_params()
 def simple_params_name_return(network):
     return bitcoin.params.NAME
@@ -227,7 +204,7 @@ def test_auto_switch_params_decorator(network):
 def test_get_network_obj_on_existing_networks(network):
     symbol = network.symbols[0]
     is_test_network = network.is_test_network()
-    network_object = get_network_object(symbol, testnet=is_test_network)
+    network_object = get_network_by_symbol(f"{symbol}{'-TESTNET' if is_test_network else ''}")
 
     assert type(network_object) == network
     assert network_object.symbols[0] == symbol
@@ -235,7 +212,7 @@ def test_get_network_obj_on_existing_networks(network):
 
 
 def test_get_network_obj_on_not_existing_network():
-    assert get_network_object('NON_EXISTING_NETWORK_SYMBOL') is None
+    assert get_network_by_symbol('NON_EXISTING_NETWORK_SYMBOL') is None
 
 
 @mark.parametrize('network_symbol,address,is_valid', [
@@ -251,7 +228,7 @@ def test_get_network_obj_on_not_existing_network():
 
 ])
 def test_valid_address(network_symbol, address, is_valid):
-    network = get_network_object(network_symbol)
+    network = get_network_by_symbol(network_symbol)
     assert network.is_valid_address(address) == is_valid
 
 

@@ -259,7 +259,7 @@ def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_tran
     )
     participate_value = 0.5
     participate_transaction = contract.participate(
-        'btc', bob_wallet.address, alice_wallet.address, participate_value, bob_utxo
+        'BTC-TESTNET', bob_wallet.address, alice_wallet.address, participate_value, bob_utxo
     )
     participate_transaction.fee_per_kb = 0.002
     participate_transaction.add_fee_and_sign()

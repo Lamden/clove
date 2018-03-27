@@ -137,8 +137,9 @@ from clove.network.bitcoin_based.zcoin import ZCoin, ZCoinTestNet
 from clove.network.bitcoin_based.zeitcoin import Zeitcoin
 from clove.network.bitcoin_based.zetacoin import Zetacoin, ZetacoinTestNet
 from clove.network.bitcoin_based.zoin import Zoin, ZoinTestNet
+from clove.network.ethereum import Ethereum, EthereumTestnet
 
-BITCOIN_BASES = [
+BITCOIN_BASED = (
     Bitcoin, BitcoinTestNet,
     Anoncoin,
     AquariusCoin,
@@ -278,5 +279,10 @@ BITCOIN_BASES = [
     Zeitcoin,
     Zetacoin, ZetacoinTestNet,
     Zoin, ZoinTestNet,
-]
-__all__ = BITCOIN_BASES
+)
+
+ETHEREUM_BASED = (
+    Ethereum, EthereumTestnet,
+)
+
+__all__ = BITCOIN_BASED + ETHEREUM_BASED

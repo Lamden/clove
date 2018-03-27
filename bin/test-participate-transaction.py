@@ -5,7 +5,9 @@ import os
 from pprint import pprint
 import sys
 
-from script_utils import get_network, get_transaction_from_address, print_error, print_section, print_tx_address
+from script_utils import get_transaction_from_address, print_error, print_section, print_tx_address
+
+from clove.utils.search import get_network_by_symbol
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
@@ -24,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--amount', help='Transaction amount', type=float, required=True)
     args = parser.parse_args()
 
-    network = get_network(args.network)
+    network = get_network_by_symbol(args.network)
     wallet = network.get_wallet(private_key=args.private_key)
 
     tx_hex = get_transaction_from_address(args.initial_network, args.transaction)
