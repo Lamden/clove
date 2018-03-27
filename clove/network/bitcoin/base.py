@@ -6,7 +6,7 @@ from typing import Optional
 import bitcoin
 from bitcoin import SelectParams
 from bitcoin.base58 import Base58ChecksumError, InvalidBase58Error
-from bitcoin.core import CMutableTransaction, b2lx, b2x, script
+from bitcoin.core import b2lx, b2x, script
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
     MSG_TX, MsgSerializable, msg_getdata, msg_inv, msg_ping, msg_pong, msg_reject, msg_tx, msg_verack, msg_version
@@ -14,7 +14,10 @@ from bitcoin.messages import (
 from bitcoin.net import CInv
 from bitcoin.wallet import CBitcoinAddress, CBitcoinAddressError
 
-from clove.constants import BLOCKCYPHER_SUPPORTED_NETWORKS, CRYPTOID_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT
+from clove.constants import (
+    BLOCKCYPHER_SUPPORTED_NETWORKS, CRYPTOID_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT,
+    TRANSACTION_BROADCASTING_MAX_ATTEMPTS
+)
 from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.network.base import BaseNetwork
 from clove.network.bitcoin.contract import BitcoinContract
@@ -59,6 +62,22 @@ class BitcoinBaseNetwork(BaseNetwork):
                     base58_prefixes=cls.base58_prefixes,
                 )
             )
+
+    def publish(self, raw_transaction: str):
+        for attempt in range(1, TRANSACTION_BROADCASTING_MAX_ATTEMPTS + 1):
+            transaction_address = self.broadcast_transaction(raw_transaction)
+
+            if transaction_address is None:
+                logger.warning('Transaction broadcast attempt no. %s failed. Retrying...', attempt)
+                continue
+
+            logger.info('Transaction broadcast is successful. End of broadcasting process.')
+            return transaction_address
+
+        logger.warning(
+            '%s attempts to broadcast transaction failed. Broadcasting process terminates!',
+            TRANSACTION_BROADCASTING_MAX_ATTEMPTS
+        )
 
     @staticmethod
     def get_nodes(seed) -> list:
@@ -251,8 +270,9 @@ class BitcoinBaseNetwork(BaseNetwork):
         )
 
     @auto_switch_params()
-    def broadcast_transaction(self, transaction: CMutableTransaction):
-        serialized_transaction = transaction.serialize()
+    def broadcast_transaction(self, raw_transaction: str):
+        deserialized_transaction = deserialize_raw_transaction(raw_transaction)
+        serialized_transaction = deserialized_transaction.serialize()
 
         get_data = self.send_inventory(serialized_transaction)
         if not get_data:
@@ -268,7 +288,7 @@ class BitcoinBaseNetwork(BaseNetwork):
             return self.reset_connection()
 
         message = msg_tx()
-        message.tx = transaction
+        message.tx = deserialized_transaction
 
         if not self.send_message(message, 20):
             return
@@ -280,7 +300,7 @@ class BitcoinBaseNetwork(BaseNetwork):
             return self.reset_connection()
         logger.info('[%s] Reject message not found.', node)
 
-        transaction_address = b2lx(transaction.GetHash())
+        transaction_address = b2lx(deserialized_transaction.GetHash())
         logger.info('[%s] Transaction %s has just been sent.', node, transaction_address)
         return transaction_address
 

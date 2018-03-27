@@ -47,7 +47,7 @@ def test_bitcoin_wallet_not_initialized_if_key_provided_whilst_password_not():
 
 
 def test_bitcoin_wallet_address_correct():
-    address = BitcoinWallet().address
+    address = Bitcoin.get_wallet().address
     assert address.startswith('1')
     assert encode(decode(address)) == address
 

@@ -7,6 +7,7 @@ from pytest import mark
 from validators import domain
 
 from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
+from clove.network import BitcoinTestNet
 from clove.network import __all__ as networks
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.network.bitcoin.utxo import Utxo
@@ -252,3 +253,22 @@ def test_get_network_obj_on_not_existing_network():
 def test_valid_address(network_symbol, address, is_valid):
     network = get_network_object(network_symbol)
     assert network.is_valid_address(address) == is_valid
+
+
+def test_broadcast_transaction(signed_transaction, connection_mock):
+    btc_network = BitcoinTestNet()
+
+    with connection_mock:
+        assert signed_transaction.address == btc_network.broadcast_transaction(signed_transaction.raw_transaction)
+
+
+def test_publish_transaction_from_network(signed_transaction, connection_mock):
+    btc_network = BitcoinTestNet()
+
+    with connection_mock:
+        assert signed_transaction.address == btc_network.publish(signed_transaction.raw_transaction)
+
+
+def test_publish_transaction_from_transaction(signed_transaction, connection_mock):
+    with connection_mock:
+        assert signed_transaction.address == signed_transaction.publish()
