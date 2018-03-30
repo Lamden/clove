@@ -34,6 +34,9 @@ setup(
             'pytest-cov==2.5.1',
             'requests==2.18.4',
         ],
+        'dev': [
+            'pyquery==1.4.0',
+        ],
         'docs': [
             'Sphinx==1.6.6',
             'sphinx-rtd-theme==0.2.4',

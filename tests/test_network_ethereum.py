@@ -51,7 +51,6 @@ def test_eth_refund(transaction_mock, infura_token):
     refund_transaction = contract.refund()
     details = refund_transaction.show_details()
     assert details['data'] == '0x5a8f9b8110ff972f3d8181f603aa7f6b4bc172de730fec2b000000000000000000000000'
-    assert details['hash'] == '0x546310fa12a51856138acd182e7cad4895b79aa5d6dca58b3554b7625330b434'
     assert details['startgas'] == ETH_REFUND_GAS_LIMIT
     assert details['to'] == '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8'
     assert details['value'] == 0
