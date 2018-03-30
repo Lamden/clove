@@ -6,7 +6,7 @@ from web3 import Web3
 from web3.utils.abi import get_abi_input_names, get_abi_input_types
 from web3.utils.contracts import find_matching_fn_abi
 
-from clove.constants import ETH_REDEEM_GAS_LIMIT
+from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
 from clove.network.ethereum.transaction import EthereumTransaction
 
 
@@ -29,6 +29,7 @@ class EthereumContract(object):
 
         self.locktime = datetime.utcfromtimestamp(self.inputs['_expiration'])
         self.recipient_address = Web3.toChecksumAddress(self.inputs['_participant'])
+        self.refund_address = self.tx_dict['from']
         self.secret_hash = self.inputs['_hash'].hex()
 
         self.value = self.tx_dict['value']
@@ -98,8 +99,34 @@ class EthereumContract(object):
         )
         return transaction
 
-    def refund(self):
-        pass
+    def refund(self, gas_price: int=None):
+        contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.abi)
+
+        if self.locktime > datetime.utcnow():
+            locktime_string = self.locktime.strftime('%Y-%m-%d %H:%M:%S')
+            raise RuntimeError(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
+
+        refund_func = contract.functions.refund(self.secret_hash)
+        tx_dict = {
+            'nonce': self.network.web3.eth.getTransactionCount(self.refund_address),
+            'value': 0,
+            'gas': ETH_REFUND_GAS_LIMIT,
+        }
+        if gas_price:
+            tx_dict['gasPrice'] = gas_price
+
+        tx_dict = refund_func.buildTransaction(tx_dict)
+
+        transaction = EthereumTransaction(network=self.network)
+        transaction.tx = Transaction(
+            nonce=tx_dict['nonce'],
+            gasprice=tx_dict['gasPrice'],
+            startgas=tx_dict['gas'],
+            to=tx_dict['to'],
+            value=tx_dict['value'],
+            data=Web3.toBytes(hexstr=tx_dict['data']),
+        )
+        return transaction
 
     def show_details(self):
         value_text = Web3.fromWei(self.tx_dict['value'], 'ether')
@@ -107,7 +134,7 @@ class EthereumContract(object):
             'contract_address': self.contract_address,
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
-            'refund_address': self.tx_dict['from'],
+            'refund_address': self.refund_address,
             'secret_hash': self.secret_hash,
             'transaction_address': self.tx_dict['hash'].hex(),
             'value': self.tx_dict['value'],

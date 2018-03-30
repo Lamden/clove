@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from ethereum.transactions import Transaction
@@ -85,7 +85,7 @@ class EthereumAtomicSwapTransaction(EthereumTransaction):
 
     def set_locktime(self):
         self.locktime = datetime.utcnow() + timedelta(hours=24 if self.secret_hash else 48)
-        self.locktime_unix = int(self.locktime.timestamp())
+        self.locktime_unix = int(self.locktime.replace(tzinfo=timezone.utc).timestamp())
 
     def set_contract(self):
         self.contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.abi)

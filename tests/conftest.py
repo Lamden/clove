@@ -179,5 +179,5 @@ def connection_mock(signed_transaction):
 @pytest.fixture
 def infura_token():
     os.environ['INFURA_TOKEN'] = 'WsUXSFPvO9t86xDAAhNi'
-    return
+    yield
     del os.environ['INFURA_TOKEN']
