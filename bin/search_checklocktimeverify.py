@@ -3,8 +3,10 @@
 import glob
 import logging
 import os
+import subprocess
 import time
 from urllib.error import HTTPError, URLError
+import urllib.request
 
 import requests
 
@@ -17,18 +19,27 @@ def get_github_api_token():
     return os.getenv('GITHUB_API_TOKEN')
 
 
-def search_checklocktime(lines, index):
+def search_checklocktime(lines, index, filename):
     api_token = get_github_api_token()
     github_line_offset = next((i for i, line in enumerate(lines[index:]) if 'github.com' in line), None)
     github_line = lines[index + github_line_offset]
 
-    search_link, repo_info_link = create_github_links(github_line)
+    search_link, repo_info_link, repo_zip_file = create_github_links(github_line)
 
     authorization_header = {'Authorization': f'token {api_token}'}
     repo_info = requests.get(repo_info_link, headers=authorization_header)
     repo_info_json = repo_info.json()
     if repo_info_json['fork']:
-        return None
+        zip_name = filename.replace('.py', '.zip')
+        zip_path = f'repos_zip/{zip_name}'
+        urllib.request.urlretrieve(repo_zip_file, zip_path)
+        zipgrep_process = subprocess.Popen(
+            ['zipgrep', '-i', 'op_checklocktimeverify', zip_path], stdout=subprocess.PIPE
+        )
+        wc_process = subprocess.Popen(["wc", '-l'], stdin=zipgrep_process.stdout, stdout=subprocess.PIPE)
+        zipgrep_process.stdout.close()
+        count = wc_process.communicate()[0]
+        return int(count.strip())
     response = requests.get(search_link, headers=authorization_header)
     response_json = response.json()
     return response_json.get('total_count', 0)
@@ -41,7 +52,9 @@ def create_github_links(line):
     repo_name = line.strip().split('github.com/')[1]
     repo_name = repo_name.split('/blob/')[0]
 
-    return search_base + repo_name, repo_info_base + repo_name
+    repo_zip_file = f'https://github.com/{repo_name}/archive/master.zip'
+
+    return search_base + repo_name, repo_info_base + repo_name, repo_zip_file
 
 
 if __name__ == '__main__':
@@ -56,6 +69,8 @@ if __name__ == '__main__':
     found = []
     fork = []
     failed = []
+
+    os.makedirs('repos_zip', exist_ok=True)
 
     for file_path in files:
         if not os.path.isfile(file_path):
@@ -75,7 +90,7 @@ if __name__ == '__main__':
                 logger.error("Couldn't find network class in %s", filename)
                 continue
             try:
-                count = search_checklocktime(file_lines, indices[0])
+                count = search_checklocktime(file_lines, indices[0], filename)
                 if count is None:
                     fork.append(filename)
                     logger.info("%s network is forked and cannot be searched", filename)
