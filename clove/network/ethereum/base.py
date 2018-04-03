@@ -1,5 +1,5 @@
 import os
-from typing import Union
+from typing import Optional, Union
 
 from eth_abi import decode_abi
 from ethereum.transactions import Transaction
@@ -12,6 +12,8 @@ from web3.utils.datastructures import AttributeDict
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
+from clove.network.ethereum_based import Token
+from clove.network.ethereum_based.mainnet_tokens import tokens
 
 
 class EthereumBaseNetwork(BaseNetwork):
@@ -22,97 +24,7 @@ class EthereumBaseNetwork(BaseNetwork):
     symbols = ()
     infura_network = None
     ethereum_based = True
-    eth_swap_contract_address = None
-    token_swap_contract_address = None
-
-    # downloaded from 'Contract ABI' at etherscan.io
-    eth_abi = [{
-        'constant': False,
-        'inputs': [{
-            'name': '_hash',
-            'type': 'bytes20'
-        }],
-        'name': 'refund',
-        'outputs': [],
-        'payable': False,
-        'stateMutability': 'nonpayable',
-        'type': 'function'
-    }, {
-        'constant': False,
-        'inputs': [{
-            'name': '_expiration',
-            'type': 'uint256'
-        }, {
-            'name': '_hash',
-            'type': 'bytes20'
-        }, {
-            'name': '_participant',
-            'type': 'address'
-        }],
-        'name': 'initiate',
-        'outputs': [],
-        'payable': True,
-        'stateMutability': 'payable',
-        'type': 'function'
-    }, {
-        'constant': False,
-        'inputs': [{
-            'name': '_secret',
-            'type': 'bytes32'
-        }],
-        'name': 'redeem',
-        'outputs': [],
-        'payable': False,
-        'stateMutability': 'nonpayable',
-        'type': 'function'
-    }]
-
-    token_abi = [{
-        "constant": False,
-        "inputs": [{
-            "name": "_expiration",
-            "type": "uint256"
-        }, {
-            "name": "_hash",
-            "type": "bytes20"
-        }, {
-            "name": "_participant",
-            "type": "address"
-        }, {
-            "name": "_token",
-            "type": "address"
-        }, {
-            "name": "_value",
-            "type": "uint256"
-        }],
-        "name": "initiate",
-        "outputs": [],
-        "payable": False,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }, {
-        "constant": False,
-        "inputs": [{
-            "name": "_hash",
-            "type": "bytes20"
-        }],
-        "name": "refund",
-        "outputs": [],
-        "payable": False,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }, {
-        "constant": False,
-        "inputs": [{
-            "name": "_secret",
-            "type": "bytes32"
-        }],
-        "name": "redeem",
-        "outputs": [],
-        "payable": False,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }]
+    contract_address = None
 
     def __init__(self):
 
@@ -164,13 +76,18 @@ class EthereumBaseNetwork(BaseNetwork):
         gas_limit: int=None,
     ) -> EthereumAtomicSwapTransaction:
 
+        token = None
+        if token_address:
+            token = self.get_token_by_address(token_address)
+            if not token:
+                raise ValueError('Unknown token')
+
         transaction = EthereumAtomicSwapTransaction(
-            self,
+            token or self,
             sender_address,
             recipient_address,
             value,
             secret_hash,
-            token_address,
             gas_price,
             gas_limit,
         )
@@ -193,15 +110,33 @@ class EthereumBaseNetwork(BaseNetwork):
         method_id = self.extract_method_id(tx_dict['input'])
         if method_id != self.redeem:
             raise ValueError('Not a redeem transaction.')
-        contract_address = tx_dict['to']
-        if contract_address == self.eth_swap_contract_address:
-            abi = self.eth_abi
-        else:
-            abi = self.token_abi
         method_name = self.get_method_name(method_id)
-        input_types = get_abi_input_types(find_matching_fn_abi(abi, fn_identifier=method_name))
+        input_types = get_abi_input_types(find_matching_fn_abi(self.abi, fn_identifier=method_name))
         input_values = decode_abi(input_types, Web3.toBytes(hexstr=tx_dict['input'][10:]))
         return input_values[0].hex()
+
+    @staticmethod
+    def get_token_by_attribute(name: str, value: str) -> Optional[Token]:
+        for token in tokens:
+            if getattr(token, name).lower() == value.lower():
+                return token
+
+    def get_token_by_address(self, address: str):
+        from clove.network.ethereum.token import EthereumToken
+
+        token = self.get_token_by_attribute('address', address)
+        if not token:
+            return
+        return EthereumToken.from_namedtuple(token)
+
+    @classmethod
+    def get_token_by_symbol(cls, symbol: str):
+        from clove.network.ethereum.token import EthereumToken
+
+        token = cls.get_token_by_attribute('symbol', symbol)
+        if not token:
+            return
+        return EthereumToken.from_namedtuple(token)
 
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:

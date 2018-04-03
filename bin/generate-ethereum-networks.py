@@ -2,11 +2,12 @@
 
 import argparse
 from collections import namedtuple
+from operator import attrgetter
 import os
-import string
 
 from pyquery import PyQuery as pq
 import requests
+from web3 import Web3
 
 from script_utils import print_error, print_section
 
@@ -15,12 +16,8 @@ Token = namedtuple('Token', 'name, symbol, address')
 
 class EthereumNetworkGenerator(object):
 
-    USER_AGENT = (
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-        'AppleWebKit/537.36 (KHTML, like Gecko) '
-        'Chrome/64.0.3282.186 '
-        'Safari/537.36'
-    )
+    # Most popular user agent based on http://www.browser-info.net/useragents
+    USER_AGENT = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; FSL 7.0.6.01001)'
 
     def __init__(self, network='mainnet'):
         self.network = network
@@ -42,7 +39,7 @@ class EthereumNetworkGenerator(object):
         for l in links:
             address = l.attrib['href'].replace('/token/', '')
             name, symbol = l.text[:-1].split(' (')
-            token = Token(name, symbol, address)
+            token = Token(name, symbol, Web3.toChecksumAddress(address))
             if symbol in self.symbols:
                 print_error(f'Duplicate symbol {symbol} for token {name}. Ignoring.')
                 self.ignored.append(token)
@@ -72,30 +69,21 @@ class EthereumNetworkGenerator(object):
         if self.ignored:
             print_error(f'Ignored {len(self.ignored)} tokens.')
 
-    def create_files(self):
+    def save_tokens(self):
 
+        sorted_tokens = sorted(self.tokens, key=attrgetter('name'))
         base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        network_dir = os.path.join(base_dir, 'clove/network/ethereum_based/')
+        tokens_file = os.path.join(base_dir, 'clove/network/ethereum_based/mainnet_tokens.py')
 
-        for token in self.tokens:
-            class_name = ''.join(c for c in token.name if c in string.ascii_letters + string.digits)
-            class_name = class_name.lstrip(string.digits)
-            network_file = os.path.join(network_dir, f'{class_name}.py')
-            if os.path.isfile(network_file):
-                continue
-            f = open(network_file, 'w')
-            f.write(f'''
-from clove.network.ethereum.base import EthereumBaseNetwork
+        f = open(tokens_file, 'w')
+        f.write('''from clove.network.ethereum_based import Token
 
-
-class {class_name}(EthereumBaseNetwork):
-
-    name = '{token.name}'
-    symbols = ('{token.symbol}', )
-    token_address = '{token.address}'
+tokens = (
 ''')
-            f.close()
-            print_section(f'{network_file} created.')
+        for token in sorted_tokens:
+            f.write(f"    Token('{token.name}', '{token.symbol}', '{token.address}'),\n")
+        f.write(')\n')
+        f.close()
 
 
 if __name__ == '__main__':
@@ -111,4 +99,4 @@ if __name__ == '__main__':
         print_section('Bye!')
         exit()
 
-    network_generator.create_files()
+    network_generator.save_tokens()
