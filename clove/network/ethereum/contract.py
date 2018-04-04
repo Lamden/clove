@@ -31,13 +31,27 @@ class EthereumContract(object):
         self.recipient_address = Web3.toChecksumAddress(self.inputs['_participant'])
         self.refund_address = self.tx_dict['from']
         self.secret_hash = self.inputs['_hash'].hex()
-
-        self.value = self.tx_dict['value']
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
+
+        if self.is_token:
+            self.value = self.inputs['_value']
+            self.token_address = Web3.toChecksumAddress(self.inputs['_token'])
+            self.symbol = self.network.get_token_symbol(self.token_address)
+        else:
+            self.value = self.tx_dict['value']
+            self.symbol = self.network.default_symbol
+
+    @property
+    def is_eth_contract(self):
+        return self.tx_dict['to'] == self.network.eth_swap_contract_address
 
     @property
     def is_initiate(self):
-        return self.method_id == self.network.initiate
+        return self.method_id in (self.network.initiate, self.network.initiate_token)
+
+    @property
+    def is_token(self):
+        return self.method_id == self.network.initiate_token
 
     def participate(
         self,
@@ -54,7 +68,8 @@ class EthereumContract(object):
                 sender_address,
                 recipient_address,
                 value,
-                self.secret_hash
+                self.secret_hash,
+                token_address,
             )
         return network.atomic_swap(
             sender_address,
@@ -64,7 +79,7 @@ class EthereumContract(object):
             self.secret_hash,
         )
 
-    def redeem(self, secret: str, gas_price: int=None) -> EthereumTransaction:
+    def redeem(self, secret: str) -> EthereumTransaction:
         contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
         redeem_func = contract.functions.redeem(secret)
         tx_dict = {
@@ -72,9 +87,6 @@ class EthereumContract(object):
             'value': 0,
             'gas': ETH_REDEEM_GAS_LIMIT,
         }
-
-        if gas_price:
-            tx_dict['gasPrice'] = gas_price
 
         tx_dict = redeem_func.buildTransaction(tx_dict)
 
@@ -89,7 +101,7 @@ class EthereumContract(object):
         )
         return transaction
 
-    def refund(self, gas_price: int=None):
+    def refund(self):
         contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
 
         if self.locktime > datetime.utcnow():
@@ -102,8 +114,6 @@ class EthereumContract(object):
             'value': 0,
             'gas': ETH_REFUND_GAS_LIMIT,
         }
-        if gas_price:
-            tx_dict['gasPrice'] = gas_price
 
         tx_dict = refund_func.buildTransaction(tx_dict)
 
@@ -119,14 +129,17 @@ class EthereumContract(object):
         return transaction
 
     def show_details(self):
-        value_text = Web3.fromWei(self.tx_dict['value'], 'ether')
-        return {
+        value_text = self.network.value_to_decimal(self.value)
+        details = {
             'contract_address': self.contract_address,
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.refund_address,
             'secret_hash': self.secret_hash,
             'transaction_address': self.tx_dict['hash'].hex(),
-            'value': self.tx_dict['value'],
-            'value_text': f'{value_text:.18f} {self.network.default_symbol}',
+            'value': self.value,
+            'value_text': f'{value_text:.18f} {self.symbol}',
         }
+        if self.is_token:
+            details['token_address'] = self.token_address
+        return details
