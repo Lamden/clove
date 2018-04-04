@@ -47,7 +47,6 @@ class EthereumAtomicSwapTransaction(EthereumTransaction):
         recipient_address: str,
         value: int,
         secret_hash: str=None,
-        token_address: str=None,
         gas_price: int=None,
         gas_limit: int=None,
     ):
@@ -63,13 +62,10 @@ class EthereumAtomicSwapTransaction(EthereumTransaction):
         self.set_locktime()
         self.set_secrets()
 
-        if token_address:
-            self.token_address = self.network.unify_address(sender_address)
-            self.contract_address = self.network.token_swap_contract_address
-            self.abi = self.network.token_abi
-        else:
-            self.contract_address = self.network.eth_swap_contract_address
-            self.abi = self.network.eth_abi
+        self.contract_address = self.network.contract_address
+        self.abi = self.network.abi
+        if hasattr(self.network, 'token_address'):
+            self.token_address = self.network.token_address
 
         self.set_contract()
 

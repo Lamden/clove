@@ -5,7 +5,6 @@ from clove.network.bitcoin_based.bata import Bata, BataTestNet
 from clove.network.bitcoin_based.bitcoin_cash import BitcoinCash, BitcoinCashTestNet
 from clove.network.bitcoin_based.bitcoin_gold import BitcoinGold, BitcoinGoldTestNet
 from clove.network.bitcoin_based.bitcore import Bitcore, BitcoreTestNet
-from clove.network.bitcoin_based.bitmark import Bitmark
 from clove.network.bitcoin_based.bitsend import BitSend, BitSendTestNet
 from clove.network.bitcoin_based.blackcoin import BlackCoin
 from clove.network.bitcoin_based.blocknet import Blocknet
@@ -63,7 +62,6 @@ BITCOIN_BASED = (
     BitcoinCash, BitcoinCashTestNet,
     BitcoinGold, BitcoinGoldTestNet,
     Bitcore, BitcoreTestNet,
-    Bitmark,
     BitSend, BitSendTestNet,
     BlackCoin,
     Blocknet,
@@ -116,5 +114,6 @@ BITCOIN_BASED = (
 ETHEREUM_BASED = (
     Ethereum, EthereumTestnet,
 )
+
 
 __all__ = BITCOIN_BASED + ETHEREUM_BASED

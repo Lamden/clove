@@ -22,8 +22,8 @@ class EthereumContract(object):
         if not self.is_initiate:
             raise ValueError('Not a contract transaction.')
 
-        input_types = get_abi_input_types(find_matching_fn_abi(self.abi, fn_identifier=self.type))
-        input_names = get_abi_input_names(find_matching_fn_abi(self.abi, fn_identifier=self.type))
+        input_types = get_abi_input_types(find_matching_fn_abi(self.network.abi, fn_identifier=self.type))
+        input_names = get_abi_input_names(find_matching_fn_abi(self.network.abi, fn_identifier=self.type))
         input_values = decode_abi(input_types, Web3.toBytes(hexstr=self.tx_dict['input'][10:]))
         self.inputs = dict(zip(input_names, input_values))
 
@@ -36,18 +36,8 @@ class EthereumContract(object):
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
 
     @property
-    def is_eth_contract(self):
-        return self.tx_dict['to'] == self.network.eth_swap_contract_address
-
-    @property
     def is_initiate(self):
         return self.method_id == self.network.initiate
-
-    @property
-    def abi(self):
-        if self.is_eth_contract:
-            return self.network.eth_abi
-        return self.network.token_abi
 
     def participate(
         self,
@@ -75,7 +65,7 @@ class EthereumContract(object):
         )
 
     def redeem(self, secret: str, gas_price: int=None) -> EthereumTransaction:
-        contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.abi)
+        contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
         redeem_func = contract.functions.redeem(secret)
         tx_dict = {
             'nonce': self.network.web3.eth.getTransactionCount(self.recipient_address),
@@ -100,7 +90,7 @@ class EthereumContract(object):
         return transaction
 
     def refund(self, gas_price: int=None):
-        contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.abi)
+        contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
 
         if self.locktime > datetime.utcnow():
             locktime_string = self.locktime.strftime('%Y-%m-%d %H:%M:%S')
