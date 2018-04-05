@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from .conftest import eth_initial_transaction, eth_redeem_tranaction
+from .conftest import eth_initial_transaction, eth_redeem_tranaction, token_initial_transaction
 
 from clove.constants import ETH_REFUND_GAS_LIMIT
 from clove.network import EthereumTestnet
@@ -31,6 +31,23 @@ def test_eth_audit_contract(transaction_mock, infura_token):
         'transaction_address': '0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41',
         'value': 12,
         'value_text': '0.000000000000000012 ETH'
+    }
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(token_initial_transaction, ))
+def test_token_audit_contract(transaction_mock, infura_token):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0x316d3aaa252adb025c3486cf83949245f3f10edc169e1eb0772ed074fddb8be6')
+    assert contract.show_details() == {
+        'contract_address': '0x7657Ca877Fac31D20528B473162E39B6E152fd2e',
+        'locktime': datetime(2018, 4, 1, 14, 8, 36),
+        'recipient_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+        'refund_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+        'secret_hash': '06821b98736162c1b007155e818536ec5fd57950',
+        'transaction_address': '0x316d3aaa252adb025c3486cf83949245f3f10edc169e1eb0772ed074fddb8be6',
+        'value': 100,
+        'value_text': '0.000000000000000100 BBT',
+        'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf',
     }
 
 
