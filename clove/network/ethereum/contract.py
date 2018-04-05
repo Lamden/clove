@@ -18,12 +18,18 @@ class EthereumContract(object):
         self.tx_dict = tx_dict
         self.method_id = self.network.extract_method_id(tx_dict['input'])
         self.type = self.network.get_method_name(self.method_id)
+        self.token = None
 
         if not self.is_initiate:
             raise ValueError('Not a contract transaction.')
 
-        input_types = get_abi_input_types(find_matching_fn_abi(self.network.abi, fn_identifier=self.type))
-        input_names = get_abi_input_names(find_matching_fn_abi(self.network.abi, fn_identifier=self.type))
+        if self.is_token_contract:
+            self.abi = self.network.token_abi
+        else:
+            self.abi = self.network.abi
+
+        input_types = get_abi_input_types(find_matching_fn_abi(self.abi, fn_identifier=self.type))
+        input_names = get_abi_input_names(find_matching_fn_abi(self.abi, fn_identifier=self.type))
         input_values = decode_abi(input_types, Web3.toBytes(hexstr=self.tx_dict['input'][10:]))
         self.inputs = dict(zip(input_names, input_values))
 
@@ -33,10 +39,11 @@ class EthereumContract(object):
         self.secret_hash = self.inputs['_hash'].hex()
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
 
-        if self.is_token:
+        if self.is_token_contract:
             self.value = self.inputs['_value']
             self.token_address = Web3.toChecksumAddress(self.inputs['_token'])
-            self.symbol = self.network.get_token_symbol(self.token_address)
+            self.token = self.network.get_token_by_address(self.token_address)
+            self.symbol = self.token.symbol
         else:
             self.value = self.tx_dict['value']
             self.symbol = self.network.default_symbol
@@ -50,7 +57,7 @@ class EthereumContract(object):
         return self.method_id in (self.network.initiate, self.network.initiate_token)
 
     @property
-    def is_token(self):
+    def is_token_contract(self):
         return self.method_id == self.network.initiate_token
 
     def participate(
@@ -140,6 +147,6 @@ class EthereumContract(object):
             'value': self.value,
             'value_text': f'{value_text:.18f} {self.symbol}',
         }
-        if self.is_token:
+        if self.token:
             details['token_address'] = self.token_address
         return details

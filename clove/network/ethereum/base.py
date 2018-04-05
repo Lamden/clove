@@ -172,6 +172,10 @@ class EthereumBaseNetwork(BaseNetwork):
             return
         return cls.token_class.from_namedtuple(token)
 
+    @property
+    def token_abi(self):
+        return self.token_class.abi
+
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:
         return Web3.toHex(rlp.encode(transaction))

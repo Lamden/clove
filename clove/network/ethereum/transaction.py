@@ -42,14 +42,14 @@ class EthereumTokenTransaction(EthereumTransaction):
     def __init__(self, network):
         super().__init__(network)
 
-        self.is_token = False
+        self.token = None
         self.value = None
         self.symbol = None
 
     def show_details(self):
         details = super().show_details()
 
-        if self.is_token:
+        if self.token:
             value_text = self.network.value_to_decimal(self.value)
             details['value_text'] = f'{value_text:.18f} {self.symbol}'
             details['value'] = self.value
@@ -69,8 +69,6 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
         gas_limit: int=None,
     ):
         super().__init__(network)
-
-        self.is_token = True
 
         self.sender_address = self.network.unify_address(sender_address)
         self.value = value
@@ -153,7 +151,6 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         self.set_secrets()
 
         if self.token:
-            self.is_token = True
             self.token_address = self.token.token_address
             self.symbol = self.token.symbol
             self.contract_address = self.token.contract_address
@@ -256,6 +253,6 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         details['transaction_address'] = details.pop('hash')
         details['contract_address'] = self.contract_address
         details['refund_address'] = self.sender_address
-        if self.is_token:
+        if self.token:
             details['token_address'] = self.token_address
         return details
