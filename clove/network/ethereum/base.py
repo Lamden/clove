@@ -11,9 +11,8 @@ from web3.utils.datastructures import AttributeDict
 
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
-from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
+from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
 from clove.network.ethereum_based import Token
-from clove.network.ethereum_based.mainnet_tokens import tokens
 
 
 class EthereumBaseNetwork(BaseNetwork):
@@ -25,6 +24,8 @@ class EthereumBaseNetwork(BaseNetwork):
     infura_network = None
     ethereum_based = True
     contract_address = None
+    tokens = []
+    token_class = None
 
     def __init__(self):
 
@@ -32,6 +33,7 @@ class EthereumBaseNetwork(BaseNetwork):
 
         # Method IDs for transaction building. Built on the fly for developer reference (keeping away from magics)
         self.initiate = self.method_id('initiate(uint256,bytes20,address)')
+        self.initiate_token = self.method_id('initiate(uint256,bytes20,address,address,uint256)')
         self.redeem = self.method_id('redeem(bytes32)')
         self.refund = self.method_id('refund(bytes20)')
 
@@ -53,9 +55,18 @@ class EthereumBaseNetwork(BaseNetwork):
     def get_method_name(self, method_id):
         return {
             self.initiate: 'initiate',
+            self.initiate_token: 'initiate',
             self.redeem: 'redeem',
             self.refund: 'refund',
         }[method_id]
+
+    @staticmethod
+    def value_to_decimal(value: int):
+        return Web3.fromWei(value, 'ether')
+
+    @staticmethod
+    def value_from_decimal(value: float):
+        return Web3.toWei(value, 'ether')
 
     @staticmethod
     def unify_address(address):
@@ -63,17 +74,15 @@ class EthereumBaseNetwork(BaseNetwork):
         if len(address) == 40:
             address = '0x' + address
         int(address, 16)
-        return address
+        return Web3.toChecksumAddress(address)
 
     def atomic_swap(
         self,
         sender_address: str,
         recipient_address: str,
-        value: float,
+        value: int,
         secret_hash: bytes=None,
         token_address: str=None,
-        gas_price: int=None,
-        gas_limit: int=None,
     ) -> EthereumAtomicSwapTransaction:
 
         token = None
@@ -83,14 +92,35 @@ class EthereumBaseNetwork(BaseNetwork):
                 raise ValueError('Unknown token')
 
         transaction = EthereumAtomicSwapTransaction(
-            token or self,
+            self,
             sender_address,
             recipient_address,
             value,
             secret_hash,
-            gas_price,
-            gas_limit,
+            token,
         )
+        return transaction
+
+    def approve_token(
+        self,
+        sender_address: str,
+        value: int,
+        token_address: str=None,
+    ) -> EthereumTokenApprovalTransaction:
+
+        token = None
+        if token_address:
+            token = self.get_token_by_address(token_address)
+            if not token:
+                raise ValueError('Unknown token')
+
+        transaction = EthereumTokenApprovalTransaction(
+            self,
+            sender_address,
+            value,
+            token,
+        )
+
         return transaction
 
     @staticmethod
@@ -115,28 +145,28 @@ class EthereumBaseNetwork(BaseNetwork):
         input_values = decode_abi(input_types, Web3.toBytes(hexstr=tx_dict['input'][10:]))
         return input_values[0].hex()
 
-    @staticmethod
-    def get_token_by_attribute(name: str, value: str) -> Optional[Token]:
-        for token in tokens:
+    @classmethod
+    def get_token_by_attribute(cls, name: str, value: str) -> Optional[Token]:
+        for token in cls.tokens:
             if getattr(token, name).lower() == value.lower():
                 return token
 
     def get_token_by_address(self, address: str):
-        from clove.network.ethereum.token import EthereumToken
-
         token = self.get_token_by_attribute('address', address)
         if not token:
             return
-        return EthereumToken.from_namedtuple(token)
+        return self.token_class.from_namedtuple(token)
 
     @classmethod
     def get_token_by_symbol(cls, symbol: str):
-        from clove.network.ethereum.token import EthereumToken
-
         token = cls.get_token_by_attribute('symbol', symbol)
         if not token:
             return
-        return EthereumToken.from_namedtuple(token)
+        return cls.token_class.from_namedtuple(token)
+
+    @property
+    def token_abi(self):
+        return self.token_class.abi
 
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:

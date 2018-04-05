@@ -1,6 +1,3 @@
-from clove.network import Ethereum, EthereumTestnet
-
-
 class TokenMixin(object):
 
     abi = [{
@@ -49,22 +46,40 @@ class TokenMixin(object):
         "stateMutability": "nonpayable",
         "type": "function"
     }]
+    approve_abi = [{
+        "constant": False,
+        "inputs": [{
+            "name": "spender",
+            "type": "address"
+        }, {
+            "name": "tokens",
+            "type": "uint256"
+        }],
+        "name": "approve",
+        "outputs": [{
+            "name": "success",
+            "type": "bool"
+        }],
+        "payable": False,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }]
     token_address = None
 
     @classmethod
     def from_namedtuple(cls, token):
         token_instance = cls()
-        token_instance.symbols = (token.symbol, )
+        token_instance.symbol = token.symbol
         token_instance.token_address = token.address
         token_instance.name = token.name
         return token_instance
 
 
-class EthereumToken(Ethereum, TokenMixin):
+class EthereumToken(TokenMixin):
 
     pass
 
 
-class EthereumTestnetToken(EthereumTestnet, TokenMixin):
+class EthereumTestnetToken(TokenMixin):
 
     contract_address = '0x7657Ca877Fac31D20528B473162E39B6E152fd2e'

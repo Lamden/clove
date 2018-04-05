@@ -5,6 +5,7 @@ from ethereum.transactions import Transaction
 import rlp
 from web3 import Web3
 
+from clove.constants import ETH_TOKEN_SWAP_GAS_LIMIT
 from clove.utils.hashing import generate_secret_with_hash
 
 
@@ -21,7 +22,7 @@ class EthereumTransaction(object):
 
     def show_details(self):
         details = self.tx.to_dict()
-        value_text = Web3.fromWei(self.tx.value, 'ether')
+        value_text = self.network.value_to_decimal(self.tx.value)
         details['value_text'] = f'{value_text:.18f} {self.network.default_symbol}'
         return details
 
@@ -36,19 +37,91 @@ class EthereumTransaction(object):
         return Web3.toHex(self.tx.hash)
 
 
-class EthereumAtomicSwapTransaction(EthereumTransaction):
+class EthereumTokenTransaction(EthereumTransaction):
+
+    def __init__(self, network):
+        super().__init__(network)
+
+        self.token = None
+        self.value = None
+        self.symbol = None
+
+    def show_details(self):
+        details = super().show_details()
+
+        if self.token:
+            value_text = self.network.value_to_decimal(self.value)
+            details['value_text'] = f'{value_text:.18f} {self.symbol}'
+            details['value'] = self.value
+
+        return details
+
+
+class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
+
+    def __init__(
+        self,
+        network,
+        sender_address: str,
+        value: int,
+        token=None,
+    ):
+        super().__init__(network)
+
+        self.sender_address = self.network.unify_address(sender_address)
+        self.value = value
+        self.token = token
+        self.token_address = self.token.token_address
+        self.symbol = self.token.symbol
+
+        self.contract = self.network.web3.eth.contract(address=self.token_address, abi=self.token.approve_abi)
+
+        approve_func = self.contract.functions.approve(
+            self.token.contract_address,
+            self.value,
+        )
+
+        tx_dict = {
+            'nonce': self.network.web3.eth.getTransactionCount(self.sender_address),
+            'from': self.sender_address,
+        }
+
+        tx_dict = approve_func.buildTransaction(tx_dict)
+
+        self.gas_limit = approve_func.estimateGas({
+            key: value for key, value in tx_dict.items() if key not in ('to', 'data')
+        })
+
+        self.tx = Transaction(
+            nonce=tx_dict['nonce'],
+            gasprice=tx_dict['gasPrice'],
+            startgas=self.gas_limit,
+            to=tx_dict['to'],
+            value=tx_dict['value'],
+            data=Web3.toBytes(hexstr=tx_dict['data']),
+        )
+
+    def show_details(self):
+        details = super().show_details()
+        details['contract_address'] = self.token.contract_address
+        details['transaction_address'] = details.pop('hash')
+        details['token_address'] = Web3.toChecksumAddress(details.pop('to'))
+        details['sender_address'] = self.sender_address
+        return details
+
+
+class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
     init_hours = 48
     participate_hours = 24
 
     def __init__(
         self,
-        network: str,
+        network,
         sender_address: str,
         recipient_address: str,
         value: int,
         secret_hash: str=None,
-        gas_price: int=None,
-        gas_limit: int=None,
+        token=None,
     ):
         super().__init__(network)
 
@@ -57,17 +130,26 @@ class EthereumAtomicSwapTransaction(EthereumTransaction):
         self.secret = None
         self.secret_hash = secret_hash
         self.value = value
-        self.gas_price = gas_price
-        self.gas_limit = gas_limit
+        self.token = token
+        self.gas_limit = None
+        self.contract = None
+        self.locktime = None
+        self.locktime_unix = None
+
         self.set_locktime()
         self.set_secrets()
 
-        self.contract_address = self.network.contract_address
-        self.abi = self.network.abi
-        if hasattr(self.network, 'token_address'):
-            self.token_address = self.network.token_address
-
-        self.set_contract()
+        if self.token:
+            self.token_address = self.token.token_address
+            self.symbol = self.token.symbol
+            self.contract_address = self.token.contract_address
+            self.abi = self.token.abi
+            self.set_token_contract()
+        else:
+            self.symbol = self.network.default_symbol
+            self.contract_address = self.network.contract_address
+            self.abi = self.network.abi
+            self.set_contract()
 
     def set_secrets(self):
 
@@ -98,20 +180,45 @@ class EthereumAtomicSwapTransaction(EthereumTransaction):
             'value': self.value,
         }
 
-        if self.gas_price:
-            tx_dict['gasPrice'] = self.gas_price
-
         tx_dict = initiate_func.buildTransaction(tx_dict)
 
-        if not self.gas_limit:
-            self.gas_limit = initiate_func.estimateGas({
-                key: value for key, value in tx_dict.items() if key not in ('to', 'data')
-            })
+        self.gas_limit = initiate_func.estimateGas({
+            key: value for key, value in tx_dict.items() if key not in ('to', 'data')
+        })
 
         self.tx = Transaction(
             nonce=tx_dict['nonce'],
             gasprice=tx_dict['gasPrice'],
             startgas=self.gas_limit,
+            to=tx_dict['to'],
+            value=tx_dict['value'],
+            data=Web3.toBytes(hexstr=tx_dict['data']),
+        )
+
+    def set_token_contract(self):
+        self.contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.abi)
+
+        initiate_func = self.contract.functions.initiate(
+            self.locktime_unix,
+            self.secret_hash,
+            self.recipient_address,
+            self.token_address,
+            self.value
+        )
+
+        tx_dict = {
+            'nonce': self.network.web3.eth.getTransactionCount(self.sender_address),
+            'from': self.sender_address,
+            'value': 0,
+            'gas': ETH_TOKEN_SWAP_GAS_LIMIT,
+        }
+
+        tx_dict = initiate_func.buildTransaction(tx_dict)
+
+        self.tx = Transaction(
+            nonce=tx_dict['nonce'],
+            gasprice=tx_dict['gasPrice'],
+            startgas=tx_dict['gas'],
             to=tx_dict['to'],
             value=tx_dict['value'],
             data=Web3.toBytes(hexstr=tx_dict['data']),
@@ -128,4 +235,6 @@ class EthereumAtomicSwapTransaction(EthereumTransaction):
         details['transaction_address'] = details.pop('hash')
         details['contract_address'] = self.contract_address
         details['refund_address'] = self.sender_address
+        if self.token:
+            details['token_address'] = self.token_address
         return details
