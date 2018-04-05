@@ -52,6 +52,14 @@ eth_initial_transaction = AttributeDict({
     'value': 12
 })
 
+eth_unsupported_transaction = AttributeDict({
+    'input': (
+        '0xeb7ae1ed000000000000000000000000000000000000000000000000000000005abe25ea10ff9'
+        '72f3d8181f603aa7f6b4bc172de730fec2b00000000000000000000000000000000000000000000'
+        '0000d867f293ba129629a9f9355fa285b8d3711a9092'
+    ),
+})
+
 eth_redeem_tranaction = AttributeDict({
     'blockHash': HexBytes('0x4a1f01ed71161e103d0fc4a82ec2facdc1b685e3a597fca07bb9b822b74ed686'),
     'blockNumber': 6612187,

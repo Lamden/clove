@@ -9,14 +9,25 @@ from bitcoin.base58 import Base58ChecksumError, InvalidBase58Error
 from bitcoin.core import b2lx, b2x, script
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
-    MSG_TX, MsgSerializable, msg_getdata, msg_inv, msg_ping, msg_pong, msg_reject, msg_tx, msg_verack, msg_version
+    MSG_TX,
+    MsgSerializable,
+    msg_getdata,
+    msg_inv,
+    msg_ping,
+    msg_pong,
+    msg_reject,
+    msg_tx,
+    msg_verack,
+    msg_version,
 )
 from bitcoin.net import CInv
 from bitcoin.wallet import CBitcoinAddress, CBitcoinAddressError
 
 from clove.constants import (
-    BLOCKCYPHER_SUPPORTED_NETWORKS, CRYPTOID_SUPPORTED_NETWORKS, NODE_COMMUNICATION_TIMEOUT,
-    TRANSACTION_BROADCASTING_MAX_ATTEMPTS
+    BLOCKCYPHER_SUPPORTED_NETWORKS,
+    CRYPTOID_SUPPORTED_NETWORKS,
+    NODE_COMMUNICATION_TIMEOUT,
+    TRANSACTION_BROADCASTING_MAX_ATTEMPTS,
 )
 from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
 from clove.network.base import BaseNetwork
@@ -25,8 +36,10 @@ from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.network.bitcoin.wallet import BitcoinWallet
 from clove.utils.bitcoin import auto_switch_params, deserialize_raw_transaction
 from clove.utils.external_source import (
-    extract_scriptsig_from_redeem_transaction, get_fee_from_blockcypher, get_fee_from_last_transactions,
-    get_utxo_from_api
+    extract_scriptsig_from_redeem_transaction,
+    get_fee_from_blockcypher,
+    get_fee_from_last_transactions,
+    get_utxo_from_api,
 )
 from clove.utils.logging import logger
 from clove.utils.network import generate_params_object
