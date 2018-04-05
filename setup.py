@@ -27,7 +27,7 @@ setup(
         'testing': [
             'tox==2.9.1',
             'pytest==3.3.2',
-            'isort==4.2.15',
+            'isort==4.3.4',
             'flake8==3.5.0',
             'freezegun==0.3.9',
             'validators==0.12.0',

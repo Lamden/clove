@@ -3,9 +3,15 @@ from unittest.mock import patch
 
 import pytest
 
-from .conftest import eth_initial_transaction, eth_redeem_tranaction, token_initial_transaction
+from .conftest import (
+    eth_initial_transaction,
+    eth_redeem_tranaction,
+    eth_unsupported_transaction,
+    token_initial_transaction,
+)
 
 from clove.constants import ETH_REFUND_GAS_LIMIT
+from clove.exceptions import UnsupportedTransactionType
 from clove.network import EthereumTestnet
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
 
@@ -49,6 +55,14 @@ def test_token_audit_contract(transaction_mock, infura_token):
         'value_text': '0.000000000000000100 BBT',
         'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf',
     }
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_unsupported_transaction, ))
+def test_eth_audit_contract_unsupported_transaction(transaction_mock, infura_token):
+    network = EthereumTestnet()
+    with pytest.raises(UnsupportedTransactionType) as error:
+        network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
+    assert error.value.message.startswith('Unrecognized method id')
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_redeem_tranaction, ))

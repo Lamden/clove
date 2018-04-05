@@ -9,6 +9,7 @@ from web3.utils.abi import get_abi_input_types
 from web3.utils.contracts import find_matching_fn_abi
 from web3.utils.datastructures import AttributeDict
 
+from clove.exceptions import UnsupportedTransactionType
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
@@ -53,12 +54,15 @@ class EthereumBaseNetwork(BaseNetwork):
         return tx_input[2:10]
 
     def get_method_name(self, method_id):
-        return {
-            self.initiate: 'initiate',
-            self.initiate_token: 'initiate',
-            self.redeem: 'redeem',
-            self.refund: 'refund',
-        }[method_id]
+        try:
+            return {
+                self.initiate: 'initiate',
+                self.initiate_token: 'initiate',
+                self.redeem: 'redeem',
+                self.refund: 'refund',
+            }[method_id]
+        except KeyError:
+            raise UnsupportedTransactionType(f'Unrecognized method id {self.method_id}')
 
     @staticmethod
     def value_to_decimal(value: int):
