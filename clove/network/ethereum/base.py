@@ -83,8 +83,6 @@ class EthereumBaseNetwork(BaseNetwork):
         value: int,
         secret_hash: bytes=None,
         token_address: str=None,
-        gas_price: int=None,
-        gas_limit: int=None,
     ) -> EthereumAtomicSwapTransaction:
 
         token = None
@@ -100,8 +98,6 @@ class EthereumBaseNetwork(BaseNetwork):
             value,
             secret_hash,
             token,
-            gas_price,
-            gas_limit,
         )
         return transaction
 
@@ -110,8 +106,6 @@ class EthereumBaseNetwork(BaseNetwork):
         sender_address: str,
         value: int,
         token_address: str=None,
-        gas_price: int = None,
-        gas_limit: int = None,
     ) -> EthereumTokenApprovalTransaction:
 
         token = None
@@ -125,8 +119,6 @@ class EthereumBaseNetwork(BaseNetwork):
             sender_address,
             value,
             token,
-            gas_price,
-            gas_limit,
         )
 
         return transaction

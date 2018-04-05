@@ -65,16 +65,12 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
         sender_address: str,
         value: int,
         token=None,
-        gas_price: int=None,
-        gas_limit: int=None,
     ):
         super().__init__(network)
 
         self.sender_address = self.network.unify_address(sender_address)
         self.value = value
         self.token = token
-        self.gas_price = gas_price
-        self.gas_limit = gas_limit
         self.token_address = self.token.token_address
         self.symbol = self.token.symbol
 
@@ -90,15 +86,11 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
             'from': self.sender_address,
         }
 
-        if self.gas_price:
-            tx_dict['gasPrice'] = self.gas_price
-
         tx_dict = approve_func.buildTransaction(tx_dict)
 
-        if not self.gas_limit:
-            self.gas_limit = approve_func.estimateGas({
-                key: value for key, value in tx_dict.items() if key not in ('to', 'data')
-            })
+        self.gas_limit = approve_func.estimateGas({
+            key: value for key, value in tx_dict.items() if key not in ('to', 'data')
+        })
 
         self.tx = Transaction(
             nonce=tx_dict['nonce'],
@@ -130,8 +122,6 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         value: int,
         secret_hash: str=None,
         token=None,
-        gas_price: int=None,
-        gas_limit: int=None,
     ):
         super().__init__(network)
 
@@ -141,8 +131,7 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         self.secret_hash = secret_hash
         self.value = value
         self.token = token
-        self.gas_price = gas_price
-        self.gas_limit = gas_limit
+        self.gas_limit = None
         self.contract = None
         self.locktime = None
         self.locktime_unix = None
@@ -191,15 +180,11 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             'value': self.value,
         }
 
-        if self.gas_price:
-            tx_dict['gasPrice'] = self.gas_price
-
         tx_dict = initiate_func.buildTransaction(tx_dict)
 
-        if not self.gas_limit:
-            self.gas_limit = initiate_func.estimateGas({
-                key: value for key, value in tx_dict.items() if key not in ('to', 'data')
-            })
+        self.gas_limit = initiate_func.estimateGas({
+            key: value for key, value in tx_dict.items() if key not in ('to', 'data')
+        })
 
         self.tx = Transaction(
             nonce=tx_dict['nonce'],
@@ -227,9 +212,6 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             'value': 0,
             'gas': ETH_TOKEN_SWAP_GAS_LIMIT,
         }
-
-        if self.gas_price:
-            tx_dict['gasPrice'] = self.gas_price
 
         tx_dict = initiate_func.buildTransaction(tx_dict)
 
