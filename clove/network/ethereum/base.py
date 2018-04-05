@@ -5,10 +5,12 @@ from eth_abi import decode_abi
 from ethereum.transactions import Transaction
 import rlp
 from web3 import HTTPProvider, Web3
+from web3.contract import ConciseContract
 from web3.utils.abi import get_abi_input_types
 from web3.utils.contracts import find_matching_fn_abi
 from web3.utils.datastructures import AttributeDict
 
+from clove.constants import ERC20_BASIC_ABI
 from clove.exceptions import UnsupportedTransactionType
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
@@ -155,8 +157,20 @@ class EthereumBaseNetwork(BaseNetwork):
             if getattr(token, name).lower() == value.lower():
                 return token
 
+    def get_token_from_token_contract(self, token_address: str) -> Optional[Token]:
+        token_address = self.unify_address(token_address)
+        token_contract = self.web3.eth.contract(address=token_address, abi=ERC20_BASIC_ABI)
+        concise = ConciseContract(token_contract)
+        try:
+            name = concise.name()
+            symbol = concise.symbol()
+            precision = concise.decimals()  # noqa
+        except OverflowError:
+            return
+        return Token(name, symbol, token_address)
+
     def get_token_by_address(self, address: str):
-        token = self.get_token_by_attribute('address', address)
+        token = self.get_token_by_attribute('address', address) or self.get_token_from_token_contract(address)
         if not token:
             return
         return self.token_class.from_namedtuple(token)

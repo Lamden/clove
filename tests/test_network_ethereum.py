@@ -14,6 +14,7 @@ from clove.constants import ETH_REFUND_GAS_LIMIT
 from clove.exceptions import UnsupportedTransactionType
 from clove.network import EthereumTestnet
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
+from clove.network.ethereum_based import Token
 
 
 def test_atomic_swap(infura_token):
@@ -130,3 +131,19 @@ def test_token_atomic_swap(infura_token):
     assert details['value'] == 3
     assert details['value_text'] == '0.000000000000000003 BBT'
     assert details['token_address'] == swap_tx.token.token_address
+
+
+def test_get_token_from_token_contract(infura_token):
+
+    network = EthereumTestnet()
+    token = network.get_token_from_token_contract('0x53E546387A0d054e7FF127923254c0a679DA6DBf')
+    assert token == Token(name='BlockbustersTest', symbol='BBT', address='0x53E546387A0d054e7FF127923254c0a679DA6DBf')
+
+
+def test_get_token_by_address(infura_token):
+
+    network = EthereumTestnet()
+    token = network.get_token_by_address('0x53E546387A0d054e7FF127923254c0a679DA6DBf')
+    assert token.name == 'BlockbustersTest'
+    assert token.symbol == 'BBT'
+    assert token.token_address == '0x53E546387A0d054e7FF127923254c0a679DA6DBf'
