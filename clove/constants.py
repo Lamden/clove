@@ -49,3 +49,38 @@ NETWORKS_WITH_API = BLOCKCYPHER_SUPPORTED_NETWORKS + CRYPTOID_SUPPORTED_NETWORKS
 ETH_REDEEM_GAS_LIMIT = 100000
 ETH_REFUND_GAS_LIMIT = 100000
 ETH_TOKEN_SWAP_GAS_LIMIT = 300000
+
+ERC20_BASIC_ABI = [{
+    "constant": True,
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [{
+        "name": "",
+        "type": "string"
+    }],
+    "payable": False,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": True,
+    "inputs": [],
+    "name": "name",
+    "outputs": [{
+        "name": "",
+        "type": "string"
+    }],
+    "payable": False,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": True,
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{
+        "name": "",
+        "type": "uint8"
+    }],
+    "payable": False,
+    "stateMutability": "view",
+    "type": "function"
+}]
