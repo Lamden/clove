@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from typing import Optional
 
 from ethereum.transactions import Transaction
@@ -22,8 +23,9 @@ class EthereumTransaction(object):
 
     def show_details(self):
         details = self.tx.to_dict()
-        value_text = self.network.value_to_decimal(self.tx.value)
-        details['value_text'] = f'{value_text:.18f} {self.network.default_symbol}'
+        value = self.network.value_from_base_units(self.tx.value)
+        details['value'] = value
+        details['value_text'] = f'{value:.18f} {self.network.default_symbol}'
         return details
 
     def sign(self, private_key):
@@ -44,14 +46,14 @@ class EthereumTokenTransaction(EthereumTransaction):
 
         self.token = None
         self.value = None
+        self.value_base_units = None
         self.symbol = None
 
     def show_details(self):
         details = super().show_details()
 
         if self.token:
-            value_text = self.network.value_to_decimal(self.value)
-            details['value_text'] = f'{value_text:.18f} {self.symbol}'
+            details['value_text'] = self.token.get_value_text(self.value)
             details['value'] = self.value
 
         return details
@@ -63,7 +65,7 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
         self,
         network,
         sender_address: str,
-        value: int,
+        value: Decimal,
         token=None,
     ):
         super().__init__(network)
@@ -71,6 +73,7 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
         self.sender_address = self.network.unify_address(sender_address)
         self.value = value
         self.token = token
+        self.value_base_units = self.token.value_to_base_units(self.value)
         self.token_address = self.token.token_address
         self.symbol = self.token.symbol
 
@@ -78,7 +81,7 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
 
         approve_func = self.contract.functions.approve(
             self.token.contract_address,
-            self.value,
+            self.value_base_units,
         )
 
         tx_dict = {
@@ -119,7 +122,7 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         network,
         sender_address: str,
         recipient_address: str,
-        value: int,
+        value: Decimal,
         secret_hash: str=None,
         token=None,
     ):
@@ -144,11 +147,13 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             self.symbol = self.token.symbol
             self.contract_address = self.token.contract_address
             self.abi = self.token.abi
+            self.value_base_units = self.token.value_to_base_units(self.value)
             self.set_token_contract()
         else:
             self.symbol = self.network.default_symbol
             self.contract_address = self.network.contract_address
             self.abi = self.network.abi
+            self.value_base_units = self.network.value_to_base_units(self.value)
             self.set_contract()
 
     def set_secrets(self):
@@ -177,7 +182,7 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         tx_dict = {
             'nonce': self.network.web3.eth.getTransactionCount(self.sender_address),
             'from': self.sender_address,
-            'value': self.value,
+            'value': self.value_base_units,
         }
 
         tx_dict = initiate_func.buildTransaction(tx_dict)
@@ -203,7 +208,7 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             self.secret_hash,
             self.recipient_address,
             self.token_address,
-            self.value
+            self.value_base_units
         )
 
         tx_dict = {

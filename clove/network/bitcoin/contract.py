@@ -102,7 +102,7 @@ class BitcoinContract(object):
         symbol: str,
         sender_address: str,
         recipient_address: str,
-        value: int,
+        value: float,
         utxo: list=None,
         token_address: str=None,
     ):
@@ -118,7 +118,7 @@ class BitcoinContract(object):
         return network.atomic_swap(
             sender_address,
             recipient_address,
-            value,
+            str(value),
             self.secret_hash,
             token_address,
         )
