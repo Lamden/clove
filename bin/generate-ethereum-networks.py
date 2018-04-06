@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
 import argparse
-from collections import namedtuple
-from operator import attrgetter
 import os
+import time
 
 from pyquery import PyQuery as pq
 import requests
 from web3 import Web3
+from web3.contract import ConciseContract
+from web3.exceptions import BadFunctionCallOutput
 
 from script_utils import print_error, print_section
 
-Token = namedtuple('Token', 'name, symbol, address')
+from clove.constants import ERC20_BASIC_ABI
+from clove.network import Ethereum
+from clove.network.ethereum_based import Token
 
 
 class EthereumNetworkGenerator(object):
@@ -28,6 +31,7 @@ class EthereumNetworkGenerator(object):
         self.names = set()
         self.current_page = 1
         self.last_page = 999
+        self.network = Ethereum()
 
     def get_pagination(self):
         pagination = self.html.find('#ContentPlaceHolder1_divpagingpanel p span').text().split()
@@ -39,7 +43,12 @@ class EthereumNetworkGenerator(object):
         for l in links:
             address = l.attrib['href'].replace('/token/', '')
             name, symbol = l.text[:-1].split(' (')
-            token = Token(name, symbol, Web3.toChecksumAddress(address))
+            decimals = self.get_token_precision(address)
+            if not decimals:
+                print_error(f'Cannot define the number of decimal places for {name} ({symbol}). Ignoring.')
+                self.ignored.append(name)
+                continue
+            token = Token(name, symbol, Web3.toChecksumAddress(address), decimals)
             if symbol in self.symbols:
                 print_error(f'Duplicate symbol {symbol} for token {name}. Ignoring.')
                 self.ignored.append(token)
@@ -69,9 +78,22 @@ class EthereumNetworkGenerator(object):
         if self.ignored:
             print_error(f'Ignored {len(self.ignored)} tokens.')
 
+    def get_token_precision(self, token_address):
+        token_contract = ConciseContract(
+            self.network.web3.eth.contract(
+                address=Web3.toChecksumAddress(token_address),
+                abi=ERC20_BASIC_ABI,
+            )
+        )
+        time.sleep(0.5)  # we don't want to spam the API
+        try:
+            return token_contract.decimals()
+        except (OverflowError, BadFunctionCallOutput):
+            return
+
     def save_tokens(self):
 
-        sorted_tokens = sorted(self.tokens, key=attrgetter('name'))
+        sorted_tokens = sorted(self.tokens, key=lambda x: x.name.lower())
         base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
         tokens_file = os.path.join(base_dir, 'clove/network/ethereum_based/mainnet_tokens.py')
 
@@ -81,7 +103,7 @@ class EthereumNetworkGenerator(object):
 tokens = (
 ''')
         for token in sorted_tokens:
-            f.write(f"    Token('{token.name}', '{token.symbol}', '{token.address}'),\n")
+            f.write(f"    Token('{token.name}', '{token.symbol}', '{token.address}', {token.decimals}),\n")
         f.write(')\n')
         f.close()
 

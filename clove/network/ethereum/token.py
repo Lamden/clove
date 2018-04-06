@@ -72,6 +72,7 @@ class TokenMixin(object):
         token_instance.symbol = token.symbol
         token_instance.token_address = token.address
         token_instance.name = token.name
+        token_instance.decimals = token.decimals
         return token_instance
 
 
