@@ -137,7 +137,12 @@ def test_get_token_from_token_contract(infura_token):
 
     network = EthereumTestnet()
     token = network.get_token_from_token_contract('0x53E546387A0d054e7FF127923254c0a679DA6DBf')
-    assert token == Token(name='BlockbustersTest', symbol='BBT', address='0x53E546387A0d054e7FF127923254c0a679DA6DBf')
+    assert token == Token(
+        name='BlockbustersTest',
+        symbol='BBT',
+        address='0x53E546387A0d054e7FF127923254c0a679DA6DBf',
+        decimals=18,
+    )
 
 
 def test_get_token_by_address(infura_token):

@@ -164,10 +164,10 @@ class EthereumBaseNetwork(BaseNetwork):
         try:
             name = concise.name()
             symbol = concise.symbol()
-            precision = concise.decimals()  # noqa
+            decimals = concise.decimals()
         except OverflowError:
             return
-        return Token(name, symbol, token_address)
+        return Token(name, symbol, token_address, decimals)
 
     def get_token_by_address(self, address: str):
         token = self.get_token_by_attribute('address', address) or self.get_token_from_token_contract(address)

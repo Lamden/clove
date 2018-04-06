@@ -1,3 +1,3 @@
 from collections import namedtuple
 
-Token = namedtuple('Token', 'name, symbol, address')
+Token = namedtuple('Token', 'name, symbol, address, decimals')
