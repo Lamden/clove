@@ -1,3 +1,4 @@
+from decimal import Decimal
 import os
 from typing import Optional, Union
 
@@ -67,11 +68,11 @@ class EthereumBaseNetwork(BaseNetwork):
             raise UnsupportedTransactionType(f'Unrecognized method id {self.method_id}')
 
     @staticmethod
-    def value_to_decimal(value: int):
+    def value_from_base_units(value: int):
         return Web3.fromWei(value, 'ether')
 
     @staticmethod
-    def value_from_decimal(value: float):
+    def value_to_base_units(value: float):
         return Web3.toWei(value, 'ether')
 
     @staticmethod
@@ -86,10 +87,13 @@ class EthereumBaseNetwork(BaseNetwork):
         self,
         sender_address: str,
         recipient_address: str,
-        value: int,
+        value: Union[str, Decimal],
         secret_hash: bytes=None,
         token_address: str=None,
     ) -> EthereumAtomicSwapTransaction:
+
+        if not isinstance(value, Decimal):
+            value = Decimal(str(value))
 
         token = None
         if token_address:
@@ -110,9 +114,12 @@ class EthereumBaseNetwork(BaseNetwork):
     def approve_token(
         self,
         sender_address: str,
-        value: int,
+        value: Union[str, Decimal],
         token_address: str=None,
     ) -> EthereumTokenApprovalTransaction:
+
+        if not isinstance(value, Decimal):
+            value = Decimal(str(value))
 
         token = None
         if token_address:

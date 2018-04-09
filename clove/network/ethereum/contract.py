@@ -40,12 +40,14 @@ class EthereumContract(object):
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
 
         if self.is_token_contract:
-            self.value = self.inputs['_value']
+            self.value_base_units = self.inputs['_value']
             self.token_address = Web3.toChecksumAddress(self.inputs['_token'])
             self.token = self.network.get_token_by_address(self.token_address)
+            self.value = self.token.value_from_base_units(self.value_base_units)
             self.symbol = self.token.symbol
         else:
-            self.value = self.tx_dict['value']
+            self.value_base_units = self.tx_dict['value']
+            self.value = self.network.value_from_base_units(self.value_base_units)
             self.symbol = self.network.default_symbol
 
     @property
@@ -65,7 +67,7 @@ class EthereumContract(object):
         symbol: str,
         sender_address: str,
         recipient_address: str,
-        value: int,
+        value: float,
         utxo: list=None,
         token_address: str=None,
     ):
@@ -74,7 +76,7 @@ class EthereumContract(object):
             return network.atomic_swap(
                 sender_address,
                 recipient_address,
-                value,
+                str(value),
                 self.secret_hash,
                 token_address,
             )
@@ -136,7 +138,6 @@ class EthereumContract(object):
         return transaction
 
     def show_details(self):
-        value_text = self.network.value_to_decimal(self.value)
         details = {
             'contract_address': self.contract_address,
             'locktime': self.locktime,
@@ -145,8 +146,9 @@ class EthereumContract(object):
             'secret_hash': self.secret_hash,
             'transaction_address': self.tx_dict['hash'].hex(),
             'value': self.value,
-            'value_text': f'{value_text:.18f} {self.symbol}',
+            'value_text': f'{self.value:.18f} {self.symbol}',
         }
         if self.token:
+            details['value_text'] = self.token.get_value_text(self.value)
             details['token_address'] = self.token_address
         return details
