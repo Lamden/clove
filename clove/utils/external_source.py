@@ -36,8 +36,8 @@ def clove_req_json(url: str):
 def get_transaction(network: str, tx_hash: str, testnet: bool=False) -> Optional[dict]:
 
     symbol = network.lower()
-    if symbol not in NETWORKS_WITH_API:
-        raise ValueError('This network has not API.')
+    if symbol not in NETWORKS_WITH_API and symbol != 'RVN':
+        raise ValueError('This network has no API.')
 
     if symbol in BLOCKCYPHER_SUPPORTED_NETWORKS:
         if testnet and symbol != 'btc':
@@ -46,7 +46,10 @@ def get_transaction(network: str, tx_hash: str, testnet: bool=False) -> Optional
         api_url = f'https://api.blockcypher.com/v1/{symbol}/{network_url}/txs/{tx_hash}?limit=50&includeHex=true'
         return clove_req_json(api_url)
 
-    return clove_req(f'https://chainz.cryptoid.info/{symbol}/api.dws?q=txinfo&t={tx_hash}')
+    if symbol == 'RVN':
+        return clove_req_json(f'http://explorer.threeeyed.info/api/getrawtransaction?txid={tx_hash}&decrypt=1')
+
+    return clove_req_json(f'https://chainz.cryptoid.info/{symbol}/api.dws?q=txinfo&t={tx_hash}')
 
 
 def get_last_transactions(network: str) -> Optional[list]:

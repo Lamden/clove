@@ -1,3 +1,5 @@
+from functools import wraps
+
 from bitcoin.core import COIN, CTransaction, x
 
 from clove.exceptions import ImpossibleDeserialization
@@ -20,6 +22,7 @@ def deserialize_raw_transaction(raw_transaction: str) -> CTransaction:
 
 def auto_switch_params(args_index: int = 0):
     def wrap(f):
+        @wraps(f)
         def wrapped(*args, **kwargs):
             if 'network' in kwargs:
                 kwargs['network'].switch_params()

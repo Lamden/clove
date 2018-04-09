@@ -407,8 +407,13 @@ class BitcoinBaseNetwork(BaseNetwork):
         return transaction
 
     @auto_switch_params()
-    def audit_contract(self, contract: str, raw_transaction: str) -> BitcoinContract:
-        return BitcoinContract(self, contract, raw_transaction)
+    def audit_contract(
+        self,
+        contract: str,
+        raw_transaction: Optional[str]=None,
+        transaction_address: Optional[str]=None,
+    ) -> BitcoinContract:
+        return BitcoinContract(self, contract, raw_transaction, transaction_address)
 
     @classmethod
     @auto_switch_params()
