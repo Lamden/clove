@@ -16,6 +16,7 @@ class EthereumTransaction(object):
 
         self.network = network
         self.tx = None
+        self.value = None
 
     @property
     def raw_transaction(self) -> str:
@@ -23,7 +24,9 @@ class EthereumTransaction(object):
 
     def show_details(self):
         details = self.tx.to_dict()
-        value = self.network.value_from_base_units(self.tx.value)
+        value = self.value
+        if not value:
+            value = self.network.value_from_base_units(self.tx.value)
         details['value'] = value
         details['value_text'] = f'{value:.18f} {self.network.default_symbol}'
         return details
@@ -231,7 +234,8 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
 
     def show_details(self):
         details = super().show_details()
-        details['secret'] = self.secret.hex()
+        if self.secret:
+            details['secret'] = self.secret.hex()
         details['secret_hash'] = self.secret_hash.hex()
         details['locktime'] = self.locktime
         details['gas_limit'] = self.gas_limit

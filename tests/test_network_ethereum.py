@@ -12,7 +12,7 @@ from .conftest import (
     token_initial_transaction,
 )
 
-from clove.constants import ETH_REFUND_GAS_LIMIT
+from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
 from clove.exceptions import UnsupportedTransactionType
 from clove.network import EthereumTestnet
 from clove.network.ethereum import EthereumToken
@@ -88,7 +88,8 @@ def test_eth_refund(transaction_mock, infura_token):
     assert details['data'] == '0x5a8f9b8110ff972f3d8181f603aa7f6b4bc172de730fec2b000000000000000000000000'
     assert details['startgas'] == ETH_REFUND_GAS_LIMIT
     assert details['to'] == '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8'
-    assert details['value'] == 0
+    assert details['value'] == Decimal('1.2e-17')
+    assert details['value_text'] == '0.000000000000000012 ETH'
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
@@ -100,6 +101,32 @@ def test_eth_refund_locktime(transaction_mock, infura_token):
         contract.refund()
     locktime_string = contract.locktime.strftime('%Y-%m-%d %H:%M:%S')
     assert str(error.value) == f"This contract is still valid! It can't be refunded until {locktime_string} UTC."
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
+def test_eth_redeem(transaction_mock, infura_token):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
+    redeem_transaction = contract.redeem('c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac')
+    details = redeem_transaction.show_details()
+    assert details['data'] == '0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac'
+    assert details['startgas'] == ETH_REDEEM_GAS_LIMIT
+    assert details['to'] == '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8'
+    assert details['value'] == Decimal('1.2e-17')
+    assert details['value_text'] == '0.000000000000000012 ETH'
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(token_initial_transaction, ))
+def test_eth_token_redeem(transaction_mock, infura_token):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0x316d3aaa252adb025c3486cf83949245f3f10edc169e1eb0772ed074fddb8be6')
+    redeem_transaction = contract.redeem('c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac')
+    details = redeem_transaction.show_details()
+    assert details['data'] == '0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac'
+    assert details['startgas'] == ETH_REDEEM_GAS_LIMIT
+    assert details['to'] == '0x7657ca877fac31d20528b473162e39b6e152fd2e'
+    assert details['value'] == Decimal('1e-16')
+    assert details['value_text'] == '0.000000000000000100 BBT'
 
 
 def test_approve_token(infura_token):
