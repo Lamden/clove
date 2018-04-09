@@ -20,7 +20,7 @@ from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
 from clove.network.ethereum_based import Token
 
 
-def test_atomic_swap(infura_token):
+def test_atomic_swap(infura_token, web3_request_mock):
     alice_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
     bob_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
     network = EthereumTestnet()
@@ -29,7 +29,7 @@ def test_atomic_swap(infura_token):
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
-def test_eth_audit_contract(transaction_mock, infura_token):
+def test_eth_audit_contract(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
     assert contract.show_details() == {
@@ -45,7 +45,7 @@ def test_eth_audit_contract(transaction_mock, infura_token):
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(token_initial_transaction, ))
-def test_token_audit_contract(transaction_mock, infura_token):
+def test_token_audit_contract(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     contract = network.audit_contract('0x316d3aaa252adb025c3486cf83949245f3f10edc169e1eb0772ed074fddb8be6')
     assert contract.show_details() == {
@@ -62,7 +62,7 @@ def test_token_audit_contract(transaction_mock, infura_token):
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_unsupported_transaction, ))
-def test_eth_audit_contract_unsupported_transaction(transaction_mock, infura_token):
+def test_eth_audit_contract_unsupported_transaction(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     with pytest.raises(UnsupportedTransactionType) as error:
         network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
@@ -70,7 +70,7 @@ def test_eth_audit_contract_unsupported_transaction(transaction_mock, infura_tok
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_redeem_tranaction, ))
-def test_eth_extract_secret(transaction_mock, infura_token):
+def test_eth_extract_secret(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     secret = network.extract_secret_from_redeem_transaction(
         '0x89b0d28e93ce55da4adab989cd48a524402eb154b23e1777f82e715589aba317'
@@ -79,7 +79,7 @@ def test_eth_extract_secret(transaction_mock, infura_token):
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
-def test_eth_refund(transaction_mock, infura_token):
+def test_eth_refund(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
     contract.locktime = datetime.utcnow() - timedelta(days=1)
@@ -93,7 +93,7 @@ def test_eth_refund(transaction_mock, infura_token):
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
-def test_eth_refund_locktime(transaction_mock, infura_token):
+def test_eth_refund_locktime(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
     contract.locktime = datetime.utcnow() + timedelta(days=1)
@@ -104,7 +104,7 @@ def test_eth_refund_locktime(transaction_mock, infura_token):
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
-def test_eth_redeem(transaction_mock, infura_token):
+def test_eth_redeem(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
     redeem_transaction = contract.redeem('c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac')
@@ -117,7 +117,7 @@ def test_eth_redeem(transaction_mock, infura_token):
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(token_initial_transaction, ))
-def test_eth_token_redeem(transaction_mock, infura_token):
+def test_eth_token_redeem(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     contract = network.audit_contract('0x316d3aaa252adb025c3486cf83949245f3f10edc169e1eb0772ed074fddb8be6')
     redeem_transaction = contract.redeem('c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac')
@@ -129,7 +129,7 @@ def test_eth_token_redeem(transaction_mock, infura_token):
     assert details['value_text'] == '0.000000000000000100 BBT'
 
 
-def test_approve_token(infura_token):
+def test_approve_token(infura_token, web3_request_mock):
     network = EthereumTestnet()
     approve_tx = network.approve_token(
         '0x999f348959e611f1e9eab2927c21e88e48e6ef45',
@@ -144,7 +144,7 @@ def test_approve_token(infura_token):
     assert details['sender_address'] == network.unify_address('0x999f348959e611f1e9eab2927c21e88e48e6ef45')
 
 
-def test_token_atomic_swap(infura_token):
+def test_token_atomic_swap(infura_token, web3_request_mock):
     alice_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
     bob_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
     network = EthereumTestnet()
