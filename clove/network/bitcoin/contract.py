@@ -1,26 +1,60 @@
 from datetime import datetime
+from typing import Optional
 
-from bitcoin.core import b2lx, b2x, script
+from bitcoin.core import CTxOut, b2lx, b2x, script
 from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import auto_switch_params, deserialize_raw_transaction, from_base_units
+from clove.utils.bitcoin import auto_switch_params, deserialize_raw_transaction, from_base_units, to_base_units
+from clove.utils.external_source import get_transaction
 
 
 class BitcoinContract(object):
 
     @auto_switch_params(1)
-    def __init__(self, network, contract: str, raw_transaction: str):
+    def __init__(
+        self,
+        network,
+        contract: str,
+        raw_transaction: Optional[str]=None,
+        transaction_address: Optional[str]=None
+    ):
+
+        if not raw_transaction and not transaction_address:
+            raise ValueError('Provide raw_transaction or transaction_address argument.')
+
         self.network = network
         self.symbol = self.network.default_symbol
         self.contract = contract
-        self.tx = deserialize_raw_transaction(raw_transaction)
+        self.tx = None
+        self.vout = None
+        self.tx_address = transaction_address
+        if raw_transaction:
+            self.tx = deserialize_raw_transaction(raw_transaction)
+            try:
+                self.vout = self.tx.vout[0]
+            except IndexError:
+                raise ValueError('Given transaction has no outputs.')
+        else:
+            tx_json = get_transaction(network.default_symbol, transaction_address, network.is_test_network())
+            if not tx_json:
+                raise ValueError('No transaction found under given address.')
+            if 'hex' in tx_json:
+                # transaction from blockcypher or raven explorer
+                self.tx = deserialize_raw_transaction(tx_json['hex'])
+                self.vout = self.tx.vout[0]
+            else:
+                # transaction from cryptoid
+                incorrect_cscript = script.CScript.fromhex(tx_json['outputs'][0]['script'])
+                correct_cscript = script.CScript([script.OP_HASH160, list(incorrect_cscript)[2], script.OP_EQUAL])
+                nValue = to_base_units(tx_json['outputs'][0]['amount'])
+                self.vout = CTxOut(nValue, correct_cscript)
 
-        if not self.tx.vout:
+        if not self.vout:
             raise ValueError('Given transaction has no outputs.')
 
-        contract_tx_out = self.tx.vout[0]
+        contract_tx_out = self.vout
         contract_script = script.CScript.fromhex(self.contract)
         script_pub_key = contract_script.to_p2sh_scriptPubKey()
         valid_p2sh = script_pub_key == contract_tx_out.scriptPubKey
@@ -31,7 +65,7 @@ class BitcoinContract(object):
             self.recipient_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[6]))
             self.refund_address = str(P2PKHBitcoinAddress.from_bytes(script_ops[13]))
             self.locktime_timestamp = int.from_bytes(script_ops[8], byteorder='little')
-            self.locktime = datetime.fromtimestamp(self.locktime_timestamp)
+            self.locktime = datetime.utcfromtimestamp(self.locktime_timestamp)
             self.secret_hash = b2x(script_ops[2])
             self.value = from_base_units(contract_tx_out.nValue)
         else:
@@ -39,7 +73,7 @@ class BitcoinContract(object):
 
     @property
     def transaction_address(self):
-        return b2lx(self.tx.GetHash())
+        return self.tx_address or b2lx(self.tx.GetHash())
 
     @staticmethod
     def is_valid_contract_script(script_ops):
@@ -66,7 +100,7 @@ class BitcoinContract(object):
             tx_id=self.transaction_address,
             vout=0,
             value=self.value,
-            tx_script=self.tx.vout[0].scriptPubKey.hex(),
+            tx_script=self.vout.scriptPubKey.hex(),
             wallet=wallet,
             secret=secret,
             refund=refund,

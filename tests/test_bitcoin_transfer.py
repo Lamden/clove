@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from bitcoin.core import CTransaction, b2x, script
 from freezegun import freeze_time
 from pytest import raises
 
 from clove.constants import SIGNATURE_SIZE
-from clove.network.bitcoin import BitcoinTestNet
+from clove.network import BitcoinTestNet, Litecoin
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction, BitcoinTransaction
 from clove.utils.bitcoin import to_base_units
 
@@ -195,6 +196,49 @@ def test_audit_contract_non_matching_contract(signed_transaction):
         ValueError, match='Given transaction is not a valid contract.'
     ):
         btc_network.audit_contract(contract, transaction_details['contract_transaction'])
+
+
+def test_audit_contract_by_address_blockcypher():
+    ltc_network = Litecoin()
+    contract = ltc_network.audit_contract(
+        contract=(
+            '63a6140d33bfb2b425ca1d91a9a90af9472d6b7a6760d88876a914621f617c765c3caa5ce1bb67f6a'
+            '3e51382b8da296704ab0ece5ab17576a91485c0522f6e23beb11cc3d066cd20ed732648a4e66888ac'
+        ),
+        transaction_address='2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b'
+    )
+    assert contract.show_details() == {
+        'contract_address': 'MAyEizEWZEQdd4Ghp7Es3ssN77d7yLbqZQ',
+        'locktime': datetime(2018, 4, 11, 13, 33, 31),
+        'recipient_address': 'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq',
+        'refund_address': 'LXRAXRgPo84p58746zaBXUFFevCTYBPxgb',
+        'secret_hash': '0d33bfb2b425ca1d91a9a90af9472d6b7a6760d8',
+        'transaction_address': '2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b',
+        'value': 0.001,
+        'value_text': '0.00100000 LTC',
+     }
+
+
+@patch('clove.utils.external_source.BLOCKCYPHER_SUPPORTED_NETWORKS', return_value=('xxx', ))
+def test_audit_contract_by_address_cryptoid(_):
+    ltc_network = Litecoin()
+    contract = ltc_network.audit_contract(
+        contract=(
+            '63a6140d33bfb2b425ca1d91a9a90af9472d6b7a6760d88876a914621f617c765c3caa5ce1bb67f6a'
+            '3e51382b8da296704ab0ece5ab17576a91485c0522f6e23beb11cc3d066cd20ed732648a4e66888ac'
+        ),
+        transaction_address='2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b'
+    )
+    assert contract.show_details() == {
+        'contract_address': 'MAyEizEWZEQdd4Ghp7Es3ssN77d7yLbqZQ',
+        'locktime': datetime(2018, 4, 11, 13, 33, 31),
+        'recipient_address': 'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq',
+        'refund_address': 'LXRAXRgPo84p58746zaBXUFFevCTYBPxgb',
+        'secret_hash': '0d33bfb2b425ca1d91a9a90af9472d6b7a6760d8',
+        'transaction_address': '2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b',
+        'value': 0.001,
+        'value_text': '0.00100000 LTC',
+     }
 
 
 def test_redeem_transaction(bob_wallet, signed_transaction):

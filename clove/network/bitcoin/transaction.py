@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import struct
 
 from bitcoin.core import CMutableTransaction, CMutableTxOut, b2lx, b2x, script, x
@@ -186,7 +186,7 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
             script.OP_HASH160,
             CBitcoinAddress(self.recipient_address),
             script.OP_ELSE,
-            int(self.locktime.timestamp()),
+            int(self.locktime.replace(tzinfo=timezone.utc).timestamp()),
             script.OP_CHECKLOCKTIMEVERIFY,
             script.OP_DROP,
             script.OP_DUP,
