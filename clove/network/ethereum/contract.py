@@ -7,7 +7,7 @@ from web3.utils.abi import get_abi_input_names, get_abi_input_types
 from web3.utils.contracts import find_matching_fn_abi
 
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
-from clove.network.ethereum.transaction import EthereumTransaction
+from clove.network.ethereum.transaction import EthereumTokenTransaction
 
 
 class EthereumContract(object):
@@ -36,7 +36,7 @@ class EthereumContract(object):
         self.locktime = datetime.utcfromtimestamp(self.inputs['_expiration'])
         self.recipient_address = Web3.toChecksumAddress(self.inputs['_participant'])
         self.refund_address = self.tx_dict['from']
-        self.secret_hash = self.inputs['_hash'].hex()
+        self.secret_hash = self.inputs['_hash']
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
 
         if self.is_token_contract:
@@ -88,7 +88,7 @@ class EthereumContract(object):
             self.secret_hash,
         )
 
-    def redeem(self, secret: str) -> EthereumTransaction:
+    def redeem(self, secret: str) -> EthereumTokenTransaction:
         contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
         redeem_func = contract.functions.redeem(secret)
         tx_dict = {
@@ -99,7 +99,7 @@ class EthereumContract(object):
 
         tx_dict = redeem_func.buildTransaction(tx_dict)
 
-        transaction = EthereumTransaction(network=self.network)
+        transaction = EthereumTokenTransaction(network=self.network)
         transaction.tx = Transaction(
             nonce=tx_dict['nonce'],
             gasprice=tx_dict['gasPrice'],
@@ -108,6 +108,8 @@ class EthereumContract(object):
             value=tx_dict['value'],
             data=Web3.toBytes(hexstr=tx_dict['data']),
         )
+        transaction.value = self.value
+        transaction.token = self.token
         return transaction
 
     def refund(self):
@@ -126,7 +128,7 @@ class EthereumContract(object):
 
         tx_dict = refund_func.buildTransaction(tx_dict)
 
-        transaction = EthereumTransaction(network=self.network)
+        transaction = EthereumTokenTransaction(network=self.network)
         transaction.tx = Transaction(
             nonce=tx_dict['nonce'],
             gasprice=tx_dict['gasPrice'],
@@ -135,6 +137,8 @@ class EthereumContract(object):
             value=tx_dict['value'],
             data=Web3.toBytes(hexstr=tx_dict['data']),
         )
+        transaction.value = self.value
+        transaction.token = self.token
         return transaction
 
     def show_details(self):
@@ -143,7 +147,7 @@ class EthereumContract(object):
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.refund_address,
-            'secret_hash': self.secret_hash,
+            'secret_hash': self.secret_hash.hex(),
             'transaction_address': self.tx_dict['hash'].hex(),
             'value': self.value,
             'value_text': f'{self.value:.18f} {self.symbol}',

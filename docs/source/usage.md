@@ -1,5 +1,9 @@
 # Clove atomic swap example
 
+* [Bitcoin based networks](#bitcoin-based-networks)
+* [Ethereum Testnet](#ethereum-testnet)
+
+# Bitcoin based networks
 
 ## Assumptions
 
@@ -194,7 +198,7 @@ For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs the U
 
     participate_utxo_list = ltc_network.get_utxo(bob_ltc_wallet.address, litecoins_to_swap)
 
-With the list of UTXOs `particapate_transaction` can be created.
+With the list of UTXOs `participate_transaction` can be created.
 
     participate_transaction = alice_contract.participate(
         'ltc',
@@ -335,3 +339,271 @@ https://bchain.info/MONA/tx/cb2a7a55535d15dbc6294e0d07e8156836ccc896b220eaa062a1
 
 
 [**Bob**] should get monacoins just after redeem transaction is published.
+
+# Ethereum Testnet
+
+## Assumptions
+
+* Alice wants to buy 0.5 ETH for 1000 Blockbusters Test tokens in Ethereum Kovan Testnet
+* Bob wants to buy 1000 Blockbusters Test tokens for 0.5 ETH in Ethereum Kovan Testnet
+* Both Alice and Bob have wallets in Ethereum Kovan network
+
+## 1. Setup
+
+Alice should initialize the network object, set her address, private key, amount of tokens to be swapped and the address of the token.
+
+[**Alice**]'s console input:
+    from clove.network import EthereumTestnet
+
+    eth_test = EthereumTestnet()
+
+    address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+    private_key = 'alice_private_key'
+
+    tokens_to_swap = '1000'
+    token_address = '0x53E546387A0d054e7FF127923254c0a679DA6DBf'
+
+It is also possible to get the token data directly from the network object by the token symbol if the token is supported:
+
+    token = eth_test.get_token_by_symbol('BBT')
+    token_address = token.token_address
+
+Bob should initialize the network object, set his address, private key and amount of ethers to be swapped.
+
+[**Bob**]'s console input:
+    from clove.network import EthereumTestnet
+
+    eth_test = EthereumTestnet()
+
+    address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    private_key = 'bob_private_key'
+
+    eth_to_swap = '0.5'
+
+## 2. Communication
+
+Alice and Bob exchange their wallet addresses.
+
+[**Alice**]'s console input:
+
+    bob_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+
+[**Bob**]'s console input:
+
+    alice_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+
+## 3. Token approval
+
+To send tokens to an atomic swap contract Alice has to first approve that the tokens she own can be spend by that contract.
+
+    approve_transaction = eth_test.approve_token(address, tokens_to_swap, token_address)
+    approve_transaction.sign(private_key)
+    approve_transaction.show_details()
+
+    {'contract_address': '0x7657Ca877Fac31D20528B473162E39B6E152fd2e',
+     'data': '0x095ea7b30000000000000000000000007657ca877fac31d20528b473162e39b6e152fd2e00000000000000000000000000000000000000000000003635c9adc5dea00000',
+     'gasprice': 20000000000,
+     'nonce': 34,
+     'r': 112426775415197512764524506063660144184257199595961926193168166347175765778579,
+     's': 1927313746114385663128009448899947006587692267799486537632890580735710981604,
+     'sender': '0x999f348959e611f1e9eab2927c21e88e48e6ef45',
+     'sender_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+     'startgas': 45576,
+     'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf',
+     'transaction_address': '0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b6635ae615e0454bd4fc',
+     'v': 28,
+     'value': Decimal('1000'),
+     'value_text': '1000.000000000000000000 BBT'}
+
+    approve_transaction.publish()
+    '0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b6635ae615e0454bd4fc'
+https://kovan.etherscan.io/tx/0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b6635ae615e0454bd4fc
+
+
+## 4. Alice is initializing an atomic swap transaction
+
+    initial_transaction = eth_test.atomic_swap(
+        address,
+        bob_address,
+        tokens_to_swap,
+        token_address=token_address
+    )
+    initial_transaction.sign(private_key)
+    initial_transaction.show_details()
+
+    {'contract_address': '0x7657Ca877Fac31D20528B473162E39B6E152fd2e',
+     'data': '0x52f50db7000000000000000000000000000000000000000000000000000000005acde5c48cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a909200000000000000000000000053e546387a0d054e7ff127923254c0a679da6dbf00000000000000000000000000000000000000000000003635c9adc5dea00000',
+     'gas_limit': None,
+     'gasprice': 20000000000,
+     'locktime': datetime.datetime(2018, 4, 11, 10, 39, 0, 535753),
+     'nonce': 35,
+     'r': 81080759208730988867907650750974367955166566527430658028938499115001735694910,
+     'recipient_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+     'refund_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+     's': 25371208205154004938960599477560107420234164093623357637201902103097079815422,
+     'secret': 'c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac',
+     'secret_hash': '8cebcb1af6fa5fddeb091f61f0af1c49a6de9922',
+     'sender': '0x999f348959e611f1e9eab2927c21e88e48e6ef45',
+     'sender_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+     'startgas': 300000,
+     'to': '0x7657ca877fac31d20528b473162e39b6e152fd2e',
+     'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf',
+     'transaction_address': '0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840',
+     'v': 27,
+     'value': Decimal('1000'),
+     'value_text': '1000.000000000000000000 BBT'}
+
+    initial_transaction.publish()
+    '0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840'
+https://kovan.etherscan.io/tx/0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840
+
+## 5. Communication
+
+[**Alice**] sends hers transaction address `0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840` to Bob so he can audit created contract.
+
+
+## 6. Contract audit
+
+[**Bob**] needs to audit the contract in the network it was created in, in our case it's Ethereum Testnet network.
+And also at this point Bob should validate if the data returned in the contract is correct.
+
+    alice_contract = eth_test.audit_contract('0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840')
+    alice_contract.show_details()
+
+    {'contract_address': '0x7657Ca877Fac31D20528B473162E39B6E152fd2e',
+     'locktime': datetime.datetime(2018, 4, 11, 10, 39),
+     'recipient_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+     'refund_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+     'secret_hash': '8cebcb1af6fa5fddeb091f61f0af1c49a6de9922',
+     'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf',
+     'transaction_address': '0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840',
+     'value': Decimal('1000'),
+     'value_text': '1000.000000000000000000 BBT'}
+
+
+## 7. Participation
+
+[**Bob**] has to create parallel transaction from point 4 but for 0.5 ETH. We call it `participate_transaction`.
+
+    participate_transaction = alice_contract.participate(
+        'ETH-TESTNET',
+        address,
+        alice_address,
+        eth_to_swap
+    )
+
+    participate_transaction.sign(private_key)
+    participate_transaction.show_details()
+
+    {'contract_address': '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8',
+     'data': '0xeb8ae1ed000000000000000000000000000000000000000000000000000000005acca1d68cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000999f348959e611f1e9eab2927c21e88e48e6ef45',
+     'gas_limit': 126221,
+     'gasprice': 20000000000,
+     'locktime': datetime.datetime(2018, 4, 10, 11, 36, 54, 224171),
+     'nonce': 18,
+     'r': 10117394961799586109544014237169747431096329877057063230289022533801441532789,
+     'recipient_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+     'refund_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+     's': 34556783084242874049490624129921763496945955547455400337813271950949674389178,
+     'secret_hash': '8cebcb1af6fa5fddeb091f61f0af1c49a6de9922',
+     'sender': '0xd867f293ba129629a9f9355fa285b8d3711a9092',
+     'sender_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+     'startgas': 126221,
+     'to': '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8',
+     'transaction_address': '0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f',
+     'v': 28,
+     'value': Decimal('0.5'),
+     'value_text': '0.500000000000000000 ETH'}
+
+    participate_transaction.publish()
+    '0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f'
+https://kovan.etherscan.io/tx/0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f
+
+## 8. Communication
+
+[**Bob**] sends his transaction address `0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f` to Alice.
+
+
+## 9. Contract audit
+
+[**Alice**] needs to audit the contract in the network it was created in, in our case it's Ethereum Testnet network.
+And also at this point Alice should validate if the data returned in the contract is correct.
+
+    bob_contract = eth_test.audit_contract(
+        '0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f'
+    )
+    bob_contract.show_details()
+
+    {'contract_address': '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8',
+     'locktime': datetime.datetime(2018, 4, 10, 11, 36, 54),
+     'recipient_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+     'refund_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+     'secret_hash': '8cebcb1af6fa5fddeb091f61f0af1c49a6de9922',
+     'transaction_address': '0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f',
+     'value': Decimal('0.5'),
+     'value_text': '0.500000000000000000 ETH'}
+
+
+## 10. First redeem transaction
+
+[**Alice**] can now collect coins she wants, thus she creates redeem transaction.
+
+    alice_redeem = bob_contract.redeem(secret=initial_transaction.show_details()['secret'])
+    alice_redeem.sign(private_key)
+
+    alice_redeem.show_details()
+
+    {'data': '0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac',
+     'gasprice': 20000000000,
+     'hash': '0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1',
+     'nonce': 36,
+     'r': 59319998726546023363151651169655572196637192178004534224886682741537229136353,
+     's': 49667378228500740364784037188336222900603288337407062594007817473604371090679,
+     'sender': '0x999f348959e611f1e9eab2927c21e88e48e6ef45',
+     'startgas': 100000,
+     'to': '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8',
+     'v': 28,
+     'value': Decimal('0.5'),
+     'value_text': '0.500000000000000000 ETH'}
+
+    alice_redeem.publish()
+    '0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1'
+https://kovan.etherscan.io/tx/0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1
+
+[**Alice**] will get ether just after redeem transaction is published.
+
+
+## 11. Secret capture
+
+[**Bob**] should extract the secret from the redeem transaction.
+
+    secret = eth_test.extract_secret_from_redeem_transaction('0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1')
+
+## 12. Second redeem transaction
+
+[**Bob**] can now collect tokens he wants, thus he creates redeem transaction.
+
+    bob_redeem = alice_contract.redeem(secret)
+    bob_redeem.sign(private_key)
+
+    bob_redeem.show_details()
+
+    {'data': '0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac',
+     'gasprice': 20000000000,
+     'hash': '0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274',
+     'nonce': 19,
+     'r': 65751206609566246138168255228214505208801025362644939199208252280848271690158,
+     's': 45667062183625152271430540771543035424773489029161348648874675951038677865195,
+     'sender': '0xd867f293ba129629a9f9355fa285b8d3711a9092',
+     'startgas': 100000,
+     'to': '0x7657ca877fac31d20528b473162e39b6e152fd2e',
+     'v': 27,
+     'value': Decimal('1000'),
+     'value_text': '1000.000000000000000000 BBT'}
+
+    bob_redeem.publish()
+    '0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274'
+https://kovan.etherscan.io/tx/0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274
+
+
+[**Bob**] will get BBT tokens just after redeem transaction is published.

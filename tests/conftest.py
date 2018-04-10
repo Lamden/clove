@@ -222,6 +222,24 @@ def connection_mock(signed_transaction):
                 yield
 
 
+def web3_request_side_effect(method, params):
+    if method == 'eth_gasPrice':
+        return 20000000000
+    elif method == 'eth_estimateGas':
+        return 125000
+    elif method == 'eth_getTransactionCount':
+        return 1
+    elif method == 'net_version':
+        return 42
+    return None
+
+
+@pytest.fixture
+def web3_request_mock():
+    with patch('web3.manager.RequestManager.request_blocking', side_effect=web3_request_side_effect):
+        yield
+
+
 @pytest.fixture
 def infura_token():
     os.environ['INFURA_TOKEN'] = 'WsUXSFPvO9t86xDAAhNi'
