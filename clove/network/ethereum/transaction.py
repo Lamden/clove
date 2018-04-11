@@ -238,7 +238,7 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         details['secret'] = self.secret.hex() if self.secret else ''
         details['secret_hash'] = self.secret_hash.hex()
         details['locktime'] = self.locktime
-        details['gas_limit'] = self.gas_limit
+        details['gas_limit'] = details.pop('startgas')
         details['sender_address'] = self.sender_address
         details['recipient_address'] = self.recipient_address
         details['transaction_address'] = details.pop('hash')
