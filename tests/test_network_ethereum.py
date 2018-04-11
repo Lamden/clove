@@ -14,7 +14,7 @@ from .conftest import (
 
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
 from clove.exceptions import UnsupportedTransactionType
-from clove.network import EthereumTestnet
+from clove.network import BitcoinTestNet, EthereumTestnet
 from clove.network.ethereum import EthereumToken
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
 from clove.network.ethereum_based import Token
@@ -42,6 +42,75 @@ def test_eth_audit_contract(transaction_mock, infura_token, web3_request_mock):
         'value': Decimal('1.2e-17'),
         'value_text': '0.000000000000000012 ETH'
     }
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
+def test_participate_transaction(transaction_mock, infura_token, web3_request_mock):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
+
+    alice_eth_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+    bob_eth_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    participate_value = 0.5
+
+    participate_transaction = contract.participate(
+        'ETH-TESTNET', alice_eth_address, bob_eth_address, participate_value
+    )
+
+    assert participate_transaction.sender_address == alice_eth_address
+    assert participate_transaction.recipient_address == bob_eth_address
+    assert participate_transaction.value == participate_value
+    assert participate_transaction.secret_hash.hex() == contract.secret_hash
+    assert participate_transaction.secret is None
+    assert isinstance(participate_transaction.network, EthereumTestnet)
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
+def test_participate_token_transaction(transaction_mock, infura_token, web3_request_mock):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
+
+    alice_eth_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+    bob_eth_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    token_address = '0x53E546387A0d054e7FF127923254c0a679DA6DBf'
+    participate_value = 0.5
+
+    participate_transaction = contract.participate(
+        'ETH-TESTNET', alice_eth_address, bob_eth_address, participate_value, token_address=token_address
+    )
+
+    assert participate_transaction.sender_address == alice_eth_address
+    assert participate_transaction.recipient_address == bob_eth_address
+    assert participate_transaction.value == participate_value
+    assert participate_transaction.token_address == token_address
+    assert participate_transaction.secret_hash.hex() == contract.secret_hash
+    assert participate_transaction.secret is None
+    assert isinstance(participate_transaction.network, EthereumTestnet)
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
+def test_participate_btc_transaction(
+    transaction_mock,
+    infura_token,
+    web3_request_mock,
+    alice_wallet,
+    bob_wallet,
+    bob_utxo
+):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
+
+    participate_value = 0.5
+    participate_transaction = contract.participate(
+        'BTC-TESTNET', bob_wallet.address, alice_wallet.address, participate_value, bob_utxo
+    )
+
+    assert participate_transaction.sender_address == bob_wallet.address
+    assert participate_transaction.recipient_address == alice_wallet.address
+    assert participate_transaction.value == participate_value
+    assert participate_transaction.secret_hash.hex() == contract.secret_hash
+    assert participate_transaction.secret is None
+    assert isinstance(participate_transaction.network, BitcoinTestNet)
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(token_initial_transaction, ))

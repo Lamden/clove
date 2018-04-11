@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from typing import Optional
 
+from bitcoin.core import x
 from ethereum.transactions import Transaction
 import rlp
 from web3 import Web3
@@ -134,7 +135,7 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         self.sender_address = network.unify_address(sender_address)
         self.recipient_address = network.unify_address(recipient_address)
         self.secret = None
-        self.secret_hash = secret_hash
+        self.secret_hash = x(secret_hash) if secret_hash else None
         self.value = value
         self.token = token
         self.gas_limit = None
@@ -234,8 +235,7 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
 
     def show_details(self):
         details = super().show_details()
-        if self.secret:
-            details['secret'] = self.secret.hex()
+        details['secret'] = self.secret.hex() if self.secret else ''
         details['secret_hash'] = self.secret_hash.hex()
         details['locktime'] = self.locktime
         details['gas_limit'] = self.gas_limit
