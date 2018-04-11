@@ -187,6 +187,16 @@ def signed_transaction(unsigned_transaction):
     return transaction
 
 
+@pytest.fixture
+def btc_testnet_contract(signed_transaction):
+    network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+    return network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
+
+
 @contextmanager
 @pytest.fixture
 def connection_mock(signed_transaction):

@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from bitcoin.core import CTransaction, b2x, script
 from freezegun import freeze_time
+import pytest
 from pytest import raises
 
 from clove.constants import SIGNATURE_SIZE
@@ -147,7 +148,8 @@ def test_swap_transaction_with_invalid_recipient_and_sender_addresses():
         BitcoinAtomicSwapTransaction(BitcoinTestNet(), 'invalid_address', 'address_123', 0.01, [])
 
 
-def test_audit_contract(signed_transaction):
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_audit_contract(_, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
@@ -175,7 +177,8 @@ def test_audit_contract_empty_transaction():
         btc_network.audit_contract('', tx)
 
 
-def test_audit_contract_invalid_transaction(signed_transaction):
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_audit_contract_invalid_transaction(_, signed_transaction):
     btc_network = BitcoinTestNet()
     signed_transaction.tx.vout.pop(0)
     transaction_details = signed_transaction.show_details()
@@ -186,7 +189,8 @@ def test_audit_contract_invalid_transaction(signed_transaction):
         btc_network.audit_contract(transaction_details['contract'], transaction_details['contract_transaction'])
 
 
-def test_audit_contract_non_matching_contract(signed_transaction):
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_audit_contract_non_matching_contract(_, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
@@ -198,28 +202,29 @@ def test_audit_contract_non_matching_contract(signed_transaction):
         btc_network.audit_contract(contract, transaction_details['contract_transaction'])
 
 
-def test_audit_contract_by_address_blockcypher():
-    ltc_network = Litecoin()
-    contract = ltc_network.audit_contract(
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_audit_contract_by_address_blockcypher(get_balance_mock):
+    btc_network = BitcoinTestNet()
+    contract = btc_network.audit_contract(
         contract=(
-            '63a6140d33bfb2b425ca1d91a9a90af9472d6b7a6760d88876a914621f617c765c3caa5ce1bb67f6a'
-            '3e51382b8da296704ab0ece5ab17576a91485c0522f6e23beb11cc3d066cd20ed732648a4e66888ac'
+            '63a614977afed2fcdfea9d27fd3032b4a1bc20219007f18876a9143f8870a5633e4fdac612fba4752'
+            '5fef082bbe96167049b02d25ab17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac'
         ),
-        transaction_address='2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b'
+        transaction_address='ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef'
     )
     assert contract.show_details() == {
-        'contract_address': 'MAyEizEWZEQdd4Ghp7Es3ssN77d7yLbqZQ',
-        'locktime': datetime(2018, 4, 11, 13, 33, 31),
-        'recipient_address': 'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq',
-        'refund_address': 'LXRAXRgPo84p58746zaBXUFFevCTYBPxgb',
-        'secret_hash': '0d33bfb2b425ca1d91a9a90af9472d6b7a6760d8',
-        'transaction_address': '2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b',
-        'value': 0.001,
-        'value_text': '0.00100000 LTC',
-     }
+        'contract_address': '2Mv9q2BF9ua62vZcWQqtGdaaAki37SHVoXm',
+        'locktime': datetime(2018, 4, 14, 13, 31, 7),
+        'recipient_address': 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1',
+        'refund_address': 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM',
+        'secret_hash': '977afed2fcdfea9d27fd3032b4a1bc20219007f1',
+        'transaction_address': 'ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef',
+        'value': 0.01,
+        'value_text': '0.01000000 BTC'
+    }
 
 
-@patch('clove.utils.external_source.BLOCKCYPHER_SUPPORTED_NETWORKS', return_value=('xxx', ))
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
 def test_audit_contract_by_address_cryptoid(_):
     ltc_network = Litecoin()
     contract = ltc_network.audit_contract(
@@ -241,7 +246,8 @@ def test_audit_contract_by_address_cryptoid(_):
      }
 
 
-def test_redeem_transaction(bob_wallet, signed_transaction):
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_redeem_transaction(_, bob_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
@@ -257,7 +263,15 @@ def test_redeem_transaction(bob_wallet, signed_transaction):
     assert redeem_transaction.value == signed_transaction.value
 
 
-def test_refund_transaction(alice_wallet, signed_transaction):
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0)
+def test_redeem_transaction_zero_balance(_, btc_testnet_contract, bob_wallet):
+    with pytest.raises(ValueError) as e:
+        btc_testnet_contract.redeem(bob_wallet, 'such_secret')
+    assert str(e.value) == 'Balance of this contract is 0.'
+
+
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_refund_transaction(_, alice_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
@@ -276,7 +290,8 @@ def test_refund_transaction(alice_wallet, signed_transaction):
     assert refund_transaction.value == signed_transaction.value
 
 
-def test_refund_not_expired_contract(alice_wallet, signed_transaction):
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_refund_not_expired_contract(_, alice_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
@@ -293,7 +308,16 @@ def test_refund_not_expired_contract(alice_wallet, signed_transaction):
             contract.refund(alice_wallet)
 
 
-def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_transaction):
+@freeze_time('2018-04-20')
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0)
+def test_refund_zero_balance(_, btc_testnet_contract, bob_wallet):
+    with pytest.raises(ValueError) as e:
+        btc_testnet_contract.refund(bob_wallet)
+    assert str(e.value) == 'Balance of this contract is 0.'
+
+
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_participate_transaction(_, alice_wallet, bob_wallet, bob_utxo, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
@@ -352,7 +376,8 @@ def test_participate_eth_transaction(signed_transaction, infura_token):
     assert isinstance(participate_transaction.network, EthereumTestnet)
 
 
-def test_extract_secret(bob_wallet, signed_transaction):
+@patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
+def test_extract_secret(_, bob_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
 
