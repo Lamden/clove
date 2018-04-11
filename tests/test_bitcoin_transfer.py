@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from pytest import raises
 
 from clove.constants import SIGNATURE_SIZE
-from clove.network import BitcoinTestNet, Litecoin
+from clove.network import BitcoinTestNet, EthereumTestnet, Litecoin
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction, BitcoinTransaction
 from clove.utils.bitcoin import to_base_units
 
@@ -327,6 +327,29 @@ def test_participate_transaction(alice_wallet, bob_wallet, bob_utxo, signed_tran
 
     assert redeem_participate_transaction.recipient_address == alice_wallet.address
     assert redeem_participate_transaction.value == participate_value
+
+
+def test_participate_eth_transaction(signed_transaction, infura_token):
+    btc_network = BitcoinTestNet()
+    transaction_details = signed_transaction.show_details()
+
+    contract = btc_network.audit_contract(
+        transaction_details['contract'],
+        transaction_details['contract_transaction']
+    )
+    alice_eth_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+    bob_eth_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    participate_value = 0.5
+    participate_transaction = contract.participate(
+        'ETH-TESTNET', alice_eth_address, bob_eth_address, participate_value
+    )
+
+    assert participate_transaction.sender_address == alice_eth_address
+    assert participate_transaction.recipient_address == bob_eth_address
+    assert participate_transaction.value == participate_value
+    assert participate_transaction.secret_hash == signed_transaction.secret_hash
+    assert participate_transaction.secret is None
+    assert isinstance(participate_transaction.network, EthereumTestnet)
 
 
 def test_extract_secret(bob_wallet, signed_transaction):

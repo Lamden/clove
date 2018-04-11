@@ -36,7 +36,7 @@ class EthereumContract(object):
         self.locktime = datetime.utcfromtimestamp(self.inputs['_expiration'])
         self.recipient_address = Web3.toChecksumAddress(self.inputs['_participant'])
         self.refund_address = self.tx_dict['from']
-        self.secret_hash = self.inputs['_hash']
+        self.secret_hash = self.inputs['_hash'].hex()
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
 
         if self.is_token_contract:
@@ -147,7 +147,7 @@ class EthereumContract(object):
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.refund_address,
-            'secret_hash': self.secret_hash.hex(),
+            'secret_hash': self.secret_hash,
             'transaction_address': self.tx_dict['hash'].hex(),
             'value': self.value,
             'value_text': f'{self.value:.18f} {self.symbol}',

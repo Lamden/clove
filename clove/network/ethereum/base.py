@@ -88,7 +88,7 @@ class EthereumBaseNetwork(BaseNetwork):
         sender_address: str,
         recipient_address: str,
         value: Union[str, Decimal],
-        secret_hash: bytes=None,
+        secret_hash: str=None,
         token_address: str=None,
     ) -> EthereumAtomicSwapTransaction:
 
