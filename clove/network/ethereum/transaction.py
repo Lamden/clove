@@ -36,11 +36,7 @@ class EthereumTransaction(object):
         return self.tx.sign(private_key)
 
     def publish(self) -> Optional[str]:
-        try:
-            self.network.web3.eth.sendRawTransaction(self.raw_transaction)
-        except ValueError:
-            return
-        return Web3.toHex(self.tx.hash)
+        return self.network.publish(self.tx)
 
 
 class EthereumTokenTransaction(EthereumTransaction):
