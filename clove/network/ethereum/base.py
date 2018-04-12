@@ -197,10 +197,9 @@ class EthereumBaseNetwork(BaseNetwork):
     def get_raw_transaction(transaction: Transaction) -> str:
         return Web3.toHex(rlp.encode(transaction))
 
-    def broadcast_transaction(self, transaction: Union[str, Transaction]) -> bool:
+    def publish(self, transaction: Union[str, Transaction]) -> Optional[str]:
         raw_transaction = transaction if isinstance(transaction, str) else self.get_raw_transaction(transaction)
         try:
-            self.web3.eth.sendRawTransaction(raw_transaction)
+            return self.web3.eth.sendRawTransaction(raw_transaction).hex()
         except ValueError:
-            return False
-        return True
+            return
