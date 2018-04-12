@@ -3,8 +3,10 @@ from bitcoin.core.key import CPubKey
 from bitcoin.wallet import CBitcoinSecret
 from pytest import mark, raises
 
+from clove.network import Ethereum
 from clove.network.bitcoin import Bitcoin
 from clove.network.bitcoin.wallet import BitcoinWallet
+from clove.network.ethereum.wallet import EthereumWallet
 
 
 def test_password_encryption():
@@ -69,3 +71,17 @@ def test_get_bitcoin_wallet_via_network(kwargs):
 def test_get_new_bitcoin_wallet_via_network():
     wallet = Bitcoin.get_new_wallet()
     assert isinstance(wallet, BitcoinWallet)
+
+
+def test_wallet_ethereum():
+    private_key = '3a1076bf45ab87712ad64ccb3b10217737f7faacbf2872e88fdd9a537d8fe266'
+    wallet = EthereumWallet(private_key)
+
+    assert wallet.private_key == private_key
+    assert wallet.address == '0xC2D7CF95645D33006175B78989035C7c9061d3F9'
+
+
+def test_get_new_ethereum_wallet_via_network():
+    private_key = '3a1076bf45ab87712ad64ccb3b10217737f7faacbf2872e88fdd9a537d8fe266'
+    wallet = Ethereum.get_wallet(private_key)
+    assert isinstance(wallet, EthereumWallet)
