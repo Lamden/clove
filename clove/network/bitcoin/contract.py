@@ -7,7 +7,7 @@ from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import auto_switch_params, deserialize_raw_transaction, from_base_units, to_base_units
-from clove.utils.external_source import get_transaction
+from clove.utils.external_source import get_balance, get_transaction
 
 
 class BitcoinContract(object):
@@ -59,6 +59,7 @@ class BitcoinContract(object):
         script_pub_key = contract_script.to_p2sh_scriptPubKey()
         valid_p2sh = script_pub_key == contract_tx_out.scriptPubKey
         self.address = str(CBitcoinAddress.from_scriptPubKey(script_pub_key))
+        self.balance = get_balance(self.network, self.address)
 
         script_ops = list(contract_script)
         if valid_p2sh and self.is_valid_contract_script(script_ops):
@@ -108,6 +109,8 @@ class BitcoinContract(object):
         )
 
     def redeem(self, wallet, secret):
+        if self.balance == 0:
+            raise ValueError("Balance of this contract is 0.")
         transaction = BitcoinTransaction(
             network=self.network,
             recipient_address=self.recipient_address,
@@ -121,6 +124,8 @@ class BitcoinContract(object):
         if self.locktime > datetime.utcnow():
             locktime_string = self.locktime.strftime('%Y-%m-%d %H:%M:%S')
             raise RuntimeError(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
+        if self.balance == 0:
+            raise ValueError("Balance of this contract is 0.")
         transaction = BitcoinTransaction(
             network=self.network,
             recipient_address=self.refund_address,
