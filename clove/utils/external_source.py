@@ -1,6 +1,7 @@
 from datetime import datetime
 from http.client import HTTPResponse
 import json
+import os
 from typing import Optional
 from urllib.error import HTTPError, URLError
 import urllib.request
@@ -117,6 +118,49 @@ def get_fee_from_blockcypher(network: str, testnet: bool=False) -> Optional[floa
         return
     data = json.loads(resp.read().decode())
     return data['high_fee_per_kb'] / COIN
+
+
+def get_balance(network: object, address: str):
+
+    network_symbol = network.default_symbol.lower()
+    if network_symbol not in NETWORKS_WITH_API:
+        logger.debug('Unsupported network %s', network.default_symbol)
+        return
+
+    if network_symbol in BLOCKCYPHER_SUPPORTED_NETWORKS:
+        return get_balance_blockcypher(network.default_symbol, address, network.is_test_network())
+
+    if network_symbol in CRYPTOID_SUPPORTED_NETWORKS:
+        return get_balance_cryptoid(
+            network.default_symbol,
+            address,
+            network.is_test_network(),
+            os.getenv('CRYPTOID_API_KEY'),
+        )
+
+
+def get_balance_blockcypher(network: str, address: str, testnet: bool) -> Optional[float]:
+    subnet = 'test3' if testnet else 'main'
+    url = f'https://api.blockcypher.com/v1/{network.lower()}/{subnet}/addrs/{address}/full?limit=2000'
+    data = clove_req_json(url)
+    if data is None:
+        logger.debug('Could not get details for address %s in %s network', address, network)
+        return
+    return from_base_units(data['balance'])
+
+
+def get_balance_cryptoid(network: str, address: str, testnet: bool, cryptoid_api_key: str) -> Optional[float]:
+    if cryptoid_api_key is None:
+        raise ValueError('API key for cryptoid is required to get balance.')
+    network = network.lower()
+    if testnet:
+        network += '-TEST'
+    url = f'https://chainz.cryptoid.info/{network}/api.dws?q=getbalance&a={address}&key={cryptoid_api_key}'
+    data = clove_req_json(url)
+    if data is None:
+        logger.debug('Could not get details for address %s in %s network', address, network)
+        return
+    return data
 
 
 def get_utxo_from_api(
