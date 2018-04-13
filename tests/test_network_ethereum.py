@@ -155,10 +155,12 @@ def test_eth_refund(transaction_mock, infura_token, web3_request_mock):
     refund_transaction = contract.refund()
     details = refund_transaction.show_details()
     assert details['data'] == '0x5a8f9b8110ff972f3d8181f603aa7f6b4bc172de730fec2b000000000000000000000000'
-    assert details['startgas'] == ETH_REFUND_GAS_LIMIT
+    assert details['gas_limit'] == ETH_REFUND_GAS_LIMIT
     assert details['to'] == '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8'
     assert details['value'] == Decimal('1.2e-17')
     assert details['value_text'] == '0.000000000000000012 ETH'
+    assert details['recipient_address'] == '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+    assert details['transaction'] == refund_transaction.raw_transaction
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
@@ -179,10 +181,12 @@ def test_eth_redeem(transaction_mock, infura_token, web3_request_mock):
     redeem_transaction = contract.redeem('c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac')
     details = redeem_transaction.show_details()
     assert details['data'] == '0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac'
-    assert details['startgas'] == ETH_REDEEM_GAS_LIMIT
+    assert details['gas_limit'] == ETH_REDEEM_GAS_LIMIT
     assert details['to'] == '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8'
     assert details['value'] == Decimal('1.2e-17')
     assert details['value_text'] == '0.000000000000000012 ETH'
+    assert details['recipient_address'] == '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    assert details['transaction'] == redeem_transaction.raw_transaction
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(token_initial_transaction, ))
@@ -192,10 +196,12 @@ def test_eth_token_redeem(transaction_mock, infura_token, web3_request_mock):
     redeem_transaction = contract.redeem('c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac')
     details = redeem_transaction.show_details()
     assert details['data'] == '0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac'
-    assert details['startgas'] == ETH_REDEEM_GAS_LIMIT
+    assert details['gas_limit'] == ETH_REDEEM_GAS_LIMIT
     assert details['to'] == '0x7657ca877fac31d20528b473162e39b6e152fd2e'
     assert details['value'] == Decimal('1e-16')
     assert details['value_text'] == '0.000000000000000100 BBT'
+    assert details['recipient_address'] == '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    assert details['transaction'] == redeem_transaction.raw_transaction
 
 
 def test_approve_token(infura_token, web3_request_mock):
@@ -211,6 +217,7 @@ def test_approve_token(infura_token, web3_request_mock):
     assert details['value_text'] == '0.001000000000000000 BBT'
     assert details['token_address'] == approve_tx.token.token_address
     assert details['sender_address'] == network.unify_address('0x999f348959e611f1e9eab2927c21e88e48e6ef45')
+    assert details['transaction'] == approve_tx.raw_transaction
 
 
 def test_token_atomic_swap(infura_token, web3_request_mock):
@@ -230,6 +237,7 @@ def test_token_atomic_swap(infura_token, web3_request_mock):
     assert details['value'] == Decimal('0.0003')
     assert details['value_text'] == '0.000300000000000000 BBT'
     assert details['token_address'] == swap_tx.token.token_address
+    assert details['transaction'] == swap_tx.raw_transaction
 
 
 def test_get_token_from_token_contract(infura_token):
