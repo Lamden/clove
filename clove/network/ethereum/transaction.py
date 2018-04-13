@@ -18,6 +18,7 @@ class EthereumTransaction(object):
         self.network = network
         self.tx = None
         self.value = None
+        self.recipient_address = None
 
     @property
     def raw_transaction(self) -> str:
@@ -25,6 +26,13 @@ class EthereumTransaction(object):
 
     def show_details(self):
         details = self.tx.to_dict()
+        details['transaction_address'] = details.pop('hash')
+        details['gas_limit'] = details.pop('startgas')
+        details['transaction'] = self.raw_transaction
+
+        if self.recipient_address:
+            details['recipient_address'] = self.recipient_address
+
         value = self.value
         if not value:
             value = self.network.value_from_base_units(self.tx.value)
@@ -107,7 +115,6 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
     def show_details(self):
         details = super().show_details()
         details['contract_address'] = self.token.contract_address
-        details['transaction_address'] = details.pop('hash')
         details['token_address'] = Web3.toChecksumAddress(details.pop('to'))
         details['sender_address'] = self.sender_address
         return details
@@ -234,10 +241,8 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         details['secret'] = self.secret.hex() if self.secret else ''
         details['secret_hash'] = self.secret_hash.hex()
         details['locktime'] = self.locktime
-        details['gas_limit'] = details.pop('startgas')
         details['sender_address'] = self.sender_address
         details['recipient_address'] = self.recipient_address
-        details['transaction_address'] = details.pop('hash')
         details['contract_address'] = self.contract_address
         details['refund_address'] = self.sender_address
         if self.token:
