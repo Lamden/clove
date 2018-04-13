@@ -110,6 +110,7 @@ class EthereumContract(object):
         )
         transaction.value = self.value
         transaction.token = self.token
+        transaction.recipient_address = self.recipient_address
         return transaction
 
     def refund(self):
@@ -139,6 +140,7 @@ class EthereumContract(object):
         )
         transaction.value = self.value
         transaction.token = self.token
+        transaction.recipient_address = self.refund_address
         return transaction
 
     def show_details(self):
