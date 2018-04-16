@@ -1,10 +1,16 @@
+from unittest.mock import patch
+
 from bitcoin.base58 import decode, encode
 from bitcoin.core.key import CPubKey
 from bitcoin.wallet import CBitcoinSecret
+from ecdsa import SECP256k1, SigningKey
+from ecdsa.util import PRNG
 from pytest import mark, raises
 
+from clove.network import Ethereum
 from clove.network.bitcoin import Bitcoin
 from clove.network.bitcoin.wallet import BitcoinWallet
+from clove.network.ethereum.wallet import EthereumWallet
 
 
 def test_password_encryption():
@@ -69,3 +75,31 @@ def test_get_bitcoin_wallet_via_network(kwargs):
 def test_get_new_bitcoin_wallet_via_network():
     wallet = Bitcoin.get_new_wallet()
     assert isinstance(wallet, BitcoinWallet)
+
+
+def test_wallet_ethereum():
+    private_key = '34fff148b3d00c1e8b3a016c7859e1616dc0edcfc3ea1ef7c96a7c4487fbeb26'
+    wallet = EthereumWallet(private_key)
+
+    assert wallet.private_key == private_key
+    assert wallet.address == '0x76cF367Efb63E037E3dfd0352DAc15e501f72DeA'
+
+
+def test_get_new_ethereum_wallet_via_network():
+    private_key = '34fff148b3d00c1e8b3a016c7859e1616dc0edcfc3ea1ef7c96a7c4487fbeb26'
+    wallet = Ethereum.get_wallet(private_key)
+    assert isinstance(wallet, EthereumWallet)
+
+
+@patch(
+    'ecdsa.SigningKey.generate',
+    return_value=SigningKey.generate(
+        curve=SECP256k1, entropy=PRNG("test")
+    )
+)
+def test_get_new_ethereum_wallet_wo_priv_key_provided(mocked_priv_key):
+    expected_address = '0xfc843077A275A4caFEF00D88BE0B296b334D613B'
+
+    wallet = Ethereum.get_wallet()
+    assert isinstance(wallet, EthereumWallet)
+    assert wallet.address == expected_address

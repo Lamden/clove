@@ -22,6 +22,7 @@ setup(
         'python_bitcoinlib',
         'ethereum==2.3.0',
         'web3==4.0.0b11',
+        'ecdsa==0.13',
     ],
     extras_require={
         'testing': [

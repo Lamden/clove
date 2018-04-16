@@ -17,6 +17,7 @@ from clove.exceptions import UnsupportedTransactionType
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
+from clove.network.ethereum.wallet import EthereumWallet
 from clove.network.ethereum_based import Token
 
 
@@ -204,3 +205,7 @@ class EthereumBaseNetwork(BaseNetwork):
             return self.web3.eth.sendRawTransaction(raw_transaction).hex()
         except ValueError:
             return
+
+    @classmethod
+    def get_wallet(cls, private_key=None):
+        return EthereumWallet(private_key)
