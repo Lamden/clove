@@ -7,6 +7,7 @@ from ethereum.transactions import Transaction
 import rlp
 from web3 import HTTPProvider, Web3
 from web3.contract import ConciseContract
+from web3.exceptions import BadFunctionCallOutput
 from web3.utils.abi import get_abi_input_types
 from web3.utils.contracts import find_matching_fn_abi
 from web3.utils.datastructures import AttributeDict
@@ -172,7 +173,7 @@ class EthereumBaseNetwork(BaseNetwork):
             name = concise.name()
             symbol = concise.symbol()
             decimals = concise.decimals()
-        except OverflowError:
+        except (OverflowError, BadFunctionCallOutput):
             return
         return Token(name, symbol, token_address, decimals)
 
