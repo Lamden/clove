@@ -206,5 +206,5 @@ class EthereumBaseNetwork(BaseNetwork):
             return
 
     @classmethod
-    def get_wallet(cls, private_key):
+    def get_wallet(cls, private_key=None):
         return EthereumWallet(private_key)
