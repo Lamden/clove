@@ -6,6 +6,7 @@ class BaseNetwork(object):
     test_networks = {}
     bitcoin_based = None
     ethereum_based = None
+    testnet = False
 
     @property
     def default_symbol(self):
@@ -14,7 +15,7 @@ class BaseNetwork(object):
 
     @classmethod
     def is_test_network(cls):
-        return cls.name and cls.name.startswith('test-')
+        return cls.testnet
 
     @classmethod
     def get_network_by_symbol(cls, symbol):

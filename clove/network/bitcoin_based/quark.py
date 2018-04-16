@@ -36,3 +36,4 @@ class QuarkTestNet(Quark):
         'SCRIPT_ADDR': 199,
         'SECRET_KEY': 247
     }
+    testnet = True

@@ -40,3 +40,4 @@ class ZetacoinTestNet(Zetacoin):
         'SCRIPT_ADDR': 188,
         'SECRET_KEY': 239
     }
+    testnet = True

@@ -38,3 +38,4 @@ class MonetaryUnitTestNet(MonetaryUnit):
         'SCRIPT_ADDR': 19,
         'SECRET_KEY': 64
     }
+    testnet = True

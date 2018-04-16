@@ -38,3 +38,4 @@ class ZCoinTestNet(ZCoin):
         'SCRIPT_ADDR': 178,
         'SECRET_KEY': 185
     }
+    testnet = True

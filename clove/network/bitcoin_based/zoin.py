@@ -42,3 +42,4 @@ class ZoinTestNet(Zoin):
         'SCRIPT_ADDR': 178,
         'SECRET_KEY': 193
     }
+    testnet = True

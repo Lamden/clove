@@ -37,3 +37,4 @@ class MachinecoinTestNet(Machinecoin):
         'SCRIPT_ADDR': 5,
         'SECRET_KEY': 178
     }
+    testnet = True

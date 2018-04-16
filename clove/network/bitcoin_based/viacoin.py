@@ -38,3 +38,4 @@ class ViacoinTestNet(Viacoin):
         'SCRIPT_ADDR': 196,
         'SECRET_KEY': 255
     }
+    testnet = True

@@ -38,3 +38,4 @@ class BitcoreTestNet(Bitcore):
         'SCRIPT_ADDR': 196,
         'SECRET_KEY': 239
     }
+    testnet = True

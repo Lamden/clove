@@ -61,5 +61,6 @@ class EthereumTestnet(Ethereum):
     infura_network = 'kovan'
     tokens = kovan_tokens
     token_class = EthereumTestnetToken
+    testnet = True
 
     contract_address = '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8'
