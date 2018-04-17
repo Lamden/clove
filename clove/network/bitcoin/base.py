@@ -6,7 +6,7 @@ from typing import Optional
 import bitcoin
 from bitcoin import SelectParams
 from bitcoin.base58 import Base58ChecksumError, InvalidBase58Error
-from bitcoin.core import b2lx, b2x, script
+from bitcoin.core import CTransaction, b2lx, b2x, script, x
 from bitcoin.core.serialize import Hash, SerializationError, SerializationTruncationError
 from bitcoin.messages import (
     MSG_TX,
@@ -29,12 +29,17 @@ from clove.constants import (
     NODE_COMMUNICATION_TIMEOUT,
     TRANSACTION_BROADCASTING_MAX_ATTEMPTS,
 )
-from clove.exceptions import ConnectionProblem, TransactionRejected, UnexpectedResponseFromNode
+from clove.exceptions import (
+    ConnectionProblem,
+    ImpossibleDeserialization,
+    TransactionRejected,
+    UnexpectedResponseFromNode,
+)
 from clove.network.base import BaseNetwork
 from clove.network.bitcoin.contract import BitcoinContract
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.network.bitcoin.wallet import BitcoinWallet
-from clove.utils.bitcoin import auto_switch_params, deserialize_raw_transaction
+from clove.utils.bitcoin import auto_switch_params
 from clove.utils.external_source import (
     extract_scriptsig_from_redeem_transaction,
     get_fee_from_blockcypher,
@@ -283,7 +288,7 @@ class BitcoinBaseNetwork(BaseNetwork):
 
     @auto_switch_params()
     def broadcast_transaction(self, raw_transaction: str):
-        deserialized_transaction = deserialize_raw_transaction(raw_transaction)
+        deserialized_transaction = self.deserialize_raw_transaction(raw_transaction)
         serialized_transaction = deserialized_transaction.serialize()
 
         get_data = self.send_inventory(serialized_transaction)
@@ -420,14 +425,14 @@ class BitcoinBaseNetwork(BaseNetwork):
     def get_wallet(cls, private_key=None, encrypted_private_key=None, password=None):
         return BitcoinWallet(private_key, encrypted_private_key, password)
 
-    @staticmethod
-    def extract_secret(raw_transaction: str=None, scriptsig: str=None) -> str:
+    @classmethod
+    def extract_secret(cls, raw_transaction: str=None, scriptsig: str=None) -> str:
 
         if not raw_transaction and not scriptsig:
             raise ValueError('raw_transaction or scriptsig have to be provided.')
 
         if raw_transaction:
-            tx = deserialize_raw_transaction(raw_transaction)
+            tx = cls.deserialize_raw_transaction(raw_transaction)
 
             if not tx.vin:
                 raise ValueError('Given transaction has no inputs.')
@@ -477,3 +482,10 @@ class BitcoinBaseNetwork(BaseNetwork):
             return False
 
         return True
+
+    @staticmethod
+    def deserialize_raw_transaction(raw_transaction: str) -> CTransaction:
+        try:
+            return CTransaction.deserialize(x(raw_transaction))
+        except Exception:
+            raise ImpossibleDeserialization()

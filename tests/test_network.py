@@ -2,11 +2,13 @@ import ipaddress
 from unittest.mock import patch
 
 import bitcoin
+from bitcoin.core import CTransaction
 import pytest
-from pytest import mark
+from pytest import mark, raises
 from validators import domain
 
 from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
+from clove.exceptions import ImpossibleDeserialization
 from clove.network import BITCOIN_BASED as networks
 from clove.network import BitcoinTestNet
 from clove.network.bitcoin.base import BitcoinBaseNetwork
@@ -249,3 +251,18 @@ def test_publish_transaction_from_network(signed_transaction, connection_mock):
 def test_publish_transaction_from_transaction(signed_transaction, connection_mock):
     with connection_mock:
         assert signed_transaction.address == signed_transaction.publish()
+
+
+def test_deserialize_raw_transaction():
+    valid_transaction = '0100000001350ff23c56027e3f7b8206d01a8fa2302d7ef82898e7ac795674a4e6450dd427000000008a47' \
+                        '3044022033a4d693aedc99fea12d03acb07d3fbd2c26eb1da88df2820a2544058010a750022032195aaed8' \
+                        'e773fa984bb3fe98ab138f6af36a500151f910a473f437bd63631501410402282aa6329ceada82ebcd53af' \
+                        '7b1739cbc958e137ddde2b5da21183fa545b54cf75ce0c2296af902d53dd2a06fd783b7d8de00d74e612e8' \
+                        '52bfee952d6744e70000000002a0e92f000000000017a914a2e40d94f0fa9d2bb8b6f424607f44a2e153da' \
+                        '6f87c059693b000000001976a9143dfd3bba567574ba0508d01a96e89300af292b0688ac00000000'
+    invalid_transaction = 'I am an invalid transaction :)'
+
+    assert type(BitcoinTestNet.deserialize_raw_transaction(valid_transaction)) == CTransaction
+
+    with raises(ImpossibleDeserialization):
+        BitcoinTestNet.deserialize_raw_transaction(invalid_transaction)

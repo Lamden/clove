@@ -6,7 +6,7 @@ from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import auto_switch_params, deserialize_raw_transaction, from_base_units, to_base_units
+from clove.utils.bitcoin import auto_switch_params, from_base_units, to_base_units
 from clove.utils.external_source import get_balance, get_transaction
 
 
@@ -31,7 +31,7 @@ class BitcoinContract(object):
         self.vout = None
         self.tx_address = transaction_address
         if raw_transaction:
-            self.tx = deserialize_raw_transaction(raw_transaction)
+            self.tx = self.network.deserialize_raw_transaction(raw_transaction)
             try:
                 self.vout = self.tx.vout[0]
             except IndexError:
@@ -42,7 +42,7 @@ class BitcoinContract(object):
                 raise ValueError('No transaction found under given address.')
             if 'hex' in tx_json:
                 # transaction from blockcypher or raven explorer
-                self.tx = deserialize_raw_transaction(tx_json['hex'])
+                self.tx = self.network.deserialize_raw_transaction(tx_json['hex'])
                 self.vout = self.tx.vout[0]
             else:
                 # transaction from cryptoid
