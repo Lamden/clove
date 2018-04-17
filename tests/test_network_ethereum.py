@@ -3,7 +3,7 @@ from decimal import Decimal
 from unittest.mock import patch
 
 import pytest
-from pytest import mark
+from pytest import mark, raises
 
 from .conftest import (
     eth_initial_transaction,
@@ -13,7 +13,7 @@ from .conftest import (
 )
 
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
-from clove.exceptions import UnsupportedTransactionType
+from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionType
 from clove.network import BitcoinTestNet, EthereumTestnet
 from clove.network.ethereum import EthereumToken
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
@@ -283,3 +283,51 @@ def test_token_precision_validation(value, token_decimals):
     with pytest.raises(ValueError) as error:
         token.validate_precision(value)
     assert str(error.value) == f'Test_token token supports at most {token_decimals} decimal places.'
+
+
+@mark.parametrize('raw_transaction', ['', 'non_hex_characters', '12345'])
+def test_deserialize_raw_transaction_invalid_transaction(raw_transaction):
+    with raises(ImpossibleDeserialization):
+        EthereumTestnet.deserialize_raw_transaction(raw_transaction)
+
+
+def test_deserialize_raw_transaction():
+    transaction = EthereumTestnet.deserialize_raw_transaction(eth_initial_transaction['raw'].hex())
+
+    assert EthereumTestnet.unify_address(transaction.to.hex()) == eth_initial_transaction['to']
+    assert EthereumTestnet.unify_address(transaction.sender.hex()) == eth_initial_transaction['from']
+    assert transaction.hash == eth_initial_transaction['hash']
+    assert transaction.nonce == eth_initial_transaction['nonce']
+    assert transaction.gasprice == eth_initial_transaction['gasPrice']
+    assert transaction.startgas == eth_initial_transaction['gas']
+    assert transaction.value == eth_initial_transaction['value']
+    assert transaction.data.hex() == eth_initial_transaction['input'][2:]
+    assert transaction.s == int.from_bytes(eth_initial_transaction['s'], byteorder='big')
+    assert transaction.r == int.from_bytes(eth_initial_transaction['r'], byteorder='big')
+    assert transaction.v == eth_initial_transaction['v']
+
+
+@mark.parametrize('private_key', ['', 'non_hex_characters', '12345'])
+def test_sign_raw_transaction_invalid_key(private_key):
+    unsigned_transaction = '0xf86880843b9aca0082b2089453e546387a0d054e7ff127923254c' \
+                           '0a679da6dbf80b844095ea7b30000000000000000000000007657ca' \
+                           '877fac31d20528b473162e39b6e152fd2e000000000000000000000' \
+                           '00000000000000000000000003635c9adc5dea00000808080'
+
+    with raises(ValueError, match='Invalid private key.'):
+        EthereumTestnet.sign_raw_transaction(unsigned_transaction, private_key)
+
+
+def test_sign_raw_transaction():
+    unsigned_transaction = '0xf86880843b9aca0082b2089453e546387a0d054e7ff127923254c' \
+                           '0a679da6dbf80b844095ea7b30000000000000000000000007657ca' \
+                           '877fac31d20528b473162e39b6e152fd2e000000000000000000000' \
+                           '00000000000000000000000003635c9adc5dea00000808080'
+
+    private_key = '34fff148b3d00c1e8b3a016c7859e1616dc0edcfc3ea1ef7c96a7c4487fbeb26'
+    address = '0x76cF367Efb63E037E3dfd0352DAc15e501f72DeA'
+
+    raw_signed_transaction = EthereumTestnet.sign_raw_transaction(unsigned_transaction, private_key)
+    signed_transaction = EthereumTestnet.deserialize_raw_transaction(raw_signed_transaction)
+
+    assert EthereumTestnet.unify_address(signed_transaction.sender.hex()) == address
