@@ -307,3 +307,23 @@ def extract_scriptsig_raven(contract_address: str, testnet: bool=False) -> Optio
         raise ValueError('Unexpected response from Ravencoin API.')
 
     return data['vin'][0]['scriptSig']['hex']
+
+
+def find_redeem_transaction(recipient_address: str, contract_address: str, value: int, subdomain: str) -> Optional[str]:
+
+    recipient_address = recipient_address.lower()
+    contract_address = contract_address.lower()
+    value = str(value)
+
+    etherscan_api_key = os.getenv('ETHERSCAN_API_KEY')
+    if not etherscan_api_key:
+        raise ValueError('API key for etherscan is required.')
+
+    data = clove_req_json(
+        f'http://{subdomain}.etherscan.io/api?module=account&action=txlistinternal'
+        f'&address={recipient_address}&apikey={etherscan_api_key}'
+    )
+
+    for result in reversed(data['result']):
+        if result['to'] == recipient_address and result['from'] == contract_address and result['value'] == value:
+            return result['hash']
