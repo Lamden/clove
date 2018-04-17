@@ -5,6 +5,7 @@ from typing import Optional, Union
 from eth_abi import decode_abi
 from ethereum.transactions import Transaction
 import rlp
+from rlp import RLPException
 from web3 import HTTPProvider, Web3
 from web3.contract import ConciseContract
 from web3.exceptions import BadFunctionCallOutput
@@ -13,7 +14,7 @@ from web3.utils.contracts import find_matching_fn_abi
 from web3.utils.datastructures import AttributeDict
 
 from clove.constants import ERC20_BASIC_ABI
-from clove.exceptions import UnsupportedTransactionType
+from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionType
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
@@ -198,6 +199,29 @@ class EthereumBaseNetwork(BaseNetwork):
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:
         return Web3.toHex(rlp.encode(transaction))
+
+    @staticmethod
+    def deserialize_raw_transaction(raw_transaction: str) -> Optional[Transaction]:
+        try:
+            transaction = rlp.hex_decode(raw_transaction, Transaction)
+        except (ValueError, RLPException):
+            raise ImpossibleDeserialization()
+
+        transaction._cached_rlp = None
+        transaction.make_mutable()
+
+        return transaction
+
+    @classmethod
+    def sign_raw_transaction(cls, raw_transaction: str, private_key: str) -> str:
+        transaction = cls.deserialize_raw_transaction(raw_transaction)
+
+        try:
+            transaction.sign(private_key)
+        except Exception:
+            raise ValueError('Invalid private key.')
+
+        return cls.get_raw_transaction(transaction)
 
     def publish(self, transaction: Union[str, Transaction]) -> Optional[str]:
         raw_transaction = transaction if isinstance(transaction, str) else self.get_raw_transaction(transaction)
