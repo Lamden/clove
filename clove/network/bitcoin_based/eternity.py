@@ -37,3 +37,4 @@ class EternityTestNet(Eternity):
         'SCRIPT_ADDR': 10,
         'SECRET_KEY': 239
     }
+    testnet = True

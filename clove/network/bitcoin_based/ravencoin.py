@@ -89,6 +89,7 @@ class RavencoinTestNet(Ravencoin):
         'SCRIPT_ADDR': 196,
         'SECRET_KEY': 239
     }
+    testnet = True
 
     @classmethod
     def get_current_fee_per_kb(cls) -> Optional[float]:

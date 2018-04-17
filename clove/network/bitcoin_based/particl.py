@@ -36,3 +36,4 @@ class ParticlTestNet(Particl):
         'SCRIPT_ADDR': 122,
         'SECRET_KEY': 46
     }
+    testnet = True

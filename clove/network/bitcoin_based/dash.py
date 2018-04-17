@@ -43,3 +43,4 @@ class DashTestNet(Dash):
         'SCRIPT_ADDR': 19,
         'SECRET_KEY': 239
     }
+    testnet = True

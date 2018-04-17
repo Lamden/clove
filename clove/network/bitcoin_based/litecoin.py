@@ -45,3 +45,4 @@ class LitecoinTestNet(Litecoin):
         'SCRIPT_ADDR': 58,
         'SECRET_KEY': 239
     }
+    testnet = True

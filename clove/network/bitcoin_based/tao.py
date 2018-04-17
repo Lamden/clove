@@ -36,3 +36,4 @@ class TaoTestNet(Tao):
         'SCRIPT_ADDR': 130,
         'SECRET_KEY': 138
     }
+    testnet = True
