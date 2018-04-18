@@ -308,11 +308,11 @@ def test_refund_not_expired_contract(_, alice_wallet, signed_transaction):
             contract.refund(alice_wallet)
 
 
-@freeze_time('2018-04-20')
 @patch('clove.network.bitcoin.contract.get_balance', return_value=0)
 def test_refund_zero_balance(_, btc_testnet_contract, bob_wallet):
-    with pytest.raises(ValueError) as e:
-        btc_testnet_contract.refund(bob_wallet)
+    with freeze_time(btc_testnet_contract.locktime + timedelta(days=5)):
+        with pytest.raises(ValueError) as e:
+            btc_testnet_contract.refund(bob_wallet)
     assert str(e.value) == 'Balance of this contract is 0.'
 
 
