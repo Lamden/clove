@@ -20,6 +20,7 @@ from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
 from clove.network.ethereum.wallet import EthereumWallet
 from clove.network.ethereum_based import Token
+from clove.utils.logging import logger
 
 
 class EthereumBaseNetwork(BaseNetwork):
@@ -48,6 +49,7 @@ class EthereumBaseNetwork(BaseNetwork):
     def infura_endpoint(self) -> str:
         token = os.environ.get('INFURA_TOKEN')
         if not token:
+            logger.warning('INFURA_TOKEN environment variable was not set.')
             raise ValueError('INFURA_TOKEN environment variable was not set.')
         return f'https://{self.infura_network}.infura.io/{token}'
 
@@ -68,6 +70,7 @@ class EthereumBaseNetwork(BaseNetwork):
                 self.refund: 'refund',
             }[method_id]
         except KeyError:
+            logger.warning(f'Unrecognized method id {self.method_id}')
             raise UnsupportedTransactionType(f'Unrecognized method id {self.method_id}')
 
     @staticmethod
@@ -102,6 +105,7 @@ class EthereumBaseNetwork(BaseNetwork):
         if token_address:
             token = self.get_token_by_address(token_address)
             if not token:
+                logger.warning('Unknown ethereum token')
                 raise ValueError('Unknown token')
 
         transaction = EthereumAtomicSwapTransaction(
@@ -128,6 +132,7 @@ class EthereumBaseNetwork(BaseNetwork):
         if token_address:
             token = self.get_token_by_address(token_address)
             if not token:
+                logger.warning('Unknown ethereum token')
                 raise ValueError('Unknown token')
 
         transaction = EthereumTokenApprovalTransaction(
@@ -142,6 +147,7 @@ class EthereumBaseNetwork(BaseNetwork):
     @staticmethod
     def sign(transaction: Transaction, private_key: str) -> Transaction:
         transaction.sign(private_key)
+        logger.info('Transaction signed')
         return transaction
 
     def get_transaction(self, tx_address: str) -> AttributeDict:
@@ -155,6 +161,7 @@ class EthereumBaseNetwork(BaseNetwork):
         tx_dict = self.get_transaction(tx_address)
         method_id = self.extract_method_id(tx_dict['input'])
         if method_id != self.redeem:
+            logger.debug('Not a redeem transaction.')
             raise ValueError('Not a redeem transaction.')
         method_name = self.get_method_name(method_id)
         input_types = get_abi_input_types(find_matching_fn_abi(self.abi, fn_identifier=method_name))
@@ -175,13 +182,16 @@ class EthereumBaseNetwork(BaseNetwork):
             name = concise.name()
             symbol = concise.symbol()
             decimals = concise.decimals()
+            logger.debug(f'Token get from contract with success')
         except (OverflowError, BadFunctionCallOutput):
+            logger.warning(f'Unable to take token from address: {token_address}')
             return
         return Token(name, symbol, token_address, decimals)
 
     def get_token_by_address(self, address: str):
         token = self.get_token_by_attribute('address', address) or self.get_token_from_token_contract(address)
         if not token:
+            logger.warning(f'No token found for address {address}')
             return
         return self.token_class.from_namedtuple(token)
 
@@ -189,6 +199,7 @@ class EthereumBaseNetwork(BaseNetwork):
     def get_token_by_symbol(cls, symbol: str):
         token = cls.get_token_by_attribute('symbol', symbol)
         if not token:
+            logger.warning(f'No token found for symbol {symbol}')
             return
         return cls.token_class.from_namedtuple(token)
 
@@ -204,7 +215,9 @@ class EthereumBaseNetwork(BaseNetwork):
     def deserialize_raw_transaction(raw_transaction: str) -> Optional[Transaction]:
         try:
             transaction = rlp.hex_decode(raw_transaction, Transaction)
+            logger.debug('Deserialization succeed')
         except (ValueError, RLPException):
+            logger.warning(f'Deserialization with {raw_transaction} failed')
             raise ImpossibleDeserialization()
 
         transaction._cached_rlp = None
@@ -218,7 +231,9 @@ class EthereumBaseNetwork(BaseNetwork):
 
         try:
             transaction.sign(private_key)
+            logger.debug("Transaction signed")
         except Exception:
+            logger.warning("Invalid private key. Transaction could not be signed.")
             raise ValueError('Invalid private key.')
 
         return cls.get_raw_transaction(transaction)
@@ -226,8 +241,11 @@ class EthereumBaseNetwork(BaseNetwork):
     def publish(self, transaction: Union[str, Transaction]) -> Optional[str]:
         raw_transaction = transaction if isinstance(transaction, str) else self.get_raw_transaction(transaction)
         try:
-            return self.web3.eth.sendRawTransaction(raw_transaction).hex()
+            published_transaction = self.web3.eth.sendRawTransaction(raw_transaction).hex()
+            logger.debug(f'Transaction {published_transaction} published successful')
+            return published_transaction
         except ValueError:
+            logger.warning(f'Unable to publish transaction {raw_transaction}')
             return
 
     @classmethod

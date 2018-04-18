@@ -2,6 +2,7 @@ from datetime import datetime
 from http.client import HTTPResponse
 import json
 import os
+import time
 from typing import Optional
 from urllib.error import HTTPError, URLError
 import urllib.request
@@ -17,9 +18,12 @@ def clove_req(url: str) -> Optional[HTTPResponse]:
     """Make a request with Clove user-agent header"""
     req = urllib.request.Request(url, headers={'User-Agent': 'Clove'})
     try:
+        request_start = time.time()
         resp = urllib.request.urlopen(req)
+        response_time = time.time() - request_start
+        logger.debug(f'Request was sent successfully. Response time was {response_time}')
     except (HTTPError, URLError) as e:
-        logger.debug('Could not open url %s', url)
+        logger.warning('Could not open url %s', url)
         logger.exception(e)
         return
     return resp
