@@ -8,6 +8,7 @@ from web3.utils.contracts import find_matching_fn_abi
 
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
 from clove.network.ethereum.transaction import EthereumTokenTransaction
+from clove.utils.external_source import find_redeem_transaction
 
 
 class EthereumContract(object):
@@ -112,6 +113,14 @@ class EthereumContract(object):
         transaction.token = self.token
         transaction.recipient_address = self.recipient_address
         return transaction
+
+    def find_redeem_transaction(self):
+        return find_redeem_transaction(
+            recipient_address=self.recipient_address,
+            contract_address=self.contract_address,
+            value=self.network.value_to_base_units(self.value),
+            subdomain=self.network.etherscan_api_subdomain,
+        )
 
     def refund(self):
         contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)

@@ -22,6 +22,13 @@ For operations on networks supported by `chainz.cryptoid.info` API a [free API k
     $ export CRYPTOID_API_KEY=YOUR_API_KEY
 
 
+### Etherscan API key
+
+For operations on Etherscan API (e.q. `find_redeem_transaction`) a [free API key](https://etherscan.io/myapikey) is needed. This key has to be setup as a environment variable under the `ETHERSCAN_API_KEY` key.
+
+    $ export ETHERSCAN_API_KEY=YOUR_API_KEY
+
+
 ## 1. Wallets setup
 
 [**Alice**] has to create a new litecoin wallet
@@ -575,9 +582,10 @@ https://kovan.etherscan.io/tx/0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd26
 
 ## 11. Secret capture
 
-[**Bob**] should extract the secret from the redeem transaction.
+[**Bob**] should extract the secret from the redeem transaction. For this operation (`find_redeem_transaction`) an Etherscan API key is required - [read more](#etherscan-api-key)
 
-    secret = eth_test.extract_secret_from_redeem_transaction('0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1')
+    alice_redeem_tx_hash = bob_contract.find_redeem_transaction()
+    secret = eth_test.extract_secret_from_redeem_transaction(alice_redeem_tx_hash)
 
 ## 12. Second redeem transaction
 

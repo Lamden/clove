@@ -255,3 +255,118 @@ def infura_token():
     os.environ['INFURA_TOKEN'] = 'WsUXSFPvO9t86xDAAhNi'
     yield
     del os.environ['INFURA_TOKEN']
+
+
+@pytest.fixture
+def etherscan_token():
+    os.environ['ETHERSCAN_API_KEY'] = 'PRF1ZEGKUDN9P2WKITCCYRU9E3ASPKGBKZ'
+    yield
+    del os.environ['ETHERSCAN_API_KEY']
+
+
+@pytest.fixture
+@patch('clove.utils.external_source.clove_req_json')
+def etherscan_api_response(etherscan_api_mock):
+    etherscan_api_mock.return_value = {
+        "message": "OK",
+        "result": [
+            {
+                "blockNumber": "6628836",
+                "contractAddress": "",
+                "errCode": "",
+                "from": "0x9f7e5402ed0858ea0c5914d44b900a42c89547b8",
+                "gas": "2300",
+                "gasUsed": "0",
+                "hash": "0x862b393fd64d4c1ae1a6cc55f2c6f36a87fdce46dcc7abb1a7ba174c10bb0281",
+                "input": "",
+                "isError": "0",
+                "timeStamp": "1522398684",
+                "to": "0x999f348959e611f1e9eab2927c21e88e48e6ef45",
+                "traceId": "0",
+                "type": "call",
+                "value": "8"
+            },
+            {
+                "blockNumber": "6712309",
+                "contractAddress": "",
+                "errCode": "",
+                "from": "0x9f7e5402ed0858ea0c5914d44b900a42c89547b8",
+                "gas": "2300",
+                "gasUsed": "0",
+                "hash": "0x2dd60f28a3ef781fd12adfeb3b622fe424a268816392bbac4d5116ead94a0fde",
+                "input": "",
+                "isError": "0",
+                "timeStamp": "1522841088",
+                "to": "0x999f348959e611f1e9eab2927c21e88e48e6ef45",
+                "traceId": "0",
+                "type": "call",
+                "value": "1"
+            },
+            {
+                "blockNumber": "6793058",
+                "contractAddress": "",
+                "errCode": "",
+                "from": "0x9f7e5402ed0858ea0c5914d44b900a42c89547b8",
+                "gas": "2300",
+                "gasUsed": "0",
+                "hash": "0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1",
+                "input": "",
+                "isError": "0",
+                "timeStamp": "1523275524",
+                "to": "0x999f348959e611f1e9eab2927c21e88e48e6ef45",
+                "traceId": "0",
+                "type": "call",
+                "value": "500000000000000000"
+            },
+            {
+                "blockNumber": "6795065",
+                "contractAddress": "",
+                "errCode": "",
+                "from": "0x9f7e5402ed0858ea0c5914d44b900a42c89547b8",
+                "gas": "2300",
+                "gasUsed": "0",
+                "hash": "0x4c21cf7bb5d64f659ba02f84e9af42150d7911147588a2b5fe4330f73d6afb33",
+                "input": "",
+                "isError": "0",
+                "timeStamp": "1523285852",
+                "to": "0x999f348959e611f1e9eab2927c21e88e48e6ef45",
+                "traceId": "0",
+                "type": "call",
+                "value": "9"
+            },
+            {
+                "blockNumber": "6837685",
+                "contractAddress": "",
+                "errCode": "",
+                "from": "0x9f7e5402ed0858ea0c5914d44b900a42c89547b8",
+                "gas": "2300",
+                "gasUsed": "0",
+                "hash": "0xbf0b86b80ca9780c7e992c9c5bf5fc8db75e434821fc0a51545e469f554f9878",
+                "input": "",
+                "isError": "0",
+                "timeStamp": "1523530744",
+                "to": "0x999f348959e611f1e9eab2927c21e88e48e6ef45",
+                "traceId": "0",
+                "type": "call",
+                "value": "1000000000000000000"
+            },
+            {
+                "blockNumber": "6896101",
+                "contractAddress": "",
+                "errCode": "",
+                "from": "0x9f7e5402ed0858ea0c5914d44b900a42c89547b8",
+                "gas": "2300",
+                "gasUsed": "0",
+                "hash": "0xadded643661b566661969bb05dc3aa25eaa3ad6eef371d01e3af3e9386c266a9",
+                "input": "",
+                "isError": "0",
+                "timeStamp": "1523951692",
+                "to": "0x999f348959e611f1e9eab2927c21e88e48e6ef45",
+                "traceId": "0",
+                "type": "call",
+                "value": "1000000000000000000"
+            }
+        ],
+        "status": "1"
+    }
+    return etherscan_api_mock
