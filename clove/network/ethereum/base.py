@@ -94,6 +94,8 @@ class EthereumBaseNetwork(BaseNetwork):
         secret_hash: str=None,
         token_address: str=None,
     ) -> EthereumAtomicSwapTransaction:
+        """ Return EthereumAtomicSwapTransaction object,
+            which initiate and build transaction beetwen sender and recipient """
 
         if not isinstance(value, Decimal):
             value = Decimal(str(value))
@@ -163,11 +165,14 @@ class EthereumBaseNetwork(BaseNetwork):
 
     @classmethod
     def get_token_by_attribute(cls, name: str, value: str) -> Optional[Token]:
+        """ Get a token by provided attribute and its value """
         for token in cls.tokens:
             if getattr(token, name).lower() == value.lower():
                 return token
 
     def get_token_from_token_contract(self, token_address: str) -> Optional[Token]:
+        """ Getting information from token contract and creating Token.
+            Smart contract is taken based on provided address """
         token_address = self.unify_address(token_address)
         token_contract = self.web3.eth.contract(address=token_address, abi=ERC20_BASIC_ABI)
         concise = ConciseContract(token_contract)
@@ -187,6 +192,7 @@ class EthereumBaseNetwork(BaseNetwork):
 
     @classmethod
     def get_token_by_symbol(cls, symbol: str):
+        """  Get raw_transaction by encoding Transaction object token by provided symbol """
         token = cls.get_token_by_attribute('symbol', symbol)
         if not token:
             return
@@ -198,10 +204,13 @@ class EthereumBaseNetwork(BaseNetwork):
 
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:
+        """ Get raw_transaction by encoding Transaction object """
         return Web3.toHex(rlp.encode(transaction))
 
     @staticmethod
     def deserialize_raw_transaction(raw_transaction: str) -> Optional[Transaction]:
+        """ Method to deserialize raw method.
+        It's deserializing raw_transaction and returns Transaction object"""
         try:
             transaction = rlp.hex_decode(raw_transaction, Transaction)
         except (ValueError, RLPException):
@@ -214,6 +223,7 @@ class EthereumBaseNetwork(BaseNetwork):
 
     @classmethod
     def sign_raw_transaction(cls, raw_transaction: str, private_key: str) -> str:
+        """ Method to sign raw transactions """
         transaction = cls.deserialize_raw_transaction(raw_transaction)
 
         try:
@@ -224,6 +234,7 @@ class EthereumBaseNetwork(BaseNetwork):
         return cls.get_raw_transaction(transaction)
 
     def publish(self, transaction: Union[str, Transaction]) -> Optional[str]:
+        """ Method to publish transaction """
         raw_transaction = transaction if isinstance(transaction, str) else self.get_raw_transaction(transaction)
         try:
             return self.web3.eth.sendRawTransaction(raw_transaction).hex()
@@ -232,4 +243,5 @@ class EthereumBaseNetwork(BaseNetwork):
 
     @classmethod
     def get_wallet(cls, private_key=None):
+        """ Returns Ethereum wallter object, which allows to keep address and priv key """
         return EthereumWallet(private_key)
