@@ -234,6 +234,7 @@ class BitcoinBaseNetwork(BaseNetwork):
         try:
             self.blacklist_nodes[node] += 1
         except KeyError:
+            logger.warning('Unable to update  blacklist')
             self.blacklist_nodes[node] = 1
 
     @auto_switch_params()
@@ -366,6 +367,7 @@ class BitcoinBaseNetwork(BaseNetwork):
         """Returns current fee based on last transactions."""
 
         if cls.is_test_network() and cls.name != 'test-bitcoin':
+            logger.warning('Unable to take fee per kb for %s', cls.name)
             raise NotImplementedError
 
         network = cls.symbols[0].lower()
@@ -373,6 +375,7 @@ class BitcoinBaseNetwork(BaseNetwork):
             return get_fee_from_blockcypher(network, testnet=cls.is_test_network())
 
         if network not in CRYPTOID_SUPPORTED_NETWORKS:
+            logger.info('%s: network is not supported', network)
             raise NotImplementedError
 
         return get_fee_from_last_transactions(network)
@@ -384,6 +387,7 @@ class BitcoinBaseNetwork(BaseNetwork):
     @classmethod
     def get_utxo(cls, address, amount):
         if cls.is_test_network() and cls.name != 'test-bitcoin':
+            logger.info('%s: network is not supported to get utxo', cls.name)
             raise NotImplementedError
 
         network = cls.symbols[0].lower()
@@ -391,6 +395,7 @@ class BitcoinBaseNetwork(BaseNetwork):
             return get_utxo_from_api(network, address, amount, use_blockcypher=True, testnet=cls.is_test_network())
 
         if network not in CRYPTOID_SUPPORTED_NETWORKS:
+            logger.info('%s: network is not supported', network)
             raise NotImplementedError
 
         api_key = os.getenv('CRYPTOID_API_KEY')

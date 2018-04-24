@@ -9,6 +9,7 @@ from web3.utils.contracts import find_matching_fn_abi
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
 from clove.network.ethereum.transaction import EthereumTokenTransaction
 from clove.utils.external_source import find_redeem_transaction
+from clove.utils.logging import logger
 
 
 class EthereumContract(object):
@@ -22,6 +23,7 @@ class EthereumContract(object):
         self.token = None
 
         if not self.is_initiate:
+            logger.warning('Not a contract transaction.')
             raise ValueError('Not a contract transaction.')
 
         if self.is_token_contract:
@@ -127,6 +129,7 @@ class EthereumContract(object):
 
         if self.locktime > datetime.utcnow():
             locktime_string = self.locktime.strftime('%Y-%m-%d %H:%M:%S')
+            logger.warning(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
             raise RuntimeError(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
 
         refund_func = contract.functions.refund(self.secret_hash)
@@ -150,6 +153,7 @@ class EthereumContract(object):
         transaction.value = self.value
         transaction.token = self.token
         transaction.recipient_address = self.refund_address
+        logger.debug('Transaction refunded')
         return transaction
 
     def show_details(self):
