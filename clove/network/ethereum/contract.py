@@ -121,13 +121,13 @@ class EthereumContract(object):
             return find_redeem_token_transaction(
                 recipient_address=self.recipient_address,
                 token_address=self.token_address,
-                value=str(self.value_base_units),
+                value=self.value_base_units,
                 subdomain=self.network.etherscan_api_subdomain,
             )
         return find_redeem_transaction(
             recipient_address=self.recipient_address,
             contract_address=self.contract_address,
-            value=self.network.value_to_base_units(self.value),
+            value=self.value_base_units,
             subdomain=self.network.etherscan_api_subdomain,
         )
 

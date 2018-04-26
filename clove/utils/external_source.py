@@ -317,7 +317,7 @@ def extract_scriptsig_raven(contract_address: str, testnet: bool=False) -> Optio
 def find_redeem_transaction(
     recipient_address: str,
     contract_address: str,
-    value: str,
+    value: int,
     subdomain: str,
 ) -> Optional[str]:
 
@@ -344,7 +344,7 @@ def find_redeem_transaction(
 def find_redeem_token_transaction(
     recipient_address: str,
     token_address: str,
-    value: str,
+    value: int,
     subdomain: str
 ) -> Optional[str]:
 

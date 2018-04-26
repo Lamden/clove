@@ -17,12 +17,18 @@ setup(
     description='Clove is a library that makes atomic swaps between chains easy.',
     long_description=long_description,
     install_requires=[
+
         'colorama==0.3.9',
         'coloredlogs==9.0',
         'python_bitcoinlib',
-        'ethereum==2.3.0',
         'web3==4.0.0b11',
         'ecdsa==0.13',
+
+        # fixed requirements of ethereum
+        'eth-account==0.1.0a2',
+        'eth-rlp==0.1.0',
+
+        'ethereum==2.3.0',
     ],
     extras_require={
         'testing': [
