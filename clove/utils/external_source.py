@@ -19,9 +19,10 @@ def clove_req(url: str) -> Optional[HTTPResponse]:
     req = urllib.request.Request(url, headers={'User-Agent': 'Clove'})
     try:
         request_start = time.time()
+        logger.debug('  Requesting: %s', url)
         resp = urllib.request.urlopen(req)
         response_time = time.time() - request_start
-        logger.debug(f'Request was sent successfully. Response time was {response_time}')
+        logger.debug('Got response: %s [%.2fs]', url, response_time)
     except (HTTPError, URLError) as e:
         logger.warning('Could not open url %s', url)
         logger.exception(e)
@@ -313,7 +314,12 @@ def extract_scriptsig_raven(contract_address: str, testnet: bool=False) -> Optio
     return data['vin'][0]['scriptSig']['hex']
 
 
-def find_redeem_transaction(recipient_address: str, contract_address: str, value: int, subdomain: str) -> Optional[str]:
+def find_redeem_transaction(
+    recipient_address: str,
+    contract_address: str,
+    value: int,
+    subdomain: str,
+) -> Optional[str]:
 
     recipient_address = recipient_address.lower()
     contract_address = contract_address.lower()
@@ -331,3 +337,35 @@ def find_redeem_transaction(recipient_address: str, contract_address: str, value
     for result in reversed(data['result']):
         if result['to'] == recipient_address and result['from'] == contract_address and result['value'] == value:
             return result['hash']
+
+    logger.debug('Redeem transaction not found.')
+
+
+def find_redeem_token_transaction(
+    recipient_address: str,
+    token_address: str,
+    value: int,
+    subdomain: str
+) -> Optional[str]:
+
+    recipient_address = recipient_address.lower()
+    token_address = token_address.lower()
+    value = str(value)
+
+    etherscan_api_key = os.getenv('ETHERSCAN_API_KEY')
+    if not etherscan_api_key:
+        raise ValueError('API key for etherscan is required.')
+
+    data = clove_req_json(
+        f'http://{subdomain}.etherscan.io/api?module=account&action=tokentx'
+        f'&contractaddress={token_address}&address={recipient_address}'
+        f'&apikey={etherscan_api_key}'
+    )
+
+    for result in reversed(data['result']):
+        if result['to'] == recipient_address \
+                and result['contractAddress'] == token_address \
+                and result['value'] == value:
+            return result['hash']
+
+    logger.debug('Redeem token transaction not found.')

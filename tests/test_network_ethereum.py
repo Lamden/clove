@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 from pytest import mark, raises
 
-from .conftest import (
+from .constants import (
     eth_initial_transaction,
     eth_redeem_tranaction,
     eth_unsupported_transaction,
