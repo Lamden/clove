@@ -3,7 +3,7 @@ from os import path
 
 from setuptools import find_packages, setup
 
-__version__ = '0.0.1'
+version = __import__('clove').__version__
 
 here = path.abspath(path.dirname(__file__))
 
@@ -13,7 +13,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='clove',
-    version=__version__,
+    version=version,
     description='Clove is a library that makes atomic swaps between chains easy.',
     long_description=long_description,
     install_requires=[
@@ -43,6 +43,7 @@ setup(
         ],
         'dev': [
             'pyquery==1.4.0',
+            'bumpversion==0.5.3',
         ],
         'docs': [
             'Sphinx==1.6.6',
@@ -56,7 +57,7 @@ setup(
         'https://github.com/lamden/python-bitcoinlib/archive/master.zip#egg=python_bitcoinlib-999'
     ],
     url='https://github.com/Lamden/clove',
-    download_url='https://github.com/Lamden/clove/tarball/' + __version__,
+    download_url=f'https://github.com/Lamden/clove/tarball/{version}',
     license='GPLv3',
     classifiers=[
         'Development Status :: 3 - Alpha',
