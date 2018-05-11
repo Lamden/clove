@@ -28,6 +28,16 @@ def test_atomic_swap(infura_token, web3_request_mock):
     assert isinstance(eth_atomic_swap, EthereumAtomicSwapTransaction)
 
 
+@mark.parametrize('address,valid', [
+    ('0x999F348959E611F1E9eab2927c21E88E48e6Ef45', True),
+    ('123', False),
+    ('999F348959E611F1E9eab2927c21E88E48e6Ef45', False),
+])
+def test_ethereum_addresses(address, valid, infura_token):
+    network = EthereumTestnet()
+    assert network.is_valid_address(address) is valid
+
+
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
 def test_eth_audit_contract(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
