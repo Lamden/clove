@@ -89,6 +89,10 @@ class EthereumBaseNetwork(BaseNetwork):
         int(address, 16)
         return Web3.toChecksumAddress(address)
 
+    @staticmethod
+    def is_valid_address(adddress: str) -> bool:
+        return Web3.isAddress(adddress)
+
     def atomic_swap(
         self,
         sender_address: str,
