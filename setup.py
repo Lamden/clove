@@ -16,6 +16,7 @@ setup(
     version=version,
     description='Clove is a library that makes atomic swaps between chains easy.',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     install_requires=[
         'python-altcoinlib==0.9.1',
         'colorama==0.3.9',
