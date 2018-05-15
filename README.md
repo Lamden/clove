@@ -1,4 +1,4 @@
-# clove [![Build Status](https://travis-ci.com/Lamden/clove_dev.svg?token=ZJstcVy9cUkAxLqvqRuL&branch=master)](https://travis-ci.com/Lamden/clove_dev)
+# clove [![Build Status](https://travis-ci.com/Lamden/clove.svg?token=ZJstcVy9cUkAxLqvqRuL&branch=master)](https://travis-ci.com/Lamden/clove)
 
 version number: 0.1.0
 

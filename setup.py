@@ -17,10 +17,9 @@ setup(
     description='Clove is a library that makes atomic swaps between chains easy.',
     long_description=long_description,
     install_requires=[
-
+        'python-altcoinlib==0.9.1',
         'colorama==0.3.9',
         'coloredlogs==9.0',
-        'python_bitcoinlib',
         'web3==4.0.0b11',
         'ecdsa==0.13',
 
@@ -51,11 +50,6 @@ setup(
             'recommonmark==0.4.0',
         ],
     },
-    dependency_links=[
-        # waiting for this fix to be released:
-        # https://github.com/petertodd/python-bitcoinlib/commit/1a089d67f5a0b64ae9f2ffcac786b87b56a0551b
-        'https://github.com/lamden/python-bitcoinlib/archive/master.zip#egg=python_bitcoinlib-999'
-    ],
     url='https://github.com/Lamden/clove',
     download_url=f'https://github.com/Lamden/clove/tarball/{version}',
     license='GPLv3',
