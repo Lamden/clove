@@ -26,6 +26,7 @@ setup(
         # fixed requirements of ethereum
         'eth-account==0.1.0a2',
         'eth-rlp==0.1.0',
+        'rlp==0.6.0',
 
         'ethereum==2.3.0',
     ],
