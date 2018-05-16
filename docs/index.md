@@ -3,4 +3,5 @@
 
 ## Contents
 
-* [Atomic swap example](usage.html)
+* [Atomic swap example](usage.md)
+* [Refund example](refund.md)
