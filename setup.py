@@ -46,11 +46,6 @@ setup(
             'pyquery==1.4.0',
             'bumpversion==0.5.3',
         ],
-        'docs': [
-            'Sphinx==1.6.6',
-            'sphinx-rtd-theme==0.2.4',
-            'recommonmark==0.4.0',
-        ],
     },
     url='https://github.com/Lamden/clove',
     download_url=f'https://github.com/Lamden/clove/tarball/{version}',

@@ -7,3 +7,13 @@ script: tox
 branches:
   only:
     - master
+    - release
+deploy:
+  skip_cleanup: true
+  provider: pypi
+  user: "trojkat"
+  password:
+    secure: dOzfoEHyaUkoAdZE9BiqZ8ZHhxqZlEtE8d9xEzK3QYk2i6ugbXMjweWmgwClAw83d+4ZSSrVMIgYYd5M/xfHTYZZapHDO3+XHxkT1FiCcr70PGndODzgsC6aPmPy6Oh1kVkXwfqUsdSka62VohBH6BqFgaQURGGP8gnjUM8czZcOlom6hYyoqDaaWuY4BJjx6zV0ht6CSBVov/GdrnTNM58PilKbHNKYxVnHQLlSDYqXNdTWubbuMMTUwpZHnIAfoOhYkYWyHLbv0KJOjmG7LygrjUxaDPMvsgoY+E3r4KF03k3pnLoSWABQsdWr8OaKHuKoznH8ZU9+6Pp1n2SlHb6x0DoOHLPjcKrPuApqa3/V5BIfh1GGFfuMv4nbgwA3ONYwN8+hlhOIFi5QmMz0E5VQ/sIXmXcSdUxwIHjOFdqSLI6H07PskXdXZkz9aPzSZqmG+d56jqrukN3X8ulgNgD7kQXWdS2cHADmBAoJ49IzzMyF39BUYYcOIhUohC7YtRfcQ+sBqlT/A26R8ZaHo4S+STbqk7odd6XKQNyLmWlIH/PMDQI682UUUGUzkCCVh/Kblomw7Hska/O/lYu4qPk1ntMDQrZgTwrXIMjfA0es7XcO5KCDQDOfM/a/ttcrORdjlDSt+KNuPVUu3p8RInMlErqT/oUoOnuKFwHhcIw=
+  distributions: "bdist_wheel"
+  on:
+    branch: release
