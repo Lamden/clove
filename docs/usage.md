@@ -102,10 +102,10 @@ Alice and Bob exchange their wallet addresses.
 
 ## 3. Alice is initializing an atomic swap transaction
 
-[**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find these information by viewing transaction on block explorer e.g. [here](https://bchain.info/MONA/tx/5a82da68900bb725f1ac7e2a8f51a41dea12873c99c2d28a32942e04395323fd)
+[**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find this information by viewing transaction on block explorer e.g. [here](https://bchain.info/MONA/tx/5a82da68900bb725f1ac7e2a8f51a41dea12873c99c2d28a32942e04395323fd)
 
 For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs UTXOs can also be gathered automatically.
-See an exmaple in [Participation](#6-participation). For `chainz.cryptoid.info` API key is required - [read more](#cryptoid-api-key).
+See an exmaple in [Participation](#6-participation). For `chainz.cryptoid.info`, an API key is required - [read more](#cryptoid-api-key).
 
     from clove.network.bitcoin.utxo import Utxo
 
@@ -159,14 +159,14 @@ https://bchain.info/MONA/tx/a0110ac963517ea12935fabe92ecd90217ba6847069dad21f952
 
 ## 4. Communication
 
-[**Alice**] sends hers transaction hash `a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4` to Bob, so he could get `raw_transaction` (e.g. "hex" in raw data of [transaction](https://bchain.info/MONA/tx/a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4)).
+[**Alice**] sends her transaction hash `a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4` to Bob, so he can get the `raw_transaction` (e.g. "hex" in raw data of [transaction](https://bchain.info/MONA/tx/a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4)).
 And also she needs to send the contract to Bob (i.e. `63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704ef6bdc5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac`)
 
 
 ## 5. Contract audit
 
-[**Bob**] needs to create contract in network of coins he wants to receive (i.e. Alice's network), in our case in Monacoin network.
-And also at this point Bob should validate if the data returned in the contract is correct, he should also check if the transaction is present in the blockchain API (e.g. Bchain.info)
+[**Bob**] needs to create a contract in network of coins he wants to receive (i.e. Alice's network), in our case in Monacoin network.
+And also at this point Bob should validate if the data returned in the contract is correct. He should also check if the transaction is present in the blockchain API (e.g. Bchain.info)
 
     alice_contract = mona_network.audit_contract(
         contract='63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704ef6bdc5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac',
@@ -186,7 +186,7 @@ And also at this point Bob should validate if the data returned in the contract 
 
 ## 6. Participation
 
-[**Bob**] has to create parallel transaction from point 3 but in his network (i.e. Litecoin network). We call it `participate_transaction`.
+[**Bob**] has to create a parallel transaction from point 3 but in his network (i.e. Litecoin network). We call it  a `participate_transaction`.
 
     from clove.network.bitcoin.utxo import Utxo
     from clove.utils.bitcoin import from_base_units # blockcypher is showing value in satoshis
@@ -201,7 +201,7 @@ And also at this point Bob should validate if the data returned in the contract 
         ),
     ]
 
-For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs the UTXOs can also be gathered automatically. For `chainz.cryptoid.info` API key is required - [read more](#cryptoid-api-key).
+For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs the UTXOs can also be gathered automatically. For `chainz.cryptoid.info`, an API key is required - [read more](#cryptoid-api-key).
 
     participate_utxo_list = ltc_network.get_utxo(bob_ltc_wallet.address, litecoins_to_swap)
 
@@ -248,8 +248,8 @@ https://live.blockcypher.com/ltc/tx/565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e
 
 ## 8. Contract audit
 
-[**Alice**] needs to audit contract in network of coins she wants to receive (i.e. Bob's network), in our case in Litecoin network.
-And also at this point Alice should validate if the data returned in the contract is correct, she should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)
+[**Alice**] needs to audit the contract in network of coins she wants to receive (i.e. Bob's network), in our case on the Litecoin network.
+And also at this point Alice should validate if the data returned in the contract is correct. She should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)
 
 For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs contract audit can be done based on contract and transaction hash.
     bob_contract = ltc_network.audit_contract(
