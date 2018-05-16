@@ -44,9 +44,3 @@ To run all linters and tests:
 If you want to run a specyfic test
 
     $ py.test -k test_name
-
-### Generating documentation
-
-    $ pip install -e '.[docs]'
-    $ cd docs
-    $ make html
