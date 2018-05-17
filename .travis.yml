@@ -11,9 +11,8 @@ branches:
 deploy:
   skip_cleanup: true
   provider: pypi
-  user: lamden
-  password:
-    secure: "w0l7gUvaangscXMPsABsCaGfpGvzZVx0I3FCDOx6axEAXCJ8gBI6Si3lb6X0H+M/Ju1NinmjWLdaHscOOxxOcu2WIQfbLOMAm5jMN1L0W+q9k36sdo5D7RribgN79nj4vW17YtH/+7oynu7pN15AWeCMANx7YjkWQ5PTVSUkX6RZml7foPB99nFU1VNCS1i4ioSTrDPKv2ga3p9YJDd2r5ppaIpX9C9kliepfzD3BFCODa+jIwpaGag7bXSTVs81OLBdF44OMAgBAPxqKWGRlD6qkoyo7SWOXd9WUnrIMiSDeeHn8XE85mIsBdBpBV7LPlFUNDp5kvd/bxR57+g2givIY6XyUiqOicGxeO3fuyjQgvgaPshG7hRsuFtKKMsiIrjjuNpFcsiRDdo8CzEyE2IhwN3zJsWHyseKXPAIFrVVsHsHm/ruGPzVufpmfFuE5TgqP04uleY4ONULXQkVkI34WQMcQIXX6yxnhdstq31YhWYDCy8C7L3K/v0FlYxLzPpdRlHyUu97zcGahvamdXouFVE3VqvFlk1kALn7ME5VMJNl5yIaLqcRDc9jKUy72j0+TZRSjtwKrdOwa8zT5blRVcUFHPRYjLirLQupKglDHj4S/NTawjGr/Mb9rUZUlOlEwximFACVincAu9X9fmp22FXDrRnFtuLfj+2OeH8="
+  user: $PYPI_USER
+  password: $PYPI_PASS
   distributions: bdist_wheel
   on:
     branch: release
