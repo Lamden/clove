@@ -8,6 +8,9 @@ version number: 1.1.0
 Clove is a library that makes atomic swaps between chains easy.
 
 
+Documentation available at [lamden.github.io/clove](https://lamden.github.io/clove).
+
+
 ## Installation
 
 To install use pip:
