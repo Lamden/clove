@@ -9,6 +9,8 @@ TRANSACTION_BROADCASTING_MAX_ATTEMPTS = 10
 
 SIGNATURE_SIZE = 110
 
+CLOVE_API_URL = 'https://clove-api.lamden.io'
+
 BLOCKCYPHER_SUPPORTED_NETWORKS = (
     'btc', 'doge', 'dash'
 )
