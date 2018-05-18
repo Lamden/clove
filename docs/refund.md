@@ -1,7 +1,6 @@
 # Transaction refunds
 
-The beauty of the atomic swaps is hidden in the possibility of refunding transaction,
-if the second side of the exchange is delaying in the coin contribution.
+Atomic swaps work because if any party does not comply with the previously agreed upon terms, the transaction can revert using a refund mechanism.
 
 #### Here are some examples of transaction refunds.
 
