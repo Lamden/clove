@@ -46,18 +46,11 @@ def test_network_source_code_url_is_unique():
 
 
 @mark.parametrize('network', networks)
-@patch('clove.network.bitcoin_based.ravencoin.Ravencoin.get_current_fee_per_kb', return_value=0.01)
-@patch('clove.network.bitcoin.base.get_fee_from_last_transactions', return_value=0.01)
-@patch('clove.network.bitcoin.base.get_fee_from_blockcypher', return_value=0.01)
-def test_fee_per_kb_implementation(blockcyphe_mock, api_mock, ravencoin_mock, network):
+@patch('clove.network.bitcoin.base.get_current_fee', return_value=0.01)
+def test_fee_per_kb_implementation(clove_api_mock, network):
     # networks supported by blockcypher or with own methods for getting fee
     if network.name in ('bitcoin', 'test-bitcoin', 'litecoin', 'dogecoin', 'dash', 'raven'):
         assert network.get_current_fee_per_kb() == 0.01
-        return
-
-    if network.is_test_network() or network.symbols[0].lower() not in CRYPTOID_SUPPORTED_NETWORKS:
-        with pytest.raises(NotImplementedError):
-            network.get_current_fee_per_kb()
         return
 
     assert network.get_current_fee_per_kb() == 0.01

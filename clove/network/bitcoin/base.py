@@ -24,7 +24,6 @@ from bitcoin.net import CInv
 from bitcoin.wallet import CBitcoinAddress, CBitcoinAddressError
 
 from clove.constants import (
-    BLOCKCYPHER_SUPPORTED_NETWORKS,
     CRYPTOID_SUPPORTED_NETWORKS,
     NODE_COMMUNICATION_TIMEOUT,
     TRANSACTION_BROADCASTING_MAX_ATTEMPTS,
@@ -40,12 +39,7 @@ from clove.network.bitcoin.contract import BitcoinContract
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.network.bitcoin.wallet import BitcoinWallet
 from clove.utils.bitcoin import auto_switch_params
-from clove.utils.external_source import (
-    extract_scriptsig_from_redeem_transaction,
-    get_fee_from_blockcypher,
-    get_fee_from_last_transactions,
-    get_utxo_from_api,
-)
+from clove.utils.external_source import extract_scriptsig_from_redeem_transaction, get_current_fee, get_utxo_from_api
 from clove.utils.logging import logger
 from clove.utils.network import generate_params_object
 
@@ -365,20 +359,8 @@ class BitcoinBaseNetwork(BaseNetwork):
     @classmethod
     def get_current_fee_per_kb(cls) -> Optional[float]:
         """Returns current fee based on last transactions."""
-
-        if cls.is_test_network() and cls.name != 'test-bitcoin':
-            logger.warning('Unable to take fee per kb for %s', cls.name)
-            raise NotImplementedError
-
-        network = cls.symbols[0].lower()
-        if network in BLOCKCYPHER_SUPPORTED_NETWORKS:
-            return get_fee_from_blockcypher(network, testnet=cls.is_test_network())
-
-        if network not in CRYPTOID_SUPPORTED_NETWORKS:
-            logger.info('%s: network is not supported', network)
-            raise NotImplementedError
-
-        return get_fee_from_last_transactions(network)
+        network = cls.symbols[0]
+        return get_current_fee(network)
 
     def get_current_node(self):
         if self.connection:
