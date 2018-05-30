@@ -84,7 +84,7 @@ def get_current_fee(network: str) -> Optional[float]:
 
     resp = clove_req_json(f'{CLOVE_API_URL}/fee/{network}')
 
-    if not resp or resp.status != 200:
+    if not resp:
         logger.debug('Could not get current fee for %s network', network)
         return
 
