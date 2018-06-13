@@ -1,7 +1,11 @@
-# Welcome to clove's documentation!
+# Clove documentation
 
+```eval_rst
+.. toctree::
+   :maxdepth: 2
 
-## Contents
-
-* [Atomic swap example](usage.md)
-* [Refund example](refund.md)
+   README
+   usage
+   refund
+   api
+```

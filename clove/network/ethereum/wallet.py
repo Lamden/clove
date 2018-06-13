@@ -3,6 +3,7 @@ from ethereum import utils
 
 
 class EthereumWallet(object):
+    '''Ethereum wallet object.'''
 
     def __init__(self, private_key=None):
         self.private_key = private_key

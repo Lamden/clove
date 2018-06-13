@@ -12,9 +12,9 @@ from clove.utils.hashing import generate_secret_with_hash
 
 
 class EthereumTransaction(object):
+    '''Ethereum transaction object.'''
 
     def __init__(self, network):
-
         self.network = network
         self.tx = None
         self.value = None
@@ -22,9 +22,11 @@ class EthereumTransaction(object):
 
     @property
     def raw_transaction(self) -> str:
+        '''Returns raw transaction serialized to hex.'''
         return Web3.toHex(rlp.encode(self.tx))
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns information about transaction.'''
         details = self.tx.to_dict()
         details['transaction_address'] = details.pop('hash')
         details['gas_limit'] = details.pop('startgas')
@@ -48,6 +50,7 @@ class EthereumTransaction(object):
 
 
 class EthereumTokenTransaction(EthereumTransaction):
+    '''Ethereum token transaction object.'''
 
     def __init__(self, network):
         super().__init__(network)
@@ -57,7 +60,8 @@ class EthereumTokenTransaction(EthereumTransaction):
         self.value_base_units = None
         self.symbol = None
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns information about transaction.'''
         details = super().show_details()
 
         if self.token:
@@ -164,7 +168,6 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             self.set_contract()
 
     def set_secrets(self):
-
         if self.secret_hash:
             try:
                 self.secret_hash.hex()
