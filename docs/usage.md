@@ -1,11 +1,9 @@
-# Clove atomic swap example
+# Atomic swap example
 
-* [Bitcoin based networks](#bitcoin-based-networks)
-* [Ethereum Testnet](#ethereum-testnet)
 
-# Bitcoin based networks
+## Bitcoin based networks
 
-## Assumptions
+### Assumptions
 
 * Alice has over 0.4 monacoins and wants to buy 0.01 litecoins
 * Alice doesn't have a litecoin wallet
@@ -15,21 +13,21 @@
 (2018-03-01) Exchange rate: 0.01 litecoins is 0.4 monacoin
 
 
-### Cryptoid API key
+#### Cryptoid API key
 
 For operations on networks supported by `chainz.cryptoid.info` API a [free API key](https://chainz.cryptoid.info/api.key.dws) is needed. This key has to be setup as a environment variable under the `CRYPTOID_API_KEY` key.
 
     $ export CRYPTOID_API_KEY=YOUR_API_KEY
 
 
-### Etherscan API key
+#### Etherscan API key
 
 For operations on Etherscan API (e.q. `find_redeem_transaction`) a [free API key](https://etherscan.io/myapikey) is needed. This key has to be setup as a environment variable under the `ETHERSCAN_API_KEY` key.
 
     $ export ETHERSCAN_API_KEY=YOUR_API_KEY
 
 
-## 1. Wallets setup
+### 1. Wallets setup
 
 [**Alice**] has to create a new litecoin wallet
 
@@ -85,7 +83,7 @@ https://bchain.info/MONA/addr/MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL
     'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq'
 https://live.blockcypher.com/ltc/address/LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq/
 
-## 2. Communication
+### 2. Communication
 
 Alice and Bob exchange their wallet addresses.
 
@@ -100,7 +98,7 @@ Alice and Bob exchange their wallet addresses.
     alice_ltc_address = 'LXRAXRgPo84p58746zaBXUFFevCTYBPxgb'
 
 
-## 3. Alice is initializing an atomic swap transaction
+### 3. Alice is initializing an atomic swap transaction
 
 [**Alice**] has to prepare a transaction input (UTXO's that she wants to spend in this transaction). You can find this information by viewing transaction on block explorer e.g. [here](https://bchain.info/MONA/tx/5a82da68900bb725f1ac7e2a8f51a41dea12873c99c2d28a32942e04395323fd)
 
@@ -157,13 +155,13 @@ See an exmaple in [Participation](#6-participation). For `chainz.cryptoid.info`,
 https://bchain.info/MONA/tx/a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4
 
 
-## 4. Communication
+### 4. Communication
 
 [**Alice**] sends her transaction hash `a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4` to Bob, so he can get the `raw_transaction` (e.g. "hex" in raw data of [transaction](https://bchain.info/MONA/tx/a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4)).
 And also she needs to send the contract to Bob (i.e. `63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704ef6bdc5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac`)
 
 
-## 5. Contract audit
+### 5. Contract audit
 
 [**Bob**] needs to create a contract in network of coins he wants to receive (i.e. Alice's network), in our case in Monacoin network.
 And also at this point Bob should validate if the data returned in the contract is correct. He should also check if the transaction is present in the blockchain API (e.g. Bchain.info)
@@ -184,7 +182,7 @@ And also at this point Bob should validate if the data returned in the contract 
      'value_text': '0.40000000 MONA'}
 
 
-## 6. Participation
+### 6. Participation
 
 [**Bob**] has to create a parallel transaction from point 3 but in his network (i.e. Litecoin network). We call it  a `participate_transaction`.
 
@@ -241,12 +239,12 @@ With the list of UTXOs `participate_transaction` can be created.
     '565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50'
 https://live.blockcypher.com/ltc/tx/565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50/
 
-## 7. Communication
+### 7. Communication
 
 [**Bob**] sends his transaction hash `565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50` and contract `63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac` to Alice.
 
 
-## 8. Contract audit
+### 8. Contract audit
 
 [**Alice**] needs to audit the contract in network of coins she wants to receive (i.e. Bob's network), in our case on the Litecoin network.
 And also at this point Alice should validate if the data returned in the contract is correct. She should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)
@@ -276,7 +274,7 @@ For unsupported networks Alice should find the raw transaction for given transac
      'value_text': '0.01000000 LTC'}
 
 
-## 9. First redeem transaction
+### 9. First redeem transaction
 
 [**Alice**] can now collect coins she wants, thus she creates redeem transaction.
 
@@ -304,7 +302,7 @@ https://live.blockcypher.com/ltc/tx/0cd90567497823097d03464b4b2d08dd659f1c5621dd
 [**Alice**] should get litecoins just after redeem transaction is published.
 
 
-## 10. Secret capture
+### 10. Secret capture
 
 [**Bob**] should check if his contract has been already redeemed to be able to extract the secret from the redeem transaction.
 
@@ -326,7 +324,7 @@ or `script` field from the first input:
 
     secret = ltc_network.extract_secret(scriptsig='483045022100d63353332b762551f3278ea02ab25746ddc78aae08c73cfd81e7871b54ebee88022068fa0e3b6578efbfed07373b2147b190ebe6466d2cdbed15cc2eecb0f218837001410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4209a2cfc32611dbd3ac3261cd23622223e85e6c6575852d20e031c1333b9070bc2514c5163a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac')
 
-## 11. Second redeem transaction
+### 11. Second redeem transaction
 
 [**Bob**] can now collect coins he wants, thus he creates redeem transaction.
 
@@ -356,15 +354,15 @@ https://bchain.info/MONA/tx/1593f8ac14340e23d629342881e188b848af3dc1b7909791aacd
 
 [**Bob**] should get monacoins just after redeem transaction is published.
 
-# Ethereum Testnet
+## Ethereum Testnet
 
-## Assumptions
+### Assumptions
 
 * Alice wants to buy 0.5 ETH for 1000 Blockbusters Test tokens in Ethereum Kovan Testnet
 * Bob wants to buy 1000 Blockbusters Test tokens for 0.5 ETH in Ethereum Kovan Testnet
 * Both Alice and Bob have wallets in Ethereum Kovan network
 
-## 1. Setup
+### 1. Setup
 
 Alice should initialize the network object, set her address, private key, amount of tokens to be swapped and the address of the token.
 
@@ -396,7 +394,7 @@ Bob should initialize the network object, set his address, private key and amoun
 
     eth_to_swap = '0.5'
 
-## 2. Communication
+### 2. Communication
 
 Alice and Bob exchange their wallet addresses.
 
@@ -408,7 +406,7 @@ Alice and Bob exchange their wallet addresses.
 
     alice_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
 
-## 3. Token approval
+### 3. Token approval
 
 To send tokens to an atomic swap contract Alice has to first approve that the tokens she own can be spend by that contract.
 
@@ -436,7 +434,7 @@ To send tokens to an atomic swap contract Alice has to first approve that the to
 https://kovan.etherscan.io/tx/0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b6635ae615e0454bd4fc
 
 
-## 4. Alice is initializing an atomic swap transaction
+### 4. Alice is initializing an atomic swap transaction
 
     initial_transaction = eth_test.atomic_swap(
         address,
@@ -473,12 +471,12 @@ https://kovan.etherscan.io/tx/0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b663
     '0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840'
 https://kovan.etherscan.io/tx/0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840
 
-## 5. Communication
+### 5. Communication
 
 [**Alice**] sends hers transaction address `0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840` to Bob so he can audit created contract.
 
 
-## 6. Contract audit
+### 6. Contract audit
 
 [**Bob**] needs to audit the contract in the network it was created in, in our case it's Ethereum Testnet network.
 And also at this point Bob should validate if the data returned in the contract is correct.
@@ -497,7 +495,7 @@ And also at this point Bob should validate if the data returned in the contract 
      'value_text': '1000.000000000000000000 BBT'}
 
 
-## 7. Participation
+### 7. Participation
 
 [**Bob**] has to create parallel transaction from point 4 but for 0.5 ETH. We call it `participate_transaction`.
 
@@ -535,12 +533,12 @@ And also at this point Bob should validate if the data returned in the contract 
     '0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f'
 https://kovan.etherscan.io/tx/0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f
 
-## 8. Communication
+### 8. Communication
 
 [**Bob**] sends his transaction address `0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f` to Alice.
 
 
-## 9. Contract audit
+### 9. Contract audit
 
 [**Alice**] needs to audit the contract in the network it was created in, in our case it's Ethereum Testnet network.
 And also at this point Alice should validate if the data returned in the contract is correct.
@@ -560,7 +558,7 @@ And also at this point Alice should validate if the data returned in the contrac
      'value_text': '0.500000000000000000 ETH'}
 
 
-## 10. First redeem transaction
+### 10. First redeem transaction
 
 [**Alice**] can now collect coins she wants, thus she creates redeem transaction.
 
@@ -589,14 +587,14 @@ https://kovan.etherscan.io/tx/0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd26
 [**Alice**] will get ether just after redeem transaction is published.
 
 
-## 11. Secret capture
+### 11. Secret capture
 
 [**Bob**] should extract the secret from the redeem transaction. For this operation (`find_redeem_transaction`) an Etherscan API key is required - [read more](#etherscan-api-key)
 
     alice_redeem_tx_hash = bob_contract.find_redeem_transaction()
     secret = eth_test.extract_secret_from_redeem_transaction(alice_redeem_tx_hash)
 
-## 12. Second redeem transaction
+### 12. Second redeem transaction
 
 [**Bob**] can now collect tokens he wants, thus he creates redeem transaction.
 

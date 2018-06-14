@@ -12,6 +12,7 @@ from clove.utils.hashing import generate_secret_with_hash
 
 
 class BitcoinTransaction(object):
+    '''Bitcoin transaction object.'''
 
     @auto_switch_params(1)
     def __init__(self, network, recipient_address: str, value: float, solvable_utxo: list, tx_locktime: int=0):
@@ -146,6 +147,7 @@ class BitcoinTransaction(object):
 
 
 class BitcoinAtomicSwapTransaction(BitcoinTransaction):
+    '''Bitcoin atomic swap object.'''
     init_hours = 48
     participate_hours = 24
 
