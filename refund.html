@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Transaction refunds &mdash; Clove  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Atomic swap example" href="usage.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Clove
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Clove </a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Atomic swap example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Transaction refunds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#here-are-some-examples-of-transaction-refunds">Here are some examples of transaction refunds.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-initial-transaction-refund">I Initial transaction refund</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork">1. Get a wallet from the newtork</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction">2. Create refund transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction">3. Sign and publish refund transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher">4. Voilà! Alice should get her litecoins back. You can check it for example in a blockcypher.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ii-participate-transaction-refund">II Participate transaction refund</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork">1. Get a wallet from the newtork</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction">2. Create refund transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction">3. Sign and publish refund transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here">4. Voilà! Bob should get his monacoins back. You can check it for example here.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Clove</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Transaction refunds</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/refund.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="transaction-refunds">
+<span id="transaction-refunds"></span><h1>Transaction refunds<a class="headerlink" href="#transaction-refunds" title="Permalink to this headline">¶</a></h1>
+<p>Atomic swaps work because if any party does not comply with the previously agreed upon terms, the transaction can revert using a refund mechanism.</p>
+<div class="section" id="here-are-some-examples-of-transaction-refunds">
+<span id="here-are-some-examples-of-transaction-refunds"></span><h2>Here are some examples of transaction refunds.<a class="headerlink" href="#here-are-some-examples-of-transaction-refunds" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="i-initial-transaction-refund">
+<span id="i-initial-transaction-refund"></span><h2>I Initial transaction refund<a class="headerlink" href="#i-initial-transaction-refund" title="Permalink to this headline">¶</a></h2>
+<p>Alice created and published such transaction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contract&#39;</span><span class="p">:</span> <span class="s1">&#39;63a820b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a7028876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704b75db25ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;M93y8ouRm8YVez5RBnZi779tgBDPwbdehB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;01000000015322ad6edd25cc9f2f7dbec73b4d1b123b8abe7fc0e4acb1ec6bf112e1b5b9a5010000008b483045022100c4efbe3a31061df474ec8230428b6f615bc97c0e625a747f22eeeffac6efdbce02200946d6638d7d68086ba478c2280d6669934d63f09233482afcd8634937af63b701410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6000000000290ca04000000000017a9140ca29b3066cde980ffe06268f8bf1902f57ab4dd878f5c0f00000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac00000000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.00055184</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.00215564</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00215564 LTC / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00055184 LTC&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">372402</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LXRAXRgPo84p58746zaBXUFFevCTYBPxgb&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;376d4e7a476d576b70554a57504f32676569727654687463574a44356e664d72314d35744b50637743374f7a777a436257366c76514541497442316d66764733&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a702&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;256 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;abbcd57c53576985783c91f5b9cf2109c5a1f16cdfb35480e14a832fb78bfeb7&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.00314</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00314000 LTC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>She was waiting for the response from Bob for a day but she did not receive any,
+so she decided to refund the money from the blockchain:</p>
+<div class="section" id="get-a-wallet-from-the-newtork">
+<span id="get-a-wallet-from-the-newtork"></span><h3>1. Get a wallet from the newtork<a class="headerlink" href="#get-a-wallet-from-the-newtork" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+
+<span class="n">alice_ltc_wallet</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;aliceprivatekey&#39;</span><span class="p">)</span> <span class="c1"># provide real key</span>
+<span class="n">alice_ltc_wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-refund-transaction">
+<span id="create-refund-transaction"></span><h3>2. Create refund transaction<a class="headerlink" href="#create-refund-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>from clove.network.bitcoin.contract import BitcoinContract
+
+ltc_network = Litecoin()
+
+alice_contract = BitcoinContract(
+    network=ltc_network,
+    contract=&#39;63a820b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a7028876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704b75db25ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;,
+    raw_transaction=&#39;01000000015322ad6edd25cc9f2f7dbec73b4d1b123b8abe7fc0e4acb1ec6bf112e1b5b9a5010000008b483045022100c4efbe3a31061df474ec8230428b6f615bc97c0e625a747f22eeeffac6efdbce02200946d6638d7d68086ba478c2280d6669934d63f09233482afcd8634937af63b701410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6000000000290ca04000000000017a9140ca29b3066cde980ffe06268f8bf1902f57ab4dd878f5c0f00000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac00000000&#39;
+)
+
+refund_transaction = alice_contract.refund(alice_ltc_wallet)
+RuntimeError: This contract is still valid! It can&#39;t be refunded until 2018-03-21 14:27:19 UTC.
+</pre></div>
+</div>
+<p>Oops! Something went wrong! Contract is still valid! Alice was a bit impatient, wasn’t she?</p>
+<p>Initial transaction contract is set to be <strong>valid for 48 hours</strong>.</p>
+<p>Okey! It is past 2018-03-21 14:27:19 UTC, so Alice is free to create a refund transaction!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span> <span class="o">=</span> <span class="n">alice_contract</span><span class="o">.</span><span class="n">refund</span><span class="p">(</span><span class="n">alice_ltc_wallet</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sign-and-publish-refund-transaction">
+<span id="sign-and-publish-refund-transaction"></span><h3>3. Sign and publish refund transaction<a class="headerlink" href="#sign-and-publish-refund-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">()</span>
+
+<span class="n">refund_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+<span class="p">{</span><span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.00069549</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.00217341</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00217341 LTC / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00069549 LTC&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;320 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000001b7fe8bb72f834ae18054b3df6cf1a1c50921cfb9f5913c78856957537cd5bcab00000000eb4830450221008a1974702c78cdf9067af92d57643641b9b99388fa86a35ab6121348f75b2f7a02202cff4e470e3088fbbde26c71150641428511dd6188e9fdd4ec29f507bde8f50401410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6004c5d63a820b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a7028876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704b75db25ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac0000000001e3ba0300000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988acb75db25a&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;e42d94615792f60eab5503d7dc05a80d9cd394f958af83c8af862af1246e049d&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.00314</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00314000 LTC&#39;</span><span class="p">}</span>
+
+ <span class="n">refund_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher">
+<span id="voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher"></span><h3>4. Voilà! Alice should get her litecoins back. You can check it for example in a blockcypher.<a class="headerlink" href="#voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="ii-participate-transaction-refund">
+<span id="ii-participate-transaction-refund"></span><h2>II Participate transaction refund<a class="headerlink" href="#ii-participate-transaction-refund" title="Permalink to this headline">¶</a></h2>
+<p>Bob created and published such participating transaction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contract&#39;</span><span class="p">:</span> <span class="s1">&#39;63a820b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a7028876a9141a376f6634e41c22b28bc9ef3336a623717083a467047d0eb15ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;3F5em2T4pJd5ParPjs2QenpGL7QDvK2Wyc&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000001daee049a9f9822743a0691ae4f51768e3b4431f5f6abe08da8d8f7afd048e6ff010000008b483045022100c316eb713d282337807de04cdbd67327d78b5deb850f831f0f9aa5c06aa6ab7902203777ed3b22ab88927b92a70b621f44342a6159f10f5a3f456a9d8393e06e9e440141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca0000000002405dc6000000000017a91492e189107196d882ed245bf224940a21a23c5c0187c0fb6e0c000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac00000000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00000000 MONA / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00100000 MONA&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">516711</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a702&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;256 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;5d920e7093b2f0ac94cb1c13a42a79ed1c1290fcc4155d15a123d69b1afe05d2&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.13</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.13000000 MONA&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Alice didn’t redeem the transaction, so no secret key was published. Bob needed to get his monacoins back.</p>
+<p>The process is parallel as in the <a class="reference external" href="#I-Initial-transaction-refund">initial transaction</a>.</p>
+<div class="section" id="get-a-wallet-from-the-newtork">
+<span id="id1"></span><h3>1. Get a wallet from the newtork<a class="headerlink" href="#get-a-wallet-from-the-newtork" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Monacoin</span>
+
+<span class="n">bob_mona_wallet</span> <span class="o">=</span> <span class="n">Monacoin</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;bobprivatekey&#39;</span><span class="p">)</span> <span class="c1"># provide real key</span>
+<span class="n">bob_mona_wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-refund-transaction">
+<span id="id2"></span><h3>2. Create refund transaction<a class="headerlink" href="#create-refund-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>from clove.network.bitcoin.contract import BitcoinContract
+
+mona_network = Monacoin()
+
+bob_contract = BitcoinContract(
+    network=mona_network,
+    contract=&#39;63a820b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a7028876a9141a376f6634e41c22b28bc9ef3336a623717083a467047d0eb15ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac&#39;,
+    raw_transaction=&#39;0100000001daee049a9f9822743a0691ae4f51768e3b4431f5f6abe08da8d8f7afd048e6ff010000008b483045022100c316eb713d282337807de04cdbd67327d78b5deb850f831f0f9aa5c06aa6ab7902203777ed3b22ab88927b92a70b621f44342a6159f10f5a3f456a9d8393e06e9e440141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca0000000002405dc6000000000017a91492e189107196d882ed245bf224940a21a23c5c0187c0fb6e0c000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac00000000&#39;
+)
+
+refund_transaction = bob_contract.refund(bob_mona_wallet)
+RuntimeError: This contract is still valid! It can&#39;t be refunded until 2018-03-20 14:37:01 UTC.
+</pre></div>
+</div>
+<p>Oops! Something went wrong! Contract is still valid! Bob was a bit impatient, wasn’t he?</p>
+<p>Participate transaction contract is set to be <strong>valid for 24 hours</strong>.</p>
+<p>Okey! It is past 2018-03-20 14:37:01 UTC, so Bob is free to create a refund transaction!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span> <span class="o">=</span> <span class="n">bob_contract</span><span class="o">.</span><span class="n">refund</span><span class="p">(</span><span class="n">bob_mona_wallet</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sign-and-publish-refund-transaction">
+<span id="id3"></span><h3>3. Sign and publish refund transaction<a class="headerlink" href="#sign-and-publish-refund-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c1"># As monacoin is not in the blockcypher we need to add fee manually</span>
+<span class="n">refund_transaction</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00000000 MONA / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00100000 MONA&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">319</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;319 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000001d205fe1a9bd623a1155d15c4fc90121ced792aa4131ccb94acf0b293700e925d00000000ea4730440220112731937e6e0a0f5c366e667961ba8d41bc6fd980055c0c911f6dff3cb857d0022033751626806881058120118915a0a7f20280f53952460fff0e2b4c547cc5a7690141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca004c5d63a820b02f390cf0c6d445f8f3a730b2e9fce5dff10da4b47a523d2fd7bf73d8a7a7028876a9141a376f6634e41c22b28bc9ef3336a623717083a467047d0eb15ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac0000000001a0d6c400000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac7d0eb15a&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;3582597e1c30759027d9e53843f79528e0f4f0ddc458449f9bb824dabb53ba14&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.13</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.13000000 MONA&#39;</span><span class="p">}</span>
+
+ <span class="n">refund_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+ <span class="s1">&#39;3582597e1c30759027d9e53843f79528e0f4f0ddc458449f9bb824dabb53ba14&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here">
+<span id="voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here"></span><h3>4. Voilà! Bob should get his monacoins back. You can check it for example <a class="reference external" href="https://bchain.info/MONA/addr/MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ">here</a>.<a class="headerlink" href="#voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="usage.html" class="btn btn-neutral" title="Atomic swap example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lamden Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

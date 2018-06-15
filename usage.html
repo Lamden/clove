@@ -1,0 +1,873 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Atomic swap example &mdash; Clove  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Transaction refunds" href="refund.html" />
+    <link rel="prev" title="Clove" href="README.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Clove
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Clove </a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Atomic swap example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bitcoin-based-networks">Bitcoin based networks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#assumptions">Assumptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cryptoid-api-key">Cryptoid API key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#etherscan-api-key">Etherscan API key</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#wallets-setup">1. Wallets setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">2. Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alice-is-initializing-an-atomic-swap-transaction">3. Alice is initializing an atomic swap transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">4. Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contract-audit">5. Contract audit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#participation">6. Participation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">7. Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contract-audit">8. Contract audit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#first-redeem-transaction">9. First redeem transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#secret-capture">10. Secret capture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#second-redeem-transaction">11. Second redeem transaction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ethereum-testnet">Ethereum Testnet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup">1. Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">2. Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#token-approval">3. Token approval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alice-is-initializing-an-atomic-swap-transaction">4. Alice is initializing an atomic swap transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">5. Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contract-audit">6. Contract audit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#participation">7. Participation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">8. Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contract-audit">9. Contract audit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#first-redeem-transaction">10. First redeem transaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#secret-capture">11. Secret capture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#second-redeem-transaction">12. Second redeem transaction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Clove</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Atomic swap example</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/usage.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="atomic-swap-example">
+<span id="atomic-swap-example"></span><h1>Atomic swap example<a class="headerlink" href="#atomic-swap-example" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bitcoin-based-networks">
+<span id="bitcoin-based-networks"></span><h2>Bitcoin based networks<a class="headerlink" href="#bitcoin-based-networks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="assumptions">
+<span id="assumptions"></span><h3>Assumptions<a class="headerlink" href="#assumptions" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Alice has over 0.4 monacoins and wants to buy 0.01 litecoins</li>
+<li>Alice doesn’t have a litecoin wallet</li>
+<li>Bob has over 0.01 litecoins and wants to buy around 0.4 monacoin</li>
+<li>Bob has a monacoin wallet</li>
+</ul>
+<p>(2018-03-01) Exchange rate: 0.01 litecoins is 0.4 monacoin</p>
+<div class="section" id="cryptoid-api-key">
+<span id="cryptoid-api-key"></span><h4>Cryptoid API key<a class="headerlink" href="#cryptoid-api-key" title="Permalink to this headline">¶</a></h4>
+<p>For operations on networks supported by <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> API a <a class="reference external" href="https://chainz.cryptoid.info/api.key.dws">free API key</a> is needed. This key has to be setup as a environment variable under the <code class="docutils literal notranslate"><span class="pre">CRYPTOID_API_KEY</span></code> key.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export CRYPTOID_API_KEY=YOUR_API_KEY
+</pre></div>
+</div>
+</div>
+<div class="section" id="etherscan-api-key">
+<span id="etherscan-api-key"></span><h4>Etherscan API key<a class="headerlink" href="#etherscan-api-key" title="Permalink to this headline">¶</a></h4>
+<p>For operations on Etherscan API (e.q. <code class="docutils literal notranslate"><span class="pre">find_redeem_transaction</span></code>) a <a class="reference external" href="https://etherscan.io/myapikey">free API key</a> is needed. This key has to be setup as a environment variable under the <code class="docutils literal notranslate"><span class="pre">ETHERSCAN_API_KEY</span></code> key.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export ETHERSCAN_API_KEY=YOUR_API_KEY
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="wallets-setup">
+<span id="wallets-setup"></span><h3>1. Wallets setup<a class="headerlink" href="#wallets-setup" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] has to create a new litecoin wallet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+
+<span class="n">ltc_network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+
+<span class="n">alice_ltc_wallet</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">get_new_wallet</span><span class="p">()</span>
+
+<span class="n">alice_ltc_wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="s1">&#39;LXRAXRgPo84p58746zaBXUFFevCTYBPxgb&#39;</span>
+</pre></div>
+</div>
+<p>https://live.blockcypher.com/ltc/address/LXRAXRgPo84p58746zaBXUFFevCTYBPxgb/</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_ltc_wallet</span><span class="o">.</span><span class="n">get_private_key</span><span class="p">()</span>
+<span class="c1"># returns private key; The one below is fake, because of obvious security reasons.</span>
+<span class="s1">&#39;L15kFZg4MdoX2kqXEeEZMjbbVEdZzt1zL2vU59ynrtEf6GB16B3c&#39;</span>
+</pre></div>
+</div>
+<p>[<strong>Alice</strong>] has to prepare her monacoin wallet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Monacoin</span>
+
+<span class="n">mona_network</span> <span class="o">=</span> <span class="n">Monacoin</span><span class="p">()</span>
+
+<span class="c1"># Alice provides hers private key. The one below is fake, because of obvious security reasons.</span>
+<span class="n">alice_mona_wallet</span> <span class="o">=</span> <span class="n">mona_network</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe&#39;</span><span class="p">)</span>
+
+<span class="n">alice_mona_wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span>
+</pre></div>
+</div>
+<p>https://bchain.info/MONA/addr/MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ</p>
+<p>[<strong>Bob</strong>] can use his existing monacoin wallet by passing his private key</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Monacoin</span>
+
+<span class="n">mona_network</span> <span class="o">=</span> <span class="n">Monacoin</span><span class="p">()</span>
+
+<span class="n">bob_mona_wallet</span> <span class="o">=</span> <span class="n">mona_network</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;cRoFBWMvcLXrLsYFt794NRBEPUgMLf5AmnJ7VQwiEenc34z7zSpK&#39;</span><span class="p">)</span>
+
+<span class="n">bob_mona_wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="s1">&#39;MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL&#39;</span>
+</pre></div>
+</div>
+<p>https://bchain.info/MONA/addr/MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL</p>
+<p>[<strong>Bob</strong>] has to prepare his litecoin wallet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+
+<span class="n">ltc_network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+
+<span class="c1"># Bob provides his private key. The one below is fake, because of obvious security reasons.</span>
+<span class="n">bob_ltc_wallet</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;cTVuBqcjryCdHiCfFxkY5ycNPH2RYNrbmgrTVXBsLKG8xR2My3j2&#39;</span><span class="p">)</span>
+
+<span class="n">bob_ltc_wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span>
+</pre></div>
+</div>
+<p>https://live.blockcypher.com/ltc/address/LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq/</p>
+</div>
+<div class="section" id="communication">
+<span id="communication"></span><h3>2. Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<p>Alice and Bob exchange their wallet addresses.</p>
+<p>[<strong>Alice</strong>]’s console input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_mona_address</span> <span class="o">=</span> <span class="s1">&#39;MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL&#39;</span>
+<span class="n">bob_ltc_address</span> <span class="o">=</span> <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span>
+</pre></div>
+</div>
+<p>[<strong>Bob</strong>]’s console input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_mona_address</span> <span class="o">=</span> <span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span>
+<span class="n">alice_ltc_address</span> <span class="o">=</span> <span class="s1">&#39;LXRAXRgPo84p58746zaBXUFFevCTYBPxgb&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="alice-is-initializing-an-atomic-swap-transaction">
+<span id="alice-is-initializing-an-atomic-swap-transaction"></span><h3>3. Alice is initializing an atomic swap transaction<a class="headerlink" href="#alice-is-initializing-an-atomic-swap-transaction" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] has to prepare a transaction input (UTXO’s that she wants to spend in this transaction). You can find this information by viewing transaction on block explorer e.g. <a class="reference external" href="https://bchain.info/MONA/tx/5a82da68900bb725f1ac7e2a8f51a41dea12873c99c2d28a32942e04395323fd">here</a></p>
+<p>For networks supported by <code class="docutils literal notranslate"><span class="pre">blockcypher.com</span></code> or <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> APIs UTXOs can also be gathered automatically.
+See an exmaple in <a class="reference external" href="#6-participation">Participation</a>. For <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code>, an API key is required - <a class="reference external" href="#cryptoid-api-key">read more</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network.bitcoin.utxo</span> <span class="k">import</span> <span class="n">Utxo</span>
+
+<span class="n">monacoins_to_swap</span> <span class="o">=</span> <span class="mf">0.4</span>
+
+<span class="n">initial_utxo_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Utxo</span><span class="p">(</span>
+        <span class="n">tx_id</span><span class="o">=</span><span class="s1">&#39;5d920e7093b2f0ac94cb1c13a42a79ed1c1290fcc4155d15a123d69b1afe05d2&#39;</span><span class="p">,</span>
+        <span class="n">vout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="mf">2.086</span><span class="p">,</span>
+        <span class="n">tx_script</span><span class="o">=</span><span class="s1">&#39;76a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac&#39;</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">initial_transaction</span> <span class="o">=</span> <span class="n">mona_network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span>
+    <span class="n">alice_mona_wallet</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="n">bob_mona_address</span><span class="p">,</span>
+    <span class="n">monacoins_to_swap</span><span class="p">,</span>
+    <span class="n">initial_utxo_list</span>
+<span class="p">)</span>
+
+<span class="c1"># As monacoin is not in the blockcypher we need to add fee manually</span>
+<span class="n">initial_transaction</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="n">initial_transaction</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">(</span><span class="n">alice_mona_wallet</span><span class="p">)</span>
+
+<span class="n">initial_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract&#39;</span><span class="p">:</span> <span class="s1">&#39;63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704ef6bdc5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;3QNHtUAJ85WWfF1rXPpLde4CjwYKcJYLiv&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000001d205fe1a9bd623a1155d15c4fc90121ced792aa4131ccb94acf0b293700e925d010000008a473044022003d3f4216fdc08be20c2d828227d8652e89dcf20566719a561265d3886c0fda7022035fb05dd2bc1b9e325837af29b0e7687815e5544f643a24480aa09ddfc10cb460141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca0000000002005a62020000000017a914f8c050e6c124b3d0b693779b418dec5f40b8188087201b0b0a000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac00000000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00000000 MONA / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00100000 MONA&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">86941</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;9a2cfc32611dbd3ac3261cd23622223e85e6c6575852d20e031c1333b9070bc2&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;98ff8f419c57646b3e056514185a97d15a7f086e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">255</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;255 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.40000000 MONA&#39;</span><span class="p">}</span>
+
+ <span class="n">initial_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+ <span class="s1">&#39;a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4&#39;</span>
+</pre></div>
+</div>
+<p>https://bchain.info/MONA/tx/a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4</p>
+</div>
+<div class="section" id="communication">
+<span id="id1"></span><h3>4. Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] sends her transaction hash <code class="docutils literal notranslate"><span class="pre">a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4</span></code> to Bob, so he can get the <code class="docutils literal notranslate"><span class="pre">raw_transaction</span></code> (e.g. “hex” in raw data of <a class="reference external" href="https://bchain.info/MONA/tx/a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4">transaction</a>).
+And also she needs to send the contract to Bob (i.e. <code class="docutils literal notranslate"><span class="pre">63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704ef6bdc5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac</span></code>)</p>
+</div>
+<div class="section" id="contract-audit">
+<span id="contract-audit"></span><h3>5. Contract audit<a class="headerlink" href="#contract-audit" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] needs to create a contract in network of coins he wants to receive (i.e. Alice’s network), in our case in Monacoin network.
+And also at this point Bob should validate if the data returned in the contract is correct. He should also check if the transaction is present in the blockchain API (e.g. Bchain.info)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_contract</span> <span class="o">=</span> <span class="n">mona_network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
+    <span class="n">contract</span><span class="o">=</span><span class="s1">&#39;63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704ef6bdc5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac&#39;</span><span class="p">,</span>
+    <span class="n">raw_transaction</span><span class="o">=</span><span class="s1">&#39;0100000001d205fe1a9bd623a1155d15c4fc90121ced792aa4131ccb94acf0b293700e925d010000008a473044022003d3f4216fdc08be20c2d828227d8652e89dcf20566719a561265d3886c0fda7022035fb05dd2bc1b9e325837af29b0e7687815e5544f643a24480aa09ddfc10cb460141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca0000000002005a62020000000017a914f8c050e6c124b3d0b693779b418dec5f40b8188087201b0b0a000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac00000000&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">alice_contract</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;3QNHtUAJ85WWfF1rXPpLde4CjwYKcJYLiv&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;98ff8f419c57646b3e056514185a97d15a7f086e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;a0110ac963517ea12935fabe92ecd90217ba6847069dad21f9523bbc83bbf0e4&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.40000000 MONA&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="participation">
+<span id="participation"></span><h3>6. Participation<a class="headerlink" href="#participation" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] has to create a parallel transaction from point 3 but in his network (i.e. Litecoin network). We call it  a <code class="docutils literal notranslate"><span class="pre">participate_transaction</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network.bitcoin.utxo</span> <span class="k">import</span> <span class="n">Utxo</span>
+<span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">from_base_units</span> <span class="c1"># blockcypher is showing value in satoshis</span>
+
+<span class="n">litecoins_to_swap</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">participate_utxo_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Utxo</span><span class="p">(</span>
+        <span class="n">tx_id</span><span class="o">=</span><span class="s1">&#39;42394cedfaeecdbfce788ea3291784177f4f28c83f038adca3864db0c48869ab&#39;</span><span class="p">,</span>
+        <span class="n">vout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">from_base_units</span><span class="p">(</span><span class="mi">2437887</span><span class="p">),</span>
+        <span class="n">tx_script</span><span class="o">=</span><span class="s1">&#39;76a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>For networks supported by <code class="docutils literal notranslate"><span class="pre">blockcypher.com</span></code> or <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> APIs the UTXOs can also be gathered automatically. For <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code>, an API key is required - <a class="reference external" href="#cryptoid-api-key">read more</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">participate_utxo_list</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">get_utxo</span><span class="p">(</span><span class="n">bob_ltc_wallet</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">litecoins_to_swap</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With the list of UTXOs <code class="docutils literal notranslate"><span class="pre">participate_transaction</span></code> can be created.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">participate_transaction</span> <span class="o">=</span> <span class="n">alice_contract</span><span class="o">.</span><span class="n">participate</span><span class="p">(</span>
+    <span class="s1">&#39;ltc&#39;</span><span class="p">,</span>
+    <span class="n">bob_ltc_wallet</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="n">alice_ltc_address</span><span class="p">,</span>
+    <span class="n">litecoins_to_swap</span><span class="p">,</span>
+    <span class="n">participate_utxo_list</span>
+<span class="p">)</span>
+
+<span class="n">participate_transaction</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">(</span><span class="n">bob_ltc_wallet</span><span class="p">)</span>
+
+<span class="n">participate_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract&#39;</span><span class="p">:</span> <span class="s1">&#39;63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MWXzG4RaH4VH6hiNKakxkZQqW7NSHYRGrA&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;contract_transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000002be1c074d0e9e119b2099aa792ebda8c0c4a432a22c79490634a556da38435f67000000008a4730440220042d58c03f0db46727770a4c81543ee90294b87ea606baa2ff589d2dd5857c5c02206c5a8ea6e6579191ed3485523a8b27d28db666205c2a2d8477764cc6c6b913e801410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f600000000e930c516c102222acd2439a5b4fe462188c56e8e236588c53a689e2dbf86b6dd010000008a473044022043154c8c7935bff74743551863169fe8617a4c1043894786b4a7d14c46f68905022040431412a306ca13d4bd791ae3cd07e9e6eaa6982d105b07d0cd52a05fc7b1fd01410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6000000000240420f000000000017a914f849d56da5d65cc96764c25fbcd79161f170f67a872e590400000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac00000000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.00030225</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.00069482</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00069482 LTC / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00030225 LTC&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">629962</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LXRAXRgPo84p58746zaBXUFFevCTYBPxgb&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;98ff8f419c57646b3e056514185a97d15a7f086e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">434</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;434 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.01000000 LTC&#39;</span><span class="p">}</span>
+
+<span class="n">participate_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50&#39;</span>
+</pre></div>
+</div>
+<p>https://live.blockcypher.com/ltc/tx/565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50/</p>
+</div>
+<div class="section" id="communication">
+<span id="id2"></span><h3>7. Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] sends his transaction hash <code class="docutils literal notranslate"><span class="pre">565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50</span></code> and contract <code class="docutils literal notranslate"><span class="pre">63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac</span></code> to Alice.</p>
+</div>
+<div class="section" id="contract-audit">
+<span id="id3"></span><h3>8. Contract audit<a class="headerlink" href="#contract-audit" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] needs to audit the contract in network of coins she wants to receive (i.e. Bob’s network), in our case on the Litecoin network.
+And also at this point Alice should validate if the data returned in the contract is correct. She should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)</p>
+<p>For networks supported by <code class="docutils literal notranslate"><span class="pre">blockcypher.com</span></code> or <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> APIs contract audit can be done based on contract and transaction hash.
+bob_contract = ltc_network.audit_contract(
+contract=‘63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac’,
+transaction_address=‘565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50’
+)</p>
+<p>For unsupported networks Alice should find the raw transaction for given transaction address by herself.
+bob_contract = ltc_network.audit_contract(
+contract=‘63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac’,
+raw_transaction=‘0100000002be1c074d0e9e119b2099aa792ebda8c0c4a432a22c79490634a556da38435f67000000008a4730440220042d58c03f0db46727770a4c81543ee90294b87ea606baa2ff589d2dd5857c5c02206c5a8ea6e6579191ed3485523a8b27d28db666205c2a2d8477764cc6c6b913e801410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f600000000e930c516c102222acd2439a5b4fe462188c56e8e236588c53a689e2dbf86b6dd010000008a473044022043154c8c7935bff74743551863169fe8617a4c1043894786b4a7d14c46f68905022040431412a306ca13d4bd791ae3cd07e9e6eaa6982d105b07d0cd52a05fc7b1fd01410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6000000000240420f000000000017a914f849d56da5d65cc96764c25fbcd79161f170f67a872e590400000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac00000000’
+)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_contract</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MWXzG4RaH4VH6hiNKakxkZQqW7NSHYRGrA&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">17</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LXRAXRgPo84p58746zaBXUFFevCTYBPxgb&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;98ff8f419c57646b3e056514185a97d15a7f086e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.01000000 LTC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="first-redeem-transaction">
+<span id="first-redeem-transaction"></span><h3>9. First redeem transaction<a class="headerlink" href="#first-redeem-transaction" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] can now collect coins she wants, thus she creates redeem transaction.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_redeem</span> <span class="o">=</span> <span class="n">bob_contract</span><span class="o">.</span><span class="n">redeem</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="n">initial_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()[</span><span class="s1">&#39;secret&#39;</span><span class="p">],</span> <span class="n">wallet</span><span class="o">=</span><span class="n">alice_ltc_wallet</span><span class="p">)</span>
+<span class="n">alice_redeem</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">()</span>
+
+<span class="n">alice_redeem</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.00023832</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.00069482</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00069482 LTC / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00023832 LTC&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LXRAXRgPo84p58746zaBXUFFevCTYBPxgb&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">343</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;343 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000001505cab5a4fb315145f284ede8c43b2af3fa6557b1bfe54e46037533e6d1a5c5600000000fd0001483045022100d63353332b762551f3278ea02ab25746ddc78aae08c73cfd81e7871b54ebee88022068fa0e3b6578efbfed07373b2147b190ebe6466d2cdbed15cc2eecb0f218837001410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4209a2cfc32611dbd3ac3261cd23622223e85e6c6575852d20e031c1333b9070bc2514c5163a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac000000000128e50e00000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0cd90567497823097d03464b4b2d08dd659f1c5621dd55e9540bc9bcd3e191ec&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.01000000 LTC&#39;</span><span class="p">}</span>
+
+<span class="n">alice_redeem</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;0cd90567497823097d03464b4b2d08dd659f1c5621dd55e9540bc9bcd3e191ec&#39;</span>
+</pre></div>
+</div>
+<p>https://live.blockcypher.com/ltc/tx/0cd90567497823097d03464b4b2d08dd659f1c5621dd55e9540bc9bcd3e191ec/</p>
+<p>[<strong>Alice</strong>] should get litecoins just after redeem transaction is published.</p>
+</div>
+<div class="section" id="secret-capture">
+<span id="secret-capture"></span><h3>10. Secret capture<a class="headerlink" href="#secret-capture" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] should check if his contract has been already redeemed to be able to extract the secret from the redeem transaction.</p>
+<p>For networks supported by <code class="docutils literal notranslate"><span class="pre">blockcypher.com</span></code> or <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> APIs this can be done automatically.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract_address</span> <span class="o">=</span> <span class="n">participate_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()[</span><span class="s1">&#39;contract_address&#39;</span><span class="p">]</span>
+<span class="n">secret</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="n">contract_address</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> API key is required - <a class="reference external" href="#cryptoid-api-key">read more</a>.</p>
+<p>For unsupported networks Bob should extract the secret himself.
+First by using the <code class="docutils literal notranslate"><span class="pre">contract_address</span></code> he need to find <a class="reference external" href="https://chainz.cryptoid.info/ltc/address.dws?MLPZyHgX3dFEWFXTcUpsjBU1p3QsXfUFJ7.htm">the contract</a> and the last transacion there (first from the top) will be the <a class="reference external" href="https://api.blockcypher.com/v1/ltc/main/txs/25e3b32de672c1f287424a0a9ef23984f5132fc184b182d25476795761925ad2?limit=50&amp;includeHex=true">redeem transaction</a>.</p>
+<p>by using <code class="docutils literal notranslate"><span class="pre">hex</span></code> field (whole transaction)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">secret</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">extract_secret</span><span class="p">(</span><span class="n">raw_transaction</span><span class="o">=</span><span class="s1">&#39;0100000001505cab5a4fb315145f284ede8c43b2af3fa6557b1bfe54e46037533e6d1a5c5600000000fd0001483045022100d63353332b762551f3278ea02ab25746ddc78aae08c73cfd81e7871b54ebee88022068fa0e3b6578efbfed07373b2147b190ebe6466d2cdbed15cc2eecb0f218837001410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4209a2cfc32611dbd3ac3261cd23622223e85e6c6575852d20e031c1333b9070bc2514c5163a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac000000000128e50e00000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or <code class="docutils literal notranslate"><span class="pre">script</span></code> field from the first input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">secret</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">extract_secret</span><span class="p">(</span><span class="n">scriptsig</span><span class="o">=</span><span class="s1">&#39;483045022100d63353332b762551f3278ea02ab25746ddc78aae08c73cfd81e7871b54ebee88022068fa0e3b6578efbfed07373b2147b190ebe6466d2cdbed15cc2eecb0f218837001410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4209a2cfc32611dbd3ac3261cd23622223e85e6c6575852d20e031c1333b9070bc2514c5163a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="second-redeem-transaction">
+<span id="second-redeem-transaction"></span><h3>11. Second redeem transaction<a class="headerlink" href="#second-redeem-transaction" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] can now collect coins he wants, thus he creates redeem transaction.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_redeem</span> <span class="o">=</span> <span class="n">alice_contract</span><span class="o">.</span><span class="n">redeem</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="n">secret</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="n">bob_mona_wallet</span><span class="p">)</span>
+
+<span class="c1"># As monacoin is not in the blockcypher we need to add fee manually</span>
+<span class="n">bob_redeem</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">bob_redeem</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">()</span>
+
+<span class="n">bob_redeem</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+<span class="p">{</span><span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+ <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00000000 MONA / 1 kB&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00100000 MONA&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">343</span><span class="p">,</span>
+ <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;343 bytes&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000001e4f0bb83bc3b52f921ad9d064768ba1702d9ec92befa3529a17e5163c90a11a000000000fd0001483045022100bf0dec5ab03d024147bc26df33a64f2389c4647fc1f9a92e93575cb5f2ff5081022060a54dd5135bc38eb6e75c65ec4e47efa08e7298fed83757db31bd53619a17d501410447408e366d0e979101f776ab10753091b0b62ba9aa609d006263959e030fb2d96e054c1f976a8cddcee5e1a95022cf289be89577ca348c893223d2e648de1abb209a2cfc32611dbd3ac3261cd23622223e85e6c6575852d20e031c1333b9070bc2514c5163a61498ff8f419c57646b3e056514185a97d15a7f086e8876a9141a376f6634e41c22b28bc9ef3336a623717083a46704ef6bdc5ab17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac000000000160d36002000000001976a9141a376f6634e41c22b28bc9ef3336a623717083a488ac00000000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;1593f8ac14340e23d629342881e188b848af3dc1b7909791aacde53d48a1e697&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.40000000 MONA&#39;</span><span class="p">}</span>
+
+<span class="n">bob_redeem</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;1593f8ac14340e23d629342881e188b848af3dc1b7909791aacde53d48a1e697&#39;</span>
+</pre></div>
+</div>
+<p>https://bchain.info/MONA/tx/1593f8ac14340e23d629342881e188b848af3dc1b7909791aacde53d48a1e697</p>
+<p>[<strong>Bob</strong>] should get monacoins just after redeem transaction is published.</p>
+</div>
+</div>
+<div class="section" id="ethereum-testnet">
+<span id="ethereum-testnet"></span><h2>Ethereum Testnet<a class="headerlink" href="#ethereum-testnet" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="assumptions">
+<span id="id4"></span><h3>Assumptions<a class="headerlink" href="#assumptions" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Alice wants to buy 0.5 ETH for 1000 Blockbusters Test tokens in Ethereum Kovan Testnet</li>
+<li>Bob wants to buy 1000 Blockbusters Test tokens for 0.5 ETH in Ethereum Kovan Testnet</li>
+<li>Both Alice and Bob have wallets in Ethereum Kovan network</li>
+</ul>
+</div>
+<div class="section" id="setup">
+<span id="setup"></span><h3>1. Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<p>Alice should initialize the network object, set her address, private key, amount of tokens to be swapped and the address of the token.</p>
+<p>[<strong>Alice</strong>]’s console input:
+from clove.network import EthereumTestnet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eth_test</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+
+<span class="n">address</span> <span class="o">=</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="s1">&#39;alice_private_key&#39;</span>
+
+<span class="n">tokens_to_swap</span> <span class="o">=</span> <span class="s1">&#39;1000&#39;</span>
+<span class="n">token_address</span> <span class="o">=</span> <span class="s1">&#39;0x53E546387A0d054e7FF127923254c0a679DA6DBf&#39;</span>
+</pre></div>
+</div>
+<p>It is also possible to get the token data directly from the network object by the token symbol if the token is supported:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">token</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">get_token_by_symbol</span><span class="p">(</span><span class="s1">&#39;BBT&#39;</span><span class="p">)</span>
+<span class="n">token_address</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">token_address</span>
+</pre></div>
+</div>
+<p>Bob should initialize the network object, set his address, private key and amount of ethers to be swapped.</p>
+<p>[<strong>Bob</strong>]’s console input:
+from clove.network import EthereumTestnet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eth_test</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+
+<span class="n">address</span> <span class="o">=</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="s1">&#39;bob_private_key&#39;</span>
+
+<span class="n">eth_to_swap</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="communication">
+<span id="id5"></span><h3>2. Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<p>Alice and Bob exchange their wallet addresses.</p>
+<p>[<strong>Alice</strong>]’s console input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_address</span> <span class="o">=</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span>
+</pre></div>
+</div>
+<p>[<strong>Bob</strong>]’s console input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_address</span> <span class="o">=</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="token-approval">
+<span id="token-approval"></span><h3>3. Token approval<a class="headerlink" href="#token-approval" title="Permalink to this headline">¶</a></h3>
+<p>To send tokens to an atomic swap contract Alice has to first approve that the tokens she own can be spend by that contract.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">approve_transaction</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">approve_token</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">tokens_to_swap</span><span class="p">,</span> <span class="n">token_address</span><span class="p">)</span>
+<span class="n">approve_transaction</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">approve_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x7657Ca877Fac31D20528B473162E39B6E152fd2e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;0x095ea7b30000000000000000000000007657ca877fac31d20528b473162e39b6e152fd2e00000000000000000000000000000000000000000000003635c9adc5dea00000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;gasprice&#39;</span><span class="p">:</span> <span class="mi">20000000000</span><span class="p">,</span>
+ <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span>
+ <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mi">112426775415197512764524506063660144184257199595961926193168166347175765778579</span><span class="p">,</span>
+ <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">1927313746114385663128009448899947006587692267799486537632890580735710981604</span><span class="p">,</span>
+ <span class="s1">&#39;sender&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999f348959e611f1e9eab2927c21e88e48e6ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;sender_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;startgas&#39;</span><span class="p">:</span> <span class="mi">45576</span><span class="p">,</span>
+ <span class="s1">&#39;token_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x53E546387A0d054e7FF127923254c0a679DA6DBf&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b6635ae615e0454bd4fc&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1000&#39;</span><span class="p">),</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;1000.000000000000000000 BBT&#39;</span><span class="p">}</span>
+
+<span class="n">approve_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b6635ae615e0454bd4fc&#39;</span>
+</pre></div>
+</div>
+<p>https://kovan.etherscan.io/tx/0x40b8d435ff4bfbb202aed75dfc87f64e0d3da3838581b6635ae615e0454bd4fc</p>
+</div>
+<div class="section" id="alice-is-initializing-an-atomic-swap-transaction">
+<span id="id6"></span><h3>4. Alice is initializing an atomic swap transaction<a class="headerlink" href="#alice-is-initializing-an-atomic-swap-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initial_transaction</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span>
+    <span class="n">address</span><span class="p">,</span>
+    <span class="n">bob_address</span><span class="p">,</span>
+    <span class="n">tokens_to_swap</span><span class="p">,</span>
+    <span class="n">token_address</span><span class="o">=</span><span class="n">token_address</span>
+<span class="p">)</span>
+<span class="n">initial_transaction</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">initial_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x7657Ca877Fac31D20528B473162E39B6E152fd2e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;0x52f50db7000000000000000000000000000000000000000000000000000000005acde5c48cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a909200000000000000000000000053e546387a0d054e7ff127923254c0a679da6dbf00000000000000000000000000000000000000000000003635c9adc5dea00000&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;gas_limit&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+ <span class="s1">&#39;gasprice&#39;</span><span class="p">:</span> <span class="mi">20000000000</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">535753</span><span class="p">),</span>
+ <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+ <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mi">81080759208730988867907650750974367955166566527430658028938499115001735694910</span><span class="p">,</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">25371208205154004938960599477560107420234164093623357637201902103097079815422</span><span class="p">,</span>
+ <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;8cebcb1af6fa5fddeb091f61f0af1c49a6de9922&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;sender&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999f348959e611f1e9eab2927c21e88e48e6ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;sender_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;startgas&#39;</span><span class="p">:</span> <span class="mi">300000</span><span class="p">,</span>
+ <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0x7657ca877fac31d20528b473162e39b6e152fd2e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;token_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x53E546387A0d054e7FF127923254c0a679DA6DBf&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1000&#39;</span><span class="p">),</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;1000.000000000000000000 BBT&#39;</span><span class="p">}</span>
+
+<span class="n">initial_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840&#39;</span>
+</pre></div>
+</div>
+<p>https://kovan.etherscan.io/tx/0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840</p>
+</div>
+<div class="section" id="communication">
+<span id="id7"></span><h3>5. Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] sends hers transaction address <code class="docutils literal notranslate"><span class="pre">0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840</span></code> to Bob so he can audit created contract.</p>
+</div>
+<div class="section" id="contract-audit">
+<span id="id8"></span><h3>6. Contract audit<a class="headerlink" href="#contract-audit" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] needs to audit the contract in the network it was created in, in our case it’s Ethereum Testnet network.
+And also at this point Bob should validate if the data returned in the contract is correct.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_contract</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span><span class="s1">&#39;0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840&#39;</span><span class="p">)</span>
+<span class="n">alice_contract</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x7657Ca877Fac31D20528B473162E39B6E152fd2e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">39</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;8cebcb1af6fa5fddeb091f61f0af1c49a6de9922&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;token_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x53E546387A0d054e7FF127923254c0a679DA6DBf&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1000&#39;</span><span class="p">),</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;1000.000000000000000000 BBT&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="participation">
+<span id="id9"></span><h3>7. Participation<a class="headerlink" href="#participation" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] has to create parallel transaction from point 4 but for 0.5 ETH. We call it <code class="docutils literal notranslate"><span class="pre">participate_transaction</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">participate_transaction</span> <span class="o">=</span> <span class="n">alice_contract</span><span class="o">.</span><span class="n">participate</span><span class="p">(</span>
+    <span class="s1">&#39;ETH-TESTNET&#39;</span><span class="p">,</span>
+    <span class="n">address</span><span class="p">,</span>
+    <span class="n">alice_address</span><span class="p">,</span>
+    <span class="n">eth_to_swap</span>
+<span class="p">)</span>
+
+<span class="n">participate_transaction</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">participate_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;0xeb8ae1ed000000000000000000000000000000000000000000000000000000005acca1d68cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000999f348959e611f1e9eab2927c21e88e48e6ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;gas_limit&#39;</span><span class="p">:</span> <span class="mi">126221</span><span class="p">,</span>
+ <span class="s1">&#39;gasprice&#39;</span><span class="p">:</span> <span class="mi">20000000000</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">224171</span><span class="p">),</span>
+ <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+ <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mi">10117394961799586109544014237169747431096329877057063230289022533801441532789</span><span class="p">,</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">34556783084242874049490624129921763496945955547455400337813271950949674389178</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;8cebcb1af6fa5fddeb091f61f0af1c49a6de9922&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;sender&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd867f293ba129629a9f9355fa285b8d3711a9092&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;sender_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;startgas&#39;</span><span class="p">:</span> <span class="mi">126221</span><span class="p">,</span>
+ <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0x9f7e5402ed0858ea0c5914d44b900a42c89547b8&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.5&#39;</span><span class="p">),</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.500000000000000000 ETH&#39;</span><span class="p">}</span>
+
+<span class="n">participate_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f&#39;</span>
+</pre></div>
+</div>
+<p>https://kovan.etherscan.io/tx/0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f</p>
+</div>
+<div class="section" id="communication">
+<span id="id10"></span><h3>8. Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] sends his transaction address <code class="docutils literal notranslate"><span class="pre">0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f</span></code> to Alice.</p>
+</div>
+<div class="section" id="contract-audit">
+<span id="id11"></span><h3>9. Contract audit<a class="headerlink" href="#contract-audit" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] needs to audit the contract in the network it was created in, in our case it’s Ethereum Testnet network.
+And also at this point Alice should validate if the data returned in the contract is correct.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_contract</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
+    <span class="s1">&#39;0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f&#39;</span>
+<span class="p">)</span>
+<span class="n">bob_contract</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">54</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;8cebcb1af6fa5fddeb091f61f0af1c49a6de9922&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.5&#39;</span><span class="p">),</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.500000000000000000 ETH&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="first-redeem-transaction">
+<span id="id12"></span><h3>10. First redeem transaction<a class="headerlink" href="#first-redeem-transaction" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Alice</strong>] can now collect coins she wants, thus she creates redeem transaction.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_redeem</span> <span class="o">=</span> <span class="n">bob_contract</span><span class="o">.</span><span class="n">redeem</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="n">initial_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()[</span><span class="s1">&#39;secret&#39;</span><span class="p">])</span>
+<span class="n">alice_redeem</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="n">alice_redeem</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;gasprice&#39;</span><span class="p">:</span> <span class="mi">20000000000</span><span class="p">,</span>
+ <span class="s1">&#39;hash&#39;</span><span class="p">:</span> <span class="s1">&#39;0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+ <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mi">59319998726546023363151651169655572196637192178004534224886682741537229136353</span><span class="p">,</span>
+ <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">49667378228500740364784037188336222900603288337407062594007817473604371090679</span><span class="p">,</span>
+ <span class="s1">&#39;sender&#39;</span><span class="p">:</span> <span class="s1">&#39;0x999f348959e611f1e9eab2927c21e88e48e6ef45&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;startgas&#39;</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span>
+ <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0x9f7e5402ed0858ea0c5914d44b900a42c89547b8&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.5&#39;</span><span class="p">),</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.500000000000000000 ETH&#39;</span><span class="p">}</span>
+
+<span class="n">alice_redeem</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1&#39;</span>
+</pre></div>
+</div>
+<p>https://kovan.etherscan.io/tx/0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1</p>
+<p>[<strong>Alice</strong>] will get ether just after redeem transaction is published.</p>
+</div>
+<div class="section" id="secret-capture">
+<span id="id13"></span><h3>11. Secret capture<a class="headerlink" href="#secret-capture" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] should extract the secret from the redeem transaction. For this operation (<code class="docutils literal notranslate"><span class="pre">find_redeem_transaction</span></code>) an Etherscan API key is required - <a class="reference external" href="#etherscan-api-key">read more</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_redeem_tx_hash</span> <span class="o">=</span> <span class="n">bob_contract</span><span class="o">.</span><span class="n">find_redeem_transaction</span><span class="p">()</span>
+<span class="n">secret</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="n">alice_redeem_tx_hash</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="second-redeem-transaction">
+<span id="id14"></span><h3>12. Second redeem transaction<a class="headerlink" href="#second-redeem-transaction" title="Permalink to this headline">¶</a></h3>
+<p>[<strong>Bob</strong>] can now collect tokens he wants, thus he creates redeem transaction.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_redeem</span> <span class="o">=</span> <span class="n">alice_contract</span><span class="o">.</span><span class="n">redeem</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span>
+<span class="n">bob_redeem</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="n">bob_redeem</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+
+<span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;0xeda1122cc037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;gasprice&#39;</span><span class="p">:</span> <span class="mi">20000000000</span><span class="p">,</span>
+ <span class="s1">&#39;hash&#39;</span><span class="p">:</span> <span class="s1">&#39;0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+ <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="mi">65751206609566246138168255228214505208801025362644939199208252280848271690158</span><span class="p">,</span>
+ <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">45667062183625152271430540771543035424773489029161348648874675951038677865195</span><span class="p">,</span>
+ <span class="s1">&#39;sender&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd867f293ba129629a9f9355fa285b8d3711a9092&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;startgas&#39;</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span>
+ <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0x7657ca877fac31d20528b473162e39b6e152fd2e&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1000&#39;</span><span class="p">),</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;1000.000000000000000000 BBT&#39;</span><span class="p">}</span>
+
+<span class="n">bob_redeem</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+<span class="s1">&#39;0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274&#39;</span>
+</pre></div>
+</div>
+<p>https://kovan.etherscan.io/tx/0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274</p>
+<p>[<strong>Bob</strong>] will get BBT tokens just after redeem transaction is published.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="refund.html" class="btn btn-neutral float-right" title="Transaction refunds" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="README.html" class="btn btn-neutral" title="Clove" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lamden Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

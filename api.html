@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API &mdash; Clove  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Transaction refunds" href="refund.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Clove
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Clove </a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Atomic swap example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refund.html">Transaction refunds</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-base">clove.network.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-base">clove.network.bitcoin.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-contract">clove.network.bitcoin.contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-transaction">clove.network.bitcoin.transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-utxo">clove.network.bitcoin.utxo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-wallet">clove.network.bitcoin.wallet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-base">clove.network.ethereum.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-contract">clove.network.ethereum.contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-transaction">clove.network.ethereum.transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-wallet">clove.network.ethereum.wallet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-utils-bitcoin">clove.utils.bitcoin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-utils-external-source">clove.utils.external_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-utils-hashing">clove.utils.hashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-utils-logging">clove.utils.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-utils-network">clove.utils.network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clove-utils-search">clove.utils.search</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Clove</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api">
+<span id="api"></span><h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="clove-network-base">
+<span id="clove-network-base"></span><h2>clove.network.base<a class="headerlink" href="#clove-network-base" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-bitcoin-base">
+<span id="clove-network-bitcoin-base"></span><h2>clove.network.bitcoin.base<a class="headerlink" href="#clove-network-bitcoin-base" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-bitcoin-contract">
+<span id="clove-network-bitcoin-contract"></span><h2>clove.network.bitcoin.contract<a class="headerlink" href="#clove-network-bitcoin-contract" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-bitcoin-transaction">
+<span id="clove-network-bitcoin-transaction"></span><h2>clove.network.bitcoin.transaction<a class="headerlink" href="#clove-network-bitcoin-transaction" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-bitcoin-utxo">
+<span id="clove-network-bitcoin-utxo"></span><h2>clove.network.bitcoin.utxo<a class="headerlink" href="#clove-network-bitcoin-utxo" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-bitcoin-wallet">
+<span id="clove-network-bitcoin-wallet"></span><h2>clove.network.bitcoin.wallet<a class="headerlink" href="#clove-network-bitcoin-wallet" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-ethereum-base">
+<span id="clove-network-ethereum-base"></span><h2>clove.network.ethereum.base<a class="headerlink" href="#clove-network-ethereum-base" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-ethereum-contract">
+<span id="clove-network-ethereum-contract"></span><h2>clove.network.ethereum.contract<a class="headerlink" href="#clove-network-ethereum-contract" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-ethereum-transaction">
+<span id="clove-network-ethereum-transaction"></span><h2>clove.network.ethereum.transaction<a class="headerlink" href="#clove-network-ethereum-transaction" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-network-ethereum-wallet">
+<span id="clove-network-ethereum-wallet"></span><h2>clove.network.ethereum.wallet<a class="headerlink" href="#clove-network-ethereum-wallet" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-utils-bitcoin">
+<span id="clove-utils-bitcoin"></span><h2>clove.utils.bitcoin<a class="headerlink" href="#clove-utils-bitcoin" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-utils-external-source">
+<span id="clove-utils-external-source"></span><h2>clove.utils.external_source<a class="headerlink" href="#clove-utils-external-source" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-utils-hashing">
+<span id="clove-utils-hashing"></span><h2>clove.utils.hashing<a class="headerlink" href="#clove-utils-hashing" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-utils-logging">
+<span id="clove-utils-logging"></span><h2>clove.utils.logging<a class="headerlink" href="#clove-utils-logging" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-utils-network">
+<span id="clove-utils-network"></span><h2>clove.utils.network<a class="headerlink" href="#clove-utils-network" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="clove-utils-search">
+<span id="clove-utils-search"></span><h2>clove.utils.search<a class="headerlink" href="#clove-utils-search" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="refund.html" class="btn btn-neutral" title="Transaction refunds" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lamden Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
