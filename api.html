@@ -82,22 +82,22 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="refund.html">Transaction refunds</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-base">clove.network.base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-base">clove.network.bitcoin.base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-contract">clove.network.bitcoin.contract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-transaction">clove.network.bitcoin.transaction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-utxo">clove.network.bitcoin.utxo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-bitcoin-wallet">clove.network.bitcoin.wallet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-base">clove.network.ethereum.base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-contract">clove.network.ethereum.contract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-transaction">clove.network.ethereum.transaction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-network-ethereum-wallet">clove.network.ethereum.wallet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-utils-bitcoin">clove.utils.bitcoin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-utils-external-source">clove.utils.external_source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-utils-hashing">clove.utils.hashing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-utils-logging">clove.utils.logging</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-utils-network">clove.utils.network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clove-utils-search">clove.utils.search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.base">clove.network.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.bitcoin.base">clove.network.bitcoin.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.bitcoin.contract">clove.network.bitcoin.contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.bitcoin.transaction">clove.network.bitcoin.transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.bitcoin.utxo">clove.network.bitcoin.utxo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.bitcoin.wallet">clove.network.bitcoin.wallet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.ethereum.base">clove.network.ethereum.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.ethereum.contract">clove.network.ethereum.contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.ethereum.transaction">clove.network.ethereum.transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.network.ethereum.wallet">clove.network.ethereum.wallet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.utils.bitcoin">clove.utils.bitcoin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.utils.external_source">clove.utils.external_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.utils.hashing">clove.utils.hashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.utils.logging">clove.utils.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.utils.network">clove.utils.network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-clove.utils.search">clove.utils.search</a></li>
 </ul>
 </li>
 </ul>
@@ -166,53 +166,1028 @@
             
   <div class="section" id="api">
 <span id="api"></span><h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="clove-network-base">
-<span id="clove-network-base"></span><h2>clove.network.base<a class="headerlink" href="#clove-network-base" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.base">
+<span id="clove-network-base"></span><span id="clove-network-base"></span><h2>clove.network.base<a class="headerlink" href="#module-clove.network.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.base.BaseNetwork">
+<em class="property">class </em><code class="descclassname">clove.network.base.</code><code class="descname">BaseNetwork</code><a class="reference internal" href="_modules/clove/network/base.html#BaseNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.base.BaseNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for shared properties and methods for Bitcoin and Ethereum network.</p>
+<dl class="attribute">
+<dt id="clove.network.base.BaseNetwork.bitcoin_based">
+<code class="descname">bitcoin_based</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.base.BaseNetwork.bitcoin_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag for Bitcoin-based networks.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.base.BaseNetwork.default_symbol">
+<code class="descname">default_symbol</code><a class="headerlink" href="#clove.network.base.BaseNetwork.default_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns default (first) symbol for networks with multiple symbols.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">network symbol</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bitcoin_network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bitcoin_network</span><span class="o">.</span><span class="n">default_symbol</span>
+<span class="go">&#39;BTC&#39;</span>
+</pre></div>
 </div>
-<div class="section" id="clove-network-bitcoin-base">
-<span id="clove-network-bitcoin-base"></span><h2>clove.network.bitcoin.base<a class="headerlink" href="#clove-network-bitcoin-base" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This property can return <cite>None</cite> if <cite>symbols</cite> are not declared in the network definition.</p>
 </div>
-<div class="section" id="clove-network-bitcoin-contract">
-<span id="clove-network-bitcoin-contract"></span><h2>clove.network.bitcoin.contract<a class="headerlink" href="#clove-network-bitcoin-contract" title="Permalink to this headline">¶</a></h2>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.base.BaseNetwork.ethereum_based">
+<code class="descname">ethereum_based</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.base.BaseNetwork.ethereum_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag for Ethereum-based networks.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.base.BaseNetwork.get_network_by_symbol">
+<em class="property">classmethod </em><code class="descname">get_network_by_symbol</code><span class="sig-paren">(</span><em>symbol: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/base.html#BaseNetwork.get_network_by_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.base.BaseNetwork.get_network_by_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns network instance by its symbol.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>str</strong> – network symbol</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Network object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code> – if there is no network with given symbol.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network.base</span> <span class="k">import</span> <span class="n">BaseNetwork</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">BaseNetwork</span><span class="o">.</span><span class="n">get_network_by_symbol</span><span class="p">(</span><span class="s1">&#39;BTC&#39;</span><span class="p">)</span>
+<span class="go">&lt;clove.network.bitcoin.Bitcoin at 0x7f5a84b233c8&gt;</span>
+</pre></div>
 </div>
-<div class="section" id="clove-network-bitcoin-transaction">
-<span id="clove-network-bitcoin-transaction"></span><h2>clove.network.bitcoin.transaction<a class="headerlink" href="#clove-network-bitcoin-transaction" title="Permalink to this headline">¶</a></h2>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.base.BaseNetwork.is_test_network">
+<em class="property">classmethod </em><code class="descname">is_test_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/base.html#BaseNetwork.is_test_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.base.BaseNetwork.is_test_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returning True if the network is a testnet.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.base.BaseNetwork.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.base.BaseNetwork.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Network name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.base.BaseNetwork.networks">
+<code class="descname">networks</code><em class="property"> = {}</em><a class="headerlink" href="#clove.network.base.BaseNetwork.networks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Placeholder for symbol-network mapping.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.base.BaseNetwork.set_symbol_mapping">
+<em class="property">classmethod </em><code class="descname">set_symbol_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/base.html#BaseNetwork.set_symbol_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.base.BaseNetwork.set_symbol_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates symbol-instance mapping.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.base.BaseNetwork.symbols">
+<code class="descname">symbols</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.base.BaseNetwork.symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tuple with network symbols (some networks may have multiple symbols, eg. Bitcoin).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.base.BaseNetwork.testnet">
+<code class="descname">testnet</code><em class="property"> = False</em><a class="headerlink" href="#clove.network.base.BaseNetwork.testnet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag for test networks.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-network-bitcoin-utxo">
-<span id="clove-network-bitcoin-utxo"></span><h2>clove.network.bitcoin.utxo<a class="headerlink" href="#clove-network-bitcoin-utxo" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.bitcoin.base">
+<span id="clove-network-bitcoin-base"></span><span id="clove-network-bitcoin-base"></span><h2>clove.network.bitcoin.base<a class="headerlink" href="#module-clove.network.bitcoin.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork">
+<em class="property">class </em><code class="descclassname">clove.network.bitcoin.base.</code><code class="descname">BitcoinBaseNetwork</code><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#clove.network.base.BaseNetwork" title="clove.network.base.BaseNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.base.BaseNetwork</span></code></a></p>
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.atomic_swap">
+<code class="descname">atomic_swap</code><span class="sig-paren">(</span><em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>solvable_utxo: list</em>, <em>secret_hash: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.atomic_swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.atomic_swap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.audit_contract">
+<code class="descname">audit_contract</code><span class="sig-paren">(</span><em>contract: str</em>, <em>raw_transaction: Union[str</em>, <em>NoneType] = None</em>, <em>transaction_address: Union[str</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.contract.BitcoinContract<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.audit_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.audit_contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.base58_prefixes">
+<code class="descname">base58_prefixes</code><em class="property"> = {}</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.base58_prefixes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.bitcoin_based">
+<code class="descname">bitcoin_based</code><em class="property"> = True</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.bitcoin_based" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.blacklist_nodes">
+<code class="descname">blacklist_nodes</code><em class="property"> = {}</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.blacklist_nodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.broadcast_transaction">
+<code class="descname">broadcast_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.broadcast_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.broadcast_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.capture_messages">
+<code class="descname">capture_messages</code><span class="sig-paren">(</span><em>expected_message_types: list</em>, <em>timeout: int = 20</em>, <em>buf_size: int = 1024</em>, <em>ignore_empty: bool = False</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.capture_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.capture_messages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.connection">
+<code class="descname">connection</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.create_connection">
+<code class="descname">create_connection</code><span class="sig-paren">(</span><em>node</em>, <em>timeout=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.create_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.deserialize_raw_transaction">
+<em class="property">static </em><code class="descname">deserialize_raw_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; bitcoin.core.CTransaction<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.deserialize_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.deserialize_raw_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret">
+<em class="property">classmethod </em><code class="descname">extract_secret</code><span class="sig-paren">(</span><em>raw_transaction: str = None</em>, <em>scriptsig: str = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.extract_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret_from_redeem_transaction">
+<em class="property">classmethod </em><code class="descname">extract_secret_from_redeem_transaction</code><span class="sig-paren">(</span><em>contract_address: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.extract_secret_from_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret_from_redeem_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.filter_blacklisted_nodes">
+<code class="descname">filter_blacklisted_nodes</code><span class="sig-paren">(</span><em>nodes</em>, <em>max_tries_number=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.filter_blacklisted_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.filter_blacklisted_nodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_fee_per_kb">
+<em class="property">classmethod </em><code class="descname">get_current_fee_per_kb</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_current_fee_per_kb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_fee_per_kb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns current fee based on last transactions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node">
+<code class="descname">get_current_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_current_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_new_wallet">
+<em class="property">classmethod </em><code class="descname">get_new_wallet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_new_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_new_wallet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_nodes">
+<em class="property">static </em><code class="descname">get_nodes</code><span class="sig-paren">(</span><em>seed</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_nodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_utxo">
+<em class="property">classmethod </em><code class="descname">get_utxo</code><span class="sig-paren">(</span><em>address</em>, <em>amount</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_utxo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_wallet">
+<em class="property">classmethod </em><code class="descname">get_wallet</code><span class="sig-paren">(</span><em>private_key=None</em>, <em>encrypted_private_key=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_wallet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.is_valid_address">
+<em class="property">classmethod </em><code class="descname">is_valid_address</code><span class="sig-paren">(</span><em>address: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.is_valid_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.is_valid_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.message_start">
+<code class="descname">message_start</code><em class="property"> = b''</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.message_start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.nodes">
+<code class="descname">nodes</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.nodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.port">
+<code class="descname">port</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.protocol_version">
+<code class="descname">protocol_version</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.protocol_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.publish">
+<code class="descname">publish</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.publish" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.reset_connection">
+<code class="descname">reset_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.reset_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.reset_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.seeds">
+<code class="descname">seeds</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.seeds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_inventory">
+<code class="descname">send_inventory</code><span class="sig-paren">(</span><em>serialized_transaction</em><span class="sig-paren">)</span> &#x2192; bitcoin.messages.msg_getdata<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_inventory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_message">
+<code class="descname">send_message</code><span class="sig-paren">(</span><em>msg: object</em>, <em>timeout: int = 2</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_ping">
+<code class="descname">send_ping</code><span class="sig-paren">(</span><em>timeout: int = 1</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_ping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_ping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_pong">
+<code class="descname">send_pong</code><span class="sig-paren">(</span><em>ping</em>, <em>timeout: int = 1</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_pong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_pong" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_verack">
+<code class="descname">send_verack</code><span class="sig-paren">(</span><em>timeout: int = 2</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_verack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_verack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_version">
+<code class="descname">send_version</code><span class="sig-paren">(</span><em>timeout: int = 2</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.split_message">
+<em class="property">classmethod </em><code class="descname">split_message</code><span class="sig-paren">(</span><em>received_data: bytes</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.split_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.split_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.switch_params">
+<em class="property">classmethod </em><code class="descname">switch_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.switch_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.switch_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.symbols">
+<code class="descname">symbols</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.symbols" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.terminate">
+<code class="descname">terminate</code><span class="sig-paren">(</span><em>node=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.terminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.terminate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.update_blacklist">
+<code class="descname">update_blacklist</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.update_blacklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.update_blacklist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.version_packet">
+<code class="descname">version_packet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.version_packet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.version_packet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-network-bitcoin-wallet">
-<span id="clove-network-bitcoin-wallet"></span><h2>clove.network.bitcoin.wallet<a class="headerlink" href="#clove-network-bitcoin-wallet" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.bitcoin.contract">
+<span id="clove-network-bitcoin-contract"></span><span id="clove-network-bitcoin-contract"></span><h2>clove.network.bitcoin.contract<a class="headerlink" href="#module-clove.network.bitcoin.contract" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.bitcoin.contract.BitcoinContract">
+<em class="property">class </em><code class="descclassname">clove.network.bitcoin.contract.</code><code class="descname">BitcoinContract</code><span class="sig-paren">(</span><em>network</em>, <em>contract: str</em>, <em>raw_transaction: Union[str</em>, <em>NoneType] = None</em>, <em>transaction_address: Union[str</em>, <em>NoneType] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="clove.network.bitcoin.contract.BitcoinContract.get_contract_utxo">
+<code class="descname">get_contract_utxo</code><span class="sig-paren">(</span><em>wallet=None</em>, <em>secret=None</em>, <em>refund=False</em>, <em>contract=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.get_contract_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.get_contract_utxo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.bitcoin.contract.BitcoinContract.is_valid_contract_script">
+<em class="property">static </em><code class="descname">is_valid_contract_script</code><span class="sig-paren">(</span><em>script_ops</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.is_valid_contract_script"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.is_valid_contract_script" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.contract.BitcoinContract.participate">
+<code class="descname">participate</code><span class="sig-paren">(</span><em>symbol: str</em>, <em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>utxo: list = None</em>, <em>token_address: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.participate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.participate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.contract.BitcoinContract.redeem">
+<code class="descname">redeem</code><span class="sig-paren">(</span><em>wallet</em>, <em>secret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.redeem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.redeem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.contract.BitcoinContract.refund">
+<code class="descname">refund</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.refund"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.refund" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.contract.BitcoinContract.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.show_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.contract.BitcoinContract.transaction_address">
+<code class="descname">transaction_address</code><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.transaction_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-network-ethereum-base">
-<span id="clove-network-ethereum-base"></span><h2>clove.network.ethereum.base<a class="headerlink" href="#clove-network-ethereum-base" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.bitcoin.transaction">
+<span id="clove-network-bitcoin-transaction"></span><span id="clove-network-bitcoin-transaction"></span><h2>clove.network.bitcoin.transaction<a class="headerlink" href="#module-clove.network.bitcoin.transaction" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction">
+<em class="property">class </em><code class="descclassname">clove.network.bitcoin.transaction.</code><code class="descname">BitcoinAtomicSwapTransaction</code><span class="sig-paren">(</span><em>network</em>, <em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>solvable_utxo: list</em>, <em>secret_hash: str = None</em>, <em>tx_locktime: int = 0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#clove.network.bitcoin.transaction.BitcoinTransaction" title="clove.network.bitcoin.transaction.BitcoinTransaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.bitcoin.transaction.BitcoinTransaction</span></code></a></p>
+<p>Bitcoin atomic swap object.</p>
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.add_fee">
+<code class="descname">add_fee</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.add_fee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.add_fee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adding fee to the transaction by decreasing ‘change’ transaction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.build_atomic_swap_contract">
+<code class="descname">build_atomic_swap_contract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.build_atomic_swap_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.build_atomic_swap_contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.build_outputs">
+<code class="descname">build_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.build_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.build_outputs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.generate_hash">
+<code class="descname">generate_hash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.generate_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.generate_hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.init_hours">
+<code class="descname">init_hours</code><em class="property"> = 48</em><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.init_hours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.participate_hours">
+<code class="descname">participate_hours</code><em class="property"> = 24</em><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.participate_hours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.set_locktime">
+<code class="descname">set_locktime</code><span class="sig-paren">(</span><em>number_of_hours</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.set_locktime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.set_locktime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.validate_address">
+<code class="descname">validate_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.validate_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.validate_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction">
+<em class="property">class </em><code class="descclassname">clove.network.bitcoin.transaction.</code><code class="descname">BitcoinTransaction</code><span class="sig-paren">(</span><em>network</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>solvable_utxo: list</em>, <em>tx_locktime: int = 0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Bitcoin transaction object.</p>
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.add_fee">
+<code class="descname">add_fee</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.add_fee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.add_fee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adding fee to the transaction by decreasing ‘change’ transaction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.add_fee_and_sign">
+<code class="descname">add_fee_and_sign</code><span class="sig-paren">(</span><em>default_wallet=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.add_fee_and_sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.add_fee_and_sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signing transaction and adding fee under the hood.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.address">
+<code class="descname">address</code><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.build_outputs">
+<code class="descname">build_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.build_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.build_outputs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.calculate_fee">
+<code class="descname">calculate_fee</code><span class="sig-paren">(</span><em>add_sig_size=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.calculate_fee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.calculate_fee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculating fee for given transaction based on transaction size and estimated fee per kb.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.create_unsigned_transaction">
+<code class="descname">create_unsigned_transaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.create_unsigned_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.create_unsigned_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.publish">
+<code class="descname">publish</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.publish" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.raw_transaction">
+<code class="descname">raw_transaction</code><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.raw_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.sign">
+<code class="descname">sign</code><span class="sig-paren">(</span><em>default_wallet: clove.network.bitcoin.wallet.BitcoinWallet = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signing transaction using the wallet object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.size">
+<code class="descname">size</code><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of a transaction represented in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.transaction.BitcoinTransaction.validate_address">
+<code class="descname">validate_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.validate_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.validate_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-network-ethereum-contract">
-<span id="clove-network-ethereum-contract"></span><h2>clove.network.ethereum.contract<a class="headerlink" href="#clove-network-ethereum-contract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.bitcoin.utxo">
+<span id="clove-network-bitcoin-utxo"></span><span id="clove-network-bitcoin-utxo"></span><h2>clove.network.bitcoin.utxo<a class="headerlink" href="#module-clove.network.bitcoin.utxo" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.bitcoin.utxo.Utxo">
+<em class="property">class </em><code class="descclassname">clove.network.bitcoin.utxo.</code><code class="descname">Utxo</code><span class="sig-paren">(</span><em>tx_id</em>, <em>vout</em>, <em>value</em>, <em>tx_script</em>, <em>wallet=None</em>, <em>secret=None</em>, <em>refund=False</em>, <em>contract=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/utxo.html#Utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="clove.network.bitcoin.utxo.Utxo.outpoint">
+<code class="descname">outpoint</code><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo.outpoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.utxo.Utxo.parsed_script">
+<code class="descname">parsed_script</code><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo.parsed_script" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.utxo.Utxo.tx_in">
+<code class="descname">tx_in</code><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo.tx_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.bitcoin.utxo.Utxo.unsigned_script_sig">
+<code class="descname">unsigned_script_sig</code><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo.unsigned_script_sig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-network-ethereum-transaction">
-<span id="clove-network-ethereum-transaction"></span><h2>clove.network.ethereum.transaction<a class="headerlink" href="#clove-network-ethereum-transaction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.bitcoin.wallet">
+<span id="clove-network-bitcoin-wallet"></span><span id="clove-network-bitcoin-wallet"></span><h2>clove.network.bitcoin.wallet<a class="headerlink" href="#module-clove.network.bitcoin.wallet" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.bitcoin.wallet.BitcoinWallet">
+<em class="property">class </em><code class="descclassname">clove.network.bitcoin.wallet.</code><code class="descname">BitcoinWallet</code><span class="sig-paren">(</span><em>private_key=None</em>, <em>encrypted_private_key=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="clove.network.bitcoin.wallet.BitcoinWallet.decrypt_private_key">
+<em class="property">static </em><code class="descname">decrypt_private_key</code><span class="sig-paren">(</span><em>encrypted_private_key: bytes</em>, <em>password: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.decrypt_private_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.decrypt_private_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypt private key with the password.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.bitcoin.wallet.BitcoinWallet.encrypt_private_key">
+<em class="property">static </em><code class="descname">encrypt_private_key</code><span class="sig-paren">(</span><em>private_key: str</em>, <em>password: str</em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.encrypt_private_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.encrypt_private_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypt private key with the password.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.wallet.BitcoinWallet.get_private_key">
+<code class="descname">get_private_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.get_private_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.get_private_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.bitcoin.wallet.BitcoinWallet.get_public_key">
+<code class="descname">get_public_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bitcoin.core.key.CPubKey<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.get_public_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.get_public_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-network-ethereum-wallet">
-<span id="clove-network-ethereum-wallet"></span><h2>clove.network.ethereum.wallet<a class="headerlink" href="#clove-network-ethereum-wallet" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.ethereum.base">
+<span id="clove-network-ethereum-base"></span><span id="clove-network-ethereum-base"></span><h2>clove.network.ethereum.base<a class="headerlink" href="#module-clove.network.ethereum.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork">
+<em class="property">class </em><code class="descclassname">clove.network.ethereum.base.</code><code class="descname">EthereumBaseNetwork</code><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#clove.network.base.BaseNetwork" title="clove.network.base.BaseNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.base.BaseNetwork</span></code></a></p>
+<p>Class with all the necessary ETH network information and transaction building.</p>
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.approve_token">
+<code class="descname">approve_token</code><span class="sig-paren">(</span><em>sender_address: str, value: Union[str, decimal.Decimal], token_address: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.transaction.EthereumTokenApprovalTransaction<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.approve_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.approve_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.atomic_swap">
+<code class="descname">atomic_swap</code><span class="sig-paren">(</span><em>sender_address: str, recipient_address: str, value: Union[str, decimal.Decimal], secret_hash: str = None, token_address: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.transaction.EthereumAtomicSwapTransaction<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.atomic_swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.atomic_swap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return EthereumAtomicSwapTransaction object,
+which initiate and build transaction beetwen sender and recipient</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.audit_contract">
+<code class="descname">audit_contract</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.contract.EthereumContract<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.audit_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.audit_contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.contract_address">
+<code class="descname">contract_address</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.contract_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.deserialize_raw_transaction">
+<em class="property">static </em><code class="descname">deserialize_raw_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; Union[ethereum.transactions.Transaction, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.deserialize_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.deserialize_raw_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to deserialize raw method.
+It’s deserializing raw_transaction and returns Transaction object</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.ethereum_based">
+<code class="descname">ethereum_based</code><em class="property"> = True</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.ethereum_based" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.extract_method_id">
+<em class="property">static </em><code class="descname">extract_method_id</code><span class="sig-paren">(</span><em>tx_input: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.extract_method_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.extract_method_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.extract_secret_from_redeem_transaction">
+<code class="descname">extract_secret_from_redeem_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.extract_secret_from_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.extract_secret_from_redeem_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_method_name">
+<code class="descname">get_method_name</code><span class="sig-paren">(</span><em>method_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_method_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_method_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_raw_transaction">
+<em class="property">static </em><code class="descname">get_raw_transaction</code><span class="sig-paren">(</span><em>transaction: ethereum.transactions.Transaction</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_raw_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get raw_transaction by encoding Transaction object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_address">
+<code class="descname">get_token_by_address</code><span class="sig-paren">(</span><em>address: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_attribute">
+<em class="property">classmethod </em><code class="descname">get_token_by_attribute</code><span class="sig-paren">(</span><em>name: str</em>, <em>value: str</em><span class="sig-paren">)</span> &#x2192; Union[clove.network.ethereum_based.Token, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a token by provided attribute and its value</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_symbol">
+<em class="property">classmethod </em><code class="descname">get_token_by_symbol</code><span class="sig-paren">(</span><em>symbol: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get raw_transaction by encoding Transaction object token by provided symbol</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_from_token_contract">
+<code class="descname">get_token_from_token_contract</code><span class="sig-paren">(</span><em>token_address: str</em><span class="sig-paren">)</span> &#x2192; Union[clove.network.ethereum_based.Token, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_from_token_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_from_token_contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting information from token contract and creating Token.
+Smart contract is taken based on provided address</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_transaction">
+<code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; web3.utils.datastructures.AttributeDict<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_wallet">
+<em class="property">classmethod </em><code class="descname">get_wallet</code><span class="sig-paren">(</span><em>private_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Ethereum wallter object, which allows to keep address and priv key</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.infura_endpoint">
+<code class="descname">infura_endpoint</code><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.infura_endpoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.infura_network">
+<code class="descname">infura_network</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.infura_network" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.is_valid_address">
+<em class="property">static </em><code class="descname">is_valid_address</code><span class="sig-paren">(</span><em>adddress: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.is_valid_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.is_valid_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.method_id">
+<em class="property">static </em><code class="descname">method_id</code><span class="sig-paren">(</span><em>method</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.method_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.method_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.publish">
+<code class="descname">publish</code><span class="sig-paren">(</span><em>transaction: Union[str, ethereum.transactions.Transaction]</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to publish transaction</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.sign">
+<em class="property">static </em><code class="descname">sign</code><span class="sig-paren">(</span><em>transaction: ethereum.transactions.Transaction</em>, <em>private_key: str</em><span class="sig-paren">)</span> &#x2192; ethereum.transactions.Transaction<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.sign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.sign_raw_transaction">
+<em class="property">classmethod </em><code class="descname">sign_raw_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em>, <em>private_key: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.sign_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.sign_raw_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to sign raw transactions</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.symbols">
+<code class="descname">symbols</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.symbols" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.token_abi">
+<code class="descname">token_abi</code><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.token_abi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.token_class">
+<code class="descname">token_class</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.token_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.tokens">
+<code class="descname">tokens</code><em class="property"> = []</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.tokens" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.unify_address">
+<em class="property">static </em><code class="descname">unify_address</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.unify_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.unify_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.value_from_base_units">
+<em class="property">static </em><code class="descname">value_from_base_units</code><span class="sig-paren">(</span><em>value: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.value_from_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.value_from_base_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="clove.network.ethereum.base.EthereumBaseNetwork.value_to_base_units">
+<em class="property">static </em><code class="descname">value_to_base_units</code><span class="sig-paren">(</span><em>value: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.value_to_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.value_to_base_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-utils-bitcoin">
-<span id="clove-utils-bitcoin"></span><h2>clove.utils.bitcoin<a class="headerlink" href="#clove-utils-bitcoin" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.ethereum.contract">
+<span id="clove-network-ethereum-contract"></span><span id="clove-network-ethereum-contract"></span><h2>clove.network.ethereum.contract<a class="headerlink" href="#module-clove.network.ethereum.contract" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.ethereum.contract.EthereumContract">
+<em class="property">class </em><code class="descclassname">clove.network.ethereum.contract.</code><code class="descname">EthereumContract</code><span class="sig-paren">(</span><em>network</em>, <em>tx_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="clove.network.ethereum.contract.EthereumContract.find_redeem_transaction">
+<code class="descname">find_redeem_transaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.find_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.find_redeem_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.contract.EthereumContract.is_eth_contract">
+<code class="descname">is_eth_contract</code><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.is_eth_contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.contract.EthereumContract.is_initiate">
+<code class="descname">is_initiate</code><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.is_initiate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.contract.EthereumContract.is_token_contract">
+<code class="descname">is_token_contract</code><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.is_token_contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.contract.EthereumContract.participate">
+<code class="descname">participate</code><span class="sig-paren">(</span><em>symbol: str</em>, <em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>utxo: list = None</em>, <em>token_address: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.participate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.participate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.contract.EthereumContract.redeem">
+<code class="descname">redeem</code><span class="sig-paren">(</span><em>secret: str</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.transaction.EthereumTokenTransaction<a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.redeem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.redeem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.contract.EthereumContract.refund">
+<code class="descname">refund</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.refund"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.refund" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.contract.EthereumContract.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.show_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-utils-external-source">
-<span id="clove-utils-external-source"></span><h2>clove.utils.external_source<a class="headerlink" href="#clove-utils-external-source" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.ethereum.transaction">
+<span id="clove-network-ethereum-transaction"></span><span id="clove-network-ethereum-transaction"></span><h2>clove.network.ethereum.transaction<a class="headerlink" href="#module-clove.network.ethereum.transaction" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction">
+<em class="property">class </em><code class="descclassname">clove.network.ethereum.transaction.</code><code class="descname">EthereumAtomicSwapTransaction</code><span class="sig-paren">(</span><em>network</em>, <em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: decimal.Decimal</em>, <em>secret_hash: str = None</em>, <em>token=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#clove.network.ethereum.transaction.EthereumTokenTransaction" title="clove.network.ethereum.transaction.EthereumTokenTransaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.ethereum.transaction.EthereumTokenTransaction</span></code></a></p>
+<dl class="attribute">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.init_hours">
+<code class="descname">init_hours</code><em class="property"> = 48</em><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.init_hours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.participate_hours">
+<code class="descname">participate_hours</code><em class="property"> = 24</em><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.participate_hours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_contract">
+<code class="descname">set_contract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction.set_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_locktime">
+<code class="descname">set_locktime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction.set_locktime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_locktime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_secrets">
+<code class="descname">set_secrets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction.set_secrets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_secrets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_token_contract">
+<code class="descname">set_token_contract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction.set_token_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.set_token_contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns information about transaction.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clove.network.ethereum.transaction.EthereumTokenApprovalTransaction">
+<em class="property">class </em><code class="descclassname">clove.network.ethereum.transaction.</code><code class="descname">EthereumTokenApprovalTransaction</code><span class="sig-paren">(</span><em>network</em>, <em>sender_address: str</em>, <em>value: decimal.Decimal</em>, <em>token=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTokenApprovalTransaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTokenApprovalTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#clove.network.ethereum.transaction.EthereumTokenTransaction" title="clove.network.ethereum.transaction.EthereumTokenTransaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.ethereum.transaction.EthereumTokenTransaction</span></code></a></p>
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumTokenApprovalTransaction.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTokenApprovalTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTokenApprovalTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns information about transaction.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clove.network.ethereum.transaction.EthereumTokenTransaction">
+<em class="property">class </em><code class="descclassname">clove.network.ethereum.transaction.</code><code class="descname">EthereumTokenTransaction</code><span class="sig-paren">(</span><em>network</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTokenTransaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTokenTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#clove.network.ethereum.transaction.EthereumTransaction" title="clove.network.ethereum.transaction.EthereumTransaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.ethereum.transaction.EthereumTransaction</span></code></a></p>
+<p>Ethereum token transaction object.</p>
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumTokenTransaction.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTokenTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTokenTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns information about transaction.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clove.network.ethereum.transaction.EthereumTransaction">
+<em class="property">class </em><code class="descclassname">clove.network.ethereum.transaction.</code><code class="descname">EthereumTransaction</code><span class="sig-paren">(</span><em>network</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTransaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Ethereum transaction object.</p>
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumTransaction.publish">
+<code class="descname">publish</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTransaction.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTransaction.publish" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clove.network.ethereum.transaction.EthereumTransaction.raw_transaction">
+<code class="descname">raw_transaction</code><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTransaction.raw_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns raw transaction serialized to hex.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumTransaction.show_details">
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns information about transaction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clove.network.ethereum.transaction.EthereumTransaction.sign">
+<code class="descname">sign</code><span class="sig-paren">(</span><em>private_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTransaction.sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTransaction.sign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="clove-utils-hashing">
-<span id="clove-utils-hashing"></span><h2>clove.utils.hashing<a class="headerlink" href="#clove-utils-hashing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.network.ethereum.wallet">
+<span id="clove-network-ethereum-wallet"></span><span id="clove-network-ethereum-wallet"></span><h2>clove.network.ethereum.wallet<a class="headerlink" href="#module-clove.network.ethereum.wallet" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="clove.network.ethereum.wallet.EthereumWallet">
+<em class="property">class </em><code class="descclassname">clove.network.ethereum.wallet.</code><code class="descname">EthereumWallet</code><span class="sig-paren">(</span><em>private_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/wallet.html#EthereumWallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.wallet.EthereumWallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Ethereum wallet object.</p>
+</dd></dl>
+
 </div>
-<div class="section" id="clove-utils-logging">
-<span id="clove-utils-logging"></span><h2>clove.utils.logging<a class="headerlink" href="#clove-utils-logging" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.utils.bitcoin">
+<span id="clove-utils-bitcoin"></span><span id="clove-utils-bitcoin"></span><h2>clove.utils.bitcoin<a class="headerlink" href="#module-clove.utils.bitcoin" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="clove.utils.bitcoin.auto_switch_params">
+<code class="descclassname">clove.utils.bitcoin.</code><code class="descname">auto_switch_params</code><span class="sig-paren">(</span><em>args_index: int = 0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/bitcoin.html#auto_switch_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.auto_switch_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.bitcoin.from_base_units">
+<code class="descclassname">clove.utils.bitcoin.</code><code class="descname">from_base_units</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/bitcoin.html#from_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.from_base_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.bitcoin.to_base_units">
+<code class="descclassname">clove.utils.bitcoin.</code><code class="descname">to_base_units</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/bitcoin.html#to_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.to_base_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="clove-utils-network">
-<span id="clove-utils-network"></span><h2>clove.utils.network<a class="headerlink" href="#clove-utils-network" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.utils.external_source">
+<span id="clove-utils-external-source"></span><span id="clove-utils-external-source"></span><h2>clove.utils.external_source<a class="headerlink" href="#module-clove.utils.external_source" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="clove.utils.external_source.clove_req">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">clove_req</code><span class="sig-paren">(</span><em>url: str</em><span class="sig-paren">)</span> &#x2192; Union[http.client.HTTPResponse, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#clove_req"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.clove_req" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a request with Clove user-agent header</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.clove_req_json">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">clove_req_json</code><span class="sig-paren">(</span><em>url: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/external_source.html#clove_req_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.clove_req_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a request with Clove user-agent header and return json response</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.extract_scriptsig_blockcypher">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">extract_scriptsig_blockcypher</code><span class="sig-paren">(</span><em>network: str</em>, <em>contract_address: str</em>, <em>testnet: bool = False</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#extract_scriptsig_blockcypher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.extract_scriptsig_blockcypher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.extract_scriptsig_cryptoid">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">extract_scriptsig_cryptoid</code><span class="sig-paren">(</span><em>network: str</em>, <em>contract_address: str</em>, <em>testnet: bool = False</em>, <em>cryptoid_api_key: str = None</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#extract_scriptsig_cryptoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.extract_scriptsig_cryptoid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.extract_scriptsig_from_redeem_transaction">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">extract_scriptsig_from_redeem_transaction</code><span class="sig-paren">(</span><em>network: str</em>, <em>contract_address: str</em>, <em>testnet: bool = False</em>, <em>cryptoid_api_key: str = None</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#extract_scriptsig_from_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.extract_scriptsig_from_redeem_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.extract_scriptsig_raven">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">extract_scriptsig_raven</code><span class="sig-paren">(</span><em>contract_address: str</em>, <em>testnet: bool = False</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#extract_scriptsig_raven"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.extract_scriptsig_raven" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.find_redeem_token_transaction">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">find_redeem_token_transaction</code><span class="sig-paren">(</span><em>recipient_address: str</em>, <em>token_address: str</em>, <em>value: int</em>, <em>subdomain: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#find_redeem_token_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.find_redeem_token_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.find_redeem_transaction">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">find_redeem_transaction</code><span class="sig-paren">(</span><em>recipient_address: str</em>, <em>contract_address: str</em>, <em>value: int</em>, <em>subdomain: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#find_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.find_redeem_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_balance">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_balance</code><span class="sig-paren">(</span><em>network: object</em>, <em>address: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/external_source.html#get_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_balance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_balance_blockcypher">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_balance_blockcypher</code><span class="sig-paren">(</span><em>network: str</em>, <em>address: str</em>, <em>testnet: bool</em><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#get_balance_blockcypher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_balance_blockcypher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_balance_cryptoid">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_balance_cryptoid</code><span class="sig-paren">(</span><em>network: str</em>, <em>address: str</em>, <em>testnet: bool</em>, <em>cryptoid_api_key: str</em><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#get_balance_cryptoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_balance_cryptoid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_current_fee">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_current_fee</code><span class="sig-paren">(</span><em>network: str</em><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#get_current_fee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_current_fee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting current network fee from Clove API</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_last_transactions">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_last_transactions</code><span class="sig-paren">(</span><em>network: str</em><span class="sig-paren">)</span> &#x2192; Union[list, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#get_last_transactions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_last_transactions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_transaction">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_transaction</code><span class="sig-paren">(</span><em>network: str</em>, <em>tx_hash: str</em>, <em>testnet: bool = False</em><span class="sig-paren">)</span> &#x2192; Union[dict, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_transaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_transaction_size">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_transaction_size</code><span class="sig-paren">(</span><em>network: str</em>, <em>tx_hash: str</em><span class="sig-paren">)</span> &#x2192; Union[int, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#get_transaction_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_transaction_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING: this method is using undocumented endpoint used by chainz.cryptoid.info site.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clove.utils.external_source.get_utxo_from_api">
+<code class="descclassname">clove.utils.external_source.</code><code class="descname">get_utxo_from_api</code><span class="sig-paren">(</span><em>network: str</em>, <em>address: str</em>, <em>amount: float</em>, <em>use_blockcypher: bool = False</em>, <em>testnet: bool = False</em>, <em>cryptoid_api_key: str = None</em><span class="sig-paren">)</span> &#x2192; Union[list, NoneType]<a class="reference internal" href="_modules/clove/utils/external_source.html#get_utxo_from_api"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.external_source.get_utxo_from_api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="clove-utils-search">
-<span id="clove-utils-search"></span><h2>clove.utils.search<a class="headerlink" href="#clove-utils-search" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-clove.utils.hashing">
+<span id="clove-utils-hashing"></span><span id="clove-utils-hashing"></span><h2>clove.utils.hashing<a class="headerlink" href="#module-clove.utils.hashing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="clove.utils.hashing.generate_secret_with_hash">
+<code class="descclassname">clove.utils.hashing.</code><code class="descname">generate_secret_with_hash</code><span class="sig-paren">(</span><em>) -&gt; (&lt;class 'bytes'&gt;</em>, <em>&lt;class 'bytes'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/hashing.html#generate_secret_with_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.hashing.generate_secret_with_hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-clove.utils.logging">
+<span id="clove-utils-logging"></span><span id="clove-utils-logging"></span><h2>clove.utils.logging<a class="headerlink" href="#module-clove.utils.logging" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-clove.utils.network">
+<span id="clove-utils-network"></span><span id="clove-utils-network"></span><h2>clove.utils.network<a class="headerlink" href="#module-clove.utils.network" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="clove.utils.network.generate_params_object">
+<code class="descclassname">clove.utils.network.</code><code class="descname">generate_params_object</code><span class="sig-paren">(</span><em>message_start=b''</em>, <em>default_port=None</em>, <em>rpc_port=None</em>, <em>dns_seeds=()</em>, <em>base58_prefixes={}</em>, <em>max_money=None</em>, <em>genesis_block=None</em>, <em>proof_of_work_limit=None</em>, <em>subsidy_halving_interval=None</em>, <em>name=None</em><span class="sig-paren">)</span> &#x2192; bitcoin.GenericParams<a class="reference internal" href="_modules/clove/utils/network.html#generate_params_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.network.generate_params_object" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-clove.utils.search">
+<span id="clove-utils-search"></span><span id="clove-utils-search"></span><h2>clove.utils.search<a class="headerlink" href="#module-clove.utils.search" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="clove.utils.search.get_network_by_symbol">
+<code class="descclassname">clove.utils.search.</code><code class="descname">get_network_by_symbol</code><span class="sig-paren">(</span><em>symbol: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/search.html#get_network_by_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.search.get_network_by_symbol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 

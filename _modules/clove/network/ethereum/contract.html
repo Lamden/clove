@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clove.network.ethereum.contract &mdash; Clove  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Clove
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Clove </a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Atomic swap example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Clove</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clove.network.ethereum.contract</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clove.network.ethereum.contract</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">eth_abi</span> <span class="k">import</span> <span class="n">decode_abi</span>
+<span class="kn">from</span> <span class="nn">ethereum.transactions</span> <span class="k">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span> <span class="nn">web3</span> <span class="k">import</span> <span class="n">Web3</span>
+<span class="kn">from</span> <span class="nn">web3.utils.abi</span> <span class="k">import</span> <span class="n">get_abi_input_names</span><span class="p">,</span> <span class="n">get_abi_input_types</span>
+<span class="kn">from</span> <span class="nn">web3.utils.contracts</span> <span class="k">import</span> <span class="n">find_matching_fn_abi</span>
+
+<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">ETH_REDEEM_GAS_LIMIT</span><span class="p">,</span> <span class="n">ETH_REFUND_GAS_LIMIT</span>
+<span class="kn">from</span> <span class="nn">clove.network.ethereum.transaction</span> <span class="k">import</span> <span class="n">EthereumTokenTransaction</span>
+<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">find_redeem_token_transaction</span><span class="p">,</span> <span class="n">find_redeem_transaction</span>
+<span class="kn">from</span> <span class="nn">clove.utils.logging</span> <span class="k">import</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="EthereumContract"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract">[docs]</a><span class="k">class</span> <span class="nc">EthereumContract</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">tx_dict</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span> <span class="o">=</span> <span class="n">tx_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">extract_method_id</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_method_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_initiate</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Not a contract transaction.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Not a contract transaction.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_token_contract</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">token_abi</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">abi</span>
+
+        <span class="n">input_types</span> <span class="o">=</span> <span class="n">get_abi_input_types</span><span class="p">(</span><span class="n">find_matching_fn_abi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="p">,</span> <span class="n">fn_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
+        <span class="n">input_names</span> <span class="o">=</span> <span class="n">get_abi_input_names</span><span class="p">(</span><span class="n">find_matching_fn_abi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="p">,</span> <span class="n">fn_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
+        <span class="n">input_values</span> <span class="o">=</span> <span class="n">decode_abi</span><span class="p">(</span><span class="n">input_types</span><span class="p">,</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toBytes</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="mi">10</span><span class="p">:]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">input_names</span><span class="p">,</span> <span class="n">input_values</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_expiration&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span> <span class="o">=</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toChecksumAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_participant&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_hash&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span> <span class="o">=</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toChecksumAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_token_contract</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_value&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token_address</span> <span class="o">=</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toChecksumAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_token&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_token_by_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_address</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">value_from_base_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">symbol</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">value_from_base_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_eth_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">eth_swap_contract_address</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_initiate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">initiate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">initiate_token</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_token_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">initiate_token</span>
+
+<div class="viewcode-block" id="EthereumContract.participate"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.participate">[docs]</a>    <span class="k">def</span> <span class="nf">participate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">sender_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">utxo</span><span class="p">:</span> <span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_network_by_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">ethereum_based</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span>
+                <span class="n">sender_address</span><span class="p">,</span>
+                <span class="n">recipient_address</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">,</span>
+                <span class="n">token_address</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span>
+            <span class="n">sender_address</span><span class="p">,</span>
+            <span class="n">recipient_address</span><span class="p">,</span>
+            <span class="n">value</span><span class="p">,</span>
+            <span class="n">utxo</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EthereumContract.redeem"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.redeem">[docs]</a>    <span class="k">def</span> <span class="nf">redeem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumTokenTransaction</span><span class="p">:</span>
+        <span class="n">contract</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">abi</span><span class="p">)</span>
+        <span class="n">redeem_func</span> <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">redeem</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span>
+        <span class="n">tx_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="n">ETH_REDEEM_GAS_LIMIT</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">tx_dict</span> <span class="o">=</span> <span class="n">redeem_func</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">)</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">EthereumTokenTransaction</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">tx</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
+            <span class="n">nonce</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;nonce&#39;</span><span class="p">],</span>
+            <span class="n">gasprice</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;gasPrice&#39;</span><span class="p">],</span>
+            <span class="n">startgas</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">],</span>
+            <span class="n">to</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">],</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">Web3</span><span class="o">.</span><span class="n">toBytes</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">recipient_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span>
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+<div class="viewcode-block" id="EthereumContract.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_token_contract</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">find_redeem_token_transaction</span><span class="p">(</span>
+                <span class="n">recipient_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
+                <span class="n">token_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">token_address</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span><span class="p">,</span>
+                <span class="n">subdomain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">etherscan_api_subdomain</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">find_redeem_transaction</span><span class="p">(</span>
+            <span class="n">recipient_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
+            <span class="n">contract_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span><span class="p">,</span>
+            <span class="n">subdomain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">etherscan_api_subdomain</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EthereumContract.refund"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.refund">[docs]</a>    <span class="k">def</span> <span class="nf">refund</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">contract</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">abi</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span> <span class="o">&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">():</span>
+            <span class="n">locktime_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;This contract is still valid! It can&#39;t be refunded until </span><span class="si">{locktime_string}</span><span class="s2"> UTC.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;This contract is still valid! It can&#39;t be refunded until </span><span class="si">{locktime_string}</span><span class="s2"> UTC.&quot;</span><span class="p">)</span>
+
+        <span class="n">refund_func</span> <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">refund</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">)</span>
+        <span class="n">tx_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span><span class="p">),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="n">ETH_REFUND_GAS_LIMIT</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">tx_dict</span> <span class="o">=</span> <span class="n">refund_func</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">)</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">EthereumTokenTransaction</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">tx</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
+            <span class="n">nonce</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;nonce&#39;</span><span class="p">],</span>
+            <span class="n">gasprice</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;gasPrice&#39;</span><span class="p">],</span>
+            <span class="n">startgas</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">],</span>
+            <span class="n">to</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">],</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">Web3</span><span class="o">.</span><span class="n">toBytes</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">recipient_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Transaction refunded&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+<div class="viewcode-block" id="EthereumContract.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span>
+            <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span><span class="p">,</span>
+            <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
+            <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span><span class="p">,</span>
+            <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">,</span>
+            <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.value:.18f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
+            <span class="n">details</span><span class="p">[</span><span class="s1">&#39;value_text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">get_value_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">details</span><span class="p">[</span><span class="s1">&#39;token_address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_address</span>
+        <span class="k">return</span> <span class="n">details</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lamden Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

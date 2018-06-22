@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clove.network.bitcoin.transaction &mdash; Clove  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Clove
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Clove </a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Atomic swap example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Clove</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clove.network.bitcoin.transaction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clove.network.bitcoin.transaction</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+
+<span class="kn">from</span> <span class="nn">bitcoin.core</span> <span class="k">import</span> <span class="n">CMutableTransaction</span><span class="p">,</span> <span class="n">CMutableTxOut</span><span class="p">,</span> <span class="n">b2lx</span><span class="p">,</span> <span class="n">b2x</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">x</span>
+<span class="kn">from</span> <span class="nn">bitcoin.core.scripteval</span> <span class="k">import</span> <span class="n">SCRIPT_VERIFY_P2SH</span><span class="p">,</span> <span class="n">VerifyScript</span>
+<span class="kn">from</span> <span class="nn">bitcoin.wallet</span> <span class="k">import</span> <span class="n">CBitcoinAddress</span>
+
+<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">SIGNATURE_SIZE</span>
+<span class="kn">from</span> <span class="nn">clove.network.bitcoin.wallet</span> <span class="k">import</span> <span class="n">BitcoinWallet</span>
+<span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">auto_switch_params</span><span class="p">,</span> <span class="n">to_base_units</span>
+<span class="kn">from</span> <span class="nn">clove.utils.hashing</span> <span class="k">import</span> <span class="n">generate_secret_with_hash</span>
+
+
+<div class="viewcode-block" id="BitcoinTransaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction">[docs]</a><span class="k">class</span> <span class="nc">BitcoinTransaction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Bitcoin transaction object.&#39;&#39;&#39;</span>
+
+    <span class="nd">@auto_switch_params</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">solvable_utxo</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">tx_locktime</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span> <span class="o">=</span> <span class="n">recipient_address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_address</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">solvable_utxo</span> <span class="o">=</span> <span class="n">solvable_utxo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">utxo_value</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">utxo</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">utxo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solvable_utxo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_in_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">utxo</span><span class="o">.</span><span class="n">tx_in</span> <span class="k">for</span> <span class="n">utxo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solvable_utxo</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_out_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_locktime</span> <span class="o">=</span> <span class="n">tx_locktime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fee_per_kb</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<div class="viewcode-block" id="BitcoinTransaction.validate_address"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.validate_address">[docs]</a>    <span class="k">def</span> <span class="nf">validate_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">is_valid_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Given recipient address is invalid.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinTransaction.build_outputs"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.build_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">build_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_out_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">CMutableTxOut</span><span class="p">(</span><span class="n">to_base_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">CBitcoinAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">)</span><span class="o">.</span><span class="n">to_scriptPubKey</span><span class="p">())</span>
+        <span class="p">]</span></div>
+
+<div class="viewcode-block" id="BitcoinTransaction.add_fee_and_sign"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.add_fee_and_sign">[docs]</a>    <span class="k">def</span> <span class="nf">add_fee_and_sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Signing transaction and adding fee under the hood.&quot;&quot;&quot;</span>
+
+        <span class="c1"># signing the transaction for the first time to get the right transaction size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">default_wallet</span><span class="p">)</span>
+
+        <span class="c1"># adding fee based on transaction size (this will modify the transaction)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_fee</span><span class="p">()</span>
+
+        <span class="c1"># signing the modified transaction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">default_wallet</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinTransaction.sign"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.sign">[docs]</a>    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_wallet</span><span class="p">:</span> <span class="n">BitcoinWallet</span> <span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Signing transaction using the wallet object.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">tx_index</span><span class="p">,</span> <span class="n">tx_in</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">vin</span><span class="p">):</span>
+            <span class="n">utxo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solvable_utxo</span><span class="p">[</span><span class="n">tx_index</span><span class="p">]</span>
+            <span class="n">wallet</span> <span class="o">=</span> <span class="n">utxo</span><span class="o">.</span><span class="n">wallet</span> <span class="ow">or</span> <span class="n">default_wallet</span>
+
+            <span class="k">if</span> <span class="n">wallet</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Cannot sign transaction without a wallet.&#39;</span><span class="p">)</span>
+
+            <span class="n">tx_script</span> <span class="o">=</span> <span class="n">utxo</span><span class="o">.</span><span class="n">parsed_script</span>
+            <span class="k">if</span> <span class="n">utxo</span><span class="o">.</span><span class="n">contract</span><span class="p">:</span>
+                <span class="n">sig_hash</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">SignatureHash</span><span class="p">(</span>
+                    <span class="n">script</span><span class="o">.</span><span class="n">CScript</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">utxo</span><span class="o">.</span><span class="n">contract</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="p">,</span>
+                    <span class="n">tx_index</span><span class="p">,</span>
+                    <span class="n">script</span><span class="o">.</span><span class="n">SIGHASH_ALL</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sig_hash</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">SignatureHash</span><span class="p">(</span>
+                    <span class="n">tx_script</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="p">,</span>
+                    <span class="n">tx_index</span><span class="p">,</span>
+                    <span class="n">script</span><span class="o">.</span><span class="n">SIGHASH_ALL</span>
+                <span class="p">)</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="n">wallet</span><span class="o">.</span><span class="n">private_key</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">sig_hash</span><span class="p">)</span> <span class="o">+</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;B&#39;</span><span class="p">,</span> <span class="n">script</span><span class="o">.</span><span class="n">SIGHASH_ALL</span><span class="p">)</span>
+            <span class="n">script_sig</span> <span class="o">=</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">wallet</span><span class="o">.</span><span class="n">private_key</span><span class="o">.</span><span class="n">pub</span><span class="p">]</span> <span class="o">+</span> <span class="n">utxo</span><span class="o">.</span><span class="n">unsigned_script_sig</span>
+            <span class="n">tx_in</span><span class="o">.</span><span class="n">scriptSig</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">CScript</span><span class="p">(</span><span class="n">script_sig</span><span class="p">)</span>
+
+            <span class="n">VerifyScript</span><span class="p">(</span>
+                <span class="n">tx_in</span><span class="o">.</span><span class="n">scriptSig</span><span class="p">,</span>
+                <span class="n">tx_script</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="p">,</span>
+                <span class="n">tx_index</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">SCRIPT_VERIFY_P2SH</span><span class="p">,)</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinTransaction.create_unsigned_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.create_unsigned_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">create_unsigned_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">utxo_value</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;You want to spend more than you</span><span class="se">\&#39;</span><span class="s1">ve got. Add more UTXO</span><span class="se">\&#39;</span><span class="s1">s.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx</span> <span class="o">=</span> <span class="n">CMutableTransaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_in_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_out_list</span><span class="p">,</span> <span class="n">nLockTime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_locktime</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinTransaction.publish"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the size of a transaction represented in bytes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">serialize</span><span class="p">())</span>
+
+<div class="viewcode-block" id="BitcoinTransaction.calculate_fee"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.calculate_fee">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_fee</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">add_sig_size</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculating fee for given transaction based on transaction size and estimated fee per kb.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee_per_kb</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fee_per_kb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_current_fee_per_kb</span><span class="p">()</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">if</span> <span class="n">add_sig_size</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_in_list</span><span class="p">)</span> <span class="o">*</span> <span class="n">SIGNATURE_SIZE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">fee_per_kb</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinTransaction.add_fee"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.add_fee">[docs]</a>    <span class="k">def</span> <span class="nf">add_fee</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adding fee to the transaction by decreasing &#39;change&#39; transaction.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calculate_fee</span><span class="p">()</span>
+        <span class="n">fee_in_satoshi</span> <span class="o">=</span> <span class="n">to_base_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fee</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">vout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nValue</span> <span class="o">&lt;</span> <span class="n">fee_in_satoshi</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Cannot subtract fee from transaction. You need to add more input transactions.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">vout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nValue</span> <span class="o">-=</span> <span class="n">fee_in_satoshi</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">raw_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">b2x</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">serialize</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">b2lx</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">GetHash</span><span class="p">())</span>
+
+<div class="viewcode-block" id="BitcoinTransaction.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;transaction&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">,</span>
+            <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee</span><span class="p">,</span>
+            <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee_per_kb</span><span class="p">,</span>
+            <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.fee_per_kb:.8f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1"> / 1 kB&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.fee:.8f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.size}</span><span class="s1"> bytes&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.value:.8f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction">[docs]</a><span class="k">class</span> <span class="nc">BitcoinAtomicSwapTransaction</span><span class="p">(</span><span class="n">BitcoinTransaction</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Bitcoin atomic swap object.&#39;&#39;&#39;</span>
+    <span class="n">init_hours</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="n">participate_hours</span> <span class="o">=</span> <span class="mi">24</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">network</span><span class="p">,</span>
+        <span class="n">sender_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">solvable_utxo</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">secret_hash</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">tx_locktime</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender_address</span> <span class="o">=</span> <span class="n">sender_address</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">solvable_utxo</span><span class="p">,</span> <span class="n">tx_locktime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span> <span class="o">=</span> <span class="n">x</span><span class="p">(</span><span class="n">secret_hash</span><span class="p">)</span> <span class="k">if</span> <span class="n">secret_hash</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction.validate_address"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.validate_address">[docs]</a>    <span class="k">def</span> <span class="nf">validate_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">invalid_recipient</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">is_valid_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">)</span>
+        <span class="n">invalid_sender</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">is_valid_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_address</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">invalid_recipient</span> <span class="ow">and</span> <span class="n">invalid_sender</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Given recipient and sender addresses are invalid.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">invalid_recipient</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Given recipient address is invalid.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">invalid_sender</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Given sender address is invalid.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction.build_atomic_swap_contract"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.build_atomic_swap_contract">[docs]</a>    <span class="k">def</span> <span class="nf">build_atomic_swap_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">CScript</span><span class="p">([</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_IF</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_RIPEMD160</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_EQUALVERIFY</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_DUP</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_HASH160</span><span class="p">,</span>
+            <span class="n">CBitcoinAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">),</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_ELSE</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locktime</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()),</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_CHECKLOCKTIMEVERIFY</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_DROP</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_DUP</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_HASH160</span><span class="p">,</span>
+            <span class="n">CBitcoinAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_address</span><span class="p">),</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_ENDIF</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_EQUALVERIFY</span><span class="p">,</span>
+            <span class="n">script</span><span class="o">.</span><span class="n">OP_CHECKSIG</span><span class="p">,</span>
+        <span class="p">])</span></div>
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction.set_locktime"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.set_locktime">[docs]</a>    <span class="k">def</span> <span class="nf">set_locktime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_hours</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">number_of_hours</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction.generate_hash"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.generate_hash">[docs]</a>    <span class="k">def</span> <span class="nf">generate_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span> <span class="o">=</span> <span class="n">generate_secret_with_hash</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction.build_outputs"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.build_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">build_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_hash</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_locktime</span><span class="p">(</span><span class="n">number_of_hours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_hours</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_locktime</span><span class="p">(</span><span class="n">number_of_hours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">participate_hours</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_atomic_swap_contract</span><span class="p">()</span>
+
+        <span class="n">contract_p2sh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span><span class="o">.</span><span class="n">to_p2sh_scriptPubKey</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_out_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">CMutableTxOut</span><span class="p">(</span><span class="n">to_base_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">contract_p2sh</span><span class="p">),</span> <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">utxo_value</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">utxo_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tx_out_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">CMutableTxOut</span><span class="p">(</span><span class="n">to_base_units</span><span class="p">(</span><span class="n">change</span><span class="p">),</span> <span class="n">CBitcoinAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender_address</span><span class="p">)</span><span class="o">.</span><span class="n">to_scriptPubKey</span><span class="p">())</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction.add_fee"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.add_fee">[docs]</a>    <span class="k">def</span> <span class="nf">add_fee</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adding fee to the transaction by decreasing &#39;change&#39; transaction.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calculate_fee</span><span class="p">()</span>
+        <span class="n">fee_in_satoshi</span> <span class="o">=</span> <span class="n">to_base_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fee</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">vout</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">vout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">nValue</span> <span class="o">&lt;</span> <span class="n">fee_in_satoshi</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Cannot subtract fee from change transaction. You need to add more input transactions.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">vout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">nValue</span> <span class="o">-=</span> <span class="n">fee_in_satoshi</span></div>
+
+<div class="viewcode-block" id="BitcoinAtomicSwapTransaction.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;contract&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>
+            <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">CBitcoinAddress</span><span class="o">.</span><span class="n">from_scriptPubKey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract</span><span class="o">.</span><span class="n">to_p2sh_scriptPubKey</span><span class="p">())),</span>
+            <span class="s1">&#39;contract_transaction&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">,</span>
+            <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee</span><span class="p">,</span>
+            <span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee_per_kb</span><span class="p">,</span>
+            <span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.fee_per_kb:.8f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1"> / 1 kB&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.fee:.8f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span><span class="p">,</span>
+            <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
+            <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender_address</span><span class="p">,</span>
+            <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.size}</span><span class="s1"> bytes&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.value:.8f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">}</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lamden Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
