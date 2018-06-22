@@ -1,4 +1,5 @@
 import os
+from random import shuffle
 import socket
 from time import sleep, time
 from typing import Optional
@@ -180,7 +181,10 @@ class BitcoinBaseNetwork(BaseNetwork):
             # fake seed node to enter the seed nodes loop
             self.seeds = (None, )
 
-        for seed in self.seeds:
+        random_seeds = list(self.seeds)
+        shuffle(random_seeds)
+
+        for seed in random_seeds:
 
             if seed is None:
                 # get hardcoded nodes
