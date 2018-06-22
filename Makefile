@@ -23,10 +23,11 @@ gh-pages:
 	git checkout gh-pages
 	rm -rf *
 	git checkout master $(SOURCEDIR)
+	git checkout master clove
 	git reset HEAD
 	sphinx-build $(SOURCEDIR) $(BUILDDIR)
 	mv -fv $(BUILDDIR)/* ./
-	rm -rf $(SOURCEDIR) $(BUILDDIR)
+	rm -rf clove $(SOURCEDIR) $(BUILDDIR)
 	git add -A
 	git ci -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`" && git push origin gh-pages ; git checkout master
 
