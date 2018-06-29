@@ -27,6 +27,7 @@ from bitcoin.wallet import CBitcoinAddress, CBitcoinAddressError
 from clove.constants import (
     CRYPTOID_SUPPORTED_NETWORKS,
     NODE_COMMUNICATION_TIMEOUT,
+    REJECT_TIMEOUT,
     TRANSACTION_BROADCASTING_MAX_ATTEMPTS,
 )
 from clove.exceptions import (
@@ -310,7 +311,7 @@ class BitcoinBaseNetwork(BaseNetwork):
             return
 
         logger.info('[%s] Looking for reject message.', node)
-        messages = self.capture_messages([msg_reject, ], timeout=5, buf_size=8192, ignore_empty=True)
+        messages = self.capture_messages([msg_reject, ], timeout=REJECT_TIMEOUT, buf_size=8192, ignore_empty=True)
         if messages:
             logger.debug(TransactionRejected(messages[0], node))
             return self.reset_connection()
