@@ -9,6 +9,10 @@ TRANSACTION_BROADCASTING_MAX_ATTEMPTS = 10
 
 SIGNATURE_SIZE = 110
 
+# How many seconds should we wait for the reject message to appear
+# after publishing transaction
+REJECT_TIMEOUT = 10
+
 CLOVE_API_URL = 'https://clove-api.lamden.io'
 
 BLOCKCYPHER_SUPPORTED_NETWORKS = (
