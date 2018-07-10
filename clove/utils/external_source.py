@@ -117,7 +117,7 @@ def get_balance_blockcypher(network: str, address: str, testnet: bool) -> Option
     if data is None:
         logger.debug('Could not get details for address %s in %s network', address, network)
         return
-    return from_base_units(data['balance'])
+    return from_base_units(data['balance'] or data['unconfirmed_balance'])
 
 
 def get_balance_cryptoid(network: str, address: str, testnet: bool, cryptoid_api_key: str) -> Optional[float]:
