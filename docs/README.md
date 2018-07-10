@@ -20,7 +20,7 @@ To install use pip:
 
 Or clone the repo:
 
-    $ git clone https://github.com/Landen/clove.git
+    $ git clone https://github.com/Lamden/clove.git
     $ python setup.py install
 
 
@@ -28,7 +28,7 @@ Or clone the repo:
 
 ### Getting started
 
-    $ git clone https://github.com/Landen/clove.git
+    $ git clone https://github.com/Lamden/clove.git
     $ cd clove
     $ virtualenv venv --python=python3.6
     $ . venv/bin/activate
