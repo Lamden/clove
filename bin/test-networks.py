@@ -13,10 +13,16 @@ class Colors:
 
 def hostname_resolves(hostname):
     try:
-        socket.gethostbyname_ex(hostname)
-        return True
+        response = socket.gethostbyname_ex(hostname)
+        return response[2]
     except socket.error:
         return False
+
+
+def check_node(node, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(2)
+    return sock.connect_ex((node, port))
 
 
 if __name__ == '__main__':
@@ -28,9 +34,7 @@ if __name__ == '__main__':
         if network.nodes:
             nodes = len(network.nodes)
             for node in network.nodes:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(2)
-                result = sock.connect_ex((node, network.port))
+                result = check_node(node, network.port)
                 if result == 0:
                     print(Colors.OKGREEN, '', node, '✓', Colors.ENDC)
                 else:
@@ -41,13 +45,23 @@ if __name__ == '__main__':
         else:
             seeds = len(network.seeds)
             for seed in network.seeds:
-                if hostname_resolves(seed):
-                    print(Colors.OKGREEN, '', seed, '✓', Colors.ENDC)
-                else:
+
+                nodes = hostname_resolves(seed)
+                nodes_counter = 0
+                if not nodes:
                     print(Colors.FAIL, '', seed, '☠', Colors.ENDC)
-                    seeds -= 1
-            if not seeds:
-                dead_networks.append(network)
+                    continue
+                print(Colors.OKGREEN, '', seed, Colors.ENDC)
+                nodes_counter = len(nodes)
+                for node in nodes:
+                    result = check_node(node, network.port)
+                    if result == 0:
+                        print(Colors.OKGREEN, '   ', node, '✓', Colors.ENDC)
+                    else:
+                        print(Colors.FAIL, '   ', node, '☠', Colors.ENDC)
+                        nodes_counter -= 1
+                if not nodes_counter:
+                    dead_networks.append(network)
 
     if dead_networks:
         print(Colors.FAIL, '\n\n☠ DEAD NETWORKS: ☠')
