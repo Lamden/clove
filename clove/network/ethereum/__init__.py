@@ -13,6 +13,8 @@ class Ethereum(EthereumBaseNetwork):
     token_class = EthereumToken
     etherscan_api_subdomain = 'api'
 
+    contract_address = '0x0fF1CEd0d5525a331E562C7c79186045b4D98CFA'
+
     # downloaded from 'Contract ABI' at etherscan.io
     abi = [{
         'constant': False,
