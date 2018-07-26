@@ -177,7 +177,9 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             self.secret, self.secret_hash = generate_secret_with_hash()
 
     def set_locktime(self):
-        self.locktime = datetime.utcnow() + timedelta(hours=24 if self.secret_hash else 48)
+        self.locktime = datetime.utcnow() + timedelta(
+            hours=self.participate_hours if self.secret_hash else self.init_hours
+        )
         self.locktime_unix = int(self.locktime.replace(tzinfo=timezone.utc).timestamp())
 
     def set_contract(self):

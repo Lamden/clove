@@ -2,9 +2,11 @@
 
 Atomic swaps work because if any party does not comply with the previously agreed upon terms, the transaction can revert using a refund mechanism.
 
+## Bitcoin based networks
+
 #### Here are some examples of transaction refunds.
 
-## I Initial transaction refund
+### I Initial transaction refund
 
 Alice created and published such transaction:
 
@@ -82,7 +84,7 @@ Okey! It is past 2018-03-21 14:27:19 UTC, so Alice is free to create a refund tr
 ### 4. Voilà! Alice should get her litecoins back. You can check it for example in a blockcypher.
 
 
-## II Participate transaction refund
+### II Participate transaction refund
 
 Bob created and published such participating transaction:
 
@@ -160,3 +162,144 @@ Okey! It is past 2018-03-20 14:37:01 UTC, so Bob is free to create a refund tran
      '3582597e1c30759027d9e53843f79528e0f4f0ddc458449f9bb824dabb53ba14'
 
 ### 4. Voilà! Bob should get his monacoins back. You can check it for example [here](https://bchain.info/MONA/addr/MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ).
+
+## Ethereum based networks
+
+### I Initial transaction refund
+
+Alice created and published such transaction:
+
+    >>> initial_transaction.show_details()
+    {'nonce': 249,
+    'gasprice': 20000000000,
+    'to': '0x7657ca877fac31d20528b473162e39b6e152fd2e',
+    'value': Decimal('1000'),
+    'data': '0x52f50db7000000000000000000000000000000000000000000000000000000005b59efd0f1281d5c4b4b49ac582d5ee5cd43b871309e0b28000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a909200000000000000000000000053e546387a0d054e7ff127923254c0a679da6dbf00000000000000000000000000000000000000000000003635c9adc5dea00000',
+    'v': 27,
+    'r': 68640564608942029631378553532061187867651305976388122732310692205381648163723,
+    's': 42842279473037306433100096957396035599316452268945287098600421922947059503385,
+    'sender': '0x999f348959e611f1e9eab2927c21e88e48e6ef45', '
+    transaction_address': '0x209a08f2faaea4c6871cd4947293fa3fada5835e1f589fa7f0ab875a858104af',
+    'gas_limit': 300000,
+    'transaction': '0xf9010b81f98504a817c800830493e0947657ca877fac31d20528b473162e39b6e152fd2e80b8a452f50db7000000000000000000000000000000000000000000000000000000005b59efd0f1281d5c4b4b49ac582d5ee5cd43b871309e0b28000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a909200000000000000000000000053e546387a0d054e7ff127923254c0a679da6dbf00000000000000000000000000000000000000000000003635c9adc5dea000001ba097c12ecc5769576b447344c87e687c503390ba2e4003a209a3c4fb322b58a38ba05eb7def14f000a1ee940ffb22417b94e5ad303611e789ff438d70addc8b15119', 'recipient_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+    'value_text': '1000.000000000000000000 BBT',
+    'secret': 'fb2cc1d75a54c2fd7d120f307442ad1051157b4759fbb92c3656e8bb639cd909',
+    'secret_hash': 'f1281d5c4b4b49ac582d5ee5cd43b871309e0b28',
+    'locktime': datetime.datetime(2018, 7, 26, 15, 59, 12, 831884),
+    'sender_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+    'contract_address': '0x7657Ca877Fac31D20528B473162E39B6E152fd2e',
+    'refund_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+    'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf'}
+
+She was waiting for the response from Bob for a day but she did not receive any,
+so she decided to refund the money from the blockchain:
+
+### 1. Get a wallet from the newtork
+
+    from clove.network import EthereumTestnet
+
+    >>> alice_eth_testnet_wallet = EthereumTestnet.get_wallet(private_key='aliceprivatekey')
+    >>> alice_eth_testnet_wallet.address
+    '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+
+### 2. Create refund transaction
+
+    >>> from clove.network import EthereumTestnet
+
+    >>> eth_testnet = EthereumTestnet()
+    >>> alice_contract = eth_testnet.audit_contract(
+        '0x209a08f2faaea4c6871cd4947293fa3fada5835e1f589fa7f0ab875a858104af' // Put your initial transaction address
+    )
+    >>> alice_contract.show_details()
+    {'contract_address': '0x7657Ca877Fac31D20528B473162E39B6E152fd2e',
+    'locktime': datetime.datetime(2018, 7, 26, 15, 59, 12),
+    'recipient_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+    'refund_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+    'secret_hash': 'f1281d5c4b4b49ac582d5ee5cd43b871309e0b28',
+    'transaction_address': '0x209a08f2faaea4c6871cd4947293fa3fada5835e1f589fa7f0ab875a858104af',
+    'value': Decimal('1000'),
+    'value_text': '1000.000000000000000000 BBT',
+    'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf'}
+
+    >>> refund = alice_contract.refund()
+
+Please remember, that initial transaction contract is set to be **valid for 48 hours**. Before that time, you will not be able to refund your transaction.
+
+### 3. Sign and publish refund transaction
+
+    >>> refund.sign('aliceprivatekey')
+    >>> refund.publish()
+    '0xbf13af6b32a0af2406fdfb23705742d2d1d097742af9bf3946029e8d1f3feba3'
+
+### 4. Voilà! Alice should get her ethereum_testnet coins back. You can check it for example [here](https://kovan.etherscan.io/tx/0xbf13af6b32a0af2406fdfb23705742d2d1d097742af9bf3946029e8d1f3feba3).
+
+
+
+### II Participate transaction refund
+
+Bob created and published such participating transaction:
+
+    >>> participate_transaction.show_details()
+    {'nonce': 113,
+    'gasprice': 1000000000,
+    'to': '0x9f7e5402ed0858ea0c5914d44b900a42c89547b8',
+    'value': Decimal('0.5'),
+    'data': '0xeb8ae1ed000000000000000000000000000000000000000000000000000000005b5adcbc8cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000999f348959e611f1e9eab2927c21e88e48e6ef45',
+    'v': 28,
+    'r': 45709055192944493283238091426882972043846668244047220959455715247392544872489,
+    's': 32702391840690720592637798834593583073452964948638155547821984857632864140453,
+    'sender': '0xd867f293ba129629a9f9355fa285b8d3711a9092',
+    'transaction_address': '0xe1de0d46e5f62f8d17a2b6dbe9ad0f2937b6c513a91e0be71a2841e8da48d602',
+    'gas_limit': 66221,
+    'transaction': '0xf8d171843b9aca00830102ad949f7e5402ed0858ea0c5914d44b900a42c89547b88806f05b59d3b20000b864eb8ae1ed000000000000000000000000000000000000000000000000000000005b5adcbc8cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000999f348959e611f1e9eab2927c21e88e48e6ef451ca0650e688ea34735d0443766a0a824ba8a932bd9876f914eb8d777da6437455829a0484ce5d993a945cd3f8dc339a161694e97ff0be0483face8d83c0a46bfc6fca5',
+    'recipient_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45', '
+    value_text': '0.500000000000000000 ETH',
+    'secret': '',
+    'secret_hash': '8cebcb1af6fa5fddeb091f61f0af1c49a6de9922',
+    'locktime': datetime.datetime(2018, 7, 27, 8, 50, 4, 937035),
+    'sender_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+    'contract_address': '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8',
+    'refund_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092'}
+
+Alice didn't redeem the transaction, so no secret key was published. Bob needed to get his tokens back.
+
+The process is parallel as in the initial transaction.
+
+### 1. Get a wallet from the newtork
+
+    >>> from clove.network import EthereumTestnet
+
+    >>> bob_eth_testnet_wallet = EthereumTestnet.get_wallet(private_key='bobprivatekey')
+    >>> bob_eth_testnet_wallet.address
+    '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+
+### 2. Create refund transaction
+
+    >>> from clove.network import EthereumTestnet
+
+    >>> eth_testnet = EthereumTestnet()
+    >>> bob_contract = eth_testnet.audit_contract(
+        '0xe1de0d46e5f62f8d17a2b6dbe9ad0f2937b6c513a91e0be71a2841e8da48d602' // Put your participate transaction address
+    )
+    >>> bob_contract.show_details()
+    {'contract_address': '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8',
+    'locktime': datetime.datetime(2018, 7, 27, 8, 50, 4),
+    'recipient_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+    'refund_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
+    'secret_hash': '8cebcb1af6fa5fddeb091f61f0af1c49a6de9922',
+    'transaction_address': '0xe1de0d46e5f62f8d17a2b6dbe9ad0f2937b6c513a91e0be71a2841e8da48d602',
+    'value': Decimal('0.5'),
+    'value_text': '0.500000000000000000 ETH'}
+
+
+    >>> refund = bob_contract.refund()
+
+Please remember, that participate transaction contract is set to be **valid for 24 hours**. Before that time, you will not be able to refund your transaction.
+
+### 3. Sign and publish refund transaction
+
+    >>> refund.sign('bobprivatekey')
+    >>> refund.publish()
+    '0x28c10e6d0632fb433f6ca7c7fb84db222e4d2ccac39112c91e911c465f21f863'
+
+### 4. Voilà! Bob should get his tokens coins back. You can check it for example [here](https://kovan.etherscan.io/tx/0x28c10e6d0632fb433f6ca7c7fb84db222e4d2ccac39112c91e911c465f21f863).
