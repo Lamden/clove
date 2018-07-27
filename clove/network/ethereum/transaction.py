@@ -48,6 +48,12 @@ class EthereumTransaction(object):
     def publish(self) -> Optional[str]:
         return self.network.publish(self.tx)
 
+    def get_transaction_url(self) -> Optional[str]:
+        '''Wrapper around the `get_transaction_url` method from base network.'''
+        if not self.tx:
+            return
+        return self.network.get_transaction_url(self.tx.to_dict()['hash'])
+
 
 class EthereumTokenTransaction(EthereumTransaction):
     '''Ethereum token transaction object.'''

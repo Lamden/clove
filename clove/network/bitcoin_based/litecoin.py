@@ -24,6 +24,7 @@ class Litecoin(BitcoinBaseNetwork):
         'SECRET_KEY': 176
     }
     source_code_url = 'https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp'
+    blockexplorer_tx = 'https://live.blockcypher.com/ltc/tx/{0}/'
 
 
 class LitecoinTestNet(Litecoin):
@@ -46,3 +47,4 @@ class LitecoinTestNet(Litecoin):
         'SECRET_KEY': 239
     }
     testnet = True
+    blockexplorer_tx = 'https://chain.so/tx/LTCTEST/{0}'

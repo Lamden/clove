@@ -12,6 +12,7 @@ class Ethereum(EthereumBaseNetwork):
     tokens = tokens
     token_class = EthereumToken
     etherscan_api_subdomain = 'api'
+    blockexplorer_tx = 'https://etherscan.io/tx/{0}'
 
     contract_address = '0x0fF1CEd0d5525a331E562C7c79186045b4D98CFA'
 
@@ -66,5 +67,6 @@ class EthereumTestnet(Ethereum):
     token_class = EthereumTestnetToken
     testnet = True
     etherscan_api_subdomain = 'api-kovan'
+    blockexplorer_tx = 'https://kovan.etherscan.io/tx/{0}'
 
     contract_address = '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8'

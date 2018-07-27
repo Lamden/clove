@@ -37,6 +37,8 @@ def test_bitcoin_based_network_definitions(network):
     assert isinstance(network.message_start, bytes)
     assert isinstance(network.base58_prefixes, dict)
     assert isinstance(network.source_code_url, str)
+    if network.blockexplorer_tx:
+        assert isinstance(network.blockexplorer_tx, str)
 
 
 def test_network_source_code_url_is_unique():
@@ -259,3 +261,10 @@ def test_deserialize_raw_transaction():
 
     with raises(ImpossibleDeserialization):
         BitcoinTestNet.deserialize_raw_transaction(invalid_transaction)
+
+
+def test_blockexplorer_tx_url():
+    btc_network = BitcoinTestNet()
+    url = btc_network.get_transaction_url('123')
+    assert url.startswith('http')
+    assert '123' in url

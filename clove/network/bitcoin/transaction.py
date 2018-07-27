@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import struct
+from typing import Optional
 
 from bitcoin.core import CMutableTransaction, CMutableTxOut, b2lx, b2x, script, x
 from bitcoin.core.scripteval import SCRIPT_VERIFY_P2SH, VerifyScript
@@ -144,6 +145,12 @@ class BitcoinTransaction(object):
             'value': self.value,
             'value_text': f'{self.value:.8f} {self.symbol}',
         }
+
+    def get_transaction_url(self) -> Optional[str]:
+        '''Wrapper around the `get_transaction_url` method from base network.'''
+        if not self.tx:
+            return
+        return self.network.get_transaction_url(self.address)
 
 
 class BitcoinAtomicSwapTransaction(BitcoinTransaction):
