@@ -21,6 +21,7 @@ class Ravencoin(BitcoinBaseNetwork):
         'SECRET_KEY': 128
     }
     source_code_url = 'https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp'
+    blockexplorer_tx = 'http://raven-blockchain.info/tx/{0}'
 
 
 class RavencoinTestNet(Ravencoin):

@@ -25,6 +25,7 @@ class Bitcoin(BitcoinBaseNetwork):
         'SECRET_KEY': 128
     }
     source_code_url = 'https://github.com/bitcoin/bitcoin/blob/master/src/chainparams.cpp'
+    blockexplorer_tx = 'https://live.blockcypher.com/btc/tx/{0}/'
 
 
 class BitcoinTestNet(Bitcoin):
@@ -48,3 +49,4 @@ class BitcoinTestNet(Bitcoin):
         'SECRET_KEY': 239
     }
     testnet = True
+    blockexplorer_tx = 'https://live.blockcypher.com/btc-testnet/tx/{0}/'

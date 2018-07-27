@@ -23,6 +23,7 @@ class Dash(BitcoinBaseNetwork):
         'SECRET_KEY': 204
     }
     source_code_url = 'https://github.com/dashpay/dash/blob/master/src/chainparams.cpp'
+    blockexplorer_tx = 'https://live.blockcypher.com/dash/tx/{0}/'
 
 
 class DashTestNet(Dash):

@@ -1,3 +1,8 @@
+from typing import Optional
+
+from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
+
+
 class BaseNetwork(object):
     '''Class for shared properties and methods for Bitcoin and Ethereum network.'''
 
@@ -13,6 +18,8 @@ class BaseNetwork(object):
     '''Flag for Ethereum-based networks.'''
     testnet = False
     '''Flag for test networks.'''
+    blockexplorer_tx = None
+    '''Url of the transaction in block explorer (format string)'''
 
     @property
     def default_symbol(self) -> str:
@@ -44,7 +51,7 @@ class BaseNetwork(object):
         Returns network instance by its symbol.
 
         Args:
-            str: network symbol
+            symbol (str): network symbol
 
         Returns:
             Network object
@@ -78,3 +85,26 @@ class BaseNetwork(object):
                     cls.networks[f'{symbol.upper()}-TESTNET'] = network
                 else:
                     cls.networks[f'{symbol.upper()}'] = network
+
+    @classmethod
+    def get_transaction_url(cls, tx_hash: str) -> Optional[str]:
+        '''
+        Returns URL for a given transaction in block explorer.
+
+        Args:
+            tx_hash (str): transaction hash
+
+        Returns:
+            str, None: URL for transaction in block explorer or `None` if there is no block explorer
+
+        Example:
+            >>> from clove.network import EthereumTestnet
+            >>> eth_testnet = EthereumTestnet()
+            >>> eth_testnet.get_transaction_url('0x78d150a0e4f73d103c08f727dbd66199e4c01f2aa5e043f9faa9c59110d22cca')
+            'https://kovan.etherscan.io/tx/0x78d150a0e4f73d103c08f727dbd66199e4c01f2aa5e043f9faa9c59110d22cca'
+        '''
+        if cls.blockexplorer_tx:
+            return cls.blockexplorer_tx.format(tx_hash)
+        network_symbol = cls.symbols[0].lower()
+        if network_symbol in CRYPTOID_SUPPORTED_NETWORKS:
+            return f'https://chainz.cryptoid.info/{network_symbol}/tx.dws?{tx_hash}.htm'
