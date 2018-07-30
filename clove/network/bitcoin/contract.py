@@ -29,6 +29,7 @@ class BitcoinContract(object):
         self.contract = contract
         self.tx = None
         self.vout = None
+        self.confirmations = None
         self.tx_address = transaction_address
         if raw_transaction:
             self.tx = self.network.deserialize_raw_transaction(raw_transaction)
@@ -50,6 +51,13 @@ class BitcoinContract(object):
                 correct_cscript = script.CScript([script.OP_HASH160, list(incorrect_cscript)[2], script.OP_EQUAL])
                 nValue = to_base_units(tx_json['outputs'][0]['amount'])
                 self.vout = CTxOut(nValue, correct_cscript)
+
+            if 'confirmations' in tx_json:
+                self.confirmations = tx_json['confirmations']
+            elif 'block_height' in tx_json:
+                self.confirmations = self.network.latest_block - tx_json['block_height']
+            elif 'block' in tx_json:
+                self.confirmations = self.network.latest_block - tx_json['block']
 
         if not self.vout:
             raise ValueError('Given transaction has no outputs.')
@@ -165,6 +173,7 @@ class BitcoinContract(object):
     def show_details(self):
         return {
             'contract_address': self.address,
+            'confirmations': self.confirmations,
             'transaction_address': self.transaction_address,
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,

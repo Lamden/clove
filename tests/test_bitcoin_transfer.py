@@ -162,6 +162,7 @@ def test_audit_contract(_, signed_transaction):
     assert contract.locktime == signed_transaction.locktime.replace(microsecond=0)
 
     contract_details.pop('locktime')
+    contract_details.pop('confirmations')
 
     for field in contract_details.keys():
         assert contract_details[field] == transaction_details[field]
@@ -212,7 +213,13 @@ def test_audit_contract_by_address_blockcypher(get_balance_mock):
         ),
         transaction_address='ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef'
     )
-    assert contract.show_details() == {
+    details = contract.show_details()
+
+    confirmations = details.pop('confirmations')
+    assert type(confirmations) is int
+    assert confirmations > 0
+
+    assert details == {
         'contract_address': '2Mv9q2BF9ua62vZcWQqtGdaaAki37SHVoXm',
         'locktime': datetime(2018, 4, 14, 13, 31, 7),
         'recipient_address': 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1',
@@ -234,7 +241,13 @@ def test_audit_contract_by_address_cryptoid(_):
         ),
         transaction_address='2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b'
     )
-    assert contract.show_details() == {
+    details = contract.show_details()
+
+    confirmations = details.pop('confirmations')
+    assert type(confirmations) is int
+    assert confirmations > 0
+
+    assert details == {
         'contract_address': 'MAyEizEWZEQdd4Ghp7Es3ssN77d7yLbqZQ',
         'locktime': datetime(2018, 4, 11, 13, 33, 31),
         'recipient_address': 'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq',

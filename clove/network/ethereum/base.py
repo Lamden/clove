@@ -267,3 +267,7 @@ class EthereumBaseNetwork(BaseNetwork):
     def get_wallet(cls, private_key=None):
         """ Returns Ethereum wallter object, which allows to keep address and priv key """
         return EthereumWallet(private_key)
+
+    @property
+    def latest_block(self):
+        return self.web3.eth.getBlock('latest').number

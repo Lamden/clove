@@ -123,6 +123,10 @@ def web3_request_side_effect(method, params):
         return 1
     elif method == 'net_version':
         return 42
+    elif method == 'eth_getBlockByNumber':
+        block_mock = MagicMock()
+        block_mock.number = 6645123
+        return block_mock
     return None
 
 

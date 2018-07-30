@@ -41,7 +41,12 @@ from clove.network.bitcoin.contract import BitcoinContract
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.network.bitcoin.wallet import BitcoinWallet
 from clove.utils.bitcoin import auto_switch_params
-from clove.utils.external_source import extract_scriptsig_from_redeem_transaction, get_current_fee, get_utxo_from_api
+from clove.utils.external_source import (
+    extract_scriptsig_from_redeem_transaction,
+    get_current_fee,
+    get_latest_block_number,
+    get_utxo_from_api,
+)
 from clove.utils.logging import logger
 from clove.utils.network import generate_params_object
 
@@ -481,3 +486,7 @@ class BitcoinBaseNetwork(BaseNetwork):
             return CTransaction.deserialize(x(raw_transaction))
         except Exception:
             raise ImpossibleDeserialization()
+
+    @property
+    def latest_block(self):
+        return get_latest_block_number(self.default_symbol, self.testnet)

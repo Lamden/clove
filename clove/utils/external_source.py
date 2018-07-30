@@ -41,10 +41,28 @@ def clove_req_json(url: str):
     return json.loads(resp.read().decode())
 
 
+def get_latest_block_number(network: str, testnet: bool=False) -> Optional[int]:
+    symbol = network.lower()
+    if symbol not in NETWORKS_WITH_API and symbol != 'rvn':
+        raise ValueError('This network has no API.')
+
+    if symbol in BLOCKCYPHER_SUPPORTED_NETWORKS:
+        if testnet and symbol != 'btc':
+            raise ValueError('Only BTC testnet is supported')
+        network_url = 'test3' if testnet else 'main'
+        api_url = f'https://api.blockcypher.com/v1/{symbol}/{network_url}/'
+        return clove_req_json(api_url).get('height')
+
+    if symbol == 'rvn':
+        return clove_req_json(f'http://raven-blockchain.info/api/getblockcount')
+
+    return clove_req_json(f'https://chainz.cryptoid.info/{symbol}/api.dws?q=getblockcount')
+
+
 def get_transaction(network: str, tx_hash: str, testnet: bool=False) -> Optional[dict]:
 
     symbol = network.lower()
-    if symbol not in NETWORKS_WITH_API and symbol != 'RVN':
+    if symbol not in NETWORKS_WITH_API and symbol != 'rvn':
         raise ValueError('This network has no API.')
 
     if symbol in BLOCKCYPHER_SUPPORTED_NETWORKS:
@@ -54,7 +72,7 @@ def get_transaction(network: str, tx_hash: str, testnet: bool=False) -> Optional
         api_url = f'https://api.blockcypher.com/v1/{symbol}/{network_url}/txs/{tx_hash}?limit=50&includeHex=true'
         return clove_req_json(api_url)
 
-    if symbol == 'RVN':
+    if symbol == 'rvn':
         return clove_req_json(f'http://raven-blockchain.info/api/getrawtransaction?txid={tx_hash}&decrypt=1')
 
     return clove_req_json(f'https://chainz.cryptoid.info/{symbol}/api.dws?q=txinfo&t={tx_hash}')

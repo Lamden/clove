@@ -41,6 +41,7 @@ class EthereumContract(object):
         self.refund_address = self.tx_dict['from']
         self.secret_hash = self.inputs['_hash'].hex()
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
+        self.confirmations = self.network.latest_block - self.tx_dict['blockNumber']
 
         if self.is_token_contract:
             self.value_base_units = self.inputs['_value']
@@ -166,6 +167,7 @@ class EthereumContract(object):
     def show_details(self):
         details = {
             'contract_address': self.contract_address,
+            'confirmations': self.confirmations,
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.refund_address,
