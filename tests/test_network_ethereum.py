@@ -43,6 +43,7 @@ def test_eth_audit_contract(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
     contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
     assert contract.show_details() == {
+        'confirmations': 44688,
         'contract_address': '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8',
         'locktime': datetime(2018, 3, 30, 11, 56, 26),
         'recipient_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',
@@ -128,6 +129,7 @@ def test_token_audit_contract(transaction_mock, infura_token, web3_request_mock)
     network = EthereumTestnet()
     contract = network.audit_contract('0x316d3aaa252adb025c3486cf83949245f3f10edc169e1eb0772ed074fddb8be6')
     assert contract.show_details() == {
+        'confirmations': 12485,
         'contract_address': '0x7657Ca877Fac31D20528B473162E39B6E152fd2e',
         'locktime': datetime(2018, 4, 1, 14, 8, 36),
         'recipient_address': '0xd867f293Ba129629a9f9355fa285B8D3711a9092',

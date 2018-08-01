@@ -11,6 +11,7 @@ from clove.utils.external_source import (
     find_redeem_transaction,
     get_balance_blockcypher,
     get_balance_cryptoid,
+    get_latest_block_number,
 )
 
 
@@ -153,3 +154,32 @@ def test_find_redeem_token_transaction_from_contract(_, balance_mock, contract_m
     contract = eth_testnet.audit_contract('0x270cc74bf60fd0d37806b000a11da972ce240fa7478e38d8b44b6793ddd3284d')
     tx = contract.find_redeem_transaction()
     assert tx == '0x329f4bffbb5385bec8816740c5e423a91b89583e6952b16b644a48157f556269'
+
+
+@patch('clove.utils.external_source.clove_req_json', return_value={
+    'height': 1234,
+})
+def test_get_latest_block_blockcypher(clove_req_json_mock):
+    latest_block_number = get_latest_block_number('BTC', testnet=True)
+    assert latest_block_number == 1234
+    clove_req_json_mock.assert_called_with(
+        'https://api.blockcypher.com/v1/btc/test3/'
+    )
+
+
+@patch('clove.utils.external_source.clove_req_json', return_value=1234)
+def test_get_latest_block_cryptoid(clove_req_json_mock):
+    latest_block_number = get_latest_block_number('LTC')
+    assert latest_block_number == 1234
+    clove_req_json_mock.assert_called_with(
+        'https://chainz.cryptoid.info/ltc/api.dws?q=getblockcount'
+    )
+
+
+@patch('clove.utils.external_source.clove_req_json', return_value=1234)
+def test_get_latest_block_ravencoin(clove_req_json_mock):
+    latest_block_number = get_latest_block_number('RVN')
+    assert latest_block_number == 1234
+    clove_req_json_mock.assert_called_with(
+        'http://raven-blockchain.info/api/getblockcount'
+    )
