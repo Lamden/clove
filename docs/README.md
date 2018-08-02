@@ -5,6 +5,9 @@ version number: 1.2.8
 
 ## Overview
 
+![clove](https://raw.githubusercontent.com/Lamden/clove/master/docs/clove.jpg)
+
+
 Clove is a library that makes atomic swaps between chains easy.
 
 
