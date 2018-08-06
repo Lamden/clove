@@ -250,17 +250,20 @@ https://live.blockcypher.com/ltc/tx/565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e
 And also at this point Alice should validate if the data returned in the contract is correct. She should also check if the transaction is present in the blockchain API (e.g. Blockexplorer)
 
 For networks supported by `blockcypher.com` or `chainz.cryptoid.info` APIs contract audit can be done based on contract and transaction hash.
+
     bob_contract = ltc_network.audit_contract(
         contract='63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac',
         transaction_address='565c1a6d3e533760e454fe1b7b55a63fafb2438cde4e285f1415b34f5aab5c50'
     )
 
 For unsupported networks Alice should find the raw transaction for given transaction address by herself.
+
     bob_contract = ltc_network.audit_contract(
         contract='63a61498ff8f419c57646b3e056514185a97d15a7f086e8876a91485c0522f6e23beb11cc3d066cd20ed732648a4e667045d23db5ab17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac',
         raw_transaction='0100000002be1c074d0e9e119b2099aa792ebda8c0c4a432a22c79490634a556da38435f67000000008a4730440220042d58c03f0db46727770a4c81543ee90294b87ea606baa2ff589d2dd5857c5c02206c5a8ea6e6579191ed3485523a8b27d28db666205c2a2d8477764cc6c6b913e801410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f600000000e930c516c102222acd2439a5b4fe462188c56e8e236588c53a689e2dbf86b6dd010000008a473044022043154c8c7935bff74743551863169fe8617a4c1043894786b4a7d14c46f68905022040431412a306ca13d4bd791ae3cd07e9e6eaa6982d105b07d0cd52a05fc7b1fd01410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6000000000240420f000000000017a914f849d56da5d65cc96764c25fbcd79161f170f67a872e590400000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac00000000'
     )
 
+[**Alice**] can check the detials of the contract
 
     bob_contract.show_details()
 
