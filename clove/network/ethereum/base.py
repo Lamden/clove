@@ -1,5 +1,4 @@
 from decimal import Decimal
-import os
 from typing import Optional, Union
 
 from eth_abi import decode_abi
@@ -29,29 +28,64 @@ class EthereumBaseNetwork(BaseNetwork):
     """
     name = None
     symbols = ()
-    infura_network = None
+    web3_provider_address = None
     ethereum_based = True
     contract_address = None
     tokens = []
     token_class = None
+    blockexplorer_tx = None
+
+    # downloaded from 'Contract ABI' at etherscan.io
+    abi = [{
+        'constant': False,
+        'inputs': [{
+            'name': '_hash',
+            'type': 'bytes20'
+        }],
+        'name': 'refund',
+        'outputs': [],
+        'payable': False,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    }, {
+        'constant': False,
+        'inputs': [{
+            'name': '_expiration',
+            'type': 'uint256'
+        }, {
+            'name': '_hash',
+            'type': 'bytes20'
+        }, {
+            'name': '_participant',
+            'type': 'address'
+        }],
+        'name': 'initiate',
+        'outputs': [],
+        'payable': True,
+        'stateMutability': 'payable',
+        'type': 'function'
+    }, {
+        'constant': False,
+        'inputs': [{
+            'name': '_secret',
+            'type': 'bytes32'
+        }],
+        'name': 'redeem',
+        'outputs': [],
+        'payable': False,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    }]
 
     def __init__(self):
 
-        self.web3 = Web3(HTTPProvider(self.infura_endpoint))
+        self.web3 = Web3(HTTPProvider(self.web3_provider_address))
 
         # Method IDs for transaction building. Built on the fly for developer reference (keeping away from magics)
         self.initiate = self.method_id('initiate(uint256,bytes20,address)')
         self.initiate_token = self.method_id('initiate(uint256,bytes20,address,address,uint256)')
         self.redeem = self.method_id('redeem(bytes32)')
         self.refund = self.method_id('refund(bytes20)')
-
-    @property
-    def infura_endpoint(self) -> str:
-        token = os.environ.get('INFURA_TOKEN')
-        if not token:
-            logger.warning('INFURA_TOKEN environment variable was not set.')
-            raise ValueError('INFURA_TOKEN environment variable was not set.')
-        return f'https://{self.infura_network}.infura.io/{token}'
 
     @staticmethod
     def method_id(method) -> str:
@@ -271,3 +305,9 @@ class EthereumBaseNetwork(BaseNetwork):
     @property
     def latest_block(self):
         return self.web3.eth.getBlock('latest').number
+
+    def find_redeem_transaction(self, recipient_address: str, contract_address: str, value: int):
+        raise NotImplementedError
+
+    def find_redeem_token_transaction(self, recipient_address: str, token_address: str, value: int):
+        raise NotImplementedError
