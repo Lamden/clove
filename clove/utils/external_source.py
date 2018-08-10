@@ -298,7 +298,7 @@ def extract_scriptsig_raven(contract_address: str, testnet: bool=False) -> Optio
     return data['vin'][0]['scriptSig']['hex']
 
 
-def find_redeem_transaction(
+def find_redeem_transaction_on_etherscan(
     recipient_address: str,
     contract_address: str,
     value: int,
@@ -325,7 +325,7 @@ def find_redeem_transaction(
     logger.debug('Redeem transaction not found.')
 
 
-def find_redeem_token_transaction(
+def find_redeem_token_transaction_on_etherscan(
     recipient_address: str,
     token_address: str,
     value: int,

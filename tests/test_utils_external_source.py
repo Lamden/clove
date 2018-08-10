@@ -8,7 +8,7 @@ from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
 from clove.network import EthereumTestnet
 from clove.utils.external_source import (
     extract_scriptsig_from_redeem_transaction,
-    find_redeem_transaction,
+    find_redeem_transaction_on_etherscan,
     get_balance_blockcypher,
     get_balance_cryptoid,
     get_latest_block_number,
@@ -127,7 +127,7 @@ def test_get_balance_cryptoid(clove_req_json_mock):
 
 @patch('clove.utils.external_source.clove_req_json', return_value=etherscan_internal_transactions)
 def test_find_redeem_transaction(_, etherscan_token):
-    tx = find_redeem_transaction(
+    tx = find_redeem_transaction_on_etherscan(
         '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'.lower(),
         '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8'.lower(),
         500000000000000000,
