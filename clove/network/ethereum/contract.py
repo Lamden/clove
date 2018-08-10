@@ -117,17 +117,22 @@ class EthereumContract(object):
         return transaction
 
     def find_redeem_transaction(self):
-        if self.is_token_contract:
-            return self.network.find_redeem_token_transaction(
+        try:
+            if self.is_token_contract:
+                return self.network.find_redeem_token_transaction(
+                    recipient_address=self.recipient_address,
+                    token_address=self.token_address,
+                    value=self.value_base_units,
+                )
+            return self.network.find_redeem_transaction(
                 recipient_address=self.recipient_address,
-                token_address=self.token_address,
+                contract_address=self.contract_address,
                 value=self.value_base_units,
             )
-        return self.network.find_redeem_transaction(
-            recipient_address=self.recipient_address,
-            contract_address=self.contract_address,
-            value=self.value_base_units,
-        )
+        except NotImplementedError:
+            raise ValueError(
+                f'Unable to find redeem transaction, {self.network.default_symbol} network is not supported.'
+            )
 
     def refund(self):
         contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
