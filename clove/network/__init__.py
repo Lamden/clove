@@ -54,6 +54,7 @@ from clove.network.bitcoin_based.zcoin import ZCoin, ZCoinTestNet
 from clove.network.bitcoin_based.zetacoin import Zetacoin, ZetacoinTestNet
 from clove.network.bitcoin_based.zoin import Zoin, ZoinTestNet
 from clove.network.ethereum import Ethereum, EthereumTestnet
+from clove.network.ethereum_based.ethereum_classic import EthereumClassic
 
 BITCOIN_BASED = (
     Bitcoin, BitcoinTestNet,
@@ -115,6 +116,7 @@ BITCOIN_BASED = (
 
 ETHEREUM_BASED = (
     Ethereum, EthereumTestnet,
+    EthereumClassic,
 )
 
 

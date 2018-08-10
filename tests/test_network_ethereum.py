@@ -14,7 +14,7 @@ from .constants import (
 
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
 from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionType
-from clove.network import BitcoinTestNet, EthereumTestnet
+from clove.network import BitcoinTestNet, EthereumClassic, EthereumTestnet
 from clove.network.ethereum import EthereumToken
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
 from clove.network.ethereum_based import Token
@@ -343,3 +343,11 @@ def test_sign_raw_transaction():
     signed_transaction = EthereumTestnet.deserialize_raw_transaction(raw_signed_transaction)
 
     assert EthereumTestnet.unify_address(signed_transaction.sender.hex()) == address
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
+def test_unsupported_find_redeem_tx(transaction_mock, infura_token, web3_request_mock):
+    network = EthereumClassic()
+    contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
+    with raises(ValueError, match='Unable to find redeem transaction, ETC network is not supported.'):
+        contract.find_redeem_transaction()
