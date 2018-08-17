@@ -12,7 +12,7 @@ from web3.utils.abi import get_abi_input_types
 from web3.utils.contracts import find_matching_fn_abi
 from web3.utils.datastructures import AttributeDict
 
-from clove.constants import ERC20_BASIC_ABI
+from clove.constants import ERC20_BASIC_ABI, ETHEREUM_CONTRACT_ABI
 from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionType
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
@@ -35,57 +35,16 @@ class EthereumBaseNetwork(BaseNetwork):
     token_class = None
     blockexplorer_tx = None
 
-    # downloaded from 'Contract ABI' at etherscan.io
-    abi = [{
-        'constant': False,
-        'inputs': [{
-            'name': '_hash',
-            'type': 'bytes20'
-        }],
-        'name': 'refund',
-        'outputs': [],
-        'payable': False,
-        'stateMutability': 'nonpayable',
-        'type': 'function'
-    }, {
-        'constant': False,
-        'inputs': [{
-            'name': '_expiration',
-            'type': 'uint256'
-        }, {
-            'name': '_hash',
-            'type': 'bytes20'
-        }, {
-            'name': '_participant',
-            'type': 'address'
-        }],
-        'name': 'initiate',
-        'outputs': [],
-        'payable': True,
-        'stateMutability': 'payable',
-        'type': 'function'
-    }, {
-        'constant': False,
-        'inputs': [{
-            'name': '_secret',
-            'type': 'bytes32'
-        }],
-        'name': 'redeem',
-        'outputs': [],
-        'payable': False,
-        'stateMutability': 'nonpayable',
-        'type': 'function'
-    }]
+    abi = ETHEREUM_CONTRACT_ABI
 
     def __init__(self):
 
         self.web3 = Web3(HTTPProvider(self.web3_provider_address))
 
         # Method IDs for transaction building. Built on the fly for developer reference (keeping away from magics)
-        self.initiate = self.method_id('initiate(uint256,bytes20,address)')
-        self.initiate_token = self.method_id('initiate(uint256,bytes20,address,address,uint256)')
+        self.initiate = self.method_id('initiate(uint256,bytes20,address,address,bool,uint256)')
         self.redeem = self.method_id('redeem(bytes32)')
-        self.refund = self.method_id('refund(bytes20)')
+        self.refund = self.method_id('refund(bytes20, address)')
 
     @staticmethod
     def method_id(method) -> str:
@@ -99,7 +58,6 @@ class EthereumBaseNetwork(BaseNetwork):
         try:
             return {
                 self.initiate: 'initiate',
-                self.initiate_token: 'initiate',
                 self.redeem: 'redeem',
                 self.refund: 'refund',
             }[method_id]

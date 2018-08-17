@@ -54,7 +54,6 @@ NETWORKS_WITH_API = BLOCKCYPHER_SUPPORTED_NETWORKS + CRYPTOID_SUPPORTED_NETWORKS
 
 ETH_REDEEM_GAS_LIMIT = 100000
 ETH_REFUND_GAS_LIMIT = 100000
-ETH_TOKEN_SWAP_GAS_LIMIT = 300000
 
 ERC20_BASIC_ABI = [{
     "constant": True,
@@ -89,4 +88,160 @@ ERC20_BASIC_ABI = [{
     "payable": False,
     "stateMutability": "view",
     "type": "function"
+}]
+
+
+ETHEREUM_CONTRACT_ABI = [{
+    "constant": False,
+    "inputs": [{
+             "name": "_expiration",
+             "type": "uint256"
+        }, {
+            "name": "_hash",
+            "type": "bytes20"
+        }, {
+            "name": "_participant",
+            "type": "address"
+        }, {
+            "name": "_token",
+            "type": "address"
+        }, {
+            "name": "_isToken",
+            "type": "bool"
+        }, {
+            "name": "_value",
+            "type": "uint256"
+    }],
+    "name": "initiate",
+    "outputs": [],
+    "payable":True,
+    "stateMutability": "payable",
+    "type": "function"
+}, {
+    "constant": True,
+    "inputs": [{
+        "name": "",
+        "type": "address"
+    }, {
+        "name": "",
+        "type": "bytes20"
+    }],
+    "name": "swaps",
+    "outputs": [{
+        "name": "expiration",
+        "type": "uint256"
+    }, {
+        "name": "initiator",
+        "type": "address"
+    }, {
+        "name": "participant",
+        "type": "address"
+    }, {
+        "name": "value",
+        "type": "uint256"
+    }, {
+        "name": "isToken",
+        "type": "bool"
+    }, {
+        "name": "token",
+        "type": "address"
+    }, {
+        "name": "exists",
+        "type": "bool"
+    }],
+    "payable": False,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": False,
+    "inputs": [{
+        "name": "_secret",
+        "type": "bytes32"
+    }],
+    "name": "redeem",
+    "outputs": [],
+    "payable": False,
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "constant": False,
+    "inputs": [{
+        "name": "_hash",
+        "type": "bytes20"
+    }, {
+        "name": "_participant",
+        "type": "address"
+    }],
+    "name": "refund",
+    "outputs": [],
+    "payable": False,
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "anonymous": False,
+    "inputs": [{
+        "indexed": False,
+        "name": "_initiator",
+        "type": "address"
+    }, {
+        "indexed": False,
+        "name": "_participant",
+        "type": "address"
+    }, {
+        "indexed": False,
+        "name": "_expiration",
+        "type": "uint256"
+    }, {
+        "indexed": False,
+        "name": "_hash",
+        "type": "bytes20"
+    }, {
+        "indexed": False,
+        "name": "_token",
+        "type": "address"
+    }, {
+        "indexed": False,
+        "name": "_isToken",
+        "type": "bool"
+    }, {
+        "indexed": False,
+        "name": "_value",
+        "type": "uint256"
+    }],
+    "name": "InitiateSwap",
+    "type": "event"
+}, {
+    "anonymous": False,
+    "inputs": [{
+        "indexed": False,
+        "name": "_participant",
+        "type": "address"
+    }, {
+        "indexed": False,
+        "name": "_hash",
+        "type": "bytes20"
+    }, {
+        "indexed": False,
+        "name": "_secret",
+        "type": "bytes32"
+    }],
+    "name": "RedeemSwap",
+    "type": "event"
+}, {
+    "anonymous": False,
+    "inputs": [{
+        "indexed": False,
+        "name": "_initiator",
+        "type": "address"
+    }, {
+        "indexed": False,
+        "name": "_participant",
+        "type": "address"
+    }, {
+        "indexed": False,
+        "name": "_hash",
+        "type": "bytes20"
+    }],
+    "name": "RefundSwap",
+    "type": "event"
 }]
