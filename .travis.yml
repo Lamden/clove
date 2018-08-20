@@ -15,4 +15,4 @@ deploy:
   password: $PYPI_PASS
   distributions: bdist_wheel
   on:
-    branch: release
+    tags: true
