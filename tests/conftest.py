@@ -125,7 +125,7 @@ def web3_request_side_effect(method, params):
         return 42
     elif method == 'eth_getBlockByNumber':
         block_mock = MagicMock()
-        block_mock.number = 6645123
+        block_mock.number = 8400000
         return block_mock
     return None
 

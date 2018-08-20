@@ -2,7 +2,12 @@ from unittest.mock import patch
 
 from pytest import mark
 
-from .constants import eth_contract, eth_token_contract, etherscan_internal_transactions, etherscan_token_transfers
+from .constants import (
+    eth_initial_transaction,
+    etherscan_internal_transactions,
+    etherscan_token_transfers,
+    token_initial_transaction,
+)
 
 from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
 from clove.network import EthereumTestnet
@@ -136,24 +141,24 @@ def test_find_redeem_transaction(_, etherscan_token):
     assert tx == '0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1'
 
 
-@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', return_value=eth_contract)
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', return_value=eth_initial_transaction)
 @patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
 @patch('clove.utils.external_source.clove_req_json', return_value=etherscan_internal_transactions)
 def test_find_redeem_transaction_from_contract(_, balance_mock, contract_mock, infura_token, etherscan_token):
     eth_testnet = EthereumTestnet()
     contract = eth_testnet.audit_contract('0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f')
     tx = contract.find_redeem_transaction()
-    assert tx == '0x80addbc1b1ff0cf32949c78cde0dc4347f1a81e7f510fd266aa934523c92c2c1'
+    assert tx == '0x65320e57b9d18ec08388896b029ad1495beb7a57c547440253a1dde01b4485f1'
 
 
-@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', return_value=eth_token_contract)
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', return_value=token_initial_transaction)
 @patch('clove.network.bitcoin.contract.get_balance', return_value=0.01)
 @patch('clove.utils.external_source.clove_req_json', return_value=etherscan_token_transfers)
 def test_find_redeem_token_transaction_from_contract(_, balance_mock, contract_mock, infura_token, etherscan_token):
     eth_testnet = EthereumTestnet()
     contract = eth_testnet.audit_contract('0x270cc74bf60fd0d37806b000a11da972ce240fa7478e38d8b44b6793ddd3284d')
     tx = contract.find_redeem_transaction()
-    assert tx == '0x329f4bffbb5385bec8816740c5e423a91b89583e6952b16b644a48157f556269'
+    assert tx == '0xda110a95189e069b34dacbde2594093f2cc303d652c21ed0ce57fd953546fb6f'
 
 
 @patch('clove.utils.external_source.clove_req_json', return_value={

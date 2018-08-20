@@ -17,18 +17,14 @@ class EthereumContract(object):
 
         self.network = network
         self.tx_dict = tx_dict
+        self.abi = self.network.abi
         self.method_id = self.network.extract_method_id(tx_dict['input'])
         self.type = self.network.get_method_name(self.method_id)
         self.token = None
 
-        if not self.is_initiate:
+        if self.method_id != self.network.initiate:
             logger.warning('Not a contract transaction.')
             raise ValueError('Not a contract transaction.')
-
-        if self.is_token_contract:
-            self.abi = self.network.token_abi
-        else:
-            self.abi = self.network.abi
 
         input_types = get_abi_input_types(find_matching_fn_abi(self.abi, fn_identifier=self.type))
         input_names = get_abi_input_names(find_matching_fn_abi(self.abi, fn_identifier=self.type))
@@ -54,16 +50,8 @@ class EthereumContract(object):
             self.symbol = self.network.default_symbol
 
     @property
-    def is_eth_contract(self):
-        return self.tx_dict['to'] == self.network.eth_swap_contract_address
-
-    @property
-    def is_initiate(self):
-        return self.method_id in (self.network.initiate, self.network.initiate_token)
-
-    @property
     def is_token_contract(self):
-        return self.method_id == self.network.initiate_token
+        return self.inputs['_isToken']
 
     def participate(
         self,
@@ -142,7 +130,7 @@ class EthereumContract(object):
             logger.warning(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
             raise RuntimeError(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
 
-        refund_func = contract.functions.refund(self.secret_hash)
+        refund_func = contract.functions.refund(self.secret_hash, self.recipient_address)
         tx_dict = {
             'nonce': self.network.web3.eth.getTransactionCount(self.refund_address),
             'value': 0,

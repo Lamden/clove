@@ -7,7 +7,6 @@ from ethereum.transactions import Transaction
 import rlp
 from web3 import Web3
 
-from clove.constants import ETH_TOKEN_SWAP_GAS_LIMIT
 from clove.utils.hashing import generate_secret_with_hash
 
 
@@ -98,7 +97,7 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
         self.contract = self.network.web3.eth.contract(address=self.token_address, abi=self.token.approve_abi)
 
         approve_func = self.contract.functions.approve(
-            self.token.contract_address,
+            self.network.contract_address,
             self.value_base_units,
         )
 
@@ -147,6 +146,8 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
 
         self.sender_address = network.unify_address(sender_address)
         self.recipient_address = network.unify_address(recipient_address)
+        self.contract_address = self.network.contract_address
+        self.abi = self.network.abi
         self.secret = None
         self.secret_hash = x(secret_hash) if secret_hash else None
         self.value = value
@@ -155,6 +156,8 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         self.contract = None
         self.locktime = None
         self.locktime_unix = None
+        self.token_value_base_units = 0
+        self.value_base_units = 0
 
         self.set_locktime()
         self.set_secrets()
@@ -162,16 +165,13 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         if self.token:
             self.token_address = self.token.token_address
             self.symbol = self.token.symbol
-            self.contract_address = self.token.contract_address
-            self.abi = self.token.abi
-            self.value_base_units = self.token.value_to_base_units(self.value)
-            self.set_token_contract()
+            self.token_value_base_units = self.token.value_to_base_units(self.value)
         else:
+            self.token_address = '0x0000000000000000000000000000000000000000'
             self.symbol = self.network.default_symbol
-            self.contract_address = self.network.contract_address
-            self.abi = self.network.abi
             self.value_base_units = self.network.value_to_base_units(self.value)
-            self.set_contract()
+
+        self.set_contract()
 
     def set_secrets(self):
         if self.secret_hash:
@@ -195,6 +195,9 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             self.locktime_unix,
             self.secret_hash,
             self.recipient_address,
+            self.token_address,
+            bool(self.token),
+            self.token_value_base_units,
         )
 
         tx_dict = {
@@ -213,35 +216,6 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             nonce=tx_dict['nonce'],
             gasprice=tx_dict['gasPrice'],
             startgas=self.gas_limit,
-            to=tx_dict['to'],
-            value=tx_dict['value'],
-            data=Web3.toBytes(hexstr=tx_dict['data']),
-        )
-
-    def set_token_contract(self):
-        self.contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.abi)
-
-        initiate_func = self.contract.functions.initiate(
-            self.locktime_unix,
-            self.secret_hash,
-            self.recipient_address,
-            self.token_address,
-            self.value_base_units
-        )
-
-        tx_dict = {
-            'nonce': self.network.web3.eth.getTransactionCount(self.sender_address),
-            'from': self.sender_address,
-            'value': 0,
-            'gas': ETH_TOKEN_SWAP_GAS_LIMIT,
-        }
-
-        tx_dict = initiate_func.buildTransaction(tx_dict)
-
-        self.tx = Transaction(
-            nonce=tx_dict['nonce'],
-            gasprice=tx_dict['gasPrice'],
-            startgas=tx_dict['gas'],
             to=tx_dict['to'],
             value=tx_dict['value'],
             data=Web3.toBytes(hexstr=tx_dict['data']),

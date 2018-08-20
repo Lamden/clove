@@ -55,4 +55,4 @@ class EthereumTestnet(Ethereum):
     etherscan_api_subdomain = 'api-kovan'
     blockexplorer_tx = 'https://kovan.etherscan.io/tx/{0}'
 
-    contract_address = '0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8'
+    contract_address = '0xce07aB9477BC20790B88B398A2A9e0F626c7D263'
