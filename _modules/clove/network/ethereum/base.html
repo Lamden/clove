@@ -145,7 +145,6 @@
             
   <h1>Source code for clove.network.ethereum.base</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">decimal</span> <span class="k">import</span> <span class="n">Decimal</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">eth_abi</span> <span class="k">import</span> <span class="n">decode_abi</span>
@@ -159,7 +158,7 @@
 <span class="kn">from</span> <span class="nn">web3.utils.contracts</span> <span class="k">import</span> <span class="n">find_matching_fn_abi</span>
 <span class="kn">from</span> <span class="nn">web3.utils.datastructures</span> <span class="k">import</span> <span class="n">AttributeDict</span>
 
-<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">ERC20_BASIC_ABI</span>
+<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">ERC20_BASIC_ABI</span><span class="p">,</span> <span class="n">ETHEREUM_CONTRACT_ABI</span>
 <span class="kn">from</span> <span class="nn">clove.exceptions</span> <span class="k">import</span> <span class="n">ImpossibleDeserialization</span><span class="p">,</span> <span class="n">UnsupportedTransactionType</span>
 <span class="kn">from</span> <span class="nn">clove.network.base</span> <span class="k">import</span> <span class="n">BaseNetwork</span>
 <span class="kn">from</span> <span class="nn">clove.network.ethereum.contract</span> <span class="k">import</span> <span class="n">EthereumContract</span>
@@ -175,29 +174,23 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">symbols</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">infura_network</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">web3_provider_address</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">ethereum_based</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">contract_address</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">token_class</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">blockexplorer_tx</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">abi</span> <span class="o">=</span> <span class="n">ETHEREUM_CONTRACT_ABI</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infura_endpoint</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">web3_provider_address</span><span class="p">))</span>
 
         <span class="c1"># Method IDs for transaction building. Built on the fly for developer reference (keeping away from magics)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initiate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;initiate(uint256,bytes20,address)&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initiate_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;initiate(uint256,bytes20,address,address,uint256)&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initiate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;initiate(uint256,bytes20,address,address,bool,uint256)&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redeem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;redeem(bytes32)&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">refund</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;refund(bytes20)&#39;</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">infura_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INFURA_TOKEN&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;INFURA_TOKEN environment variable was not set.&#39;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;INFURA_TOKEN environment variable was not set.&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;https://</span><span class="si">{self.infura_network}</span><span class="s1">.infura.io/</span><span class="si">{token}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refund</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;refund(bytes20, address)&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.method_id"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.method_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">method_id</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -211,7 +204,6 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">initiate</span><span class="p">:</span> <span class="s1">&#39;initiate&#39;</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">initiate_token</span><span class="p">:</span> <span class="s1">&#39;initiate&#39;</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">redeem</span><span class="p">:</span> <span class="s1">&#39;redeem&#39;</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">refund</span><span class="p">:</span> <span class="s1">&#39;refund&#39;</span><span class="p">,</span>
             <span class="p">}[</span><span class="n">method_id</span><span class="p">]</span>
@@ -412,7 +404,17 @@
 <div class="viewcode-block" id="EthereumBaseNetwork.get_wallet"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_wallet">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns Ethereum wallter object, which allows to keep address and priv key &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">EthereumWallet</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">EthereumWallet</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getBlock</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">number</span>
+
+<div class="viewcode-block" id="EthereumBaseNetwork.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="EthereumBaseNetwork.find_redeem_token_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_token_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_token_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 </pre></div>
 
            </div>

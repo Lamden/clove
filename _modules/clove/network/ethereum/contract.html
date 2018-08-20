@@ -154,7 +154,6 @@
 
 <span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">ETH_REDEEM_GAS_LIMIT</span><span class="p">,</span> <span class="n">ETH_REFUND_GAS_LIMIT</span>
 <span class="kn">from</span> <span class="nn">clove.network.ethereum.transaction</span> <span class="k">import</span> <span class="n">EthereumTokenTransaction</span>
-<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">find_redeem_token_transaction</span><span class="p">,</span> <span class="n">find_redeem_transaction</span>
 <span class="kn">from</span> <span class="nn">clove.utils.logging</span> <span class="k">import</span> <span class="n">logger</span>
 
 
@@ -164,18 +163,14 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">network</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span> <span class="o">=</span> <span class="n">tx_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">abi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">extract_method_id</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_method_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_initiate</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">initiate</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Not a contract transaction.&#39;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Not a contract transaction.&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_token_contract</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">token_abi</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">abi</span>
 
         <span class="n">input_types</span> <span class="o">=</span> <span class="n">get_abi_input_types</span><span class="p">(</span><span class="n">find_matching_fn_abi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="p">,</span> <span class="n">fn_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
         <span class="n">input_names</span> <span class="o">=</span> <span class="n">get_abi_input_names</span><span class="p">(</span><span class="n">find_matching_fn_abi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="p">,</span> <span class="n">fn_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
@@ -187,6 +182,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_hash&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span> <span class="o">=</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toChecksumAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">confirmations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">latest_block</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;blockNumber&#39;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_token_contract</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_value&#39;</span><span class="p">]</span>
@@ -200,16 +196,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_eth_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">eth_swap_contract_address</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_initiate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">initiate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">initiate_token</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_token_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">initiate_token</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_isToken&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="EthereumContract.participate"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.participate">[docs]</a>    <span class="k">def</span> <span class="nf">participate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -263,19 +251,22 @@
         <span class="k">return</span> <span class="n">transaction</span></div>
 
 <div class="viewcode-block" id="EthereumContract.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_token_contract</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">find_redeem_token_transaction</span><span class="p">(</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_token_contract</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">find_redeem_token_transaction</span><span class="p">(</span>
+                    <span class="n">recipient_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
+                    <span class="n">token_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">token_address</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">find_redeem_transaction</span><span class="p">(</span>
                 <span class="n">recipient_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
-                <span class="n">token_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">token_address</span><span class="p">,</span>
+                <span class="n">contract_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span>
                 <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span><span class="p">,</span>
-                <span class="n">subdomain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">etherscan_api_subdomain</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">find_redeem_transaction</span><span class="p">(</span>
-            <span class="n">recipient_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
-            <span class="n">contract_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span>
-            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value_base_units</span><span class="p">,</span>
-            <span class="n">subdomain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">etherscan_api_subdomain</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">f</span><span class="s1">&#39;Unable to find redeem transaction, </span><span class="si">{self.network.default_symbol}</span><span class="s1"> network is not supported.&#39;</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumContract.refund"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.refund">[docs]</a>    <span class="k">def</span> <span class="nf">refund</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">contract</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">abi</span><span class="p">)</span>
@@ -285,7 +276,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;This contract is still valid! It can&#39;t be refunded until </span><span class="si">{locktime_string}</span><span class="s2"> UTC.&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;This contract is still valid! It can&#39;t be refunded until </span><span class="si">{locktime_string}</span><span class="s2"> UTC.&quot;</span><span class="p">)</span>
 
-        <span class="n">refund_func</span> <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">refund</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">)</span>
+        <span class="n">refund_func</span> <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">refund</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">)</span>
         <span class="n">tx_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span><span class="p">),</span>
             <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -312,6 +303,7 @@
 <div class="viewcode-block" id="EthereumContract.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span>
+            <span class="s1">&#39;confirmations&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmations</span><span class="p">,</span>
             <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span><span class="p">,</span>
             <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
             <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span><span class="p">,</span>

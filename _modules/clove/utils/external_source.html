@@ -187,10 +187,28 @@
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
 
 
+<div class="viewcode-block" id="get_latest_block_number"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_latest_block_number">[docs]</a><span class="k">def</span> <span class="nf">get_latest_block_number</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NETWORKS_WITH_API</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This network has no API.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">BLOCKCYPHER_SUPPORTED_NETWORKS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">testnet</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;btc&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only BTC testnet is supported&#39;</span><span class="p">)</span>
+        <span class="n">network_url</span> <span class="o">=</span> <span class="s1">&#39;test3&#39;</span> <span class="k">if</span> <span class="n">testnet</span> <span class="k">else</span> <span class="s1">&#39;main&#39;</span>
+        <span class="n">api_url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://api.blockcypher.com/v1/</span><span class="si">{symbol}</span><span class="s1">/</span><span class="si">{network_url}</span><span class="s1">/&#39;</span>
+        <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;http://raven-blockchain.info/api/getblockcount&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{symbol}</span><span class="s1">/api.dws?q=getblockcount&#39;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="get_transaction"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_transaction">[docs]</a><span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 
     <span class="n">symbol</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NETWORKS_WITH_API</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;RVN&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NETWORKS_WITH_API</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This network has no API.&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">BLOCKCYPHER_SUPPORTED_NETWORKS</span><span class="p">:</span>
@@ -200,7 +218,7 @@
         <span class="n">api_url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://api.blockcypher.com/v1/</span><span class="si">{symbol}</span><span class="s1">/</span><span class="si">{network_url}</span><span class="s1">/txs/</span><span class="si">{tx_hash}</span><span class="s1">?limit=50&amp;includeHex=true&#39;</span>
         <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;RVN&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;http://raven-blockchain.info/api/getrawtransaction?txid=</span><span class="si">{tx_hash}</span><span class="s1">&amp;decrypt=1&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{symbol}</span><span class="s1">/api.dws?q=txinfo&amp;t=</span><span class="si">{tx_hash}</span><span class="s1">&#39;</span><span class="p">)</span></div>
@@ -263,7 +281,7 @@
     <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get details for address </span><span class="si">%s</span><span class="s1"> in </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
         <span class="k">return</span>
-    <span class="k">return</span> <span class="n">from_base_units</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;balance&#39;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">from_base_units</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;balance&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;unconfirmed_balance&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="get_balance_cryptoid"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_balance_cryptoid">[docs]</a><span class="k">def</span> <span class="nf">get_balance_cryptoid</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">cryptoid_api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
@@ -426,7 +444,7 @@
     <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;vin&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;scriptSig&#39;</span><span class="p">][</span><span class="s1">&#39;hex&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="find_redeem_transaction"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.find_redeem_transaction">[docs]</a><span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span>
+<div class="viewcode-block" id="find_redeem_transaction_on_etherscan"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.find_redeem_transaction_on_etherscan">[docs]</a><span class="k">def</span> <span class="nf">find_redeem_transaction_on_etherscan</span><span class="p">(</span>
     <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -453,7 +471,7 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Redeem transaction not found.&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_redeem_token_transaction"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.find_redeem_token_transaction">[docs]</a><span class="k">def</span> <span class="nf">find_redeem_token_transaction</span><span class="p">(</span>
+<div class="viewcode-block" id="find_redeem_token_transaction_on_etherscan"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.find_redeem_token_transaction_on_etherscan">[docs]</a><span class="k">def</span> <span class="nf">find_redeem_token_transaction_on_etherscan</span><span class="p">(</span>
     <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>

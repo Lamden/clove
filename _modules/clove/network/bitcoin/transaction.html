@@ -146,6 +146,7 @@
   <h1>Source code for clove.network.bitcoin.transaction</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
 <span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">bitcoin.core</span> <span class="k">import</span> <span class="n">CMutableTransaction</span><span class="p">,</span> <span class="n">CMutableTxOut</span><span class="p">,</span> <span class="n">b2lx</span><span class="p">,</span> <span class="n">b2x</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">x</span>
 <span class="kn">from</span> <span class="nn">bitcoin.core.scripteval</span> <span class="k">import</span> <span class="n">SCRIPT_VERIFY_P2SH</span><span class="p">,</span> <span class="n">VerifyScript</span>
@@ -289,7 +290,13 @@
             <span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.size}</span><span class="s1"> bytes&#39;</span><span class="p">,</span>
             <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
             <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.value:.8f}</span><span class="s1"> </span><span class="si">{self.symbol}</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="p">}</span></div></div>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="BitcoinTransaction.get_transaction_url"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinTransaction.get_transaction_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_transaction_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;Wrapper around the `get_transaction_url` method from base network.&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="BitcoinAtomicSwapTransaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction">[docs]</a><span class="k">class</span> <span class="nc">BitcoinAtomicSwapTransaction</span><span class="p">(</span><span class="n">BitcoinTransaction</span><span class="p">):</span>

@@ -173,6 +173,7 @@
 <span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span><span class="p">,</span>
     <span class="n">NODE_COMMUNICATION_TIMEOUT</span><span class="p">,</span>
+    <span class="n">REJECT_TIMEOUT</span><span class="p">,</span>
     <span class="n">TRANSACTION_BROADCASTING_MAX_ATTEMPTS</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">clove.exceptions</span> <span class="k">import</span> <span class="p">(</span>
@@ -186,7 +187,12 @@
 <span class="kn">from</span> <span class="nn">clove.network.bitcoin.transaction</span> <span class="k">import</span> <span class="n">BitcoinAtomicSwapTransaction</span>
 <span class="kn">from</span> <span class="nn">clove.network.bitcoin.wallet</span> <span class="k">import</span> <span class="n">BitcoinWallet</span>
 <span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">auto_switch_params</span>
-<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">extract_scriptsig_from_redeem_transaction</span><span class="p">,</span> <span class="n">get_current_fee</span><span class="p">,</span> <span class="n">get_utxo_from_api</span>
+<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">extract_scriptsig_from_redeem_transaction</span><span class="p">,</span>
+    <span class="n">get_current_fee</span><span class="p">,</span>
+    <span class="n">get_latest_block_number</span><span class="p">,</span>
+    <span class="n">get_utxo_from_api</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">clove.utils.logging</span> <span class="k">import</span> <span class="n">logger</span>
 <span class="kn">from</span> <span class="nn">clove.utils.network</span> <span class="k">import</span> <span class="n">generate_params_object</span>
 
@@ -456,7 +462,7 @@
             <span class="k">return</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">] Looking for reject message.&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-        <span class="n">messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_messages</span><span class="p">([</span><span class="n">msg_reject</span><span class="p">,</span> <span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">buf_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span> <span class="n">ignore_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_messages</span><span class="p">([</span><span class="n">msg_reject</span><span class="p">,</span> <span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">REJECT_TIMEOUT</span><span class="p">,</span> <span class="n">buf_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span> <span class="n">ignore_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">messages</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">TransactionRejected</span><span class="p">(</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">node</span><span class="p">))</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">()</span>
@@ -625,7 +631,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">CTransaction</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ImpossibleDeserialization</span><span class="p">()</span></div></div>
+            <span class="k">raise</span> <span class="n">ImpossibleDeserialization</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_latest_block_number</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_symbol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testnet</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
