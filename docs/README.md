@@ -1,6 +1,6 @@
 # Clove [![Build Status](https://travis-ci.com/Lamden/clove.svg?token=ZJstcVy9cUkAxLqvqRuL&branch=master)](https://travis-ci.com/Lamden/clove)
 
-version number: 1.2.1
+version number: 1.2.2
 
 
 ## Overview
