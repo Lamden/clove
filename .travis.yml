@@ -7,7 +7,6 @@ script: tox
 branches:
   only:
     - master
-    - release
 deploy:
   skip_cleanup: true
   provider: pypi
@@ -16,3 +15,4 @@ deploy:
   distributions: bdist_wheel
   on:
     tags: true
+    branch: master
