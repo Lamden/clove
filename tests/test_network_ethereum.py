@@ -15,7 +15,7 @@ from .constants import (
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
 from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionType
 from clove.network import BitcoinTestNet, EthereumClassic, EthereumTestnet
-from clove.network.ethereum import EthereumToken
+from clove.network.ethereum.token import EthToken
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction
 from clove.network.ethereum_based import Token
 
@@ -225,7 +225,6 @@ def test_approve_token(infura_token, web3_request_mock):
         '0x53E546387A0d054e7FF127923254c0a679DA6DBf'
     )
     details = approve_tx.show_details()
-    assert details['contract_address'] == approve_tx.token.contract_address
     assert details['value'] == Decimal('0.001')
     assert details['value_text'] == '0.001000000000000000 BBT'
     assert details['token_address'] == approve_tx.token.token_address
@@ -278,7 +277,7 @@ def test_get_token_by_address(infura_token):
     (10 ** (18-n), float(f'1e-{n}')) for n in range(18, 1, -1)
 ])
 def test_token_value_base_units_conversion(base_unit_value, float_value):
-    token = EthereumToken()
+    token = EthToken()
     assert token.value_to_base_units(float_value) == base_unit_value
     assert token.value_from_base_units(base_unit_value) == Decimal(str(float_value))
 
@@ -292,7 +291,7 @@ def test_token_value_base_units_conversion(base_unit_value, float_value):
     (Decimal('999999999.9999'), 3),
 ])
 def test_token_precision_validation(value, token_decimals):
-    token = EthereumToken.from_namedtuple(Token('Test_token', 'TST', '0x123', token_decimals))
+    token = EthToken.from_namedtuple(Token('Test_token', 'TST', '0x123', token_decimals))
     with pytest.raises(ValueError) as error:
         token.validate_precision(value)
     assert str(error.value) == f'Test_token token supports at most {token_decimals} decimal places.'
@@ -347,8 +346,14 @@ def test_sign_raw_transaction():
 
 
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
-def test_unsupported_find_redeem_tx(transaction_mock, infura_token, web3_request_mock):
+def test_find_secret(transaction_mock, web3_request_mock):
     network = EthereumClassic()
     contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
-    with raises(ValueError, match='Unable to find redeem transaction, ETC network is not supported.'):
-        contract.find_redeem_transaction()
+    assert contract.find_secret() == 'bc2424e1dcdd2e425c555bcea35a54fd27cf540e60f18366e153e3fb7cf4490c'
+
+
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
+def test_find_redeem_transaction_in_event(transaction_mock, web3_request_mock):
+    network = EthereumClassic()
+    contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
+    assert contract.find_redeem_transaction() == '0x65320e57b9d18ec08388896b029ad1495beb7a57c547440253a1dde01b4485f1'

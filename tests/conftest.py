@@ -5,6 +5,7 @@ import os
 from unittest.mock import MagicMock, patch
 
 from bitcoin.messages import msg_getdata, msg_reject, msg_verack, msg_version
+from hexbytes import HexBytes
 import pytest
 
 from clove.network.bitcoin import BitcoinTestNet
@@ -123,10 +124,15 @@ def web3_request_side_effect(method, params):
         return 1
     elif method == 'net_version':
         return 42
-    elif method == 'eth_getBlockByNumber':
-        block_mock = MagicMock()
-        block_mock.number = 8400000
-        return block_mock
+    elif method == 'eth_blockNumber':
+        return 8400000
+    elif method == 'eth_getFilterLogs':
+        return [
+            {
+                'data': '0xbc2424e1dcdd2e425c555bcea35a54fd27cf540e60f18366e153e3fb7cf4490c',
+                'transactionHash': HexBytes('0x65320e57b9d18ec08388896b029ad1495beb7a57c547440253a1dde01b4485f1'),
+            }
+        ]
     return None
 
 
