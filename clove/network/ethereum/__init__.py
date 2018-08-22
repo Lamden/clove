@@ -1,7 +1,6 @@
 import os
 
 from clove.network.ethereum.base import EthereumBaseNetwork
-from clove.network.ethereum.token import EthereumTestnetToken, EthereumToken
 from clove.network.ethereum_based.kovan_tokens import kovan_tokens
 from clove.network.ethereum_based.mainnet_tokens import tokens
 from clove.utils.external_source import find_redeem_token_transaction_on_etherscan, find_redeem_transaction_on_etherscan
@@ -14,7 +13,6 @@ class Ethereum(EthereumBaseNetwork):
     symbols = ('ETH',)
     infura_network = 'mainnet'
     tokens = tokens
-    token_class = EthereumToken
     etherscan_api_subdomain = 'api'
     blockexplorer_tx = 'https://etherscan.io/tx/{0}'
 
@@ -50,7 +48,6 @@ class EthereumTestnet(Ethereum):
     name = 'test-ethereum'
     infura_network = 'kovan'
     tokens = kovan_tokens
-    token_class = EthereumTestnetToken
     testnet = True
     etherscan_api_subdomain = 'api-kovan'
     blockexplorer_tx = 'https://kovan.etherscan.io/tx/{0}'

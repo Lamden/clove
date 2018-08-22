@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Optional, Union
 
-from eth_abi import decode_abi
+from eth_abi import decode_abi, encode_single
 from ethereum.transactions import Transaction
 import rlp
 from rlp import RLPException
@@ -12,10 +12,11 @@ from web3.utils.abi import get_abi_input_types
 from web3.utils.contracts import find_matching_fn_abi
 from web3.utils.datastructures import AttributeDict
 
-from clove.constants import ERC20_BASIC_ABI, ETHEREUM_CONTRACT_ABI
+from clove.constants import ERC20_BASIC_ABI, ETH_FILTER_MAX_ATTEMPTS, ETHEREUM_CONTRACT_ABI
 from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionType
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
+from clove.network.ethereum.token import EthToken
 from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
 from clove.network.ethereum.wallet import EthereumWallet
 from clove.network.ethereum_based import Token
@@ -32,8 +33,8 @@ class EthereumBaseNetwork(BaseNetwork):
     ethereum_based = True
     contract_address = None
     tokens = []
-    token_class = None
     blockexplorer_tx = None
+    filtering_supported = False
 
     abi = ETHEREUM_CONTRACT_ABI
 
@@ -194,7 +195,7 @@ class EthereumBaseNetwork(BaseNetwork):
         if not token:
             logger.warning(f'No token found for address {address}')
             return
-        return self.token_class.from_namedtuple(token)
+        return EthToken.from_namedtuple(token)
 
     @classmethod
     def get_token_by_symbol(cls, symbol: str):
@@ -203,11 +204,7 @@ class EthereumBaseNetwork(BaseNetwork):
         if not token:
             logger.warning(f'No token found for symbol {symbol}')
             return
-        return cls.token_class.from_namedtuple(token)
-
-    @property
-    def token_abi(self):
-        return self.token_class.abi
+        return EthToken.from_namedtuple(token)
 
     @staticmethod
     def get_raw_transaction(transaction: Transaction) -> str:
@@ -262,10 +259,35 @@ class EthereumBaseNetwork(BaseNetwork):
 
     @property
     def latest_block(self):
-        return self.web3.eth.getBlock('latest').number
+        return self.web3.eth.blockNumber
 
     def find_redeem_transaction(self, recipient_address: str, contract_address: str, value: int):
         raise NotImplementedError
 
     def find_redeem_token_transaction(self, recipient_address: str, token_address: str, value: int):
         raise NotImplementedError
+
+    def find_transaction_details_in_redeem_event(self, recipient_address: str, secret_hash: str, block_number: int):
+        if not self.filtering_supported:
+            raise NotImplementedError
+
+        event_signature_hash = self.web3.sha3(text="RedeemSwap(address,bytes20,bytes32)").hex()
+        filter_options = {
+            'fromBlock': block_number,
+            'address': self.contract_address,
+            'topics': [
+                event_signature_hash,
+                '0x' + encode_single('address', recipient_address).hex(),
+                '0x' + encode_single('bytes20', bytes.fromhex(secret_hash)).hex()
+            ]
+        }
+
+        event_filter = self.web3.eth.filter(filter_options)
+
+        for _ in range(ETH_FILTER_MAX_ATTEMPTS):
+            events = event_filter.get_all_entries()
+            if events:
+                return {
+                    'secret': events[0]['data'][2:],
+                    'transaction_hash': events[0]['transactionHash'].hex()
+                }

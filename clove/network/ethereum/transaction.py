@@ -123,7 +123,6 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
 
     def show_details(self):
         details = super().show_details()
-        details['contract_address'] = self.token.contract_address
         details['token_address'] = Web3.toChecksumAddress(details.pop('to'))
         details['sender_address'] = self.sender_address
         return details

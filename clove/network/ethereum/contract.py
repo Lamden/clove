@@ -36,7 +36,8 @@ class EthereumContract(object):
         self.refund_address = self.tx_dict['from']
         self.secret_hash = self.inputs['_hash'].hex()
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
-        self.confirmations = self.network.latest_block - self.tx_dict['blockNumber']
+        self.block_number = self.tx_dict['blockNumber']
+        self.confirmations = self.network.latest_block - self.block_number
 
         if self.is_token_contract:
             self.value_base_units = self.inputs['_value']
@@ -105,6 +106,17 @@ class EthereumContract(object):
         return transaction
 
     def find_redeem_transaction(self):
+        if self.network.filtering_supported:
+            tx_details = self.network.find_transaction_details_in_redeem_event(
+                block_number=self.block_number,
+                recipient_address=self.recipient_address,
+                secret_hash=self.secret_hash
+            )
+            if not tx_details:
+                return
+
+            return tx_details.get('transaction_hash')
+
         try:
             if self.is_token_contract:
                 return self.network.find_redeem_token_transaction(
@@ -120,6 +132,23 @@ class EthereumContract(object):
         except NotImplementedError:
             raise ValueError(
                 f'Unable to find redeem transaction, {self.network.default_symbol} network is not supported.'
+            )
+
+    def find_secret(self):
+        try:
+            tx_details = self.network.find_transaction_details_in_redeem_event(
+                block_number=self.block_number,
+                recipient_address=self.recipient_address,
+                secret_hash=self.secret_hash
+            )
+            if not tx_details:
+                return
+
+            return tx_details.get('secret')
+
+        except NotImplementedError:
+            raise ValueError(
+                f'Unable to find secret, {self.network.default_symbol} network is not supported.'
             )
 
     def refund(self):
