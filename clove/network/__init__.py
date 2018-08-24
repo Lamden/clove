@@ -57,6 +57,7 @@ from clove.network.ethereum import Ethereum, EthereumTestnet
 from clove.network.ethereum_based.ellaism import Ellaism, EllaismTestnet
 from clove.network.ethereum_based.ether_gem import EtherGem
 from clove.network.ethereum_based.ethereum_classic import EthereumClassic
+from clove.network.ethereum_based.musicoin import Musicoin
 
 BITCOIN_BASED = (
     Bitcoin, BitcoinTestNet,
@@ -121,6 +122,7 @@ ETHEREUM_BASED = (
     EthereumClassic,
     EtherGem,
     Ellaism, EllaismTestnet,
+    Musicoin,
 )
 
 
