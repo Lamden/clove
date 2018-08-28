@@ -9,7 +9,7 @@ class Ellaism(EthereumBaseNetwork):
     blockexplorer_tx = 'https://explorer.ellaism.org/tx/{0}'
     filtering_supported = True
 
-    contract_address = ''
+    contract_address = '0x0ff1C3dD4b262a0324910A6E30CaA182204d9163'
 
 
 class EllaismTestnet(Ellaism):
