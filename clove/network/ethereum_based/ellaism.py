@@ -15,6 +15,7 @@ class Ellaism(EthereumBaseNetwork):
 class EllaismTestnet(Ellaism):
 
     name = 'ellaism-testnet'
+    testnet = True
     web3_provider_address = 'https://jsonrpc.testnet.ellaism.org/'
     blockexplorer_tx = 'https://explorer.testnet.ellaism.org/tx/{0}'
     filtering_supported = True
