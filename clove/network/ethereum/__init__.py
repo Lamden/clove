@@ -16,7 +16,7 @@ class Ethereum(EthereumBaseNetwork):
     etherscan_api_subdomain = 'api'
     blockexplorer_tx = 'https://etherscan.io/tx/{0}'
 
-    contract_address = '0x0fF1CEd0d5525a331E562C7c79186045b4D98CFA'
+    contract_address = '0x0ff1C3dD4b262a0324910A6E30CaA182204d9163'
 
     @property
     def web3_provider_address(self) -> str:

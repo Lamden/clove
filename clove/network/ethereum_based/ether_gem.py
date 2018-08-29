@@ -9,4 +9,4 @@ class EtherGem(EthereumBaseNetwork):
     blockexplorer_tx = 'https://explorer.egem.io/tx/{0}'
     filtering_supported = True
 
-    contract_address = '0x16F6e3a898dE8d03D9228E0A00e76FeF32868Aa9'
+    contract_address = '0x0ff1C3dD4b262a0324910A6E30CaA182204d9163'
