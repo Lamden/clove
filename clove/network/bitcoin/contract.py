@@ -175,6 +175,7 @@ class BitcoinContract(object):
             'contract_address': self.address,
             'confirmations': self.confirmations,
             'transaction_address': self.transaction_address,
+            'transaction_link': self.network.get_transaction_url(self.transaction_address),
             'locktime': self.locktime,
             'recipient_address': self.recipient_address,
             'refund_address': self.refund_address,
