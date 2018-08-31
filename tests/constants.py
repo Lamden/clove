@@ -416,3 +416,9 @@ eth_token_contract = AttributeDict({
     'v': 27,
     'value': 0
 })
+
+
+eth_raw_unsigned_transaction = '0xf86880843b9aca0082b2089453e546387a0d054e7ff127923254c' \
+                               '0a679da6dbf80b844095ea7b30000000000000000000000007657ca' \
+                               '877fac31d20528b473162e39b6e152fd2e000000000000000000000' \
+                               '00000000000000000000000003635c9adc5dea00000808080'

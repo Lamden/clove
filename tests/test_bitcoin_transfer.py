@@ -59,6 +59,7 @@ def test_show_details(signed_transaction):
         'contract_address',
         'contract_transaction',
         'transaction_address',
+        'transaction_link',
         'recipient_address',
         'refund_address',
         'secret',
@@ -226,6 +227,10 @@ def test_audit_contract_by_address_blockcypher(get_balance_mock):
         'refund_address': 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM',
         'secret_hash': '977afed2fcdfea9d27fd3032b4a1bc20219007f1',
         'transaction_address': 'ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef',
+        'transaction_link': (
+            'https://live.blockcypher.com/btc-testnet/tx/'
+            'ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef/'
+        ),
         'value': 0.01,
         'value_text': '0.01000000 BTC'
     }
@@ -254,6 +259,10 @@ def test_audit_contract_by_address_cryptoid(_):
         'refund_address': 'LXRAXRgPo84p58746zaBXUFFevCTYBPxgb',
         'secret_hash': '0d33bfb2b425ca1d91a9a90af9472d6b7a6760d8',
         'transaction_address': '2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b',
+        'transaction_link': (
+            'https://live.blockcypher.com/ltc/tx/'
+            '2d08cb8a4c06c5df7d21334a0dff5aaebf55d1b3adb8545d707f2b45888f932b/'
+        ),
         'value': 0.001,
         'value_text': '0.00100000 LTC',
      }
@@ -410,3 +419,13 @@ def test_extract_secret(_, bob_wallet, signed_transaction):
 
     # extracting secret from scriptSig
     assert secret == btc_network.extract_secret(scriptsig=redeem_transaction.tx.vin[0].scriptSig.hex())
+
+
+def test_transaction_link_in_unsigned_transaction(unsigned_transaction):
+
+    assert 'transaction_link' not in unsigned_transaction.show_details()
+
+
+def test_transaction_link_in_signed_transaction(signed_transaction):
+
+    assert signed_transaction.show_details()['transaction_link'].startswith('http')

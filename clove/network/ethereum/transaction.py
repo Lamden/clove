@@ -39,6 +39,9 @@ class EthereumTransaction(object):
             value = self.network.value_from_base_units(self.tx.value)
         details['value'] = value
         details['value_text'] = f'{value:.18f} {self.network.default_symbol}'
+
+        if self.tx and self.tx.r and self.tx.s and self.tx.v:
+            details['transaction_link'] = self.network.get_transaction_url(details['transaction_address'])
         return details
 
     def sign(self, private_key):

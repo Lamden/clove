@@ -192,6 +192,7 @@ class EthereumContract(object):
             'refund_address': self.refund_address,
             'secret_hash': self.secret_hash,
             'transaction_address': self.tx_dict['hash'].hex(),
+            'transaction_link': self.network.get_transaction_url(self.tx_dict['hash'].hex()),
             'value': self.value,
             'value_text': f'{self.value:.18f} {self.symbol}',
         }

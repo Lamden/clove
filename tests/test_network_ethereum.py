@@ -7,6 +7,7 @@ from pytest import mark, raises
 
 from .constants import (
     eth_initial_transaction,
+    eth_raw_unsigned_transaction,
     eth_redeem_tranaction,
     eth_unsupported_transaction,
     token_initial_transaction,
@@ -50,6 +51,10 @@ def test_eth_audit_contract(transaction_mock, infura_token, web3_request_mock):
         'refund_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
         'secret_hash': 'ed2e6fe492005de2dd82e84d38448467d632e81c',
         'transaction_address': '0xcf64ef4d0449cf7a78d2be1c1f7225dffb11dded98a58d569ebcc6e883ce9f2b',
+        'transaction_link': (
+            'https://kovan.etherscan.io/tx/'
+            '0xcf64ef4d0449cf7a78d2be1c1f7225dffb11dded98a58d569ebcc6e883ce9f2b'
+        ),
         'value': Decimal('0.001'),
         'value_text': '0.001000000000000000 ETH'
     }
@@ -136,6 +141,10 @@ def test_token_audit_contract(transaction_mock, infura_token, web3_request_mock)
         'refund_address': '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
         'secret_hash': '34378f0187488d019d3e0151f2fe3d3672ca310e',
         'transaction_address': '0x224818e4390e6d4e24b18e19a268825c0bbc649ab3e93dcb446328973dc7914b',
+        'transaction_link': (
+            'https://kovan.etherscan.io/tx/'
+            '0x224818e4390e6d4e24b18e19a268825c0bbc649ab3e93dcb446328973dc7914b'
+        ),
         'value': Decimal('1000'),
         'value_text': '1000.000000000000000000 BBT',
         'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf',
@@ -321,25 +330,17 @@ def test_deserialize_raw_transaction():
 
 @mark.parametrize('private_key', ['', 'non_hex_characters', '12345'])
 def test_sign_raw_transaction_invalid_key(private_key):
-    unsigned_transaction = '0xf86880843b9aca0082b2089453e546387a0d054e7ff127923254c' \
-                           '0a679da6dbf80b844095ea7b30000000000000000000000007657ca' \
-                           '877fac31d20528b473162e39b6e152fd2e000000000000000000000' \
-                           '00000000000000000000000003635c9adc5dea00000808080'
 
     with raises(ValueError, match='Invalid private key.'):
-        EthereumTestnet.sign_raw_transaction(unsigned_transaction, private_key)
+        EthereumTestnet.sign_raw_transaction(eth_raw_unsigned_transaction, private_key)
 
 
 def test_sign_raw_transaction():
-    unsigned_transaction = '0xf86880843b9aca0082b2089453e546387a0d054e7ff127923254c' \
-                           '0a679da6dbf80b844095ea7b30000000000000000000000007657ca' \
-                           '877fac31d20528b473162e39b6e152fd2e000000000000000000000' \
-                           '00000000000000000000000003635c9adc5dea00000808080'
 
     private_key = '34fff148b3d00c1e8b3a016c7859e1616dc0edcfc3ea1ef7c96a7c4487fbeb26'
     address = '0x76cF367Efb63E037E3dfd0352DAc15e501f72DeA'
 
-    raw_signed_transaction = EthereumTestnet.sign_raw_transaction(unsigned_transaction, private_key)
+    raw_signed_transaction = EthereumTestnet.sign_raw_transaction(eth_raw_unsigned_transaction, private_key)
     signed_transaction = EthereumTestnet.deserialize_raw_transaction(raw_signed_transaction)
 
     assert EthereumTestnet.unify_address(signed_transaction.sender.hex()) == address
@@ -357,3 +358,20 @@ def test_find_redeem_transaction_in_event(transaction_mock, web3_request_mock):
     network = EthereumClassic()
     contract = network.audit_contract('0x7221773115ded91f856cedb2032a529edabe0bab8785d07d901681512314ef41')
     assert contract.find_redeem_transaction() == '0x65320e57b9d18ec08388896b029ad1495beb7a57c547440253a1dde01b4485f1'
+
+
+def test_transaction_link_in_unsigned_transaction(infura_token, web3_request_mock):
+    alice_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+    bob_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    network = EthereumTestnet()
+    eth_atomic_swap = network.atomic_swap(sender_address=alice_address, recipient_address=bob_address, value=3)
+    assert 'transaction_link' not in eth_atomic_swap.show_details()
+
+
+def test_transaction_link_in_signed_transaction(infura_token, web3_request_mock):
+    alice_address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
+    bob_address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
+    network = EthereumTestnet()
+    eth_atomic_swap = network.atomic_swap(sender_address=alice_address, recipient_address=bob_address, value=3)
+    eth_atomic_swap.sign('34fff148b3d00c1e8b3a016c7859e1616dc0edcfc3ea1ef7c96a7c4487fbeb26')
+    assert eth_atomic_swap.show_details()['transaction_link'].startswith('http')

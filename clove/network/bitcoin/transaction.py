@@ -33,6 +33,7 @@ class BitcoinTransaction(object):
         self.tx_locktime = tx_locktime
         self.fee = 0.0
         self.fee_per_kb = 0.0
+        self.signed = False
 
     def validate_address(self):
         if not self.network.is_valid_address(self.recipient_address):
@@ -91,6 +92,7 @@ class BitcoinTransaction(object):
                 tx_index,
                 (SCRIPT_VERIFY_P2SH,)
             )
+        self.signed = True
 
     def create_unsigned_transaction(self):
         assert self.utxo_value >= self.value, 'You want to spend more than you\'ve got. Add more UTXO\'s.'
@@ -132,7 +134,7 @@ class BitcoinTransaction(object):
         return b2lx(self.tx.GetHash())
 
     def show_details(self):
-        return {
+        details = {
             'transaction': self.raw_transaction,
             'transaction_address': self.address,
             'fee': self.fee,
@@ -145,6 +147,9 @@ class BitcoinTransaction(object):
             'value': self.value,
             'value_text': f'{self.value:.8f} {self.symbol}',
         }
+        if self.signed:
+            details['transaction_link'] = self.network.get_transaction_url(self.address)
+        return details
 
     def get_transaction_url(self) -> Optional[str]:
         '''Wrapper around the `get_transaction_url` method from base network.'''
@@ -240,7 +245,7 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
         self.tx.vout[1].nValue -= fee_in_satoshi
 
     def show_details(self):
-        return {
+        details = {
             'contract': self.contract.hex(),
             'contract_address': str(CBitcoinAddress.from_scriptPubKey(self.contract.to_p2sh_scriptPubKey())),
             'contract_transaction': self.raw_transaction,
@@ -259,3 +264,6 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
             'value': self.value,
             'value_text': f'{self.value:.8f} {self.symbol}',
         }
+        if self.signed:
+            details['transaction_link'] = self.network.get_transaction_url(self.address)
+        return details
