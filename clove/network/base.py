@@ -86,6 +86,13 @@ class BaseNetwork(object):
                 else:
                     cls.networks[f'{symbol.upper()}'] = network
 
+    @property
+    def latest_block(self):
+        raise NotImplemented
+
+    def get_transaction(self):
+        raise NotImplemented
+
     @classmethod
     def get_transaction_url(cls, tx_hash: str) -> Optional[str]:
         '''

@@ -7,7 +7,7 @@ from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import auto_switch_params, from_base_units, to_base_units
-from clove.utils.external_source import get_balance, get_transaction
+from clove.utils.external_source import get_balance
 
 
 class BitcoinContract(object):
@@ -38,7 +38,7 @@ class BitcoinContract(object):
             except IndexError:
                 raise ValueError('Given transaction has no outputs.')
         else:
-            tx_json = get_transaction(network.default_symbol, transaction_address, network.is_test_network())
+            tx_json = self.network.get_transaction(transaction_address)
             if not tx_json:
                 raise ValueError('No transaction found under given address.')
             if 'hex' in tx_json:

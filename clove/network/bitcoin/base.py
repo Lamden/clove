@@ -45,6 +45,7 @@ from clove.utils.external_source import (
     extract_scriptsig_from_redeem_transaction,
     get_current_fee,
     get_latest_block_number,
+    get_transaction,
     get_utxo_from_api,
 )
 from clove.utils.logging import logger
@@ -377,7 +378,7 @@ class BitcoinBaseNetwork(BaseNetwork):
             return self.connection.getpeername()[0]
 
     @classmethod
-    def get_utxo(cls, address, amount):
+    def get_utxo(cls, address: str, amount: float) -> Optional[list]:
         if cls.is_test_network() and cls.name != 'test-bitcoin':
             logger.info('%s: network is not supported to get utxo', cls.name)
             raise NotImplementedError
@@ -490,3 +491,6 @@ class BitcoinBaseNetwork(BaseNetwork):
     @property
     def latest_block(self):
         return get_latest_block_number(self.default_symbol, self.testnet)
+
+    def get_transaction(self, tx_address: str) -> dict:
+        return get_transaction(self.default_symbol, tx_address, self.is_test_network())
