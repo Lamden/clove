@@ -1,7 +1,10 @@
 from bitcoin.wallet import CBitcoinSecretError
 
 from clove.network.bitcoin.base import BitcoinBaseNetwork
-from clove.utils.bitcoin import auto_switch_params
+from clove.network.bitcoin.utxo import Utxo
+from clove.utils.bitcoin import auto_switch_params, from_base_units
+from clove.utils.external_source import clove_req_json
+from clove.utils.logging import logger
 
 
 class Monacoin(BitcoinBaseNetwork):
@@ -35,6 +38,38 @@ class Monacoin(BitcoinBaseNetwork):
                 cls.alternative_secret_key, cls.base58_prefixes['SECRET_KEY']
             return super().get_wallet(*args, **kwargs)
 
+    @property
+    def latest_block(self):
+        return clove_req_json('https://mona.chainseeker.info/api/v1/status')['blocks']
+
+    @staticmethod
+    def get_transaction(tx_address: str) -> dict:
+        return clove_req_json(f'https://mona.chainseeker.info/api/v1/tx/{tx_address}')
+
+    @classmethod
+    def get_utxo(cls, address, amount):
+        data = clove_req_json(f'https://mona.chainseeker.info/api/v1/utxos/{address}')
+        unspent = sorted(data, key=lambda k: k['value'], reverse=True)
+
+        utxo = []
+        total = 0
+
+        for output in unspent:
+            value = from_base_units(output['value'])
+            utxo.append(
+                Utxo(
+                    tx_id=output['txid'],
+                    vout=output['vout'],
+                    value=value,
+                    tx_script=output['scriptPubKey']['hex'],
+                )
+            )
+            total += value
+            if total > amount:
+                return utxo
+
+        logger.debug(f'Cannot find enough UTXO\'s. Found %.8f from %.8f.', total, amount)
+
 
 class MonacoinTestNet(Monacoin):
     """
@@ -54,3 +89,15 @@ class MonacoinTestNet(Monacoin):
         'SECRET_KEY': 239
     }
     testnet = True
+
+    @property
+    def latest_block(self):
+        raise NotImplementedError
+
+    @staticmethod
+    def get_transaction(tx_address: str) -> dict:
+        raise NotImplementedError
+
+    @classmethod
+    def get_utxo(cls, address, amount):
+        raise NotImplementedError

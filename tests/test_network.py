@@ -10,7 +10,7 @@ from validators import domain
 from clove.constants import CRYPTOID_SUPPORTED_NETWORKS
 from clove.exceptions import ImpossibleDeserialization
 from clove.network import BITCOIN_BASED as networks
-from clove.network import BitcoinTestNet
+from clove.network import BitcoinTestNet, Monacoin
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import auto_switch_params
@@ -126,6 +126,31 @@ cryptoid_utxo_response = {
     ]
 }
 
+monacoin_utxo_response = [
+  {
+    "txid": "e0832ca854e4577cab20413013d6251c4a426022112d9ff222067bb5d8b6b723",
+    "vout": 0,
+    "scriptPubKey": {
+      "asm": "OP_DUP OP_HASH160 098671104a3dd5b8eb1559929221d946073a34ba OP_EQUALVERIFY OP_CHECKSIG",
+      "hex": "76a9143804c5840717fb1c5c8ac0bd2726556a51e91fcd99ac",
+      "type": "pubkeyhash",
+      "address": "M8mXNKtwFoW765V8VEbhZ8TNCqywFr25in"
+    },
+    "value": 90000070
+  },
+  {
+    "txid": "308b997d8583aa48a7b265246eb76e5d030495468bbb87989606aea769b03600",
+    "vout": 1,
+    "scriptPubKey": {
+      "asm": "OP_DUP OP_HASH160 098671104a3dd5b8eb1559929221d946073a34ba OP_EQUALVERIFY OP_CHECKSIG",
+      "hex": "76a9143804c5840717fb1c5c8ac0bd2726556a51e91fcd99ac",
+      "type": "pubkeyhash",
+      "address": "M8mXNKtwFoW765V8VEbhZ8TNCqywFr25in"
+    },
+    "value": 15500105
+  },
+]
+
 expected_utxo = [
     Utxo(
         tx_id='e0832ca854e4577cab20413013d6251c4a426022112d9ff222067bb5d8b6b723',
@@ -147,10 +172,12 @@ expected_utxo_dicts = [utxo.__dict__ for utxo in expected_utxo]
 @patch('clove.utils.external_source.clove_req_json')
 @patch.dict('os.environ', {'CRYPTOID_API_KEY': 'test_api_key'})
 def test_getting_utxo(json_response, network):
+    if network.name == 'monacoin':
+        # there is a separate test for monacoin utxo
+        return
     address = 'testaddress'
     amount = 1.0
     symbol = network.symbols[0].lower()
-
     # networks supported by blockcypher
     if network.name in ('test-bitcoin', 'dogecoin'):
         json_response.return_value = blockcypher_utxo_response
@@ -169,6 +196,15 @@ def test_getting_utxo(json_response, network):
 
     assert [utxo.__dict__ for utxo in network.get_utxo(address, amount)] == expected_utxo_dicts
     assert json_response.call_args[0][0].startswith('https://chainz.cryptoid.info/')
+
+
+@patch('clove.network.bitcoin_based.monacoin.clove_req_json', return_value=monacoin_utxo_response)
+def test_getting_utxo_monacoin(json_response):
+    network = Monacoin()
+    address = 'testaddress'
+    amount = 1.0
+    assert [utxo.__dict__ for utxo in network.get_utxo(address, amount)] == expected_utxo_dicts
+    assert json_response.call_args[0][0].startswith('https://mona.chainseeker.info/api/v1/utxos/')
 
 
 def test_filter_blacklisted_nodes_method():
