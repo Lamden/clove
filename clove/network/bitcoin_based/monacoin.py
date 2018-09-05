@@ -76,9 +76,7 @@ class Monacoin(BitcoinBaseNetwork):
     def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
         contract_transactions = clove_req_json(f'https://mona.chainseeker.info/api/v1/txids/{contract_address}')
         if len(contract_transactions) < 2:
-            logger.debug(
-                f'Searching for redeem transaction, found {len(contract_transactions)} transactions on this contract'
-            )
+            logger.debug('There is no redeem transaction on this contract yet.')
             return
         redeem_transaction = cls.get_transaction(contract_transactions[1])
         return cls.extract_secret(redeem_transaction['hex'])
