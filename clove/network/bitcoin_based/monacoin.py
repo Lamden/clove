@@ -1,3 +1,5 @@
+from typing import Optional
+
 from bitcoin.wallet import CBitcoinSecretError
 
 from clove.network.bitcoin.base import BitcoinBaseNetwork
@@ -70,6 +72,17 @@ class Monacoin(BitcoinBaseNetwork):
 
         logger.debug(f'Cannot find enough UTXO\'s. Found %.8f from %.8f.', total, amount)
 
+    @classmethod
+    def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
+        contract_transactions = clove_req_json(f'https://mona.chainseeker.info/api/v1/txids/{contract_address}')
+        if len(contract_transactions) < 2:
+            logger.debug(
+                f'Searching for redeem transaction, found {len(contract_transactions)} transactions on this contract'
+            )
+            return
+        redeem_transaction = cls.get_transaction(contract_transactions[1])
+        return cls.extract_secret(redeem_transaction['hex'])
+
 
 class MonacoinTestNet(Monacoin):
     """
@@ -100,4 +113,8 @@ class MonacoinTestNet(Monacoin):
 
     @classmethod
     def get_utxo(cls, address, amount):
+        raise NotImplementedError
+
+    @classmethod
+    def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
         raise NotImplementedError
