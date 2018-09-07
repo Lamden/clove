@@ -67,7 +67,10 @@ class BitcoinContract(object):
         script_pub_key = contract_script.to_p2sh_scriptPubKey()
         valid_p2sh = script_pub_key == contract_tx_out.scriptPubKey
         self.address = str(CBitcoinAddress.from_scriptPubKey(script_pub_key))
-        self.balance = get_balance(self.network, self.address)
+        if hasattr(self.network, 'get_balance'):
+            self.balance = self.network.get_balance(self.address)
+        else:
+            self.balance = get_balance(self.network, self.address)
 
         script_ops = list(contract_script)
         if valid_p2sh and self.is_valid_contract_script(script_ops):

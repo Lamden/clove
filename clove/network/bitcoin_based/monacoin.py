@@ -29,6 +29,7 @@ class Monacoin(BitcoinBaseNetwork):
     }
     source_code_url = 'https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp'
     alternative_secret_key = 178
+    blockexplorer_tx = 'https://mona.chainseeker.info/tx/{0}'
 
     @classmethod
     @auto_switch_params()
@@ -80,6 +81,13 @@ class Monacoin(BitcoinBaseNetwork):
             return
         redeem_transaction = cls.get_transaction(contract_transactions[1])
         return cls.extract_secret(redeem_transaction['hex'])
+
+    @staticmethod
+    def get_balance(wallet_address: str) -> float:
+        wallet_utxo = clove_req_json(f'https://mona.chainseeker.info/api/v1/utxos/{wallet_address}')
+        if not wallet_utxo:
+            return 0
+        return from_base_units(sum([utxo['value'] for utxo in wallet_utxo]))
 
 
 class MonacoinTestNet(Monacoin):
