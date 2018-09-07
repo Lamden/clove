@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.2.3
 
 * Getting contract balance in Monacoin
 * Extracting secret in Monacoin network
