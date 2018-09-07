@@ -29,6 +29,7 @@ class Monacoin(BitcoinBaseNetwork):
     }
     source_code_url = 'https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp'
     alternative_secret_key = 178
+    blockexplorer_tx = 'https://mona.chainseeker.info/tx/{0}'
 
     @classmethod
     @auto_switch_params()
