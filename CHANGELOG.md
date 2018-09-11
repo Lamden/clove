@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.4
 
 * Fix for getting contract balance on MonacoinTestnet
 
