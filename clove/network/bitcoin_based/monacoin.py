@@ -124,3 +124,7 @@ class MonacoinTestNet(Monacoin):
     @classmethod
     def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
         raise NotImplementedError
+
+    @staticmethod
+    def get_balance(wallet_address: str) -> float:
+        raise NotImplementedError
