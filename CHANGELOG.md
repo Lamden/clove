@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+* Fix for getting contract balance on MonacoinTestnet
+
+
 ## v1.2.3
 
 * Getting contract balance in Monacoin
