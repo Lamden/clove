@@ -153,7 +153,7 @@
 <span class="kn">from</span> <span class="nn">clove.network.bitcoin.transaction</span> <span class="k">import</span> <span class="n">BitcoinTransaction</span>
 <span class="kn">from</span> <span class="nn">clove.network.bitcoin.utxo</span> <span class="k">import</span> <span class="n">Utxo</span>
 <span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">auto_switch_params</span><span class="p">,</span> <span class="n">from_base_units</span><span class="p">,</span> <span class="n">to_base_units</span>
-<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">get_balance</span><span class="p">,</span> <span class="n">get_transaction</span>
+<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">get_balance</span>
 
 
 <div class="viewcode-block" id="BitcoinContract"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract">[docs]</a><span class="k">class</span> <span class="nc">BitcoinContract</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -184,7 +184,7 @@
             <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Given transaction has no outputs.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">tx_json</span> <span class="o">=</span> <span class="n">get_transaction</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span><span class="p">,</span> <span class="n">transaction_address</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">())</span>
+            <span class="n">tx_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">transaction_address</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">tx_json</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No transaction found under given address.&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="s1">&#39;hex&#39;</span> <span class="ow">in</span> <span class="n">tx_json</span><span class="p">:</span>
@@ -213,7 +213,10 @@
         <span class="n">script_pub_key</span> <span class="o">=</span> <span class="n">contract_script</span><span class="o">.</span><span class="n">to_p2sh_scriptPubKey</span><span class="p">()</span>
         <span class="n">valid_p2sh</span> <span class="o">=</span> <span class="n">script_pub_key</span> <span class="o">==</span> <span class="n">contract_tx_out</span><span class="o">.</span><span class="n">scriptPubKey</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">CBitcoinAddress</span><span class="o">.</span><span class="n">from_scriptPubKey</span><span class="p">(</span><span class="n">script_pub_key</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">=</span> <span class="n">get_balance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="s1">&#39;get_balance&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_balance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">=</span> <span class="n">get_balance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
 
         <span class="n">script_ops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contract_script</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">valid_p2sh</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_contract_script</span><span class="p">(</span><span class="n">script_ops</span><span class="p">):</span>
@@ -321,6 +324,7 @@
             <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
             <span class="s1">&#39;confirmations&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmations</span><span class="p">,</span>
             <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">transaction_address</span><span class="p">,</span>
+            <span class="s1">&#39;transaction_link&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transaction_address</span><span class="p">),</span>
             <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span><span class="p">,</span>
             <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span>
             <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">refund_address</span><span class="p">,</span>

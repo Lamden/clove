@@ -147,7 +147,7 @@
 <span></span><span class="kn">from</span> <span class="nn">decimal</span> <span class="k">import</span> <span class="n">Decimal</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">eth_abi</span> <span class="k">import</span> <span class="n">decode_abi</span>
+<span class="kn">from</span> <span class="nn">eth_abi</span> <span class="k">import</span> <span class="n">decode_abi</span><span class="p">,</span> <span class="n">encode_single</span>
 <span class="kn">from</span> <span class="nn">ethereum.transactions</span> <span class="k">import</span> <span class="n">Transaction</span>
 <span class="kn">import</span> <span class="nn">rlp</span>
 <span class="kn">from</span> <span class="nn">rlp</span> <span class="k">import</span> <span class="n">RLPException</span>
@@ -158,10 +158,11 @@
 <span class="kn">from</span> <span class="nn">web3.utils.contracts</span> <span class="k">import</span> <span class="n">find_matching_fn_abi</span>
 <span class="kn">from</span> <span class="nn">web3.utils.datastructures</span> <span class="k">import</span> <span class="n">AttributeDict</span>
 
-<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">ERC20_BASIC_ABI</span><span class="p">,</span> <span class="n">ETHEREUM_CONTRACT_ABI</span>
+<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">ERC20_BASIC_ABI</span><span class="p">,</span> <span class="n">ETH_FILTER_MAX_ATTEMPTS</span><span class="p">,</span> <span class="n">ETHEREUM_CONTRACT_ABI</span>
 <span class="kn">from</span> <span class="nn">clove.exceptions</span> <span class="k">import</span> <span class="n">ImpossibleDeserialization</span><span class="p">,</span> <span class="n">UnsupportedTransactionType</span>
 <span class="kn">from</span> <span class="nn">clove.network.base</span> <span class="k">import</span> <span class="n">BaseNetwork</span>
 <span class="kn">from</span> <span class="nn">clove.network.ethereum.contract</span> <span class="k">import</span> <span class="n">EthereumContract</span>
+<span class="kn">from</span> <span class="nn">clove.network.ethereum.token</span> <span class="k">import</span> <span class="n">EthToken</span>
 <span class="kn">from</span> <span class="nn">clove.network.ethereum.transaction</span> <span class="k">import</span> <span class="n">EthereumAtomicSwapTransaction</span><span class="p">,</span> <span class="n">EthereumTokenApprovalTransaction</span>
 <span class="kn">from</span> <span class="nn">clove.network.ethereum.wallet</span> <span class="k">import</span> <span class="n">EthereumWallet</span>
 <span class="kn">from</span> <span class="nn">clove.network.ethereum_based</span> <span class="k">import</span> <span class="n">Token</span>
@@ -178,8 +179,8 @@
     <span class="n">ethereum_based</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">contract_address</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">token_class</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">blockexplorer_tx</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">filtering_supported</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">abi</span> <span class="o">=</span> <span class="n">ETHEREUM_CONTRACT_ABI</span>
 
@@ -340,7 +341,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;No token found for address </span><span class="si">{address}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_class</span><span class="o">.</span><span class="n">from_namedtuple</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">EthToken</span><span class="o">.</span><span class="n">from_namedtuple</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_token_by_symbol"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_symbol">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_token_by_symbol</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -349,11 +350,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;No token found for symbol </span><span class="si">{symbol}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">token_class</span><span class="o">.</span><span class="n">from_namedtuple</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">token_abi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_class</span><span class="o">.</span><span class="n">abi</span>
+        <span class="k">return</span> <span class="n">EthToken</span><span class="o">.</span><span class="n">from_namedtuple</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_raw_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_raw_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_raw_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -408,13 +405,38 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getBlock</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">number</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">blockNumber</span>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.find_redeem_token_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_token_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_token_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="EthereumBaseNetwork.find_transaction_details_in_redeem_event"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_transaction_details_in_redeem_event">[docs]</a>    <span class="k">def</span> <span class="nf">find_transaction_details_in_redeem_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">block_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">filtering_supported</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="n">event_signature_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">sha3</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;RedeemSwap(address,bytes20,bytes32)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+        <span class="n">filter_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;fromBlock&#39;</span><span class="p">:</span> <span class="n">block_number</span><span class="p">,</span>
+            <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span>
+            <span class="s1">&#39;topics&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">event_signature_hash</span><span class="p">,</span>
+                <span class="s1">&#39;0x&#39;</span> <span class="o">+</span> <span class="n">encode_single</span><span class="p">(</span><span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>
+                <span class="s1">&#39;0x&#39;</span> <span class="o">+</span> <span class="n">encode_single</span><span class="p">(</span><span class="s1">&#39;bytes20&#39;</span><span class="p">,</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">secret_hash</span><span class="p">))</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="n">event_filter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filter_options</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ETH_FILTER_MAX_ATTEMPTS</span><span class="p">):</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="n">event_filter</span><span class="o">.</span><span class="n">get_all_entries</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">events</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">:],</span>
+                    <span class="s1">&#39;transaction_hash&#39;</span><span class="p">:</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;transactionHash&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+                <span class="p">}</span></div></div>
 </pre></div>
 
            </div>

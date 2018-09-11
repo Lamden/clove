@@ -232,6 +232,13 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">cls</span><span class="o">.</span><span class="n">networks</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;{symbol.upper()}&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span></div>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span>
+
+<div class="viewcode-block" id="BaseNetwork.get_transaction"><a class="viewcode-back" href="../../../api.html#clove.network.base.BaseNetwork.get_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span></div>
+
 <div class="viewcode-block" id="BaseNetwork.get_transaction_url"><a class="viewcode-back" href="../../../api.html#clove.network.base.BaseNetwork.get_transaction_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_transaction_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&#39;&#39;&#39;</span>
