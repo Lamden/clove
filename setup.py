@@ -54,6 +54,9 @@ setup(
         ]
     },
     url='https://github.com/Lamden/clove',
+    project_urls={
+        'Changelog': 'https://github.com/Lamden/clove/blob/master/CHANGELOG.md',
+    },
     download_url=f'https://github.com/Lamden/clove/tarball/{version}',
     license='GPLv3',
     classifiers=[
