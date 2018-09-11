@@ -1,7 +1,8 @@
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Goldcoin(BitcoinBaseNetwork):
+class Goldcoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Goldcoin network information based on
     https://github.com/goldcoin/goldcoin/blob/master/src/net.cpp

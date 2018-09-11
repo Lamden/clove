@@ -1,8 +1,9 @@
 
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class ZCoin(BitcoinBaseNetwork):
+class ZCoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary XZC network information based on
     http://www.github.com/zcoinofficial/zcoin/blob/master/src/chainparams.cpp
@@ -22,7 +23,7 @@ class ZCoin(BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/zcoinofficial/zcoin/blob/master/src/chainparams.cpp'
 
 
-class ZCoinTestNet(ZCoin):
+class ZCoinTestNet(NoAPI, ZCoin):
     """
     Class with all the necessary XZC testing network information based on
     http://www.github.com/zcoinofficial/zcoin/blob/master/src/chainparams.cpp

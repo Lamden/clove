@@ -1,7 +1,8 @@
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Digibyte(BitcoinBaseNetwork):
+class Digibyte(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary DGB network information based on
     https://github.com/digibyte/digibyte/blob/master/src/chainparams.cpp

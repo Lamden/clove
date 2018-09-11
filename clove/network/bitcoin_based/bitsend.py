@@ -1,8 +1,9 @@
 
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class BitSend(BitcoinBaseNetwork):
+class BitSend(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary BSD network information based on
     http://www.github.com/LIMXTEC/BitSend/blob/master/src/chainparams.cpp
@@ -23,7 +24,7 @@ class BitSend(BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/LIMXTEC/BitSend/blob/master/src/chainparams.cpp'
 
 
-class BitSendTestNet(BitSend):
+class BitSendTestNet(NoAPI, BitSend):
     """
     Class with all the necessary BSD testing network information based on
     http://www.github.com/LIMXTEC/BitSend/blob/master/src/chainparams.cpp

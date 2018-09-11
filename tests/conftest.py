@@ -154,3 +154,10 @@ def etherscan_token():
     os.environ['ETHERSCAN_API_KEY'] = 'PRF1ZEGKUDN9P2WKITCCYRU9E3ASPKGBKZ'
     yield
     del os.environ['ETHERSCAN_API_KEY']
+
+
+@pytest.fixture
+def fake_cryptoid_token():
+    os.environ['CRYPTOID_API_KEY'] = '123'
+    yield
+    del os.environ['CRYPTOID_API_KEY']

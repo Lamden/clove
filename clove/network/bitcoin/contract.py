@@ -7,7 +7,6 @@ from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import auto_switch_params, from_base_units, to_base_units
-from clove.utils.external_source import get_balance
 
 
 class BitcoinContract(object):
@@ -68,10 +67,7 @@ class BitcoinContract(object):
         valid_p2sh = script_pub_key == contract_tx_out.scriptPubKey
         self.address = str(CBitcoinAddress.from_scriptPubKey(script_pub_key))
         try:
-            if hasattr(self.network, 'get_balance'):
-                self.balance = self.network.get_balance(self.address)
-            else:
-                self.balance = get_balance(self.network, self.address)
+            self.balance = self.network.get_balance(self.address)
         except NotImplementedError:
             self.balance = None
 

@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Tao(BitcoinBaseNetwork):
+class Tao(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Tao (XTO) network information based on
     https://github.com/taoblockchain/tao-core/blob/master/src/chainparams.cpp
@@ -21,7 +22,7 @@ class Tao(BitcoinBaseNetwork):
     source_code_url = 'https://github.com/taoblockchain/tao-core/blob/master/src/chainparams.cpp'
 
 
-class TaoTestNet(Tao):
+class TaoTestNet(NoAPI, Tao):
     """
     Class with all the necessary Tao (XTO) testing network information based on
     https://github.com/taoblockchain/tao-core/blob/master/src/chainparams.cpp

@@ -1,7 +1,8 @@
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class AquariusCoin(BitcoinBaseNetwork):
+class AquariusCoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary ARCO network information based on
     http://www.github.com/AquariusNetwork/ARCO/blob/master/src/chainparams.cpp

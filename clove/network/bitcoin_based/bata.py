@@ -1,8 +1,9 @@
 
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Bata(BitcoinBaseNetwork):
+class Bata(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary BTA network information based on
     http://www.github.com/BTA-BATA/BATA-SOURCE/blob/master/src/chainparams.cpp
@@ -21,7 +22,7 @@ class Bata(BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/BTA-BATA/BATA-SOURCE/blob/master/src/chainparams.cpp'
 
 
-class BataTestNet(Bata):
+class BataTestNet(NoAPI, Bata):
     """
     Class with all the necessary BTA testing network information based on
     http://www.github.com/BTA-BATA/BATA-SOURCE/blob/master/src/chainparams.cpp

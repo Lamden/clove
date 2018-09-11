@@ -1,7 +1,8 @@
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Mooncoin(BitcoinBaseNetwork):
+class Mooncoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Mooncoin (MOON) network information based on
     https://github.com/mooncoincore/wallet/blob/master/src/chainparams.cpp

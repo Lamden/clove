@@ -1,4 +1,3 @@
-import os
 from random import shuffle
 import socket
 from time import sleep, time
@@ -25,7 +24,7 @@ from bitcoin.net import CInv
 from bitcoin.wallet import CBitcoinAddress, CBitcoinAddressError
 
 from clove.constants import (
-    CRYPTOID_SUPPORTED_NETWORKS,
+    CLOVE_API_URL,
     NODE_COMMUNICATION_TIMEOUT,
     REJECT_TIMEOUT,
     TRANSACTION_BROADCASTING_MAX_ATTEMPTS,
@@ -41,13 +40,7 @@ from clove.network.bitcoin.contract import BitcoinContract
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
 from clove.network.bitcoin.wallet import BitcoinWallet
 from clove.utils.bitcoin import auto_switch_params
-from clove.utils.external_source import (
-    extract_scriptsig_from_redeem_transaction,
-    get_current_fee,
-    get_latest_block_number,
-    get_transaction,
-    get_utxo_from_api,
-)
+from clove.utils.external_source import clove_req_json
 from clove.utils.logging import logger
 from clove.utils.network import generate_params_object
 
@@ -369,30 +362,22 @@ class BitcoinBaseNetwork(BaseNetwork):
 
     @classmethod
     def get_current_fee_per_kb(cls) -> Optional[float]:
-        """Returns current fee based on last transactions."""
-        network = cls.symbols[0]
-        return get_current_fee(network)
+        """Getting current network fee from Clove API"""
+
+        network = cls.symbols[0].upper()
+        if cls.testnet:
+            network += '-TESTNET'
+        resp = clove_req_json(f'{CLOVE_API_URL}/fee/{network}')
+
+        if not resp:
+            logger.debug('Could not get current fee for %s network', network)
+            return
+
+        return resp['fee']
 
     def get_current_node(self):
         if self.connection:
             return self.connection.getpeername()[0]
-
-    @classmethod
-    def get_utxo(cls, address: str, amount: float) -> Optional[list]:
-        if cls.is_test_network() and cls.name != 'test-bitcoin':
-            logger.info('%s: network is not supported to get utxo', cls.name)
-            raise NotImplementedError
-
-        network = cls.symbols[0].lower()
-        if network == 'doge' or cls.name == 'test-bitcoin':
-            return get_utxo_from_api(network, address, amount, use_blockcypher=True, testnet=cls.is_test_network())
-
-        if network not in CRYPTOID_SUPPORTED_NETWORKS:
-            logger.info('%s: network is not supported', network)
-            raise NotImplementedError
-
-        api_key = os.getenv('CRYPTOID_API_KEY')
-        return get_utxo_from_api(network, address, amount, cryptoid_api_key=api_key)
 
     @auto_switch_params()
     def atomic_swap(
@@ -446,32 +431,6 @@ class BitcoinBaseNetwork(BaseNetwork):
         raise ValueError('Unable to extract secret.')
 
     @classmethod
-    def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
-
-        if cls.is_test_network() and cls.name != 'test-bitcoin':
-            raise NotImplementedError
-
-        try:
-            scriptsig = extract_scriptsig_from_redeem_transaction(
-                network=cls.symbols[0],
-                contract_address=contract_address,
-                testnet=cls.is_test_network(),
-                cryptoid_api_key=os.getenv('CRYPTOID_API_KEY'),
-            )
-        except NotImplementedError:
-            logger.debug('%s: network is not supported', cls.name)
-            raise
-        except ValueError as e:
-            logger.debug(e)
-            raise
-
-        try:
-            return cls.extract_secret(scriptsig=scriptsig)
-        except ValueError as e:
-            logger.debug(e)
-            raise
-
-    @classmethod
     @auto_switch_params()
     def is_valid_address(cls, address: str) -> bool:
         try:
@@ -488,9 +447,27 @@ class BitcoinBaseNetwork(BaseNetwork):
         except Exception:
             raise ImpossibleDeserialization()
 
+
+class NoAPI(object):
+
+    API = False
+
     @property
     def latest_block(self):
-        return get_latest_block_number(self.default_symbol, self.testnet)
+        raise NotImplementedError
 
-    def get_transaction(self, tx_address: str) -> dict:
-        return get_transaction(self.default_symbol, tx_address, self.is_test_network())
+    @staticmethod
+    def get_transaction(tx_address: str) -> dict:
+        raise NotImplementedError
+
+    @classmethod
+    def get_utxo(cls, address, amount):
+        raise NotImplementedError
+
+    @classmethod
+    def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
+        raise NotImplementedError
+
+    @staticmethod
+    def get_balance(wallet_address: str) -> float:
+        raise NotImplementedError

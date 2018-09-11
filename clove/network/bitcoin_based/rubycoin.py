@@ -1,8 +1,9 @@
 
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Rubycoin(BitcoinBaseNetwork):
+class Rubycoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary RBY network information based on
     http://www.github.com/rubycoinorg/rubycoin/blob/master/src/chainparams.cpp

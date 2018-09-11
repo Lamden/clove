@@ -1,7 +1,8 @@
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Europecoin(BitcoinBaseNetwork):
+class Europecoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Europecoin network information based on
     https://github.com/LIMXTEC/Europecoin-V3/blob/master/src/chainparams.cpp
