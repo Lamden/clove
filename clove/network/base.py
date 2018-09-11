@@ -88,10 +88,10 @@ class BaseNetwork(object):
 
     @property
     def latest_block(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_transaction(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     @classmethod
     def get_transaction_url(cls, tx_hash: str) -> Optional[str]:
