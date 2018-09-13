@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+* Changing SCRIPT_ADDR for Monacoin network
+
+
 ## v1.2.4
 
 * Fix for getting contract balance on MonacoinTestnet
