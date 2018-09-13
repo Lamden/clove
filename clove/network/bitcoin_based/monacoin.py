@@ -24,7 +24,7 @@ class Monacoin(BitcoinBaseNetwork):
     message_start = b'\xfb\xc0\xb6\xdb'
     base58_prefixes = {
         'PUBKEY_ADDR': 50,
-        'SCRIPT_ADDR': 5,
+        'SCRIPT_ADDR': 55,
         'SECRET_KEY': 176
     }
     source_code_url = 'https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp'
