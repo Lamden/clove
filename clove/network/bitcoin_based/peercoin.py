@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Peercoin(BitcoinBaseNetwork):
+class Peercoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Peercoin (PPC) network information based on
     https://github.com/peercoin/peercoin/blob/master/src/net.cpp
@@ -20,7 +21,7 @@ class Peercoin(BitcoinBaseNetwork):
     source_code_url = 'https://github.com/peercoin/peercoin/blob/master/src/net.cpp'
 
 
-class PeercoinTestNet(Peercoin):
+class PeercoinTestNet(NoAPI, Peercoin):
     """
     Class with all the necessary Peercoin (PPC) testing network information based on
     https://github.com/peercoin/peercoin/blob/master/src/net.cpp

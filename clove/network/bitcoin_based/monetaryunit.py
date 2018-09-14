@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class MonetaryUnit(BitcoinBaseNetwork):
+class MonetaryUnit(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary MonetaryUnit network information based on
     https://github.com/muecoin/MUECore/blob/master/src/chainparams.cpp
@@ -23,7 +24,7 @@ class MonetaryUnit(BitcoinBaseNetwork):
     source_code_url = 'https://github.com/muecoin/MUECore/blob/master/src/chainparams.cpp'
 
 
-class MonetaryUnitTestNet(MonetaryUnit):
+class MonetaryUnitTestNet(NoAPI, MonetaryUnit):
     """
     Class with all the necessary Diamond testing network information based on
     https://github.com/muecoin/MUECore/blob/master/src/chainparams.cpp

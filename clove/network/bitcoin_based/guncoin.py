@@ -1,7 +1,8 @@
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Guncoin(BitcoinBaseNetwork):
+class Guncoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Guncoin network information based on
     https://github.com/guncoin/guncoin/blob/master-1.4/src/chainparams.cpp

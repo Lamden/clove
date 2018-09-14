@@ -1,8 +1,9 @@
 
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Vivo(BitcoinBaseNetwork):
+class Vivo(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary VIVO network information based on
     http://www.github.com/vivocoin/vivo/blob/master/src/chainparams.cpp

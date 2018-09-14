@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class BitcoinGold(BitcoinBaseNetwork):
+class BitcoinGold(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary BTG network information based on
     https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp
@@ -21,7 +22,7 @@ class BitcoinGold(BitcoinBaseNetwork):
     source_code_url = 'https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp'
 
 
-class BitcoinGoldTestNet(BitcoinGold):
+class BitcoinGoldTestNet(NoAPI, BitcoinGold):
     """
     Class with all the necessary BTG testing network information based on
     https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp

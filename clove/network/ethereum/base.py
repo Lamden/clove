@@ -27,6 +27,8 @@ class EthereumBaseNetwork(BaseNetwork):
     """
     Class with all the necessary ETH network information and transaction building.
     """
+    API = True
+
     name = None
     symbols = ()
     web3_provider_address = None
@@ -257,6 +259,11 @@ class EthereumBaseNetwork(BaseNetwork):
         """ Returns Ethereum wallter object, which allows to keep address and priv key """
         return EthereumWallet(private_key)
 
+    @classmethod
+    def get_new_wallet(cls):
+        """ Returns new Ethereum wallter object, which allows to keep address and priv key """
+        return cls.get_wallet()
+
     @property
     def latest_block(self):
         return self.web3.eth.blockNumber
@@ -291,3 +298,9 @@ class EthereumBaseNetwork(BaseNetwork):
                     'secret': events[0]['data'][2:],
                     'transaction_hash': events[0]['transactionHash'].hex()
                 }
+
+    @classmethod
+    def get_transaction_url(cls, tx_hash: str) -> Optional[str]:
+        if not cls.blockexplorer_tx:
+            return
+        return cls.blockexplorer_tx.format(tx_hash)

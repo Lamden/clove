@@ -1,8 +1,9 @@
 
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class SolarCoin(BitcoinBaseNetwork):
+class SolarCoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary SLR network information based on
     http://www.github.com/onsightit/solarcoin/blob/master/src/chainparams.cpp
@@ -24,7 +25,7 @@ class SolarCoin(BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/onsightit/solarcoin/blob/master/src/chainparams.cpp'
 
 
-class SolarCoinTestNet(SolarCoin):
+class SolarCoinTestNet(NoAPI, SolarCoin):
     """
     Class with all the necessary SLR testing network information based on
     http://www.github.com/onsightit/solarcoin/blob/master/src/chainparams.cpp

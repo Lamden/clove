@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+* Separate adapter classes for each block explorer
+
 ## v1.2.5
 
 * Changing SCRIPT_ADDR for Monacoin network

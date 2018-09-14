@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Quark(BitcoinBaseNetwork):
+class Quark(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Quark (QRK) network information based on
     https://github.com/quark-project/quark/blob/master/src/chainparams.cpp
@@ -21,7 +22,7 @@ class Quark(BitcoinBaseNetwork):
     source_code_url = 'https://github.com/quark-project/quark/blob/master/src/chainparams.cpp'
 
 
-class QuarkTestNet(Quark):
+class QuarkTestNet(NoAPI, Quark):
     """
     Class with all the necessary Quark (QRK) testing network information based on
     https://github.com/quark-project/quark/blob/master/src/chainparams.cpp

@@ -1,8 +1,9 @@
 
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Netko(BitcoinBaseNetwork):
+class Netko(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary NETKO network information based on
     http://www.github.com/netkotech/netko/blob/master/src/chainparams.cpp

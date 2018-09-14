@@ -1,7 +1,8 @@
+from clove.block_explorer.insight import InsightAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Ravencoin(BitcoinBaseNetwork):
+class Ravencoin(InsightAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary RVN network information based on
     https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp
@@ -21,7 +22,7 @@ class Ravencoin(BitcoinBaseNetwork):
         'SECRET_KEY': 128
     }
     source_code_url = 'https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp'
-    blockexplorer_tx = 'http://raven-blockchain.info/tx/{0}'
+    api_url = 'https://ravencoin.network'
 
 
 class RavencoinTestNet(Ravencoin):
@@ -43,3 +44,4 @@ class RavencoinTestNet(Ravencoin):
         'SECRET_KEY': 239
     }
     testnet = True
+    api_url = 'https://testnet.ravencoin.network'

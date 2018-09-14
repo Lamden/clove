@@ -1,7 +1,8 @@
+from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Blocknet(BitcoinBaseNetwork):
+class Blocknet(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Blocknet (BLOCK) network information based on
     https://github.com/BlocknetDX/BlockDX/blob/master/src/chainparams.cpp

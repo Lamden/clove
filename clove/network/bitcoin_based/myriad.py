@@ -1,8 +1,9 @@
 
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Myriad(BitcoinBaseNetwork):
+class Myriad(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary XMY network information based on
     http://www.github.com/myriadteam/myriadcoin/blob/master/src/chainparams.cpp
@@ -23,7 +24,7 @@ class Myriad(BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/myriadteam/myriadcoin/blob/master/src/chainparams.cpp'
 
 
-class MyriadTestNet(Myriad):
+class MyriadTestNet(NoAPI, Myriad):
     """
     Class with all the necessary XMY testing network information based on
     http://www.github.com/myriadteam/myriadcoin/blob/master/src/chainparams.cpp

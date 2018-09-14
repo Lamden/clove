@@ -1,7 +1,8 @@
+from clove.block_explorer.blockcypher import BlockcypherAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class Bitcoin(BitcoinBaseNetwork):
+class Bitcoin(BlockcypherAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary BTC network information based on
     https://github.com/bitcoin/bitcoin/blob/master/src/chainparams.cpp

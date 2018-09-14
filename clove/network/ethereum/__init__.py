@@ -1,13 +1,13 @@
 import os
 
+from clove.block_explorer.etherscan import EtherscanAPI
 from clove.network.ethereum.base import EthereumBaseNetwork
 from clove.network.ethereum_based.kovan_tokens import kovan_tokens
 from clove.network.ethereum_based.mainnet_tokens import tokens
-from clove.utils.external_source import find_redeem_token_transaction_on_etherscan, find_redeem_transaction_on_etherscan
 from clove.utils.logging import logger
 
 
-class Ethereum(EthereumBaseNetwork):
+class Ethereum(EtherscanAPI, EthereumBaseNetwork):
 
     name = 'ethereum'
     symbols = ('ETH',)
@@ -25,22 +25,6 @@ class Ethereum(EthereumBaseNetwork):
             logger.warning('INFURA_TOKEN environment variable was not set.')
             raise ValueError('INFURA_TOKEN environment variable was not set.')
         return f'https://{self.infura_network}.infura.io/{token}'
-
-    def find_redeem_transaction(self, recipient_address: str, contract_address: str, value: int):
-        return find_redeem_transaction_on_etherscan(
-            recipient_address=recipient_address,
-            contract_address=contract_address,
-            value=value,
-            subdomain=self.etherscan_api_subdomain,
-        )
-
-    def find_redeem_token_transaction(self, recipient_address: str, token_address: str, value: int):
-        return find_redeem_token_transaction_on_etherscan(
-            recipient_address=recipient_address,
-            token_address=token_address,
-            value=value,
-            subdomain=self.etherscan_api_subdomain,
-        )
 
 
 class EthereumTestnet(Ethereum):

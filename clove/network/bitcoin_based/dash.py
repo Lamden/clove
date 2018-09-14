@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.blockcypher import BlockcypherAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Dash(BitcoinBaseNetwork):
+class Dash(BlockcypherAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary DASH network information based on
     https://github.com/dashpay/dash/blob/master/src/chainparams.cpp
@@ -26,7 +27,7 @@ class Dash(BitcoinBaseNetwork):
     blockexplorer_tx = 'https://live.blockcypher.com/dash/tx/{0}/'
 
 
-class DashTestNet(Dash):
+class DashTestNet(NoAPI, Dash):
     """
     Class with all the necessary DASH testing network information based on
     https://github.com/dashpay/dash/blob/master/src/chainparams.cpp

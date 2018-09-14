@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Litecoin(BitcoinBaseNetwork):
+class Litecoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary LTC network information based on
     https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp
@@ -27,7 +28,7 @@ class Litecoin(BitcoinBaseNetwork):
     blockexplorer_tx = 'https://live.blockcypher.com/ltc/tx/{0}/'
 
 
-class LitecoinTestNet(Litecoin):
+class LitecoinTestNet(NoAPI, Litecoin):
     """
     Class with all the necessary LTC testing network information based on
     https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp

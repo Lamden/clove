@@ -1,7 +1,8 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Particl(BitcoinBaseNetwork):
+class Particl(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Particl PART network information based on
     https://github.com/particl/particl-core/blob/master/src/chainparams.cpp
@@ -21,7 +22,7 @@ class Particl(BitcoinBaseNetwork):
     source_code_url = 'https://github.com/particl/particl-core/blob/master/src/chainparams.cpp'
 
 
-class ParticlTestNet(Particl):
+class ParticlTestNet(NoAPI, Particl):
     """
     Class with all the necessary Particl PART testing network information based on
     https://github.com/particl/particl-core/blob/master/src/chainparams.cpp

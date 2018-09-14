@@ -1,8 +1,9 @@
 
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class NevaCoin(BitcoinBaseNetwork):
+class NevaCoin(CryptoidAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary NEVA network information based on
     http://www.github.com/Nevacoin/nevacoin/blob/master/src/chainparams.cpp
@@ -22,7 +23,7 @@ class NevaCoin(BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/Nevacoin/nevacoin/blob/master/src/chainparams.cpp'
 
 
-class NevaCoinTestNet(NevaCoin):
+class NevaCoinTestNet(NoAPI, NevaCoin):
     """
     Class with all the necessary NEVA testing network information based on
     http://www.github.com/Nevacoin/nevacoin/blob/master/src/chainparams.cpp
