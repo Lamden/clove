@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.6
 
 * Separate adapter classes for each block explorer
 
