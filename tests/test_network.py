@@ -15,6 +15,7 @@ from clove.utils.search import get_network_by_symbol
 
 @mark.parametrize('network', networks)
 def test_bitcoin_based_network_definitions(network):
+    assert isinstance(network.API, bool)
     assert isinstance(network.name, str)
     assert isinstance(network.symbols, tuple)
     assert isinstance(network().default_symbol, str)
@@ -33,6 +34,8 @@ def test_bitcoin_based_network_definitions(network):
     assert isinstance(network.message_start, bytes)
     assert isinstance(network.base58_prefixes, dict)
     assert isinstance(network.source_code_url, str)
+    if network.bitcoin_based and network.API:
+        assert isinstance(network.api_url, str)
     if network.blockexplorer_tx:
         assert isinstance(network.blockexplorer_tx, str)
 
