@@ -265,7 +265,7 @@ class EthereumBaseNetwork(BaseNetwork):
         return cls.get_wallet()
 
     @property
-    def latest_block(self):
+    def get_latest_block(self):
         return self.web3.eth.blockNumber
 
     def find_redeem_transaction(self, recipient_address: str, contract_address: str, value: int):

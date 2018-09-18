@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
-from clove.network import Ravencoin
+from clove.network import Monacoin, Ravencoin
 
 
 @patch('clove.block_explorer.insight.clove_req_json')
-def test_latest_block(request_mock):
+def test_get_latest_block(request_mock):
     request_mock.return_value = {
         "info": {
             "version": 2000400,
@@ -22,7 +22,7 @@ def test_latest_block(request_mock):
             "reward": 500000000000
         }
     }
-    assert Ravencoin().latest_block == 360681
+    assert Ravencoin.get_latest_block() == 360681
 
 
 @patch('clove.block_explorer.insight.clove_req_json')
@@ -90,7 +90,7 @@ def test_get_transaction(request_mock):
         "fees": 0.01
     }
     request_mock.return_value = tx_details
-    tx = Ravencoin().get_transaction('123')
+    tx = Ravencoin.get_transaction('123')
     assert tx == tx_details
 
 
@@ -129,17 +129,24 @@ def test_get_utxo(request_mock):
     assert utxo[0].secret is None
     assert utxo[0].refund is False
 
-    utxo = Ravencoin().get_utxo(address='RM7w75BcC21LzxRe62jy8JhFYykRedqu8k', amount=11)
+    utxo = Ravencoin.get_utxo(address='RM7w75BcC21LzxRe62jy8JhFYykRedqu8k', amount=11)
     assert len(utxo) == 2
 
 
 @patch('clove.block_explorer.insight.clove_req_json')
 def test_get_balance(request_mock):
     request_mock.return_value = 1899000000
-    balance = Ravencoin().get_balance('RM7w75BcC21LzxRe62jy8JhFYykRedqu8k')
+    balance = Ravencoin.get_balance('RM7w75BcC21LzxRe62jy8JhFYykRedqu8k')
     assert balance == 18.99
 
 
 def test_get_transaction_url():
-    url = Ravencoin().get_transaction_url('123')
+    url = Ravencoin.get_transaction_url('123')
     assert url == 'https://ravencoin.network/tx/123'
+
+
+@patch('clove.block_explorer.insight.clove_req_json')
+def test_get_fee(request_mock):
+    request_mock.return_value = {"1": 0.00020451}
+    balance = Monacoin.get_fee()
+    assert balance == 0.00020451
