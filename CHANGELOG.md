@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.2.8
+
+* Fix for subdomains in etherscan url
+
 ## v1.2.7
 
 * Counting fee moved from Clove API to Clove
