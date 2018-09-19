@@ -1,11 +1,11 @@
 from bitcoin.wallet import CBitcoinSecretError
 
-from clove.block_explorer.monacoin import MonacoinAPI
+from clove.block_explorer.insight import InsightAPIv4
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 from clove.utils.bitcoin import auto_switch_params
 
 
-class Monacoin(MonacoinAPI, BitcoinBaseNetwork):
+class Monacoin(InsightAPIv4, BitcoinBaseNetwork):
     """
     Class with all the necessary MONA network information based on
     https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp
@@ -25,7 +25,8 @@ class Monacoin(MonacoinAPI, BitcoinBaseNetwork):
     }
     source_code_url = 'https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp'
     alternative_secret_key = 178
-    blockexplorer_tx = 'https://mona.chainseeker.info/tx/{0}'
+    api_url = 'https://insight.electrum-mona.org'
+    api_prefix = '/insight-api-monacoin'
 
     @classmethod
     @auto_switch_params()
@@ -36,6 +37,10 @@ class Monacoin(MonacoinAPI, BitcoinBaseNetwork):
             cls.base58_prefixes['SECRET_KEY'], cls.alternative_secret_key = \
                 cls.alternative_secret_key, cls.base58_prefixes['SECRET_KEY']
             return super().get_wallet(*args, **kwargs)
+
+    @classmethod
+    def get_transaction_url(cls, tx_id: str) -> str:
+        return f'{cls.api_url}/insight/tx/{tx_id}'
 
 
 class MonacoinTestNet(NoAPI, Monacoin):

@@ -16,9 +16,10 @@ class BlockcypherAPI(BaseAPI):
         chain = 'test3' if cls.testnet else 'main'
         return f'{cls.api_url}/v1/{cls.symbols[0].lower()}/{chain}'
 
-    @property
-    def latest_block(self) -> int:
-        return clove_req_json(f'{self.blockcypher_url()}')['height']
+    @classmethod
+    def get_latest_block(cls) -> int:
+        '''Returns the number of the latest block.'''
+        return clove_req_json(f'{cls.blockcypher_url()}')['height']
 
     @classmethod
     def get_transaction(cls, tx_address: str) -> dict:
@@ -60,7 +61,7 @@ class BlockcypherAPI(BaseAPI):
     def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:
         data = clove_req_json(f'{cls.blockcypher_url()}/addrs/{contract_address}/full')
         if not data:
-            logger.debug('Unexpected response from blockcypher')
+            logger.error('Unexpected response from blockcypher')
             raise ValueError('Unexpected response from blockcypher')
 
         transactions = data['txs']
@@ -71,10 +72,10 @@ class BlockcypherAPI(BaseAPI):
         return cls.extract_secret(scriptsig=transactions[0]['inputs'][0]['script'])
 
     @classmethod
-    def get_balance(cls, wallet_address: str) -> float:
+    def get_balance(cls, wallet_address: str) -> Optional[float]:
         data = clove_req_json(f'{cls.blockcypher_url()}/addrs/{wallet_address}/balance')
         if data is None:
-            logger.debug('Could not get details for address %s in %s network', wallet_address, cls.symbols[0])
+            logger.error('Could not get details for address %s in %s network', wallet_address, cls.symbols[0])
             return
         return from_base_units(data['balance'] or data['unconfirmed_balance'])
 
@@ -86,3 +87,13 @@ class BlockcypherAPI(BaseAPI):
             network_name = cls.symbols[0].lower()
         url = cls.api_url.replace('api.', 'live.')
         return f'{url}/{network_name}/tx/{tx_hash}/'
+
+    @classmethod
+    def get_fee(cls) -> Optional[float]:
+        '''Returns actual fee per kb.'''
+        response = clove_req_json(cls.blockcypher_url())
+        fee = response.get('high_fee_per_kb')
+        if not fee:
+            logger.error('Cannot find the right key (high_fee_per_kb) while getting fee in blockcypher.')
+            return
+        return from_base_units(fee)

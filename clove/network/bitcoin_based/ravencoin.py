@@ -1,8 +1,9 @@
-from clove.block_explorer.insight import InsightAPI
+from clove.block_explorer.insight import InsightAPIv4
 from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.utils.external_source import clove_req_json
 
 
-class Ravencoin(InsightAPI, BitcoinBaseNetwork):
+class Ravencoin(InsightAPIv4, BitcoinBaseNetwork):
     """
     Class with all the necessary RVN network information based on
     https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp
@@ -23,6 +24,11 @@ class Ravencoin(InsightAPI, BitcoinBaseNetwork):
     }
     source_code_url = 'https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp'
     api_url = 'https://ravencoin.network'
+    api_prefix = '/api'
+
+    @classmethod
+    def get_fee(cls):
+        return clove_req_json(f'{cls.api_url}{cls.api_prefix}/utils/estimatesmartfee?nbBlocks=1')['1']
 
 
 class RavencoinTestNet(Ravencoin):

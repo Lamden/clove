@@ -37,7 +37,7 @@ class EthereumContract(object):
         self.secret_hash = self.inputs['_hash'].hex()
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
         self.block_number = self.tx_dict['blockNumber']
-        self.confirmations = self.network.latest_block - self.block_number
+        self.confirmations = self.network.get_latest_block - self.block_number
 
         if self.is_token_contract:
             self.value_base_units = self.inputs['_value']

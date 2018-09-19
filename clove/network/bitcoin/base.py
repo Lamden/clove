@@ -452,8 +452,8 @@ class NoAPI(object):
 
     API = False
 
-    @property
-    def latest_block(self):
+    @classmethod
+    def get_latest_block(cls):
         raise NotImplementedError
 
     @staticmethod

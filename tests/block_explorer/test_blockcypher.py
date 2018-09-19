@@ -4,7 +4,7 @@ from clove.network import BitcoinTestNet
 
 
 @patch('clove.block_explorer.blockcypher.clove_req_json')
-def test_latest_block(request_mock):
+def test_get_latest_block(request_mock):
     request_mock.return_value = {
         "name": "BTC.test3",
         "height": 1413369,
@@ -21,7 +21,7 @@ def test_latest_block(request_mock):
         "last_fork_height": 1412892,
         "last_fork_hash": "00000000e7db755cf751a8811cc612b07bf2b519180cca85e25c45db5ce77a3e"
     }
-    assert BitcoinTestNet().latest_block == 1413369
+    assert BitcoinTestNet.get_latest_block() == 1413369
 
 
 @patch('clove.block_explorer.blockcypher.clove_req_json')
@@ -232,3 +232,25 @@ def test_get_balance(request_mock):
 def test_get_transaction_url():
     url = BitcoinTestNet().get_transaction_url('123')
     assert url == 'https://live.blockcypher.com/btc-testnet/tx/123/'
+
+
+@patch('clove.block_explorer.blockcypher.clove_req_json')
+def test_get_fee(request_mock):
+    request_mock.return_value = {
+        "name": "BTC.main",
+        "height": 541792,
+        "hash": "000000000000000000266590070a70d03c4126a35ed589dab1cd3bd70d6acdf7",
+        "time": "2018-09-17T12:28:08.802592156Z",
+        "latest_url": "https://api.blockcypher.com/v1/btc/main/blocks/000000000000000000266590070a70d03c4126a35ed589dab1cd3bd70d6acdf7",  # noqa: E501
+        "previous_hash": "0000000000000000000fa8e7b6fde5321bca0533f3e680e38bed1e764fd61844",
+        "previous_url": "https://api.blockcypher.com/v1/btc/main/blocks/0000000000000000000fa8e7b6fde5321bca0533f3e680e38bed1e764fd61844",  # noqa: E501
+        "peer_count": 1045,
+        "unconfirmed_count": 3608,
+        "high_fee_per_kb": 12957,
+        "medium_fee_per_kb": 10000,
+        "low_fee_per_kb": 7000,
+        "last_fork_height": 540801,
+        "last_fork_hash": "0000000000000000001b934f570a5a225aa47f7f127ec13456e0871ec10b9a8f"
+    }
+    balance = BitcoinTestNet().get_fee()
+    assert balance == 0.00012957

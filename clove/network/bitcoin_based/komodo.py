@@ -1,7 +1,7 @@
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Komodo(BitcoinBaseNetwork):
+class Komodo(BitcoinBaseNetwork, NoAPI):
     """
     Class with all the necessary KMD network information based on
     https://github.com/jl777/komodo/blob/master/src/chainparams.cpp

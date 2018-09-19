@@ -1,8 +1,14 @@
 # CHANGELOG
 
+## Unreleased
+
+* Counting fee moved from Clove API to Clove
+
+
 ## v1.2.6
 
 * Separate adapter classes for each block explorer
+
 
 ## v1.2.5
 

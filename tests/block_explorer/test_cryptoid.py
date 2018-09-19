@@ -4,9 +4,9 @@ from clove.network import Litecoin
 
 
 @patch('clove.block_explorer.cryptoid.clove_req_json')
-def test_latest_block(request_mock):
+def test_get_latest_block(request_mock):
     request_mock.return_value = 7312974
-    assert Litecoin().latest_block == 7312974
+    assert Litecoin.get_latest_block() == 7312974
 
 
 @patch('clove.block_explorer.cryptoid.clove_req_json')

@@ -54,9 +54,9 @@ class BitcoinContract(object):
             if 'confirmations' in tx_json:
                 self.confirmations = tx_json['confirmations']
             elif 'block_height' in tx_json:
-                self.confirmations = self.network.latest_block - tx_json['block_height']
+                self.confirmations = self.network.get_latest_block() - tx_json['block_height']
             elif 'block' in tx_json:
-                self.confirmations = self.network.latest_block - tx_json['block']
+                self.confirmations = self.network.get_latest_block() - tx_json['block']
 
         if not self.vout:
             raise ValueError('Given transaction has no outputs.')
