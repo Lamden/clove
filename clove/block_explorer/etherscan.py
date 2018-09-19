@@ -18,7 +18,7 @@ class EtherscanAPI(BaseAPI):
             raise ValueError('API key for etherscan is required.')
 
         data = clove_req_json(
-            f'http://{self.subdomain}.etherscan.io/api?module=account&action=txlistinternal'
+            f'http://{self.etherscan_api_subdomain}.etherscan.io/api?module=account&action=txlistinternal'
             f'&address={recipient_address}&apikey={etherscan_api_key}'
         )
 
@@ -38,7 +38,7 @@ class EtherscanAPI(BaseAPI):
             raise ValueError('API key for etherscan is required.')
 
         data = clove_req_json(
-            f'http://{self.subdomain}.etherscan.io/api?module=account&action=tokentx'
+            f'http://{self.etherscan_api_subdomain}.etherscan.io/api?module=account&action=tokentx'
             f'&contractaddress={token_address}&address={recipient_address}'
             f'&apikey={etherscan_api_key}'
         )
