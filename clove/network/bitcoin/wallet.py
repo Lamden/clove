@@ -13,8 +13,8 @@ class BitcoinWallet(object):
 
     def __init__(self, private_key=None, encrypted_private_key=None, password=None):
         if private_key is None and encrypted_private_key is None:
-            _, secret_hash = generate_secret_with_hash()
-            self.private_key = CBitcoinSecret.from_secret_bytes(secret=secret_hash)
+            secret, _ = generate_secret_with_hash()
+            self.private_key = CBitcoinSecret.from_secret_bytes(secret=secret)
 
         elif private_key is not None:
             self.private_key = CBitcoinSecret(private_key)

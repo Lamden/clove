@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+* Generating new wallets based on longer secret
+
 ## v1.2.8
 
 * Fix for subdomains in etherscan url
