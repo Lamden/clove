@@ -7,7 +7,7 @@ import pytest
 from pytest import raises
 
 from clove.constants import SIGNATURE_SIZE
-from clove.network import BitcoinTestNet, EthereumTestnet
+from clove.network import BitcoinTestNet, EthereumTestnet, Monacoin
 from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction, BitcoinTransaction
 from clove.utils.bitcoin import to_base_units
 
@@ -292,6 +292,95 @@ def test_audit_contract_by_address_blockcypher(get_balance_mock, get_transaction
         ),
         'value': 0.01,
         'value_text': '0.01000000 BTC'
+    }
+
+
+@patch('clove.block_explorer.insight.InsightAPIv4.get_transaction')
+@patch('clove.block_explorer.insight.InsightAPIv4.get_balance', return_value=0.01)
+def test_audit_contract_by_address_insight(get_balance_mock, get_transaction_mock):
+    get_transaction_mock.return_value = {
+        'txid': '693b04a205a8b87942bff07f8855f00e7a4378b839c8a264dfc849e8331ba6d4',
+        'version': 1,
+        'locktime': 0,
+        'vin': [{
+            'txid': '61042a641baf7db7b15fb80bac5c85b5346fc8a383b9b634baf006fb7b762997',
+            'vout': 0,
+            'sequence': 0,
+            'n': 0,
+            'scriptSig': {
+                'hex': '483045022100ddfb15614affeeee2fc7667956d7d51237640dc0c29a3b1adfb8b9fc1a2a352f02206147ccdfda804d751f4df9282b5d7d0bdc1b2f9d6180332251566040a98d445501210240917aa65f12d8051abae7e8e98eea3b085a766a2dd7bd7f71c8121304cca298',  # noqa: E501
+                'asm': '3045022100ddfb15614affeeee2fc7667956d7d51237640dc0c29a3b1adfb8b9fc1a2a352f02206147ccdfda804d751f4df9282b5d7d0bdc1b2f9d6180332251566040a98d4455[ALL] 0240917aa65f12d8051abae7e8e98eea3b085a766a2dd7bd7f71c8121304cca298'   # noqa: E501
+            },
+            'addr': 'MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP',
+            'valueSat': 22234100,
+            'value': 0.222341,
+            'doubleSpentTxID': None
+         }],
+        'vout': [
+            {
+                'value': '0.01000000',
+                'n': 0,
+                'scriptPubKey': {
+                    'hex': 'a914d8fadb4bb1b13492e966f02b2fc482e81bb62ea787',
+                    'asm': 'OP_HASH160 d8fadb4bb1b13492e966f02b2fc482e81bb62ea7 OP_EQUAL',
+                    'addresses': ['PUNTdERe8wX5Pnb42siEshZ41VY2zpzJXj'],
+                    'type': 'scripthash'
+                },
+                'spentTxId': None,
+                'spentIndex': None,
+                'spentHeight': None
+            },
+            {
+                'value': '0.21129707',
+                'n': 1,
+                'scriptPubKey': {
+                    'hex': '76a914a96a92963b7a65ac904875cfa5d535b31158882788ac',
+                    'asm': 'OP_DUP OP_HASH160 a96a92963b7a65ac904875cfa5d535b311588827 OP_EQUALVERIFY OP_CHECKSIG',
+                    'addresses': ['MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP'],
+                    'type': 'pubkeyhash'
+                },
+                'spentTxId': None,
+                'spentIndex': None,
+                'spentHeight': None
+            }
+        ],
+        'blockhash': '4f31e74f6c1187b7bdeb6887a5b334ba8875539b511cd67f07ab57c00a2e3df4',
+        'blockheight': 1445790,
+        'confirmations': 50,
+        'time': 1537543050,
+        'blocktime': 1537543050,
+        'valueOut': 0.22129707,
+        'size': 224,
+        'valueIn': 0.222341,
+        'fees': 0.00104393
+    }
+
+    mona_network = Monacoin()
+    contract = mona_network.audit_contract(
+        contract=(
+            '63a6141c1a607a3ab21817158df2902c928baf43a9da438876a914fbed00c1502fded3dfa2524f8672'
+            'ee013bb3f28f6704c9aba75bb17576a914a96a92963b7a65ac904875cfa5d535b3115888276888ac'
+        ),
+        transaction_address='693b04a205a8b87942bff07f8855f00e7a4378b839c8a264dfc849e8331ba6d4'
+    )
+    details = contract.show_details()
+
+    confirmations = details.pop('confirmations')
+    assert type(confirmations) is int
+    assert confirmations > 0
+
+    assert details == {
+        'contract_address': 'PUNTdERe8wX5Pnb42siEshZ41VY2zpzJXj',
+        'transaction_address': '693b04a205a8b87942bff07f8855f00e7a4378b839c8a264dfc849e8331ba6d4',
+        'transaction_link':
+            'https://insight.electrum-mona.org/'
+            'insight/tx/693b04a205a8b87942bff07f8855f00e7a4378b839c8a264dfc849e8331ba6d4',
+        'locktime': datetime(2018, 9, 23, 15, 5, 45),
+        'recipient_address': 'MWsDkqHLonS5KfbRnRu3feByD9qkuj44Ye',
+        'refund_address': 'MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP',
+        'secret_hash': '1c1a607a3ab21817158df2902c928baf43a9da43',
+        'value': 0.01,
+        'value_text': '0.01000000 MONA'
     }
 
 

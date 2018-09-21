@@ -44,6 +44,11 @@ class BitcoinContract(object):
                 # transaction from blockcypher or raven explorer
                 self.tx = self.network.deserialize_raw_transaction(tx_json['hex'])
                 self.vout = self.tx.vout[0]
+            elif 'vout' in tx_json:
+                # transaction from insight
+                cscript = script.CScript.fromhex(tx_json['vout'][0]['scriptPubKey']['hex'])
+                nValue = to_base_units(float(tx_json['vout'][0]['value']))
+                self.vout = CTxOut(nValue, cscript)
             else:
                 # transaction from cryptoid
                 incorrect_cscript = script.CScript.fromhex(tx_json['outputs'][0]['script'])
