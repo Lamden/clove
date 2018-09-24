@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import Optional
 
-from bitcoin.core import CTxOut, b2lx, b2x, script
+from bitcoin.core import b2lx, b2x, script
 from bitcoin.wallet import CBitcoinAddress, P2PKHBitcoinAddress
 
 from clove.network.bitcoin.transaction import BitcoinTransaction
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import auto_switch_params, from_base_units, to_base_units
+from clove.utils.bitcoin import auto_switch_params, from_base_units
 
 
 class BitcoinContract(object):
@@ -40,28 +40,9 @@ class BitcoinContract(object):
             tx_json = self.network.get_transaction(transaction_address)
             if not tx_json:
                 raise ValueError('No transaction found under given address.')
-            if 'hex' in tx_json:
-                # transaction from blockcypher or raven explorer
-                self.tx = self.network.deserialize_raw_transaction(tx_json['hex'])
-                self.vout = self.tx.vout[0]
-            elif 'vout' in tx_json:
-                # transaction from insight
-                cscript = script.CScript.fromhex(tx_json['vout'][0]['scriptPubKey']['hex'])
-                nValue = to_base_units(float(tx_json['vout'][0]['value']))
-                self.vout = CTxOut(nValue, cscript)
-            else:
-                # transaction from cryptoid
-                incorrect_cscript = script.CScript.fromhex(tx_json['outputs'][0]['script'])
-                correct_cscript = script.CScript([script.OP_HASH160, list(incorrect_cscript)[2], script.OP_EQUAL])
-                nValue = to_base_units(tx_json['outputs'][0]['amount'])
-                self.vout = CTxOut(nValue, correct_cscript)
 
-            if 'confirmations' in tx_json:
-                self.confirmations = tx_json['confirmations']
-            elif 'block_height' in tx_json:
-                self.confirmations = self.network.get_latest_block() - tx_json['block_height']
-            elif 'block' in tx_json:
-                self.confirmations = self.network.get_latest_block() - tx_json['block']
+            self.vout = self.network.get_first_vout_from_tx_json(tx_json)
+            self.confirmations = self.network.get_confirmations_from_tx_json(tx_json)
 
         if not self.vout:
             raise ValueError('Given transaction has no outputs.')
