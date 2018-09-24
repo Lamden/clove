@@ -1,5 +1,7 @@
 from typing import Optional
 
+from bitcoin.core import CTxOut
+
 from clove.block_explorer.base import BaseAPI
 from clove.network.bitcoin.utxo import Utxo
 from clove.utils.bitcoin import from_base_units
@@ -97,3 +99,8 @@ class BlockcypherAPI(BaseAPI):
             logger.error('Cannot find the right key (high_fee_per_kb) while getting fee in blockcypher.')
             return
         return from_base_units(fee)
+
+    @classmethod
+    def get_first_vout_from_tx_json(cls, tx_json: dict) -> CTxOut:
+        tx = cls.deserialize_raw_transaction(tx_json['hex'])
+        return tx.vout[0]

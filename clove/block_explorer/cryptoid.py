@@ -1,9 +1,11 @@
 import os
 from typing import Optional
 
+from bitcoin.core import CTxOut, script
+
 from clove.block_explorer.base import BaseAPI
 from clove.network.bitcoin.utxo import Utxo
-from clove.utils.bitcoin import from_base_units
+from clove.utils.bitcoin import from_base_units, to_base_units
 from clove.utils.external_source import clove_req_json
 from clove.utils.logging import logger
 
@@ -140,3 +142,10 @@ class CryptoidAPI(BaseAPI):
             fees.append(tx_fee_per_kb)
 
         return round(sum(fees) / len(fees), 8) if fees else None
+
+    @classmethod
+    def get_first_vout_from_tx_json(cls, tx_json: dict) -> CTxOut:
+        incorrect_cscript = script.CScript.fromhex(tx_json['outputs'][0]['script'])
+        correct_cscript = script.CScript([script.OP_HASH160, list(incorrect_cscript)[2], script.OP_EQUAL])
+        nValue = to_base_units(tx_json['outputs'][0]['amount'])
+        return CTxOut(nValue, correct_cscript)
