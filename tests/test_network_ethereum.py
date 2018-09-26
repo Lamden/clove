@@ -60,6 +60,13 @@ def test_eth_audit_contract(transaction_mock, infura_token, web3_request_mock):
     }
 
 
+@patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', return_value=None)
+def test_eth_audit_nonexisting_contract(transaction_mock, infura_token, web3_request_mock):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0x8948a13275c5677ab3043480df69a66236bbd1ceb56b3779f7070c0112da419b')
+    assert contract is None
+
+
 @patch('clove.network.ethereum.base.EthereumBaseNetwork.get_transaction', side_effect=(eth_initial_transaction, ))
 def test_participate_transaction(transaction_mock, infura_token, web3_request_mock):
     network = EthereumTestnet()
