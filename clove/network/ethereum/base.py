@@ -156,6 +156,9 @@ class EthereumBaseNetwork(BaseNetwork):
 
     def audit_contract(self, tx_address: str) -> EthereumContract:
         tx_dict = self.get_transaction(tx_address)
+        if not tx_dict:
+            logger.info(f'Cannot audit contract, no such transaction: {tx_address} ({self.name})')
+            return
         return EthereumContract(self, tx_dict)
 
     def extract_secret_from_redeem_transaction(self, tx_address: str) -> str:

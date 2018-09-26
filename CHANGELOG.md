@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Generating new wallets based on longer secret
+* Fix for auditing non-existing contract in Ethereum
 
 ## v1.2.8
 
