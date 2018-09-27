@@ -1,9 +1,7 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class LanaCoin(CryptoidAPI, BitcoinBaseNetwork):
+class LanaCoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary LANA network information based on
     http://www.github.com/LanaCoin/lanacoin/blob/master/src/chainparams.cpp
@@ -24,7 +22,7 @@ class LanaCoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/LanaCoin/lanacoin/blob/master/src/chainparams.cpp'
 
 
-class LanaCoinTestNet(NoAPI, LanaCoin):
+class LanaCoinTestNet(LanaCoin):
     """
     Class with all the necessary LANA testing network information based on
     http://www.github.com/LanaCoin/lanacoin/blob/master/src/chainparams.cpp

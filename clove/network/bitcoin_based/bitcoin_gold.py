@@ -1,8 +1,8 @@
-from clove.block_explorer.cryptoid import CryptoidAPI
+from clove.block_explorer.insight import InsightAPIv4
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class BitcoinGold(CryptoidAPI, BitcoinBaseNetwork):
+class BitcoinGold(InsightAPIv4, BitcoinBaseNetwork):
     """
     Class with all the necessary BTG network information based on
     https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp
@@ -20,6 +20,8 @@ class BitcoinGold(CryptoidAPI, BitcoinBaseNetwork):
         'SECRET_KEY': 128
     }
     source_code_url = 'https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp'
+    api_url = 'https://explorer.bitcoingold.org'
+    api_prefix = '/insight-api'
 
 
 class BitcoinGoldTestNet(NoAPI, BitcoinGold):

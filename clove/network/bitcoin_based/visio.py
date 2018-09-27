@@ -1,9 +1,7 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Visio(CryptoidAPI, BitcoinBaseNetwork):
+class Visio(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary VISIO network information based on
     http://www.github.com/Fladirmacht/visioX/blob/master/src/chainparams.cpp

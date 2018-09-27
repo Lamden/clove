@@ -1,8 +1,7 @@
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class BlackCoin(CryptoidAPI, BitcoinBaseNetwork):
+class BlackCoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary BlackCoin network information based on
     https://github.com/CoinBlack/blackcoin/blob/master/src/chainparams.cpp

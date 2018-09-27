@@ -1,8 +1,7 @@
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Dopecoin(CryptoidAPI, BitcoinBaseNetwork):
+class Dopecoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Dopecoin (DOPE) network information based on
     https://github.com/dopecoin-dev/DopeCoinGold/blob/master/src/chainparams.cpp
