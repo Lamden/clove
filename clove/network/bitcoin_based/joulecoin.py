@@ -1,9 +1,8 @@
 
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Joulecoin(CryptoidAPI, BitcoinBaseNetwork):
+class Joulecoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary XJO network information based on
     http://www.github.com/joulecoin/joulecoin/blob/master/src/chainparams.cpp

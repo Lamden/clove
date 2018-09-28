@@ -1,9 +1,7 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class AudioCoin(CryptoidAPI, BitcoinBaseNetwork):
+class AudioCoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary ADC network information based on
     http://www.github.com/aurovine/audiocoin/blob/master/src/chainparams.cpp
@@ -23,7 +21,7 @@ class AudioCoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/aurovine/audiocoin/blob/master/src/chainparams.cpp'
 
 
-class AudioCoinTestNet(NoAPI, AudioCoin):
+class AudioCoinTestNet(AudioCoin):
     """
     Class with all the necessary ADC testing network information based on
     http://www.github.com/aurovine/audiocoin/blob/master/src/chainparams.cpp

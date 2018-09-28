@@ -1,8 +1,7 @@
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class IVCCoin(CryptoidAPI, BitcoinBaseNetwork):
+class IVCCoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary IVC_Coin network information based on
     https://github.com/invictus2082/invictus/blob/master/src/chainparams.cpp

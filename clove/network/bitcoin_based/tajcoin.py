@@ -1,9 +1,7 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class TajCoin(CryptoidAPI, BitcoinBaseNetwork):
+class TajCoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary TAJ network information based on
     http://www.github.com/Taj-Coin/tajcoin/blob/master/src/chainparams.cpp

@@ -1,9 +1,7 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Sexcoin(CryptoidAPI, BitcoinBaseNetwork):
+class Sexcoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary SXC network information based on
     http://www.github.com/sexcoin-project/sexcoin/blob/master/src/chainparams.cpp
@@ -22,7 +20,7 @@ class Sexcoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/sexcoin-project/sexcoin/blob/master/src/chainparams.cpp'
 
 
-class SexcoinTestNet(NoAPI, Sexcoin):
+class SexcoinTestNet(Sexcoin):
     """
     Class with all the necessary SXC testing network information based on
     http://www.github.com/sexcoin-project/sexcoin/blob/master/src/chainparams.cpp

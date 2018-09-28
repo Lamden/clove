@@ -1,9 +1,7 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class SwagBucks(CryptoidAPI, BitcoinBaseNetwork):
+class SwagBucks(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary BUCKS network information based on
     http://www.github.com/pinkmagicdev/SwagBucks/blob/master/src/chainparams.cpp

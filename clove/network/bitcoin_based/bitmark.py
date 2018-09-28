@@ -1,8 +1,7 @@
-from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Bitmark(CryptoidAPI, BitcoinBaseNetwork):
+class Bitmark(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Bitmark network information based on
     https://github.com/project-bitmark/bitmark/blob/master/src/chainparams.cpp

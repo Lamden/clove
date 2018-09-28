@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+* Switching bitcoin-gold to Insight API
+* Marking 23 networks as NoAPI
+
 ## v1.2.9
 
 * Generating new wallets based on longer secret
