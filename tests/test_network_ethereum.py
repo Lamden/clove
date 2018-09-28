@@ -2,15 +2,19 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from unittest.mock import patch
 
+from eth_abi import encode_abi
 import pytest
 from pytest import mark, raises
 
 from .constants import (
+    abi_swaps_types,
     eth_initial_transaction,
     eth_raw_unsigned_transaction,
     eth_redeem_tranaction,
     eth_unsupported_transaction,
+    non_zero_balance_abi_contract,
     token_initial_transaction,
+    zero_balance_abi_contract,
 )
 
 from clove.constants import ETH_REDEEM_GAS_LIMIT, ETH_REFUND_GAS_LIMIT
@@ -56,7 +60,8 @@ def test_eth_audit_contract(transaction_mock, infura_token, web3_request_mock):
             '0xcf64ef4d0449cf7a78d2be1c1f7225dffb11dded98a58d569ebcc6e883ce9f2b'
         ),
         'value': Decimal('0.001'),
-        'value_text': '0.001000000000000000 ETH'
+        'value_text': '0.001000000000000000 ETH',
+        'balance': 10,
     }
 
 
@@ -155,6 +160,7 @@ def test_token_audit_contract(transaction_mock, infura_token, web3_request_mock)
         'value': Decimal('1000'),
         'value_text': '1000.000000000000000000 BBT',
         'token_address': '0x53E546387A0d054e7FF127923254c0a679DA6DBf',
+        'balance': 10,
     }
 
 
@@ -382,3 +388,17 @@ def test_transaction_link_in_signed_transaction(infura_token, web3_request_mock)
     eth_atomic_swap = network.atomic_swap(sender_address=alice_address, recipient_address=bob_address, value=3)
     eth_atomic_swap.sign('34fff148b3d00c1e8b3a016c7859e1616dc0edcfc3ea1ef7c96a7c4487fbeb26')
     assert eth_atomic_swap.show_details()['transaction_link'].startswith('http')
+
+
+@patch('web3.eth.Eth.call', return_value=encode_abi(abi_swaps_types, non_zero_balance_abi_contract))
+def test_get_non_zero_balance(mock, infura_token):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0xf9660c9a16da011834a470d78319fa5e8d515959b472c539c2f16ecf85e0db41')
+    assert contract.balance == 10
+
+
+@patch('web3.eth.Eth.call', return_value=encode_abi(abi_swaps_types, zero_balance_abi_contract))
+def test_get_zero_balance(mock, infura_token):
+    network = EthereumTestnet()
+    contract = network.audit_contract('0xf9660c9a16da011834a470d78319fa5e8d515959b472c539c2f16ecf85e0db41')
+    assert contract.balance == 0
