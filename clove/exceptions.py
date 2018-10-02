@@ -22,3 +22,7 @@ class ImpossibleDeserialization(CloveException):
 
 class UnsupportedTransactionType(CloveException):
     pass
+
+
+class ExternalApiRequestLimitExceeded(CloveException):
+    pass
