@@ -4,6 +4,7 @@
 
 * Switching bitcoin-gold to Insight API
 * Marking 23 networks as NoAPI
+* Using requests lib for clove requests to external APIs
 
 ## v1.2.9
 
