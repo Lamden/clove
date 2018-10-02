@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.10
 
 * Switching bitcoin-gold to Insight API
 * Marking 23 networks as NoAPI
