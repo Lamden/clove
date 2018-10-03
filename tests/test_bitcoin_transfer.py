@@ -149,7 +149,7 @@ def test_swap_transaction_with_invalid_recipient_and_sender_addresses():
         BitcoinAtomicSwapTransaction(BitcoinTestNet(), 'invalid_address', 'address_123', 0.01, [])
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_audit_contract(_, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
@@ -179,7 +179,7 @@ def test_audit_contract_empty_transaction():
         btc_network.audit_contract('', tx)
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_audit_contract_invalid_transaction(_, signed_transaction):
     btc_network = BitcoinTestNet()
     signed_transaction.tx.vout.pop(0)
@@ -191,7 +191,7 @@ def test_audit_contract_invalid_transaction(_, signed_transaction):
         btc_network.audit_contract(transaction_details['contract'], transaction_details['contract_transaction'])
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_audit_contract_non_matching_contract(_, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
@@ -204,99 +204,8 @@ def test_audit_contract_non_matching_contract(_, signed_transaction):
         btc_network.audit_contract(contract, transaction_details['contract_transaction'])
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_transaction')
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
-def test_audit_contract_by_address_blockcypher(get_balance_mock, get_transaction_mock):
-    get_transaction_mock.return_value = {
-        "block_hash": "00000000d658734e67ec1b46c5f0879b1c513a8677af5780d49f0c7158bc4c92",
-        "block_height": 1292546,
-        "block_index": 19,
-        "hash": "ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef",
-        "hex": "0100000001bad8594e6fd26e78151d4c0b36329a0e40d6f219fb07fac5308e8bcc1cf32744010000006b4830450221008f4faade6585edbdae83c6764bd22be25bd3970856ce8d45490c9fca58b291d70220356607cae5ee31fc3d67f8484e8bb30491381af3dcb5ea2e33edfdc61a64f661012103142762372a0f6f2b4718cdee32fa1a3cc2465d3379312e8875ee5f9193158177000000000240420f000000000017a9141fe32017a8f8ad24f791dfd3128f18d0145a66fa87a0c9f003000000001976a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac00000000",  # noqa: E501
-        "addresses": [
-            "2Mv9q2BF9ua62vZcWQqtGdaaAki37SHVoXm",
-            "msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM"
-        ],
-        "total": 67111904,
-        "fees": 39182,
-        "size": 224,
-        "preference": "high",
-        "relayed_by": "46.4.95.69:18333",
-        "confirmed": "2018-04-12T13:47:09Z",
-        "received": "2018-04-12T13:31:14.365Z",
-        "ver": 1,
-        "double_spend": False,
-        "vin_sz": 1,
-        "vout_sz": 2,
-        "opt_in_rbf": True,
-        "confirmations": 120829,
-        "confidence": 1,
-        "inputs": [
-            {
-                "prev_hash": "4427f31ccc8b8e30c5fa07fb19f2d6400e9a32360b4c1d15786ed26f4e59d8ba",
-                "output_index": 1,
-                "script": "4830450221008f4faade6585edbdae83c6764bd22be25bd3970856ce8d45490c9fca58b291d70220356607cae5ee31fc3d67f8484e8bb30491381af3dcb5ea2e33edfdc61a64f661012103142762372a0f6f2b4718cdee32fa1a3cc2465d3379312e8875ee5f9193158177",  # noqa: E501
-                "output_value": 67151086,
-                "sequence": 0,
-                "addresses": [
-                    "msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM"
-                ],
-                "script_type": "pay-to-pubkey-hash",
-                "age": 1292283
-            }
-        ],
-        "outputs": [
-            {
-                "value": 1000000,
-                "script": "a9141fe32017a8f8ad24f791dfd3128f18d0145a66fa87",
-                "addresses": [
-                    "2Mv9q2BF9ua62vZcWQqtGdaaAki37SHVoXm"
-                ],
-                "script_type": "pay-to-script-hash"
-            },
-            {
-                "value": 66111904,
-                "script": "76a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b88ac",
-                "spent_by": "2bd59cfdd58af477756bd3bde263e2d875e741d7aa828bc8af398960083dbfbe",
-                "addresses": [
-                    "msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM"
-                ],
-                "script_type": "pay-to-pubkey-hash"
-            }
-        ]
-    }
-    btc_network = BitcoinTestNet()
-    contract = btc_network.audit_contract(
-        contract=(
-            '63a614977afed2fcdfea9d27fd3032b4a1bc20219007f18876a9143f8870a5633e4fdac612fba4752'
-            '5fef082bbe96167049b02d25ab17576a914812ff3e5afea281eb3dd7fce9b077e4ec6fba08b6888ac'
-        ),
-        transaction_address='ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef'
-    )
-    details = contract.show_details()
-
-    confirmations = details.pop('confirmations')
-    assert type(confirmations) is int
-    assert confirmations > 0
-
-    assert details == {
-        'contract_address': '2Mv9q2BF9ua62vZcWQqtGdaaAki37SHVoXm',
-        'locktime': datetime(2018, 4, 14, 13, 31, 7),
-        'recipient_address': 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1',
-        'refund_address': 'msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM',
-        'secret_hash': '977afed2fcdfea9d27fd3032b4a1bc20219007f1',
-        'transaction_address': 'ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef',
-        'transaction_link': (
-            'https://live.blockcypher.com/btc-testnet/tx/'
-            'ed42a44cd4d45d6829fed3faa06e9dc60de3a6314fd42a80229ea85e1b4680ef/'
-        ),
-        'value': 0.01,
-        'value_text': '0.01000000 BTC'
-    }
-
-
 @patch('clove.block_explorer.insight.InsightAPIv4.get_transaction')
-@patch('clove.block_explorer.insight.InsightAPIv4.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_audit_contract_by_address_insight(get_balance_mock, get_transaction_mock):
     get_transaction_mock.return_value = {
         'txid': '693b04a205a8b87942bff07f8855f00e7a4378b839c8a264dfc849e8331ba6d4',
@@ -384,7 +293,7 @@ def test_audit_contract_by_address_insight(get_balance_mock, get_transaction_moc
     }
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_redeem_transaction(_, bob_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
@@ -401,14 +310,14 @@ def test_redeem_transaction(_, bob_wallet, signed_transaction):
     assert redeem_transaction.value == signed_transaction.value
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.0)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.0)
 def test_redeem_transaction_zero_balance(_, btc_testnet_contract, bob_wallet):
     with pytest.raises(ValueError) as e:
         btc_testnet_contract.redeem(bob_wallet, 'such_secret')
     assert str(e.value) == 'Balance of this contract is 0.'
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_refund_transaction(_, alice_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
@@ -428,7 +337,7 @@ def test_refund_transaction(_, alice_wallet, signed_transaction):
     assert refund_transaction.value == signed_transaction.value
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_refund_not_expired_contract(_, alice_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
@@ -446,7 +355,7 @@ def test_refund_not_expired_contract(_, alice_wallet, signed_transaction):
             contract.refund(alice_wallet)
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.0)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.0)
 def test_refund_zero_balance(_, btc_testnet_contract, bob_wallet):
     with freeze_time(btc_testnet_contract.locktime + timedelta(days=5)):
         with pytest.raises(ValueError) as e:
@@ -454,7 +363,7 @@ def test_refund_zero_balance(_, btc_testnet_contract, bob_wallet):
     assert str(e.value) == 'Balance of this contract is 0.'
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_participate_transaction(_, alice_wallet, bob_wallet, bob_utxo, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()
@@ -514,7 +423,7 @@ def test_participate_eth_transaction(signed_transaction, infura_token):
     assert isinstance(participate_transaction.network, EthereumTestnet)
 
 
-@patch('clove.block_explorer.blockcypher.BlockcypherAPI.get_balance', return_value=0.01)
+@patch('clove.network.BitcoinTestNet.get_balance', return_value=0.01)
 def test_extract_secret(_, bob_wallet, signed_transaction):
     btc_network = BitcoinTestNet()
     transaction_details = signed_transaction.show_details()

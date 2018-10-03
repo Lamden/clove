@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+* Switching Bitcoin, BitcoinTestNet, BitcoinCash, BitcoinCashTestNet and Dash to Insight API (from blockcypher)
+
 ## v1.2.10
 
 * Switching bitcoin-gold to Insight API

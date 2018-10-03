@@ -1,6 +1,7 @@
 from clove.block_explorer.insight import InsightAPIv4
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.utils.external_source import clove_req_json
+from clove.utils.logging import logger
 
 
 class Ravencoin(InsightAPIv4, BitcoinBaseNetwork):
@@ -23,12 +24,23 @@ class Ravencoin(InsightAPIv4, BitcoinBaseNetwork):
         'SECRET_KEY': 128
     }
     source_code_url = 'https://github.com/RavenProject/Ravencoin/blob/master/src/chainparams.cpp'
-    api_url = 'https://ravencoin.network'
-    api_prefix = '/api'
+    api_url = 'https://ravencoin.network/api'
+    ui_url = 'https://ravencoin.network'
 
     @classmethod
-    def get_fee(cls):
-        return clove_req_json(f'{cls.api_url}{cls.api_prefix}/utils/estimatesmartfee?nbBlocks=1')['1']
+    def get_fee(cls) -> float:
+        """Ravencoin has a different endpoint for fee (estimatesmartfee, not estimatefee)"""
+        try:
+            fee = clove_req_json(f'{cls.api_url}/utils/estimatesmartfee?nbBlocks=1')['1']
+        except (TypeError, KeyError):
+            logger.error(
+                f'Incorrect response from API when getting fee from {cls.api_url}/utils/estimatefee?nbBlocks=1'
+            )
+            return cls._calculate_fee()
+        if fee > 0:
+            return fee
+        logger.warning(f'({cls.symbols[0]}) Got fee = 0, calculating manually')
+        return cls._calculate_fee()
 
 
 class RavencoinTestNet(Ravencoin):
@@ -50,4 +62,5 @@ class RavencoinTestNet(Ravencoin):
         'SECRET_KEY': 239
     }
     testnet = True
-    api_url = 'https://testnet.ravencoin.network'
+    api_url = 'https://testnet.ravencoin.network/api'
+    ui_url = 'https://testnet.ravencoin.network'
