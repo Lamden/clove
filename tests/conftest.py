@@ -5,8 +5,11 @@ import os
 from unittest.mock import MagicMock, patch
 
 from bitcoin.messages import msg_getdata, msg_reject, msg_verack, msg_version
+from eth_abi import encode_abi
 from hexbytes import HexBytes
 import pytest
+
+from .constants import abi_swaps_types, non_zero_balance_abi_contract
 
 from clove.network.bitcoin import BitcoinTestNet
 from clove.network.bitcoin.utxo import Utxo
@@ -126,6 +129,9 @@ def web3_request_side_effect(method, params):
         return 42
     elif method == 'eth_blockNumber':
         return 8400000
+    elif method == 'eth_call':
+        encoded_abi = encode_abi(abi_swaps_types, non_zero_balance_abi_contract)
+        return encoded_abi.hex()
     elif method == 'eth_getFilterLogs':
         return [
             {

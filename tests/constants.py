@@ -422,3 +422,17 @@ eth_raw_unsigned_transaction = '0xf86880843b9aca0082b2089453e546387a0d054e7ff127
                                '0a679da6dbf80b844095ea7b30000000000000000000000007657ca' \
                                '877fac31d20528b473162e39b6e152fd2e000000000000000000000' \
                                '00000000000000000000000003635c9adc5dea00000808080'
+
+non_zero_balance_abi_contract = [
+    1534602490, '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+    '0xd867f293Ba129629a9f9355fa285B8D3711a9092', 10, False,
+    '0x0000000000000000000000000000000000000000', True
+]
+
+zero_balance_abi_contract = [
+    1534602490, '0x999F348959E611F1E9eab2927c21E88E48e6Ef45',
+    '0xd867f293Ba129629a9f9355fa285B8D3711a9092', 10, False,
+    '0x0000000000000000000000000000000000000000', False
+]
+
+abi_swaps_types = ['uint256', 'address', 'address', 'uint256', 'bool', 'address', 'bool']

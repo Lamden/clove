@@ -38,6 +38,7 @@ class EthereumContract(object):
         self.contract_address = Web3.toChecksumAddress(self.tx_dict['to'])
         self.block_number = self.tx_dict['blockNumber']
         self.confirmations = self.network.get_latest_block - self.block_number
+        self.balance = self.get_balance()
 
         if self.is_token_contract:
             self.value_base_units = self.inputs['_value']
@@ -53,6 +54,22 @@ class EthereumContract(object):
     @property
     def is_token_contract(self):
         return self.inputs['_isToken']
+
+    @property
+    def contract(self):
+        return self.network.web3.eth.contract(
+            address=self.contract_address, abi=self.network.abi
+        )
+
+    def get_balance(self) -> float:
+        contract = self.contract
+        contract_swap = contract.functions.swaps(self.recipient_address, self.secret_hash).call()
+        contract_exists = contract_swap[-1]
+        contract_balance = contract_swap[3]
+
+        if contract_exists:
+            return contract_balance
+        return 0
 
     def participate(
         self,
@@ -81,7 +98,9 @@ class EthereumContract(object):
         )
 
     def redeem(self, secret: str) -> EthereumTokenTransaction:
-        contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
+        if self.balance == 0:
+            raise ValueError("Balance of this contract is 0.")
+        contract = self.contract
         redeem_func = contract.functions.redeem(secret)
         tx_dict = {
             'nonce': self.network.web3.eth.getTransactionCount(self.recipient_address),
@@ -152,7 +171,9 @@ class EthereumContract(object):
             )
 
     def refund(self):
-        contract = self.network.web3.eth.contract(address=self.contract_address, abi=self.network.abi)
+        if self.balance == 0:
+            raise ValueError("Balance of this contract is 0.")
+        contract = self.contract
 
         if self.locktime > datetime.utcnow():
             locktime_string = self.locktime.strftime('%Y-%m-%d %H:%M:%S')
@@ -195,6 +216,7 @@ class EthereumContract(object):
             'transaction_link': self.network.get_transaction_url(self.tx_dict['hash'].hex()),
             'value': self.value,
             'value_text': f'{self.value:.18f} {self.symbol}',
+            'balance': self.balance,
         }
         if self.token:
             details['value_text'] = self.token.get_value_text(self.value)
