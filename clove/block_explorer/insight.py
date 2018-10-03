@@ -149,7 +149,10 @@ class InsightAPIv4(BaseAPI):
     def get_fee(cls) -> Optional[float]:
         # This endpoint is available from v0.3.1
         fee = clove_req_json(f'{cls.api_url}{cls.api_prefix}/utils/estimatefee?nbBlocks=1')['1']
-        logger.debug(f'Incorrect value in estimatedFee: {fee}')
+        if fee == -1:
+            logger.debug(f'Incorrect value in estimatedFee: {fee}')
+            return cls._callulate_fee()
+        fee = float(fee)
         if fee > 0:
             return fee
         return cls._callulate_fee()
