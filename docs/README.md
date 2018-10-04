@@ -61,6 +61,6 @@ Documentation preview:
 
     $ make livehtml
 
-Updating docs for master branch
+Updating docs for `master` branch
 
     $ make gh-pages

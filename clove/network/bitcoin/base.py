@@ -385,9 +385,14 @@ class BitcoinBaseNetwork(BaseNetwork):
         sender_address: str,
         recipient_address: str,
         value: float,
-        solvable_utxo: list,
+        solvable_utxo: list=None,
         secret_hash: str=None,
     ) -> BitcoinAtomicSwapTransaction:
+        if not solvable_utxo:
+            solvable_utxo = self.get_utxo(sender_address, value)
+            if not solvable_utxo:
+                logger.error(f'Cannot get UTXO for address {sender_address}')
+                return
         transaction = BitcoinAtomicSwapTransaction(
             self, sender_address, recipient_address, value, solvable_utxo, secret_hash
         )
