@@ -1,6 +1,10 @@
 from unittest.mock import patch
 
+import pytest
+
 from clove.network import BitcoinTestNet
+
+pytestmark = pytest.mark.skip(reason="Currenty no network is using Blockcypher")
 
 
 @patch('clove.block_explorer.blockcypher.clove_req_json')

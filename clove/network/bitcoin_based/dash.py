@@ -1,8 +1,13 @@
-from clove.block_explorer.blockcypher import BlockcypherAPI
+from typing import Optional
+
+from clove.block_explorer.insight import InsightAPIv4
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
+from clove.utils.bitcoin import from_base_units
+from clove.utils.external_source import clove_req_json
+from clove.utils.logging import logger
 
 
-class Dash(BlockcypherAPI, BitcoinBaseNetwork):
+class Dash(InsightAPIv4, BitcoinBaseNetwork):
     """
     Class with all the necessary DASH network information based on
     https://github.com/dashpay/dash/blob/master/src/chainparams.cpp
@@ -24,7 +29,18 @@ class Dash(BlockcypherAPI, BitcoinBaseNetwork):
         'SECRET_KEY': 204
     }
     source_code_url = 'https://github.com/dashpay/dash/blob/master/src/chainparams.cpp'
-    blockexplorer_tx = 'https://live.blockcypher.com/dash/tx/{0}/'
+    api_url = 'https://insight.dash.org/insight-api'
+    ui_url = 'https://insight.dash.org/insight'
+
+    @classmethod
+    def get_fee(cls) -> Optional[float]:
+        '''Returns actual fee per kb.'''
+        response = clove_req_json('https://api.blockcypher.com/v1/dash/main')
+        fee = response.get('high_fee_per_kb')
+        if not fee:
+            logger.error('Cannot find the right key (high_fee_per_kb) while getting fee in blockcypher.')
+            return
+        return from_base_units(fee)
 
 
 class DashTestNet(NoAPI, Dash):

@@ -20,8 +20,8 @@ class BitcoinGold(InsightAPIv4, BitcoinBaseNetwork):
         'SECRET_KEY': 128
     }
     source_code_url = 'https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp'
-    api_url = 'https://explorer.bitcoingold.org'
-    api_prefix = '/insight-api'
+    api_url = 'https://explorer.bitcoingold.org/insight-api'
+    ui_url = 'https://explorer.bitcoingold.org/insight'
 
 
 class BitcoinGoldTestNet(NoAPI, BitcoinGold):

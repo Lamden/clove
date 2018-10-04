@@ -1,6 +1,22 @@
 from unittest.mock import patch
 
+from pytest import mark
+
+from clove.block_explorer.insight import InsightAPIv4
+from clove.network import BITCOIN_BASED as networks
 from clove.network import Monacoin, Ravencoin
+
+
+@mark.parametrize('network', networks)
+def test_networks_that_are_using_insight(network):
+
+    if not issubclass(network, InsightAPIv4):
+        return
+    assert isinstance(network.api_url, str), f'{network().__class__.__name__}.api_url needs to be set'
+    assert isinstance(network.ui_url, str), f'{network().__class__.__name__}.ui_url needs to be set'
+    assert not network.api_url.endswith('/'), f'{network.api_url} <- slash at the end is not allowed'
+    assert not network.ui_url.endswith('/'), f'{network.ui_url} <- slash at the end is not allowed'
+    assert network.api_url != network.ui_url
 
 
 @patch('clove.block_explorer.insight.clove_req_json')

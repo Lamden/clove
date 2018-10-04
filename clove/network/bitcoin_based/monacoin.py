@@ -25,8 +25,8 @@ class Monacoin(InsightAPIv4, BitcoinBaseNetwork):
     }
     source_code_url = 'https://github.com/monacoinproject/monacoin/blob/master-0.14/src/chainparams.cpp'
     alternative_secret_key = 178
-    api_url = 'https://insight.electrum-mona.org'
-    api_prefix = '/insight-api-monacoin'
+    api_url = 'https://insight.electrum-mona.org/insight-api-monacoin'
+    ui_url = 'https://insight.electrum-mona.org/insight'
 
     @classmethod
     @auto_switch_params()
@@ -37,10 +37,6 @@ class Monacoin(InsightAPIv4, BitcoinBaseNetwork):
             cls.base58_prefixes['SECRET_KEY'], cls.alternative_secret_key = \
                 cls.alternative_secret_key, cls.base58_prefixes['SECRET_KEY']
             return super().get_wallet(*args, **kwargs)
-
-    @classmethod
-    def get_transaction_url(cls, tx_id: str) -> str:
-        return f'{cls.api_url}/insight/tx/{tx_id}'
 
 
 class MonacoinTestNet(NoAPI, Monacoin):
