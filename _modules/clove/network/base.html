@@ -144,12 +144,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for clove.network.base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
-
-<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span>
-
-
-<div class="viewcode-block" id="BaseNetwork"><a class="viewcode-back" href="../../../api.html#clove.network.base.BaseNetwork">[docs]</a><span class="k">class</span> <span class="nc">BaseNetwork</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseNetwork"><a class="viewcode-back" href="../../../api.html#clove.network.base.BaseNetwork">[docs]</a><span></span><span class="k">class</span> <span class="nc">BaseNetwork</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Class for shared properties and methods for Bitcoin and Ethereum network.&#39;&#39;&#39;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
@@ -230,37 +225,7 @@
                 <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">():</span>
                     <span class="bp">cls</span><span class="o">.</span><span class="n">networks</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;{symbol.upper()}-TESTNET&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">cls</span><span class="o">.</span><span class="n">networks</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;{symbol.upper()}&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-<div class="viewcode-block" id="BaseNetwork.get_transaction"><a class="viewcode-back" href="../../../api.html#clove.network.base.BaseNetwork.get_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-<div class="viewcode-block" id="BaseNetwork.get_transaction_url"><a class="viewcode-back" href="../../../api.html#clove.network.base.BaseNetwork.get_transaction_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_transaction_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Returns URL for a given transaction in block explorer.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            tx_hash (str): transaction hash</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str, None: URL for transaction in block explorer or `None` if there is no block explorer</span>
-
-<span class="sd">        Example:</span>
-<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
-<span class="sd">            &gt;&gt;&gt; eth_testnet = EthereumTestnet()</span>
-<span class="sd">            &gt;&gt;&gt; eth_testnet.get_transaction_url(&#39;0x78d150a0e4f73d103c08f727dbd66199e4c01f2aa5e043f9faa9c59110d22cca&#39;)</span>
-<span class="sd">            &#39;https://kovan.etherscan.io/tx/0x78d150a0e4f73d103c08f727dbd66199e4c01f2aa5e043f9faa9c59110d22cca&#39;</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blockexplorer_tx</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blockexplorer_tx</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
-        <span class="n">network_symbol</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">network_symbol</span> <span class="ow">in</span> <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{network_symbol}</span><span class="s1">/tx.dws?</span><span class="si">{tx_hash}</span><span class="s1">.htm&#39;</span></div></div>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">networks</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;{symbol.upper()}&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span></div></div>
 </pre></div>
 
            </div>

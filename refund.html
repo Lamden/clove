@@ -83,30 +83,17 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Atomic swap example</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Transaction refunds</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#bitcoin-based-networks">Bitcoin based networks</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#here-are-some-examples-of-transaction-refunds">Here are some examples of transaction refunds.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#i-initial-transaction-refund">I Initial transaction refund</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork">1. Get a wallet from the newtork</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction">2. Create refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction">3. Sign and publish refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher">4. Voilà! Alice should get her litecoins back. You can check it for example in a blockcypher.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ii-participate-transaction-refund">II Participate transaction refund</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork">1. Get a wallet from the newtork</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction">2. Create refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction">3. Sign and publish refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here">4. Voilà! Bob should get his monacoins back. You can check it for example here.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork-mona">1. Get a wallet from the newtork (MONA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction-mona">2. Create refund transaction (MONA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction-mona">3. Sign and publish refund transaction (MONA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voila-alice-should-get-her-monacoins-back">4. Voilà! Alice should get her monacoins back.</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ethereum-based-networks">Ethereum based networks</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#i-initial-transaction-refund">I Initial transaction refund</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork">1. Get a wallet from the newtork</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction">2. Create refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction">3. Sign and publish refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#voila-alice-should-get-her-ethereum-testnet-coins-back-you-can-check-it-for-example-here">4. Voilà! Alice should get her ethereum_testnet coins back. You can check it for example here.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ii-participate-transaction-refund">II Participate transaction refund</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork">1. Get a wallet from the newtork</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction">2. Create refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction">3. Sign and publish refund transaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#voila-bob-should-get-his-tokens-coins-back-you-can-check-it-for-example-here">4. Voilà! Bob should get his tokens coins back. You can check it for example here.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-wallet-from-the-newtork-bbt">1. Get a wallet from the newtork (BBT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-refund-transaction-bbt">2. Create refund transaction (BBT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sign-and-publish-refund-transaction-bbt">3. Sign and publish refund transaction (BBT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voila-alice-should-get-her-ethereum-testnet-coins-back">4. Voilà! Alice should get her ethereum_testnet coins back.</a></li>
 </ul>
 </li>
 </ul>
@@ -179,13 +166,13 @@
   <div class="section" id="transaction-refunds">
 <span id="transaction-refunds"></span><h1>Transaction refunds<a class="headerlink" href="#transaction-refunds" title="Permalink to this headline">¶</a></h1>
 <p>Atomic swaps work because if any party does not comply with the previously agreed upon terms, the transaction can revert using a refund mechanism.</p>
+<p><strong>When you can refund your transaction?</strong></p>
+<ul class="simple">
+<li><strong>Initial transaction</strong> contract is set to be <strong>valid for 48 hours</strong>.</li>
+<li><strong>Participate transaction</strong> contract is set to be <strong>valid for 24 hours</strong>.</li>
+</ul>
 <div class="section" id="bitcoin-based-networks">
 <span id="bitcoin-based-networks"></span><h2>Bitcoin based networks<a class="headerlink" href="#bitcoin-based-networks" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="here-are-some-examples-of-transaction-refunds">
-<span id="here-are-some-examples-of-transaction-refunds"></span><h3>Here are some examples of transaction refunds.<a class="headerlink" href="#here-are-some-examples-of-transaction-refunds" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="i-initial-transaction-refund">
-<span id="i-initial-transaction-refund"></span><h3>I Initial transaction refund<a class="headerlink" href="#i-initial-transaction-refund" title="Permalink to this headline">¶</a></h3>
 <p>Alice created and published such transaction:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contract&#39;</span><span class="p">:</span> <span class="s1">&#39;63a61446260875cb8c88ba918cdd913ae23c59562f95298876a9141a376f6634e41c22b28bc9ef3336a623717083a46704396b645bb17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac&#39;</span><span class="p">,</span>
 <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;3KLY8YnMbcWqkNdSmtgwZVxx6hpU4AWFX6&#39;</span><span class="p">,</span>
@@ -207,10 +194,9 @@
 </pre></div>
 </div>
 <p>She was waiting for the response from Bob for a day but she did not receive any,
-so she decided to refund the money from the blockchain:</p>
-</div>
-<div class="section" id="get-a-wallet-from-the-newtork">
-<span id="get-a-wallet-from-the-newtork"></span><h3>1. Get a wallet from the newtork<a class="headerlink" href="#get-a-wallet-from-the-newtork" title="Permalink to this headline">¶</a></h3>
+so she decided to refund the money from the blockchain</p>
+<div class="section" id="get-a-wallet-from-the-newtork-mona">
+<span id="get-a-wallet-from-the-newtork-mona"></span><h3>1. Get a wallet from the newtork (MONA)<a class="headerlink" href="#get-a-wallet-from-the-newtork-mona" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Monacoin</span>
 
 <span class="n">mona_network</span> <span class="o">=</span> <span class="n">Monacoin</span><span class="p">()</span>
@@ -222,16 +208,25 @@ so she decided to refund the money from the blockchain:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="create-refund-transaction">
-<span id="create-refund-transaction"></span><h3>2. Create refund transaction<a class="headerlink" href="#create-refund-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="create-refund-transaction-mona">
+<span id="create-refund-transaction-mona"></span><h3>2. Create refund transaction (MONA)<a class="headerlink" href="#create-refund-transaction-mona" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_contract</span> <span class="o">=</span> <span class="n">mona_network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
     <span class="n">contract</span><span class="o">=</span><span class="s1">&#39;63a61446260875cb8c88ba918cdd913ae23c59562f95298876a9141a376f6634e41c22b28bc9ef3336a623717083a46704396b645bb17576a9142b6a3314e8fcf1f1fd6b4d70b112bd5a192850576888ac&#39;</span><span class="p">,</span>
-    <span class="n">raw_transaction</span><span class="o">=</span><span class="s1">&#39;0100000001e4f0bb83bc3b52f921ad9d064768ba1702d9ec92befa3529a17e5163c90a11a0010000008a47304402202c8e3c6814938dae17c02125990cadd550edee97df9529f889639f4096f55fe4022060cf5b36a0a3b103ae705937a65903710b849296076ce010c61da48e0946b1ad0141044fbe9cf6ef9bf4a13a693ee1d431eb700a592e8097619e0cfe82aff2a5c231e7154e464e4ec94201007b403b6de9a5819b0bc31eef0741c4fe6e932bca6d9cca0000000002001bb7000000000017a914c192be92fa15e5a97cfeae84fb2ac830594ea9fb8780795209000000001976a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac00000000&#39;</span>
+    <span class="n">transaction_addresss</span><span class="o">=</span><span class="s1">&#39;1f317ce1ab1c7504d5e70cac4cb97f6e41fbaded4dd1f094d431a9f0a508ab44&#39;</span>
 <span class="p">)</span>
+<span class="n">alice_contract</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
+<span class="p">{</span><span class="s1">&#39;confirmations&#39;</span><span class="p">:</span> <span class="mi">58543</span><span class="p">,</span>
+ <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;PSEhMygm6dgee3bmzsLsomaHZvhdZQoLBm&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+ <span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MAHnD7u7JD4DPA3R267zcB1xbaaiZrDRmL&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;46260875cb8c88ba918cdd913ae23c59562f9529&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;1f317ce1ab1c7504d5e70cac4cb97f6e41fbaded4dd1f094d431a9f0a508ab44&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transaction_link&#39;</span><span class="p">:</span> <span class="s1">&#39;https://insight.electrum-mona.org/insight/tx/1f317ce1ab1c7504d5e70cac4cb97f6e41fbaded4dd1f094d431a9f0a508ab44&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.12</span><span class="p">,</span>
+ <span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.12000000 MONA&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>For networks supported by <code class="docutils literal notranslate"><span class="pre">blockcypher.com</span></code> or <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> APIs contract audit can be done based on contract and transaction hash.
-See an exmaple in <a class="reference external" href="#2-create-refund-transaction-1">participate refund</a>.</p>
 <p>Alice refunds the contract.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>refund_transaction = alice_contract.refund(alice_mona_wallet)
 RuntimeError: This contract is still valid! It can&#39;t be refunded until 2018-08-03 14:48:25 UTC.
@@ -244,10 +239,9 @@ RuntimeError: This contract is still valid! It can&#39;t be refunded until 2018-
 </pre></div>
 </div>
 </div>
-<div class="section" id="sign-and-publish-refund-transaction">
-<span id="sign-and-publish-refund-transaction"></span><h3>3. Sign and publish refund transaction<a class="headerlink" href="#sign-and-publish-refund-transaction" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c1"># As monacoin has no explorer with API we need to add fee manually</span>
-<span class="n">refund_transaction</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">()</span>
+<div class="section" id="sign-and-publish-refund-transaction-mona">
+<span id="sign-and-publish-refund-transaction-mona"></span><h3>3. Sign and publish refund transaction (MONA)<a class="headerlink" href="#sign-and-publish-refund-transaction-mona" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">()</span>
 
 <span class="n">refund_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
 <span class="p">{</span><span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
@@ -268,105 +262,12 @@ RuntimeError: This contract is still valid! It can&#39;t be refunded until 2018-
 </pre></div>
 </div>
 </div>
-<div class="section" id="voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher">
-<span id="voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher"></span><h3>4. Voilà! Alice should get her litecoins back. You can check it for example in a blockcypher.<a class="headerlink" href="#voila-alice-should-get-her-litecoins-back-you-can-check-it-for-example-in-a-blockcypher" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="ii-participate-transaction-refund">
-<span id="ii-participate-transaction-refund"></span><h3>II Participate transaction refund<a class="headerlink" href="#ii-participate-transaction-refund" title="Permalink to this headline">¶</a></h3>
-<p>Bob created and published such participating transaction:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contract&#39;</span><span class="p">:</span> <span class="s1">&#39;63a61446260875cb8c88ba918cdd913ae23c59562f95298876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704f81b635bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;</span><span class="p">,</span>
-<span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="s1">&#39;MBtkgn1gWmm4FxAwp1WaXRtRZTfNLKTZzn&#39;</span><span class="p">,</span>
-<span class="s1">&#39;contract_transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;0100000002505cab5a4fb315145f284ede8c43b2af3fa6557b1bfe54e46037533e6d1a5c56010000008b4830450221009c8969d08f84d39585c7181be51f692151cfe8736ca9062f4534c844987659b002205599ac2c05ea98403155ea581b169e8443904893dfd76b69e0a30fcadff9826401410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f600000000945163cde3a306cfdea2a142b63a24e1d4b7a02d6451ab55a9e9aad9ac430e961b0200008a473044022040b64bfeb8065a58ba41809e024fd9fe0ef250b3cfc6d5d92b75bf672617032d02200b1f3eb08b6a6cf3cd1b842895fe7ab218ffdbb86bdf6b473940d94786ea0c9d01410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6000000000290ca04000000000017a9142bccd91f6a56b55cca796ef7f0aaaa33c97b25a8879db80100000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac00000000&#39;</span><span class="p">,</span>
-<span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;40875e3889aac718594b7f9d166ca4b0c8d3fb41b25f6649429643874e8aa384&#39;</span><span class="p">,</span>
-<span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.00067565</span><span class="p">,</span>
-<span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.00155321</span><span class="p">,</span>
-<span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00155321 LTC / 1 kB&#39;</span><span class="p">,</span>
-<span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00067565 LTC&#39;</span><span class="p">,</span>
-<span class="s1">&#39;locktime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255583</span><span class="p">),</span>
-<span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LXRAXRgPo84p58746zaBXUFFevCTYBPxgb&#39;</span><span class="p">,</span>
-<span class="s1">&#39;refund_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span>
-<span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-<span class="s1">&#39;secret_hash&#39;</span><span class="p">:</span> <span class="s1">&#39;46260875cb8c88ba918cdd913ae23c59562f9529&#39;</span><span class="p">,</span>
-<span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">435</span><span class="p">,</span>
-<span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;435 bytes&#39;</span><span class="p">,</span>
-<span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.00314</span><span class="p">,</span>
-<span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00314000 LTC&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-<p>Alice didn’t redeem the transaction, so no secret key was published. Bob needed to get his monacoins back.</p>
-<p>The process is parallel as in the <a class="reference external" href="#I-Initial-transaction-refund">initial transaction</a>.</p>
-</div>
-<div class="section" id="get-a-wallet-from-the-newtork">
-<span id="id1"></span><h3>1. Get a wallet from the newtork<a class="headerlink" href="#get-a-wallet-from-the-newtork" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
-
-<span class="n">ltc_network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
-
-<span class="n">bob_ltc_wallet</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;bobprivatekey&#39;</span><span class="p">)</span> <span class="c1"># provide real key</span>
-<span class="n">bob_ltc_wallet</span><span class="o">.</span><span class="n">address</span>
-<span class="s1">&#39;MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="create-refund-transaction">
-<span id="id2"></span><h3>2. Create refund transaction<a class="headerlink" href="#create-refund-transaction" title="Permalink to this headline">¶</a></h3>
-<p>For networks supported by <code class="docutils literal notranslate"><span class="pre">blockcypher.com</span></code> or <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> APIs contract audit can be done based on contract and transaction hash.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_contract</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
-    <span class="n">contract</span><span class="o">=</span><span class="s1">&#39;63a61446260875cb8c88ba918cdd913ae23c59562f95298876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704f81b635bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;</span><span class="p">,</span>
-    <span class="n">transaction_address</span><span class="o">=</span><span class="s1">&#39;40875e3889aac718594b7f9d166ca4b0c8d3fb41b25f6649429643874e8aa384&#39;</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>For unsupported networks Bob should find the raw transaction for given transaction address by himself.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_contract</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
-    <span class="n">contract</span><span class="o">=</span><span class="s1">&#39;63a61446260875cb8c88ba918cdd913ae23c59562f95298876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704f81b635bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;</span><span class="p">,</span>
-    <span class="n">raw_transaction</span><span class="o">=</span><span class="s1">&#39;0100000002505cab5a4fb315145f284ede8c43b2af3fa6557b1bfe54e46037533e6d1a5c56010000008b4830450221009c8969d08f84d39585c7181be51f692151cfe8736ca9062f4534c844987659b002205599ac2c05ea98403155ea581b169e8443904893dfd76b69e0a30fcadff9826401410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f600000000945163cde3a306cfdea2a142b63a24e1d4b7a02d6451ab55a9e9aad9ac430e961b0200008a473044022040b64bfeb8065a58ba41809e024fd9fe0ef250b3cfc6d5d92b75bf672617032d02200b1f3eb08b6a6cf3cd1b842895fe7ab218ffdbb86bdf6b473940d94786ea0c9d01410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6000000000290ca04000000000017a9142bccd91f6a56b55cca796ef7f0aaaa33c97b25a8879db80100000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988ac00000000&#39;</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Bob refunds the contract.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>refund_transaction = bob_contract.refund(bob_ltc_wallet)
-RuntimeError: This contract is still valid! It can&#39;t be refunded until 2018-08-02 14:58:00 UTC.
-</pre></div>
-</div>
-<p>Oops! Something went wrong! Contract is still valid! Bob was a bit impatient, wasn’t he?</p>
-<p>Participate transaction contract is set to be <strong>valid for 24 hours</strong>.</p>
-<p>Okey! It is past 2018-08-02 14:58:00 UTC, so Bob is free to create a refund transaction!</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span> <span class="o">=</span> <span class="n">bob_contract</span><span class="o">.</span><span class="n">refund</span><span class="p">(</span><span class="n">bob_ltc_wallet</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="sign-and-publish-refund-transaction">
-<span id="id3"></span><h3>3. Sign and publish refund transaction<a class="headerlink" href="#sign-and-publish-refund-transaction" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refund_transaction</span><span class="o">.</span><span class="n">add_fee_and_sign</span><span class="p">()</span>
-
-<span class="n">refund_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
-<span class="p">{</span><span class="s1">&#39;fee&#39;</span><span class="p">:</span> <span class="mf">0.00051235</span><span class="p">,</span>
-<span class="s1">&#39;fee_per_kb&#39;</span><span class="p">:</span> <span class="mf">0.00167435</span><span class="p">,</span>
-<span class="s1">&#39;fee_per_kb_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00167435 LTC / 1 kB&#39;</span><span class="p">,</span>
-<span class="s1">&#39;fee_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00051235 LTC&#39;</span><span class="p">,</span>
-<span class="s1">&#39;recipient_address&#39;</span><span class="p">:</span> <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span>
-<span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">308</span><span class="p">,</span>
-<span class="s1">&#39;size_text&#39;</span><span class="p">:</span> <span class="s1">&#39;308 bytes&#39;</span><span class="p">,</span>
-<span class="s1">&#39;transaction&#39;</span><span class="p">:</span> <span class="s1">&#39;010000000184a38a4e8743964249665fb241fbd3c8b0a46c169d7f4b5918c7aa89385e874000000000df4830450221009217801c3d6831631c67fd8dd19bc104e9f11a2b8d8dd4d953bba2ddf434ff530220453af8a4b8a6e6a801fcf14d8c3471ffeffa900898eda77b87d9d2be4d951e6b01410431ab07973bbb5dbc6b7422fc7322abb5df15f77694c0b15b09a325996af47ddd887c7eaa72c656a71fcb333068956de7b3e2f15deaafc1d9285d779ca1b6a3f6004c5163a61446260875cb8c88ba918cdd913ae23c59562f95298876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704f81b635bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac00000000016d020400000000001976a914621f617c765c3caa5ce1bb67f6a3e51382b8da2988acf81b635b&#39;</span><span class="p">,</span>
-<span class="s1">&#39;transaction_address&#39;</span><span class="p">:</span> <span class="s1">&#39;4e50927672b1f3921093ddf3f406a8bc91ce2509a7cff3eebfc8158282871a74&#39;</span><span class="p">,</span>
-<span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.00314</span><span class="p">,</span>
-<span class="s1">&#39;value_text&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00314000 LTC&#39;</span><span class="p">}</span>
-
-
- <span class="n">refund_transaction</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
- <span class="s1">&#39;4e50927672b1f3921093ddf3f406a8bc91ce2509a7cff3eebfc8158282871a74&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here">
-<span id="voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here"></span><h3>4. Voilà! Bob should get his monacoins back. You can check it for example <a class="reference external" href="https://bchain.info/MONA/addr/MBriWYyfWNdrAmycN5otoUDWDMrdFK33DQ">here</a>.<a class="headerlink" href="#voila-bob-should-get-his-monacoins-back-you-can-check-it-for-example-here" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="voila-alice-should-get-her-monacoins-back">
+<span id="voila-alice-should-get-her-monacoins-back"></span><h3>4. Voilà! Alice should get her monacoins back.<a class="headerlink" href="#voila-alice-should-get-her-monacoins-back" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="ethereum-based-networks">
 <span id="ethereum-based-networks"></span><h2>Ethereum based networks<a class="headerlink" href="#ethereum-based-networks" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="i-initial-transaction-refund">
-<span id="id4"></span><h3>I Initial transaction refund<a class="headerlink" href="#i-initial-transaction-refund" title="Permalink to this headline">¶</a></h3>
 <p>Alice created and published such transaction:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">initial_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
 <span class="go">{&#39;nonce&#39;: 249,</span>
@@ -393,9 +294,8 @@ RuntimeError: This contract is still valid! It can&#39;t be refunded until 2018-
 </div>
 <p>She was waiting for the response from Bob for a day but she did not receive any,
 so she decided to refund the money from the blockchain:</p>
-</div>
-<div class="section" id="get-a-wallet-from-the-newtork">
-<span id="id5"></span><h3>1. Get a wallet from the newtork<a class="headerlink" href="#get-a-wallet-from-the-newtork" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="get-a-wallet-from-the-newtork-bbt">
+<span id="get-a-wallet-from-the-newtork-bbt"></span><h3>1. Get a wallet from the newtork (BBT)<a class="headerlink" href="#get-a-wallet-from-the-newtork-bbt" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">alice_eth_testnet_wallet</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;aliceprivatekey&#39;</span><span class="p">)</span>
@@ -404,8 +304,8 @@ so she decided to refund the money from the blockchain:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="create-refund-transaction">
-<span id="id6"></span><h3>2. Create refund transaction<a class="headerlink" href="#create-refund-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="create-refund-transaction-bbt">
+<span id="create-refund-transaction-bbt"></span><h3>2. Create refund transaction (BBT)<a class="headerlink" href="#create-refund-transaction-bbt" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">eth_testnet</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
@@ -428,90 +328,17 @@ so she decided to refund the money from the blockchain:</p>
 </div>
 <p>Please remember, that initial transaction contract is set to be <strong>valid for 48 hours</strong>. Before that time, you will not be able to refund your transaction.</p>
 </div>
-<div class="section" id="sign-and-publish-refund-transaction">
-<span id="id7"></span><h3>3. Sign and publish refund transaction<a class="headerlink" href="#sign-and-publish-refund-transaction" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sign-and-publish-refund-transaction-bbt">
+<span id="sign-and-publish-refund-transaction-bbt"></span><h3>3. Sign and publish refund transaction (BBT)<a class="headerlink" href="#sign-and-publish-refund-transaction-bbt" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">refund</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="s1">&#39;aliceprivatekey&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">refund</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
 <span class="go">&#39;0xbf13af6b32a0af2406fdfb23705742d2d1d097742af9bf3946029e8d1f3feba3&#39;</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="voila-alice-should-get-her-ethereum-testnet-coins-back-you-can-check-it-for-example-here">
-<span id="voila-alice-should-get-her-ethereum-testnet-coins-back-you-can-check-it-for-example-here"></span><h3>4. Voilà! Alice should get her ethereum_testnet coins back. You can check it for example <a class="reference external" href="https://kovan.etherscan.io/tx/0xbf13af6b32a0af2406fdfb23705742d2d1d097742af9bf3946029e8d1f3feba3">here</a>.<a class="headerlink" href="#voila-alice-should-get-her-ethereum-testnet-coins-back-you-can-check-it-for-example-here" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="ii-participate-transaction-refund">
-<span id="id8"></span><h3>II Participate transaction refund<a class="headerlink" href="#ii-participate-transaction-refund" title="Permalink to this headline">¶</a></h3>
-<p>Bob created and published such participating transaction:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">participate_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
-<span class="go">{&#39;nonce&#39;: 113,</span>
-<span class="go">&#39;gasprice&#39;: 1000000000,</span>
-<span class="go">&#39;to&#39;: &#39;0x9f7e5402ed0858ea0c5914d44b900a42c89547b8&#39;,</span>
-<span class="go">&#39;value&#39;: Decimal(&#39;0.5&#39;),</span>
-<span class="go">&#39;data&#39;: &#39;0xeb8ae1ed000000000000000000000000000000000000000000000000000000005b5adcbc8cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000999f348959e611f1e9eab2927c21e88e48e6ef45&#39;,</span>
-<span class="go">&#39;v&#39;: 28,</span>
-<span class="go">&#39;r&#39;: 45709055192944493283238091426882972043846668244047220959455715247392544872489,</span>
-<span class="go">&#39;s&#39;: 32702391840690720592637798834593583073452964948638155547821984857632864140453,</span>
-<span class="go">&#39;sender&#39;: &#39;0xd867f293ba129629a9f9355fa285b8d3711a9092&#39;,</span>
-<span class="go">&#39;transaction_address&#39;: &#39;0xe1de0d46e5f62f8d17a2b6dbe9ad0f2937b6c513a91e0be71a2841e8da48d602&#39;,</span>
-<span class="go">&#39;gas_limit&#39;: 66221,</span>
-<span class="go">&#39;transaction&#39;: &#39;0xf8d171843b9aca00830102ad949f7e5402ed0858ea0c5914d44b900a42c89547b88806f05b59d3b20000b864eb8ae1ed000000000000000000000000000000000000000000000000000000005b5adcbc8cebcb1af6fa5fddeb091f61f0af1c49a6de9922000000000000000000000000000000000000000000000000999f348959e611f1e9eab2927c21e88e48e6ef451ca0650e688ea34735d0443766a0a824ba8a932bd9876f914eb8d777da6437455829a0484ce5d993a945cd3f8dc339a161694e97ff0be0483face8d83c0a46bfc6fca5&#39;,</span>
-<span class="go">&#39;recipient_address&#39;: &#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;, &#39;</span>
-<span class="go">value_text&#39;: &#39;0.500000000000000000 ETH&#39;,</span>
-<span class="go">&#39;secret&#39;: &#39;&#39;,</span>
-<span class="go">&#39;secret_hash&#39;: &#39;8cebcb1af6fa5fddeb091f61f0af1c49a6de9922&#39;,</span>
-<span class="go">&#39;locktime&#39;: datetime.datetime(2018, 7, 27, 8, 50, 4, 937035),</span>
-<span class="go">&#39;sender_address&#39;: &#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;,</span>
-<span class="go">&#39;contract_address&#39;: &#39;0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8&#39;,</span>
-<span class="go">&#39;refund_address&#39;: &#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;}</span>
-</pre></div>
-</div>
-<p>Alice didn’t redeem the transaction, so no secret key was published. Bob needed to get his tokens back.</p>
-<p>The process is parallel as in the initial transaction.</p>
-</div>
-<div class="section" id="get-a-wallet-from-the-newtork">
-<span id="id9"></span><h3>1. Get a wallet from the newtork<a class="headerlink" href="#get-a-wallet-from-the-newtork" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bob_eth_testnet_wallet</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;bobprivatekey&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bob_eth_testnet_wallet</span><span class="o">.</span><span class="n">address</span>
-<span class="go">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="create-refund-transaction">
-<span id="id10"></span><h3>2. Create refund transaction<a class="headerlink" href="#create-refund-transaction" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eth_testnet</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bob_contract</span> <span class="o">=</span> <span class="n">eth_testnet</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
-<span class="go">    &#39;0xe1de0d46e5f62f8d17a2b6dbe9ad0f2937b6c513a91e0be71a2841e8da48d602&#39; // Put your participate transaction address</span>
-<span class="go">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bob_contract</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
-<span class="go">{&#39;contract_address&#39;: &#39;0x9F7e5402ed0858Ea0C5914D44B900A42C89547B8&#39;,</span>
-<span class="go">&#39;locktime&#39;: datetime.datetime(2018, 7, 27, 8, 50, 4),</span>
-<span class="go">&#39;recipient_address&#39;: &#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;,</span>
-<span class="go">&#39;refund_address&#39;: &#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;,</span>
-<span class="go">&#39;secret_hash&#39;: &#39;8cebcb1af6fa5fddeb091f61f0af1c49a6de9922&#39;,</span>
-<span class="go">&#39;transaction_address&#39;: &#39;0xe1de0d46e5f62f8d17a2b6dbe9ad0f2937b6c513a91e0be71a2841e8da48d602&#39;,</span>
-<span class="go">&#39;value&#39;: Decimal(&#39;0.5&#39;),</span>
-<span class="go">&#39;value_text&#39;: &#39;0.500000000000000000 ETH&#39;}</span>
-
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">refund</span> <span class="o">=</span> <span class="n">bob_contract</span><span class="o">.</span><span class="n">refund</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Please remember, that participate transaction contract is set to be <strong>valid for 24 hours</strong>. Before that time, you will not be able to refund your transaction.</p>
-</div>
-<div class="section" id="sign-and-publish-refund-transaction">
-<span id="id11"></span><h3>3. Sign and publish refund transaction<a class="headerlink" href="#sign-and-publish-refund-transaction" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">refund</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="s1">&#39;bobprivatekey&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">refund</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
-<span class="go">&#39;0x28c10e6d0632fb433f6ca7c7fb84db222e4d2ccac39112c91e911c465f21f863&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="voila-bob-should-get-his-tokens-coins-back-you-can-check-it-for-example-here">
-<span id="voila-bob-should-get-his-tokens-coins-back-you-can-check-it-for-example-here"></span><h3>4. Voilà! Bob should get his tokens coins back. You can check it for example <a class="reference external" href="https://kovan.etherscan.io/tx/0x28c10e6d0632fb433f6ca7c7fb84db222e4d2ccac39112c91e911c465f21f863">here</a>.<a class="headerlink" href="#voila-bob-should-get-his-tokens-coins-back-you-can-check-it-for-example-here" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="voila-alice-should-get-her-ethereum-testnet-coins-back">
+<span id="voila-alice-should-get-her-ethereum-testnet-coins-back"></span><h3>4. Voilà! Alice should get her ethereum_testnet coins back.<a class="headerlink" href="#voila-alice-should-get-her-ethereum-testnet-coins-back" title="Permalink to this headline">¶</a></h3>
+<p>You can check it for example <a class="reference external" href="https://kovan.etherscan.io/tx/0xbf13af6b32a0af2406fdfb23705742d2d1d097742af9bf3946029e8d1f3feba3">here</a>.</p>
 </div>
 </div>
 </div>

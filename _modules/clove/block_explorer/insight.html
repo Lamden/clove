@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clove.block_explorer.insight &mdash; Clove  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Clove
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Clove </a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Atomic swap example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Clove</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clove.block_explorer.insight</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clove.block_explorer.insight</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">bitcoin.core</span> <span class="k">import</span> <span class="n">CTxOut</span><span class="p">,</span> <span class="n">script</span>
+
+<span class="kn">from</span> <span class="nn">clove.block_explorer.base</span> <span class="k">import</span> <span class="n">BaseAPI</span>
+<span class="kn">from</span> <span class="nn">clove.network.bitcoin.utxo</span> <span class="k">import</span> <span class="n">Utxo</span>
+<span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">from_base_units</span><span class="p">,</span> <span class="n">to_base_units</span>
+<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">clove_req_json</span>
+<span class="kn">from</span> <span class="nn">clove.utils.logging</span> <span class="k">import</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="InsightAPIv4"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4">[docs]</a><span class="k">class</span> <span class="nc">InsightAPIv4</span><span class="p">(</span><span class="n">BaseAPI</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Wrapper for block explorers that runs on Insight API engine.</span>
+<span class="sd">    Docs: https://github.com/bitpay/insight-api/</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">api_url</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ui_url</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="InsightAPIv4.get_latest_block"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.get_latest_block">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_latest_block</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;Returns the number of the latest block.&#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">latest_block</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/status?q=getInfo&#39;</span><span class="p">)[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;blocks&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot get latest block, bad response (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">latest_block</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Latest block not found (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Latest block found: </span><span class="si">{latest_block}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">latest_block</span></div>
+
+<div class="viewcode-block" id="InsightAPIv4.get_transaction"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.get_transaction">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/tx/</span><span class="si">{tx_address}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InsightAPIv4.get_utxo"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.get_utxo">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_utxo</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/addrs/</span><span class="si">{address}</span><span class="s1">/utxo&#39;</span><span class="p">)</span>
+        <span class="n">unspent</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="p">[</span><span class="s1">&#39;satoshis&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">utxo</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">unspent</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">from_base_units</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;satoshis&#39;</span><span class="p">])</span>
+            <span class="n">utxo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Utxo</span><span class="p">(</span>
+                    <span class="n">tx_id</span><span class="o">=</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;txid&#39;</span><span class="p">],</span>
+                    <span class="n">vout</span><span class="o">=</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;vout&#39;</span><span class="p">],</span>
+                    <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">tx_script</span><span class="o">=</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;scriptPubKey&#39;</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="n">amount</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">utxo</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot find enough UTXO</span><span class="se">\&#39;</span><span class="s1">s. Found </span><span class="si">%.8f</span><span class="s1"> from </span><span class="si">%.8f</span><span class="s1">.&#39;</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InsightAPIv4.extract_secret_from_redeem_transaction"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.extract_secret_from_redeem_transaction">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">contract_transactions</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/txids/</span><span class="si">{contract_address}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">contract_transactions</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot get contract transactions (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">contract_transactions</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;There is no redeem transaction on this contract yet.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">redeem_transaction</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">contract_transactions</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">redeem_transaction</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot get redeem transaction (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">extract_secret</span><span class="p">(</span><span class="n">redeem_transaction</span><span class="p">[</span><span class="s1">&#39;hex&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="InsightAPIv4.get_balance"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.get_balance">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_balance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">wallet_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns wallet balance without unconfirmed transactions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wallet_address (str): wallet address</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: amount converted from base units</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Ravencoin</span>
+<span class="sd">            &gt;&gt;&gt; r = Ravencoin()</span>
+<span class="sd">            &gt;&gt;&gt; r.get_balance(&#39;RM7w75BcC21LzxRe62jy8JhFYykRedqu8k&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; 18.99</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">wallet_utxo</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/addr/</span><span class="si">{wallet_address}</span><span class="s1">/balance&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wallet_utxo</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">from_base_units</span><span class="p">(</span><span class="n">wallet_utxo</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InsightAPIv4.get_transaction_url"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.get_transaction_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_transaction_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns URL for a given transaction in block explorer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tx_hash (str): transaction hash</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: URL for transaction in block explorer or `None` if there is no block explorer</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Ravencoin</span>
+<span class="sd">            &gt;&gt;&gt; r = Ravencoin()</span>
+<span class="sd">            &gt;&gt;&gt; r.get_transaction_url(&#39;8a673e9fcf5ea469e7c4180846834905e8d4c0f16c6e6ab9531efbb9112bc5e1&#39;)</span>
+<span class="sd">            &#39;https://ravencoin.network/tx/8a673e9fcf5ea469e7c4180846834905e8d4c0f16c6e6ab9531efbb9112bc5e1&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.ui_url}</span><span class="s1">/tx/</span><span class="si">{tx_hash}</span><span class="s1">&#39;</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_block_hash</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">block_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Getting block hash by its number&#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">block_hash</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/block-index/</span><span class="si">{block_number}</span><span class="s1">&#39;</span><span class="p">)[</span><span class="s1">&#39;blockHash&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot get block hash for block </span><span class="si">{block_number}</span><span class="s1"> (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Found hash for block </span><span class="si">{block_number}</span><span class="s1">: </span><span class="si">{block_hash}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">block_hash</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_transactions_from_block</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">block_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Getting transactions from block by given block number&#39;&#39;&#39;</span>
+        <span class="n">block_hash</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_block_hash</span><span class="p">(</span><span class="n">block_number</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">block_hash</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">transactions_page</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/txs/?block=</span><span class="si">{block_hash}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">transactions_page</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="n">transactions_page</span><span class="p">[</span><span class="s1">&#39;txs&#39;</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Found {len(transactions)} in block </span><span class="si">{block_number}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transactions</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_transactions</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Getting 10 latest transactions.&#39;&#39;&#39;</span>
+        <span class="n">from_block</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_latest_block</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">from_block</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">errors_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">errors_counter</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot get transactions from block (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="n">block_transactions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_transactions_from_block</span><span class="p">(</span><span class="n">from_block</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">block_transactions</span><span class="p">:</span>
+                <span class="n">errors_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">from_block</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">transactions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">block_transactions</span><span class="p">)</span>
+            <span class="n">from_block</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">from_block</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Not enought number of blocks (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Returning {len(transactions)} transactions&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transactions</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_calculate_fee</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Calculate fee base on latest transactions&#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transactions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_transactions</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">transactions</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">fees</span> <span class="o">=</span> <span class="p">[</span><span class="n">tx</span><span class="p">[</span><span class="s1">&#39;fees&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tx</span> <span class="ow">in</span> <span class="n">transactions</span> <span class="k">if</span> <span class="s1">&#39;fees&#39;</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fees</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">fees</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InsightAPIv4.get_fee"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.get_fee">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_fee</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+        <span class="c1"># This endpoint is available from v0.3.1</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fee</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/utils/estimatefee?nbBlocks=1&#39;</span><span class="p">)[</span><span class="s1">&#39;1&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="n">f</span><span class="s1">&#39;Incorrect response from API when getting fee from </span><span class="si">{cls.api_url}</span><span class="s1">/utils/estimatefee?nbBlocks=1&#39;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_calculate_fee</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">fee</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Incorrect value in estimatedFee: </span><span class="si">{fee}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_calculate_fee</span><span class="p">()</span>
+        <span class="n">fee</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fee</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fee</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Got fee = 0 for (</span><span class="si">{cls.symbols[0]}</span><span class="s1">), calculating manually&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fee</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_calculate_fee</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="InsightAPIv4.get_first_vout_from_tx_json"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.get_first_vout_from_tx_json">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_first_vout_from_tx_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_json</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CTxOut</span><span class="p">:</span>
+        <span class="n">cscript</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">CScript</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">tx_json</span><span class="p">[</span><span class="s1">&#39;vout&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;scriptPubKey&#39;</span><span class="p">][</span><span class="s1">&#39;hex&#39;</span><span class="p">])</span>
+        <span class="n">nValue</span> <span class="o">=</span> <span class="n">to_base_units</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tx_json</span><span class="p">[</span><span class="s1">&#39;vout&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">CTxOut</span><span class="p">(</span><span class="n">nValue</span><span class="p">,</span> <span class="n">cscript</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lamden Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+Metadata-Version: 2.0
+Name: eth-account
+Version: 0.1.0a2
+Summary: eth-account: Sign Ethereum transactions and messages with local private keys
+Home-page: https://github.com/ethereum/eth-account
+Author: Jason Carver
+Author-email: ethcalibur+pip@gmail.com
+License: MIT
+Description-Content-Type: UNKNOWN
+Keywords: ethereum
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Requires-Dist: attrdict (<3,>=2.0.0)
+Requires-Dist: eth-keyfile (<0.6.0,>=0.5.0)
+Requires-Dist: eth-keys (<0.3.0,>=0.2.0b1)
+Requires-Dist: eth-utils (<2,>=1.0.0b1)
+Requires-Dist: hexbytes (<1,>=0.1.0b0)
+Requires-Dist: eth-rlp (<1,>=0.1.0a2)
+Provides-Extra: dev
+Requires-Dist: bumpversion (<1,>=0.5.3); extra == 'dev'
+Requires-Dist: pytest-xdist; extra == 'dev'
+Requires-Dist: pytest-watch (<5,>=4.1.0); extra == 'dev'
+Requires-Dist: wheel; extra == 'dev'
+Requires-Dist: ipython; extra == 'dev'
+Requires-Dist: pytest (==3.3.2); extra == 'dev'
+Requires-Dist: tox (<3,>=2.9.1); extra == 'dev'
+Requires-Dist: flake8 (==3.4.1); extra == 'dev'
+Requires-Dist: isort (<5,>=4.2.15); extra == 'dev'
+Requires-Dist: Sphinx (<2,>=1.6.5); extra == 'dev'
+Requires-Dist: sphinx-rtd-theme (>=0.1.9); extra == 'dev'
+Provides-Extra: doc
+Requires-Dist: Sphinx (<2,>=1.6.5); extra == 'doc'
+Requires-Dist: sphinx-rtd-theme (>=0.1.9); extra == 'doc'
+Provides-Extra: lint
+Requires-Dist: flake8 (==3.4.1); extra == 'lint'
+Requires-Dist: isort (<5,>=4.2.15); extra == 'lint'
+Provides-Extra: test
+Requires-Dist: pytest (==3.3.2); extra == 'test'
+Requires-Dist: tox (<3,>=2.9.1); extra == 'test'
+
+eth-account
+===========
+
+|Join the chat at https://gitter.im/ethereum/eth-account|
+
+|Build Status|
+
+Sign Ethereum transactions and messages with local private keys
+
+-  Python 3.5+ support
+
+Read more in the `documentation on
+ReadTheDocs <http://eth-account.readthedocs.io/>`__. `View the change
+log on Github <docs/releases.rst>`__.
+
+Quickstart
+----------
+
+.. code:: sh
+
+    pip install eth-account
+
+Developer setup
+---------------
+
+If you would like to hack on eth-account, please check out the `Ethereum
+Development Tactical
+Manual <https://github.com/pipermerriam/ethereum-dev-tactical-manual>`__
+for information on how we do:
+
+-  Testing
+-  Pull Requests
+-  Code Style
+-  Documentation
+
+Development Environment Setup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can set up your dev environment with:
+
+.. code:: sh
+
+
+    git clone git@github.com:ethereum/eth-account.git
+    cd eth-account
+    virtualenv -p python3 venv
+    . venv/bin/activate
+    pip install -e .[dev]
+
+Testing Setup
+~~~~~~~~~~~~~
+
+During development, you might like to have tests run on every file save.
+
+Show flake8 errors on file change:
+
+.. code:: sh
+
+    # Test flake8
+    when-changed -v -s -r -1 eth_account/ tests/ -c "clear; flake8 eth_account tests && echo 'flake8 success' || echo 'error'"
+
+Run multi-process tests in one command, but without color:
+
+.. code:: sh
+
+    # in the project root:
+    pytest --numprocesses=4 --looponfail --maxfail=1
+    # the same thing, succinctly:
+    pytest -n 4 -f --maxfail=1
+
+Run in one thread, with color and desktop notifications:
+
+.. code:: sh
+
+    cd venv
+    ptw --onfail "notify-send -t 5000 'Test failure ⚠⚠⚠⚠⚠' 'python 3 test on eth-account failed'" ../tests ../eth_account
+
+Release setup
+~~~~~~~~~~~~~
+
+For Debian-like systems:
+
+::
+
+    apt install pandoc
+
+To release a new version:
+
+.. code:: sh
+
+    make release bump=$$VERSION_PART_TO_BUMP$$
+
+How to bumpversion
+^^^^^^^^^^^^^^^^^^
+
+The version format for this repo is ``{major}.{minor}.{patch}`` for
+stable, and ``{major}.{minor}.{patch}-{stage}.{devnum}`` for unstable
+(``stage`` can be alpha or beta).
+
+To issue the next version in line, specify which part to bump, like
+``make release bump=minor`` or ``make release bump=devnum``.
+
+If you are in a beta version, ``make release bump=stage`` will switch to
+a stable.
+
+To issue an unstable version when the current version is stable, specify
+the new version explicitly, like
+``make release bump="--new-version 4.0.0-alpha.1 devnum"``
+
+.. |Join the chat at https://gitter.im/ethereum/eth-account| image:: https://badges.gitter.im/ethereum/eth-account.svg
+   :target: https://gitter.im/ethereum/eth-account?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+.. |Build Status| image:: https://travis-ci.org/ethereum/eth-account.png
+   :target: https://travis-ci.org/ethereum/eth-account
+
+

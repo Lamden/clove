@@ -144,361 +144,60 @@
            <div itemprop="articleBody">
             
   <h1>Source code for clove.utils.external_source</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">http.client</span> <span class="k">import</span> <span class="n">HTTPResponse</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
-<span class="kn">from</span> <span class="nn">urllib.error</span> <span class="k">import</span> <span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span>
-<span class="kn">import</span> <span class="nn">urllib.request</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">BLOCKCYPHER_SUPPORTED_NETWORKS</span><span class="p">,</span>
-    <span class="n">CLOVE_API_URL</span><span class="p">,</span>
-    <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span><span class="p">,</span>
-    <span class="n">NETWORKS_WITH_API</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">from_base_units</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">clove.exceptions</span> <span class="k">import</span> <span class="n">ExternalApiRequestLimitExceeded</span>
 <span class="kn">from</span> <span class="nn">clove.utils.logging</span> <span class="k">import</span> <span class="n">logger</span>
 
 
-<div class="viewcode-block" id="clove_req"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.clove_req">[docs]</a><span class="k">def</span> <span class="nf">clove_req</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HTTPResponse</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Make a request with Clove user-agent header&quot;&quot;&quot;</span>
-    <span class="n">req</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Clove&#39;</span><span class="p">})</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">request_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Requesting: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
-        <span class="n">response_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">request_start</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Got response: </span><span class="si">%s</span><span class="s1"> [</span><span class="si">%.2f</span><span class="s1">s]&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">response_time</span><span class="p">)</span>
-    <span class="k">except</span> <span class="p">(</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Could not open url </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="k">return</span>
-    <span class="k">return</span> <span class="n">resp</span></div>
-
-
 <div class="viewcode-block" id="clove_req_json"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.clove_req_json">[docs]</a><span class="k">def</span> <span class="nf">clove_req_json</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Make a request with Clove user-agent header and return json response&quot;&quot;&quot;</span>
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">clove_req</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span> <span class="ow">or</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a request with Clove user-agent header and return json response</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): url to get data from</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: response data</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ExternalApiRequestLimitExceeded: if response status code is 429</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from clove.utils.external_source import clove_req_json</span>
+<span class="sd">        &gt;&gt;&gt; clove_req_json(&#39;https://testnet.blockexplorer.com/api/status?q=getInfo&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; {&#39;info&#39;: {</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;blocks&#39;: 1414831,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;connections&#39;: 23,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;difficulty&#39;: 1,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;errors&#39;: &#39;Warning: unknown new rules activated (versionbit 28)&#39;,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;network&#39;: &#39;testnet&#39;,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;protocolversion&#39;: 70012,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;proxy&#39;: &#39;&#39;,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;relayfee&#39;: 1e-05,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;testnet&#39;: True,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;timeoffset&#39;: 0,</span>
+<span class="sd">        &gt;&gt;&gt;      &#39;version&#39;: 120100}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Requesting: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="n">request_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Clove&#39;</span><span class="p">})</span>
+
+    <span class="n">response_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">request_start</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Got response: </span><span class="si">%s</span><span class="s1"> [</span><span class="si">%.2f</span><span class="s1">s]&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">response_time</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Requests limit exceeded when requesting url: </span><span class="si">{url}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ExternalApiRequestLimitExceeded</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;url: </span><span class="si">{url}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Unexpected status code when requesting url: </span><span class="si">{url}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span>
 
-    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
-
-
-<div class="viewcode-block" id="get_latest_block_number"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_latest_block_number">[docs]</a><span class="k">def</span> <span class="nf">get_latest_block_number</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NETWORKS_WITH_API</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This network has no API.&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">BLOCKCYPHER_SUPPORTED_NETWORKS</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">testnet</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;btc&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only BTC testnet is supported&#39;</span><span class="p">)</span>
-        <span class="n">network_url</span> <span class="o">=</span> <span class="s1">&#39;test3&#39;</span> <span class="k">if</span> <span class="n">testnet</span> <span class="k">else</span> <span class="s1">&#39;main&#39;</span>
-        <span class="n">api_url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://api.blockcypher.com/v1/</span><span class="si">{symbol}</span><span class="s1">/</span><span class="si">{network_url}</span><span class="s1">/&#39;</span>
-        <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;http://raven-blockchain.info/api/getblockcount&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{symbol}</span><span class="s1">/api.dws?q=getblockcount&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_transaction"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_transaction">[docs]</a><span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-
-    <span class="n">symbol</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NETWORKS_WITH_API</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This network has no API.&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">BLOCKCYPHER_SUPPORTED_NETWORKS</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">testnet</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="o">!=</span> <span class="s1">&#39;btc&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only BTC testnet is supported&#39;</span><span class="p">)</span>
-        <span class="n">network_url</span> <span class="o">=</span> <span class="s1">&#39;test3&#39;</span> <span class="k">if</span> <span class="n">testnet</span> <span class="k">else</span> <span class="s1">&#39;main&#39;</span>
-        <span class="n">api_url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://api.blockcypher.com/v1/</span><span class="si">{symbol}</span><span class="s1">/</span><span class="si">{network_url}</span><span class="s1">/txs/</span><span class="si">{tx_hash}</span><span class="s1">?limit=50&amp;includeHex=true&#39;</span>
-        <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;http://raven-blockchain.info/api/getrawtransaction?txid=</span><span class="si">{tx_hash}</span><span class="s1">&amp;decrypt=1&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{symbol}</span><span class="s1">/api.dws?q=txinfo&amp;t=</span><span class="si">{tx_hash}</span><span class="s1">&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_last_transactions"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_last_transactions">[docs]</a><span class="k">def</span> <span class="nf">get_last_transactions</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
-
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">clove_req</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{network}</span><span class="s1">/api.dws?q=lasttxs&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span> <span class="ow">or</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get last transactions for </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
-        <span class="k">return</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())]</span></div>
-
-
-<div class="viewcode-block" id="get_transaction_size"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_transaction_size">[docs]</a><span class="k">def</span> <span class="nf">get_transaction_size</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;WARNING: this method is using undocumented endpoint used by chainz.cryptoid.info site.&quot;&quot;&quot;</span>
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">clove_req</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/explorer/tx.raw.dws?coin=</span><span class="si">{network}</span><span class="s1">&amp;id=</span><span class="si">{tx_hash}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span> <span class="ow">or</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get transaction </span><span class="si">%s</span><span class="s1"> size for </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
-        <span class="k">return</span>
-    <span class="n">tx_details</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">tx_details</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="get_current_fee"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_current_fee">[docs]</a><span class="k">def</span> <span class="nf">get_current_fee</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Getting current network fee from Clove API&quot;&quot;&quot;</span>
-
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{CLOVE_API_URL}</span><span class="s1">/fee/</span><span class="si">{network}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get current fee for </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="k">return</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;fee&#39;</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="get_balance"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_balance">[docs]</a><span class="k">def</span> <span class="nf">get_balance</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-
-    <span class="n">network_symbol</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">network_symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NETWORKS_WITH_API</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unsupported network </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="k">if</span> <span class="n">network_symbol</span> <span class="ow">in</span> <span class="n">BLOCKCYPHER_SUPPORTED_NETWORKS</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">get_balance_blockcypher</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">network</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">())</span>
-
-    <span class="k">if</span> <span class="n">network_symbol</span> <span class="ow">in</span> <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">get_balance_cryptoid</span><span class="p">(</span>
-            <span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span><span class="p">,</span>
-            <span class="n">address</span><span class="p">,</span>
-            <span class="n">network</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">(),</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CRYPTOID_API_KEY&#39;</span><span class="p">),</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_balance_blockcypher"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_balance_blockcypher">[docs]</a><span class="k">def</span> <span class="nf">get_balance_blockcypher</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-    <span class="n">subnet</span> <span class="o">=</span> <span class="s1">&#39;test3&#39;</span> <span class="k">if</span> <span class="n">testnet</span> <span class="k">else</span> <span class="s1">&#39;main&#39;</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://api.blockcypher.com/v1/{network.lower()}/</span><span class="si">{subnet}</span><span class="s1">/addrs/</span><span class="si">{address}</span><span class="s1">/full?limit=2000&#39;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get details for address </span><span class="si">%s</span><span class="s1"> in </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
-        <span class="k">return</span>
-    <span class="k">return</span> <span class="n">from_base_units</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;balance&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;unconfirmed_balance&#39;</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="get_balance_cryptoid"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_balance_cryptoid">[docs]</a><span class="k">def</span> <span class="nf">get_balance_cryptoid</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">cryptoid_api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="n">cryptoid_api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;API key for cryptoid is required to get balance.&#39;</span><span class="p">)</span>
-    <span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">testnet</span><span class="p">:</span>
-        <span class="n">network</span> <span class="o">+=</span> <span class="s1">&#39;-TEST&#39;</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{network}</span><span class="s1">/api.dws?q=getbalance&amp;a=</span><span class="si">{address}</span><span class="s1">&amp;key=</span><span class="si">{cryptoid_api_key}</span><span class="s1">&#39;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get details for address </span><span class="si">%s</span><span class="s1"> in </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
-        <span class="k">return</span>
-    <span class="k">return</span> <span class="n">data</span></div>
-
-
-<div class="viewcode-block" id="get_utxo_from_api"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.get_utxo_from_api">[docs]</a><span class="k">def</span> <span class="nf">get_utxo_from_api</span><span class="p">(</span>
-    <span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">use_blockcypher</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">cryptoid_api_key</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
-    <span class="kn">from</span> <span class="nn">clove.network.bitcoin.utxo</span> <span class="k">import</span> <span class="n">Utxo</span>
-
-    <span class="k">if</span> <span class="n">use_blockcypher</span><span class="p">:</span>
-        <span class="n">subnet</span> <span class="o">=</span> <span class="s1">&#39;test3&#39;</span> <span class="k">if</span> <span class="n">testnet</span> <span class="k">else</span> <span class="s1">&#39;main&#39;</span>
-        <span class="n">api_url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://api.blockcypher.com/v1/</span><span class="si">{network}</span><span class="s1">/</span><span class="si">{subnet}</span><span class="s1">/addrs/</span><span class="si">{address}</span><span class="s1">&#39;</span> \
-                  <span class="n">f</span><span class="s1">&#39;?limit=2000&amp;unspentOnly=true&amp;includeScript=true&amp;confirmations=6&#39;</span>
-        <span class="n">unspent_key</span> <span class="o">=</span> <span class="s1">&#39;txrefs&#39;</span>
-        <span class="n">vout_key</span> <span class="o">=</span> <span class="s1">&#39;tx_output_n&#39;</span>
-    <span class="k">elif</span> <span class="n">cryptoid_api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;API key for cryptoid is required to get UTXOs.&#39;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">api_url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/</span><span class="si">{network}</span><span class="s1">/api.dws?q=unspent&amp;key=</span><span class="si">{cryptoid_api_key}</span><span class="s1">&amp;active=</span><span class="si">{address}</span><span class="s1">&#39;</span>
-        <span class="n">unspent_key</span> <span class="o">=</span> <span class="s1">&#39;unspent_outputs&#39;</span>
-        <span class="n">vout_key</span> <span class="o">=</span> <span class="s1">&#39;tx_ouput_n&#39;</span>
-
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get UTXOs for address </span><span class="si">%s</span><span class="s1"> in </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="n">unspent</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">unspent_key</span><span class="p">,</span> <span class="p">[])</span>
-
-    <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">unspent</span><span class="p">:</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-
-    <span class="n">unspent</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unspent</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">utxo</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">unspent</span><span class="p">:</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">from_base_units</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-        <span class="n">utxo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">Utxo</span><span class="p">(</span>
-                <span class="n">tx_id</span><span class="o">=</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;tx_hash&#39;</span><span class="p">],</span>
-                <span class="n">vout</span><span class="o">=</span><span class="n">output</span><span class="p">[</span><span class="n">vout_key</span><span class="p">],</span>
-                <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
-                <span class="n">tx_script</span><span class="o">=</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;script&#39;</span><span class="p">],</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">total</span> <span class="o">+=</span> <span class="n">value</span>
-        <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="n">amount</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">utxo</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot find enough UTXO</span><span class="se">\&#39;</span><span class="s1">s. Found </span><span class="si">%.8f</span><span class="s1"> from </span><span class="si">%.8f</span><span class="s1">.&#39;</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="extract_scriptsig_from_redeem_transaction"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.extract_scriptsig_from_redeem_transaction">[docs]</a><span class="k">def</span> <span class="nf">extract_scriptsig_from_redeem_transaction</span><span class="p">(</span>
-    <span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">cryptoid_api_key</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-
-    <span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">network</span> <span class="o">!=</span> <span class="s1">&#39;btc&#39;</span> <span class="ow">and</span> <span class="n">testnet</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-    <span class="k">if</span> <span class="n">network</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;btc&#39;</span><span class="p">,</span> <span class="s1">&#39;doge&#39;</span><span class="p">,</span> <span class="s1">&#39;dash&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">extract_scriptsig_blockcypher</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">,</span> <span class="n">testnet</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">network</span> <span class="o">==</span> <span class="s1">&#39;rvn&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">extract_scriptsig_raven</span><span class="p">(</span><span class="n">contract_address</span><span class="p">,</span> <span class="n">testnet</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">network</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-    <span class="k">return</span> <span class="n">extract_scriptsig_cryptoid</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">,</span> <span class="n">testnet</span><span class="p">,</span> <span class="n">cryptoid_api_key</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="extract_scriptsig_blockcypher"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.extract_scriptsig_blockcypher">[docs]</a><span class="k">def</span> <span class="nf">extract_scriptsig_blockcypher</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="n">subnet</span> <span class="o">=</span> <span class="s1">&#39;test3&#39;</span> <span class="k">if</span> <span class="n">testnet</span> <span class="k">else</span> <span class="s1">&#39;main&#39;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;https://api.blockcypher.com/v1/</span><span class="si">{network}</span><span class="s1">/</span><span class="si">{subnet}</span><span class="s1">/addrs/</span><span class="si">{contract_address}</span><span class="s1">/full&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unexpected response from blockcypher&#39;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected response from blockcypher&#39;</span><span class="p">)</span>
-
-    <span class="n">transactions</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;txs&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Contract was not redeemed yet.&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="k">return</span> <span class="n">transactions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;script&#39;</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="extract_scriptsig_cryptoid"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.extract_scriptsig_cryptoid">[docs]</a><span class="k">def</span> <span class="nf">extract_scriptsig_cryptoid</span><span class="p">(</span>
-    <span class="n">network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">cryptoid_api_key</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">cryptoid_api_key</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;API key for cryptoid is required.&#39;</span><span class="p">)</span>
-
-    <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/ltc/api.dws?q=multiaddr&amp;active=</span><span class="si">{contract_address}</span><span class="s1">&amp;key=</span><span class="si">{cryptoid_api_key}</span><span class="s1">&#39;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unexpected response from cryptoid&#39;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected response from cryptoid&#39;</span><span class="p">)</span>
-
-    <span class="n">transactions</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;txs&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Contract was not redeemed yet.&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="n">redeem_tx_hash</span> <span class="o">=</span> <span class="n">transactions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://chainz.cryptoid.info/explorer/tx.raw.dws?coin=</span><span class="si">{network}</span><span class="s1">&amp;id=</span><span class="si">{redeem_tx_hash}</span><span class="s1">&#39;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unexpected response from cryptoid&#39;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected response from cryptoid&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;vin&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;scriptSig&#39;</span><span class="p">][</span><span class="s1">&#39;hex&#39;</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="extract_scriptsig_raven"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.extract_scriptsig_raven">[docs]</a><span class="k">def</span> <span class="nf">extract_scriptsig_raven</span><span class="p">(</span><span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">testnet</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;http://raven-blockchain.info/ext/getaddress/</span><span class="si">{contract_address}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unexpected response from Ravencoin API.&#39;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected response from Ravencoin API.&#39;</span><span class="p">)</span>
-
-    <span class="n">transactions</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;last_txs&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Contract was not redeemed yet.&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="n">redeem_tx_hash</span> <span class="o">=</span> <span class="n">transactions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;addresses&#39;</span><span class="p">]</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;http://raven-blockchain.info/api/getrawtransaction?txid=</span><span class="si">{redeem_tx_hash}</span><span class="s1">&amp;decrypt=1&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unexpected response from Ravencoin API.&#39;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected response from Ravencoin API.&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;vin&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;scriptSig&#39;</span><span class="p">][</span><span class="s1">&#39;hex&#39;</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="find_redeem_transaction_on_etherscan"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.find_redeem_transaction_on_etherscan">[docs]</a><span class="k">def</span> <span class="nf">find_redeem_transaction_on_etherscan</span><span class="p">(</span>
-    <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">subdomain</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-
-    <span class="n">recipient_address</span> <span class="o">=</span> <span class="n">recipient_address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">contract_address</span> <span class="o">=</span> <span class="n">contract_address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-
-    <span class="n">etherscan_api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;ETHERSCAN_API_KEY&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">etherscan_api_key</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;API key for etherscan is required.&#39;</span><span class="p">)</span>
-
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span>
-        <span class="n">f</span><span class="s1">&#39;http://</span><span class="si">{subdomain}</span><span class="s1">.etherscan.io/api?module=account&amp;action=txlistinternal&#39;</span>
-        <span class="n">f</span><span class="s1">&#39;&amp;address=</span><span class="si">{recipient_address}</span><span class="s1">&amp;apikey=</span><span class="si">{etherscan_api_key}</span><span class="s1">&#39;</span>
-    <span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]):</span>
-        <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">recipient_address</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">contract_address</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Redeem transaction not found.&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="find_redeem_token_transaction_on_etherscan"><a class="viewcode-back" href="../../../api.html#clove.utils.external_source.find_redeem_token_transaction_on_etherscan">[docs]</a><span class="k">def</span> <span class="nf">find_redeem_token_transaction_on_etherscan</span><span class="p">(</span>
-    <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">subdomain</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-
-    <span class="n">recipient_address</span> <span class="o">=</span> <span class="n">recipient_address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">token_address</span> <span class="o">=</span> <span class="n">token_address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-
-    <span class="n">etherscan_api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;ETHERSCAN_API_KEY&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">etherscan_api_key</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;API key for etherscan is required.&#39;</span><span class="p">)</span>
-
-    <span class="n">data</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span>
-        <span class="n">f</span><span class="s1">&#39;http://</span><span class="si">{subdomain}</span><span class="s1">.etherscan.io/api?module=account&amp;action=tokentx&#39;</span>
-        <span class="n">f</span><span class="s1">&#39;&amp;contractaddress=</span><span class="si">{token_address}</span><span class="s1">&amp;address=</span><span class="si">{recipient_address}</span><span class="s1">&#39;</span>
-        <span class="n">f</span><span class="s1">&#39;&amp;apikey=</span><span class="si">{etherscan_api_key}</span><span class="s1">&#39;</span>
-    <span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]):</span>
-        <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">recipient_address</span> \
-                <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;contractAddress&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">token_address</span> \
-                <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Redeem token transaction not found.&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

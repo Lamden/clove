@@ -173,6 +173,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with all the necessary ETH network information and transaction building.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">API</span> <span class="o">=</span> <span class="kc">True</span>
+
     <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">symbols</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">web3_provider_address</span> <span class="o">=</span> <span class="kc">None</span>
@@ -300,6 +302,9 @@
 
 <div class="viewcode-block" id="EthereumBaseNetwork.audit_contract"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.audit_contract">[docs]</a>    <span class="k">def</span> <span class="nf">audit_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumContract</span><span class="p">:</span>
         <span class="n">tx_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_address</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tx_dict</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot audit contract, no such transaction: </span><span class="si">{tx_address}</span><span class="s1"> (</span><span class="si">{self.name}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="k">return</span> <span class="n">EthereumContract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_dict</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.extract_secret_from_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.extract_secret_from_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -403,8 +408,13 @@
         <span class="sd">&quot;&quot;&quot; Returns Ethereum wallter object, which allows to keep address and priv key &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EthereumWallet</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="EthereumBaseNetwork.get_new_wallet"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_new_wallet">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_new_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns new Ethereum wallter object, which allows to keep address and priv key &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">()</span></div>
+
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">blockNumber</span>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -436,7 +446,13 @@
                 <span class="k">return</span> <span class="p">{</span>
                     <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">:],</span>
                     <span class="s1">&#39;transaction_hash&#39;</span><span class="p">:</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;transactionHash&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
-                <span class="p">}</span></div></div>
+                <span class="p">}</span></div>
+
+<div class="viewcode-block" id="EthereumBaseNetwork.get_transaction_url"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_transaction_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_transaction_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blockexplorer_tx</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blockexplorer_tx</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

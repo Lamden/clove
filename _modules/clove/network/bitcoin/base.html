@@ -144,8 +144,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for clove.network.bitcoin.base</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">shuffle</span>
+<span></span><span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">shuffle</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">time</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
@@ -171,7 +170,7 @@
 <span class="kn">from</span> <span class="nn">bitcoin.wallet</span> <span class="k">import</span> <span class="n">CBitcoinAddress</span><span class="p">,</span> <span class="n">CBitcoinAddressError</span>
 
 <span class="kn">from</span> <span class="nn">clove.constants</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span><span class="p">,</span>
+    <span class="n">CLOVE_API_URL</span><span class="p">,</span>
     <span class="n">NODE_COMMUNICATION_TIMEOUT</span><span class="p">,</span>
     <span class="n">REJECT_TIMEOUT</span><span class="p">,</span>
     <span class="n">TRANSACTION_BROADCASTING_MAX_ATTEMPTS</span><span class="p">,</span>
@@ -187,13 +186,7 @@
 <span class="kn">from</span> <span class="nn">clove.network.bitcoin.transaction</span> <span class="k">import</span> <span class="n">BitcoinAtomicSwapTransaction</span>
 <span class="kn">from</span> <span class="nn">clove.network.bitcoin.wallet</span> <span class="k">import</span> <span class="n">BitcoinWallet</span>
 <span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">auto_switch_params</span>
-<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">extract_scriptsig_from_redeem_transaction</span><span class="p">,</span>
-    <span class="n">get_current_fee</span><span class="p">,</span>
-    <span class="n">get_latest_block_number</span><span class="p">,</span>
-    <span class="n">get_transaction</span><span class="p">,</span>
-    <span class="n">get_utxo_from_api</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">clove_req_json</span>
 <span class="kn">from</span> <span class="nn">clove.utils.logging</span> <span class="k">import</span> <span class="n">logger</span>
 <span class="kn">from</span> <span class="nn">clove.utils.network</span> <span class="k">import</span> <span class="n">generate_params_object</span>
 
@@ -515,30 +508,22 @@
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.get_current_fee_per_kb"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_fee_per_kb">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_current_fee_per_kb</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns current fee based on last transactions.&quot;&quot;&quot;</span>
-        <span class="n">network</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">get_current_fee</span><span class="p">(</span><span class="n">network</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;Getting current network fee from Clove API&quot;&quot;&quot;</span>
+
+        <span class="n">network</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">testnet</span><span class="p">:</span>
+            <span class="n">network</span> <span class="o">+=</span> <span class="s1">&#39;-TESTNET&#39;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">clove_req_json</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{CLOVE_API_URL}</span><span class="s1">/fee/</span><span class="si">{network}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not get current fee for </span><span class="si">%s</span><span class="s1"> network&#39;</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">return</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;fee&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.get_current_node"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">getpeername</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="BitcoinBaseNetwork.get_utxo"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_utxo">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_utxo</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;test-bitcoin&#39;</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: network is not supported to get utxo&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-        <span class="n">network</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">network</span> <span class="o">==</span> <span class="s1">&#39;doge&#39;</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;test-bitcoin&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">get_utxo_from_api</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">use_blockcypher</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">testnet</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="n">network</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CRYPTOID_SUPPORTED_NETWORKS</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: network is not supported&#39;</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-        <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CRYPTOID_API_KEY&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">get_utxo_from_api</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">cryptoid_api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.atomic_swap"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.atomic_swap">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">atomic_swap</span><span class="p">(</span>
@@ -546,9 +531,14 @@
         <span class="n">sender_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">solvable_utxo</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">solvable_utxo</span><span class="p">:</span> <span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">secret_hash</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BitcoinAtomicSwapTransaction</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">solvable_utxo</span><span class="p">:</span>
+            <span class="n">solvable_utxo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_utxo</span><span class="p">(</span><span class="n">sender_address</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">solvable_utxo</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot get UTXO for address </span><span class="si">{sender_address}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">return</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">BitcoinAtomicSwapTransaction</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">sender_address</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">solvable_utxo</span><span class="p">,</span> <span class="n">secret_hash</span>
         <span class="p">)</span>
@@ -591,32 +581,6 @@
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unable to extract secret.&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BitcoinBaseNetwork.extract_secret_from_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret_from_redeem_transaction">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-
-        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;test-bitcoin&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">scriptsig</span> <span class="o">=</span> <span class="n">extract_scriptsig_from_redeem_transaction</span><span class="p">(</span>
-                <span class="n">network</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">contract_address</span><span class="o">=</span><span class="n">contract_address</span><span class="p">,</span>
-                <span class="n">testnet</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">(),</span>
-                <span class="n">cryptoid_api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CRYPTOID_API_KEY&#39;</span><span class="p">),</span>
-            <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: network is not supported&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">raise</span>
-        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-            <span class="k">raise</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">extract_secret</span><span class="p">(</span><span class="n">scriptsig</span><span class="o">=</span><span class="n">scriptsig</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-            <span class="k">raise</span></div>
-
 <div class="viewcode-block" id="BitcoinBaseNetwork.is_valid_address"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.is_valid_address">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">is_valid_address</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -632,14 +596,32 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">CTransaction</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ImpossibleDeserialization</span><span class="p">()</span></div>
+            <span class="k">raise</span> <span class="n">ImpossibleDeserialization</span><span class="p">()</span></div></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">get_latest_block_number</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_symbol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testnet</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BitcoinBaseNetwork.get_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_symbol</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_test_network</span><span class="p">())</span></div></div>
+<div class="viewcode-block" id="NoAPI"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.NoAPI">[docs]</a><span class="k">class</span> <span class="nc">NoAPI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">API</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="NoAPI.get_latest_block"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.NoAPI.get_latest_block">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_latest_block</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="NoAPI.get_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.NoAPI.get_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="NoAPI.get_utxo"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.NoAPI.get_utxo">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_utxo</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="NoAPI.extract_secret_from_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.NoAPI.extract_secret_from_redeem_transaction">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="NoAPI.get_balance"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.NoAPI.get_balance">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_balance</span><span class="p">(</span><span class="n">wallet_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 </pre></div>
 
            </div>

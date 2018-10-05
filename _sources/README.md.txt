@@ -1,9 +1,12 @@
 # Clove [![Build Status](https://travis-ci.com/Lamden/clove.svg?token=ZJstcVy9cUkAxLqvqRuL&branch=master)](https://travis-ci.com/Lamden/clove)
 
-version number: 1.2.5
+version number: 1.2.11
 
 
 ## Overview
+
+![clove](https://raw.githubusercontent.com/Lamden/clove/master/docs/clove.jpg)
+
 
 Clove is a library that makes atomic swaps between chains easy.
 
@@ -56,8 +59,8 @@ Installing requirements:
 
 Documentation preview:
 
-    $ make livehtml
+    $ make livedocs
 
-Updating docs for master branch
+Updating docs for `master` branch
 
     $ make gh-pages
