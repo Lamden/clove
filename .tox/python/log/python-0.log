@@ -1,8 +1,0 @@
-actionid: python
-msg: getenv
-cmdargs: ['/home/trojkat/venvs/clove/bin/python', '-m', 'virtualenv', '--python', '/home/trojkat/venvs/clove/bin/python', 'python']
-
-Already using interpreter /home/trojkat/venvs/clove/bin/python
-Using real prefix '/usr'
-New python executable in /home/trojkat/workspace/clove/.tox/python/bin/python
-Installing setuptools, pip, wheel...done.
