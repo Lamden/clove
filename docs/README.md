@@ -59,7 +59,7 @@ Installing requirements:
 
 Documentation preview:
 
-    $ make livehtml
+    $ make livedocs
 
 Updating docs for `master` branch
 
