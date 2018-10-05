@@ -59,8 +59,8 @@ Installing requirements:
 
 Documentation preview:
 
-    $ make livehtml
+    $ make livedocs
 
-Updating docs for master branch
+Updating docs for `master` branch
 
     $ make gh-pages
