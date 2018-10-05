@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.11
 
 * Switching Bitcoin, BitcoinTestNet, BitcoinCash, BitcoinCashTestNet and Dash to Insight API (from blockcypher)
 
