@@ -7,5 +7,6 @@
    README
    usage
    refund
+   tips-and-tricks
    api
 ```

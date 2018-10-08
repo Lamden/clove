@@ -22,18 +22,18 @@ def clove_req_json(url: str):
     Example:
         >>> from clove.utils.external_source import clove_req_json
         >>> clove_req_json('https://testnet.blockexplorer.com/api/status?q=getInfo')
-        >>> {'info': {
-        >>>      'blocks': 1414831,
-        >>>      'connections': 23,
-        >>>      'difficulty': 1,
-        >>>      'errors': 'Warning: unknown new rules activated (versionbit 28)',
-        >>>      'network': 'testnet',
-        >>>      'protocolversion': 70012,
-        >>>      'proxy': '',
-        >>>      'relayfee': 1e-05,
-        >>>      'testnet': True,
-        >>>      'timeoffset': 0,
-        >>>      'version': 120100}}
+        {'info': {
+             'blocks': 1414831,
+             'connections': 23,
+             'difficulty': 1,
+             'errors': 'Warning: unknown new rules activated (versionbit 28)',
+             'network': 'testnet',
+             'protocolversion': 70012,
+             'proxy': '',
+             'relayfee': 1e-05,
+             'testnet': True,
+             'timeoffset': 0,
+             'version': 120100}}
     """
 
     logger.debug('  Requesting: %s', url)
