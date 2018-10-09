@@ -22,6 +22,7 @@ clean:
 gh-pages:
 	git checkout gh-pages
 	rm -rf *
+	rm -rf .tox
 	git checkout master $(SOURCEDIR)
 	git checkout master clove
 	git reset HEAD
