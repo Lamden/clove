@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+* Fix for extracting secret from redeem transaction for Insight API
+* More docstrings with usage examples
+
 ## v1.2.11
 
 * Switching Bitcoin, BitcoinTestNet, BitcoinCash, BitcoinCashTestNet and Dash to Insight API (from blockcypher)

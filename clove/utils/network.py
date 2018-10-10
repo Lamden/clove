@@ -6,7 +6,12 @@ def generate_params_object(
     dns_seeds=(), base58_prefixes={}, max_money=None, genesis_block=None,
     proof_of_work_limit=None, subsidy_halving_interval=None, name=None
 ) -> GenericParams:
+    '''
+    Method that returns GenericParams objects filled with given values.
 
+    Returns:
+        GenericParams: modified object with network parameters.
+    '''
     params_obj = GenericParams()
     params_obj.MESSAGE_START = message_start
     params_obj.DEFAULT_PORT = default_port
