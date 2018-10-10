@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.12
 
 * Fix for extracting secret from redeem transaction for Insight API
 * More docstrings with usage examples
