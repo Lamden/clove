@@ -1,6 +1,8 @@
+from json import JSONDecodeError
 from typing import Optional
 
 from bitcoin.core import CTxOut, script
+import requests
 
 from clove.block_explorer.base import BaseAPI
 from clove.network.bitcoin.utxo import Utxo
@@ -318,3 +320,33 @@ class InsightAPIv4(BaseAPI):
         cscript = script.CScript.fromhex(tx_json['vout'][0]['scriptPubKey']['hex'])
         nValue = to_base_units(float(tx_json['vout'][0]['value']))
         return CTxOut(nValue, cscript)
+
+    @classmethod
+    def publish(cls, raw_transaction: str) -> str:
+        '''
+        Publish signed transaction via block explorer API.
+
+        Args:
+            raw_transaction (str): signed transaction
+
+        Returns:
+            str: transaction address if transaction was published
+
+        Raises:
+            ValueError: if something went wrong
+        '''
+        response = requests.post(f'{cls.api_url}/tx/send', data={'rawtx': raw_transaction})
+        if response.status_code == 200:
+            try:
+                return response.json()['txid']
+            except (JSONDecodeError, TypeError, KeyError):
+                logger.error(f'Unexpected response from API when publishing transaction ({cls.symbols[0]})')
+                raise ValueError('Unexpected response format from API. Please try again.')
+        if response.status_code == 400:
+            logger.debug(f'Error while publishing transaction via API ({cls.symbols[0]}): {response.text}')
+            raise ValueError(f'Unexepected error: ({response.text}). Please try again or check your transaction.')
+        logger.error(
+            f'Unexepected error while publishing transaction via API ({cls.symbols[0]}). '
+            'Status code: {response.status.code}'
+        )
+        raise ValueError('Unexpected response from API. Please try again.')
