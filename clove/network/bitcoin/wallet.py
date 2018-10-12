@@ -10,6 +10,7 @@ from clove.utils.hashing import generate_secret_with_hash
 
 
 class BitcoinWallet(object):
+    '''Wallet object.'''
 
     def __init__(self, private_key=None, encrypted_private_key=None, password=None):
         if private_key is None and encrypted_private_key is None:
@@ -31,14 +32,25 @@ class BitcoinWallet(object):
         self.address = str(P2PKHBitcoinAddress.from_pubkey(self.public_key))
 
     def get_private_key(self) -> str:
+        '''Returns wallet's private key as a string'''
         return str(self.private_key)
 
     def get_public_key(self) -> CPubKey:
+        '''Returns wallet's privete key as a `CPubKey` object.'''
         return self.public_key
 
     @staticmethod
     def encrypt_private_key(private_key: str, password: str) -> bytes:
-        """Encrypt private key with the password."""
+        '''
+        Encrypt private key with the password.
+
+        Args:
+            private_key (str): private key
+            password (str): password to encrypt private key with
+
+        Returns:
+            bytes: encrpyted private key
+        '''
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)
         encrypted_private_key = base64.b64encode(iv + cipher.encrypt(bytes(private_key.encode('utf-8'))))
@@ -46,7 +58,16 @@ class BitcoinWallet(object):
 
     @staticmethod
     def decrypt_private_key(encrypted_private_key: bytes, password: str) -> str:
-        """Decrypt private key with the password."""
+        '''
+        Decrypt private key with the password.
+
+        Args:
+            encrypted_private_key (bytes): encrypted private key
+            password (str): password to decrypt private key with
+
+        Returns:
+            str: decrypted private key
+        '''
         encrypted_private_key = base64.b64decode(encrypted_private_key)
         iv = encrypted_private_key[:AES.block_size]
         cipher = AES.new(sha256(bytes(password.encode('utf-8'))).digest(), AES.MODE_CFB, iv)

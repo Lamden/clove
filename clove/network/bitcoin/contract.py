@@ -10,6 +10,7 @@ from clove.utils.bitcoin import auto_switch_params, from_base_units
 
 
 class BitcoinContract(object):
+    '''Atomic Swap contract.'''
 
     @auto_switch_params(1)
     def __init__(
@@ -69,11 +70,13 @@ class BitcoinContract(object):
             raise ValueError('Given transaction is not a valid contract.')
 
     @property
-    def transaction_address(self):
+    def transaction_address(self) -> str:
+        '''Returns transaction address.'''
         return self.tx_address or b2lx(self.tx.GetHash())
 
     @staticmethod
-    def is_valid_contract_script(script_ops):
+    def is_valid_contract_script(script_ops) -> bool:
+        '''Checking if contract script is an Atomic Swap contract.'''
         try:
             is_valid = (
                 script_ops[0] == script.OP_IF
@@ -92,7 +95,19 @@ class BitcoinContract(object):
 
         return is_valid
 
-    def get_contract_utxo(self, wallet=None, secret=None, refund=False, contract=None):
+    def get_contract_utxo(self, wallet=None, secret: str=None, refund: bool=False, contract: str=None) -> Utxo:
+        '''
+        Creating UTXO object from contract.
+
+        Args:
+            wallet (obj): wallet object
+            secret (str): tranaction secret (used to redeem contract)
+            refund (bool): flag used for refund transactions
+            contract (str): hex string with contract definition
+
+        Returns:
+            Utxo: Unspent transaction output object
+        '''
         return Utxo(
             tx_id=self.transaction_address,
             vout=0,
@@ -104,7 +119,20 @@ class BitcoinContract(object):
             contract=contract,
         )
 
-    def redeem(self, wallet, secret):
+    def redeem(self, wallet, secret: str) -> BitcoinTransaction:
+        '''
+        Creates transaction that can redeem a contract.
+
+        Args:
+            wallet (obj): wallet object of the Atomic Swap contract recipient
+            secret (str): transaction secret that should match the contract secret hash (after hashing)
+
+        Returns:
+            BitcoinTransaction: unsigned transaction object with redeem transaction
+
+        Raises:
+            ValueError: if contract balance is 0
+        '''
         if self.balance == 0:
             raise ValueError("Balance of this contract is 0.")
         transaction = BitcoinTransaction(
@@ -117,6 +145,19 @@ class BitcoinContract(object):
         return transaction
 
     def refund(self, wallet):
+        '''
+        Creates transaction that can refund a contract.
+
+        Args:
+            wallet (obj): wallet object of the Atomic Swap contract creator
+
+        Returns:
+            BitcoinTransaction: unsigned transaction object with refund transaction
+
+        Raises:
+            RuntimeError: if contract is still valid
+            ValueError: if contract balance is 0
+        '''
         if self.locktime > datetime.utcnow():
             locktime_string = self.locktime.strftime('%Y-%m-%d %H:%M:%S')
             raise RuntimeError(f"This contract is still valid! It can't be refunded until {locktime_string} UTC.")
@@ -141,6 +182,22 @@ class BitcoinContract(object):
         utxo: list=None,
         token_address: str=None,
     ):
+        '''
+        Method for creating a second Atomic Swap transaction based on the secret hash from the current contract.
+
+        Args:
+            symbol (str): network symbol
+            sender_address (str): wallet address of the transaction creator
+            recipient_address (str): wallet address of the transaction recipient
+            value (float): amount to be send
+            utxo (list): list of UTXO objects. In None UTXO will be gathered automatically if needed
+                (for bitcoin-based networks)
+            token_address (str): address of the token contract if we want to use a token
+
+        Returns:
+            BitcoinAtomicSwapTransaction, EthereumAtomicSwapTransaction, None: Atomic Swap transaction object
+                or None if something went wrong.
+        '''
         network = self.network.get_network_by_symbol(symbol)
         if network.bitcoin_based:
             return network.atomic_swap(
@@ -158,7 +215,8 @@ class BitcoinContract(object):
             token_address,
         )
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns a dictionary with transaction details.'''
         return {
             'contract_address': self.address,
             'confirmations': self.confirmations,

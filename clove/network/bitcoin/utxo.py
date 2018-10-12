@@ -2,8 +2,11 @@ from bitcoin.core import CMutableTxIn, COutPoint, lx, script, x
 
 
 class Utxo(object):
+    '''Unspent transaction output object.'''
 
-    def __init__(self, tx_id, vout, value, tx_script, wallet=None, secret=None, refund=False, contract=None):
+    def __init__(self, tx_id: str, vout: str, value: str, tx_script: str, wallet=None, secret: str=None,
+                 refund: bool=False, contract: str=None):
+
         self.tx_id = tx_id
         self.vout = vout
         self.value = value
