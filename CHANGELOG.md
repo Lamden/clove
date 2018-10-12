@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.13
 
 * Speed-up for publishing transactions in networks that use Insight API.
 
