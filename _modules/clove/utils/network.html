@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
 </ul>
 
@@ -152,7 +153,12 @@
     <span class="n">dns_seeds</span><span class="o">=</span><span class="p">(),</span> <span class="n">base58_prefixes</span><span class="o">=</span><span class="p">{},</span> <span class="n">max_money</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">genesis_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">proof_of_work_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subsidy_halving_interval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericParams</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Method that returns GenericParams objects filled with given values.</span>
 
+<span class="sd">    Returns:</span>
+<span class="sd">        GenericParams: modified object with network parameters.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">params_obj</span> <span class="o">=</span> <span class="n">GenericParams</span><span class="p">()</span>
     <span class="n">params_obj</span><span class="o">.</span><span class="n">MESSAGE_START</span> <span class="o">=</span> <span class="n">message_start</span>
     <span class="n">params_obj</span><span class="o">.</span><span class="n">DEFAULT_PORT</span> <span class="o">=</span> <span class="n">default_port</span>

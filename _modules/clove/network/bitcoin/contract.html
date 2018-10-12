@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
 </ul>
 
@@ -156,6 +157,7 @@
 
 
 <div class="viewcode-block" id="BitcoinContract"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract">[docs]</a><span class="k">class</span> <span class="nc">BitcoinContract</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Atomic Swap contract.&#39;&#39;&#39;</span>
 
     <span class="nd">@auto_switch_params</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
@@ -215,11 +217,13 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Given transaction is not a valid contract.&#39;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">transaction_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transaction_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Returns transaction address.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_address</span> <span class="ow">or</span> <span class="n">b2lx</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">GetHash</span><span class="p">())</span>
 
 <div class="viewcode-block" id="BitcoinContract.is_valid_contract_script"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.is_valid_contract_script">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_valid_contract_script</span><span class="p">(</span><span class="n">script_ops</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_valid_contract_script</span><span class="p">(</span><span class="n">script_ops</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Checking if contract script is an Atomic Swap contract.&#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">is_valid</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">script_ops</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">script</span><span class="o">.</span><span class="n">OP_IF</span>
@@ -238,7 +242,19 @@
 
         <span class="k">return</span> <span class="n">is_valid</span></div>
 
-<div class="viewcode-block" id="BitcoinContract.get_contract_utxo"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.get_contract_utxo">[docs]</a>    <span class="k">def</span> <span class="nf">get_contract_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">refund</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">contract</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BitcoinContract.get_contract_utxo"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.get_contract_utxo">[docs]</a>    <span class="k">def</span> <span class="nf">get_contract_utxo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">refund</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Utxo</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creating UTXO object from contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wallet (obj): wallet object</span>
+<span class="sd">            secret (str): tranaction secret (used to redeem contract)</span>
+<span class="sd">            refund (bool): flag used for refund transactions</span>
+<span class="sd">            contract (str): hex string with contract definition</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Utxo: Unspent transaction output object</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">Utxo</span><span class="p">(</span>
             <span class="n">tx_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transaction_address</span><span class="p">,</span>
             <span class="n">vout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -250,7 +266,20 @@
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BitcoinContract.redeem"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.redeem">[docs]</a>    <span class="k">def</span> <span class="nf">redeem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="p">,</span> <span class="n">secret</span><span class="p">):</span>
+<div class="viewcode-block" id="BitcoinContract.redeem"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.redeem">[docs]</a>    <span class="k">def</span> <span class="nf">redeem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BitcoinTransaction</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creates transaction that can redeem a contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wallet (obj): wallet object of the Atomic Swap contract recipient</span>
+<span class="sd">            secret (str): transaction secret that should match the contract secret hash (after hashing)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BitcoinTransaction: unsigned transaction object with redeem transaction</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if contract balance is 0</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Balance of this contract is 0.&quot;</span><span class="p">)</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">BitcoinTransaction</span><span class="p">(</span>
@@ -263,6 +292,19 @@
         <span class="k">return</span> <span class="n">transaction</span></div>
 
 <div class="viewcode-block" id="BitcoinContract.refund"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.refund">[docs]</a>    <span class="k">def</span> <span class="nf">refund</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creates transaction that can refund a contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wallet (obj): wallet object of the Atomic Swap contract creator</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BitcoinTransaction: unsigned transaction object with refund transaction</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: if contract is still valid</span>
+<span class="sd">            ValueError: if contract balance is 0</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span> <span class="o">&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">():</span>
             <span class="n">locktime_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locktime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;This contract is still valid! It can&#39;t be refunded until </span><span class="si">{locktime_string}</span><span class="s2"> UTC.&quot;</span><span class="p">)</span>
@@ -287,6 +329,22 @@
         <span class="n">utxo</span><span class="p">:</span> <span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Method for creating a second Atomic Swap transaction based on the secret hash from the current contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symbol (str): network symbol</span>
+<span class="sd">            sender_address (str): wallet address of the transaction creator</span>
+<span class="sd">            recipient_address (str): wallet address of the transaction recipient</span>
+<span class="sd">            value (float): amount to be send</span>
+<span class="sd">            utxo (list): list of UTXO objects. In None UTXO will be gathered automatically if needed</span>
+<span class="sd">                (for bitcoin-based networks)</span>
+<span class="sd">            token_address (str): address of the token contract if we want to use a token</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BitcoinAtomicSwapTransaction, EthereumAtomicSwapTransaction, None: Atomic Swap transaction object</span>
+<span class="sd">                or None if something went wrong.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">network</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_network_by_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">bitcoin_based</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span>
@@ -304,7 +362,8 @@
             <span class="n">token_address</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BitcoinContract.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BitcoinContract.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.contract.BitcoinContract.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Returns a dictionary with transaction details.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
             <span class="s1">&#39;confirmations&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmations</span><span class="p">,</span>

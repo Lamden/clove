@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
 </ul>
 
@@ -156,6 +157,7 @@
 
 
 <div class="viewcode-block" id="BitcoinWallet"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.wallet.BitcoinWallet">[docs]</a><span class="k">class</span> <span class="nc">BitcoinWallet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Wallet object.&#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encrypted_private_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">private_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">encrypted_private_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -177,14 +179,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">P2PKHBitcoinAddress</span><span class="o">.</span><span class="n">from_pubkey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">public_key</span><span class="p">))</span>
 
 <div class="viewcode-block" id="BitcoinWallet.get_private_key"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.wallet.BitcoinWallet.get_private_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_private_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Returns wallet&#39;s private key as a string&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">private_key</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinWallet.get_public_key"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.wallet.BitcoinWallet.get_public_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CPubKey</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Returns wallet&#39;s privete key as a `CPubKey` object.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span></div>
 
 <div class="viewcode-block" id="BitcoinWallet.encrypt_private_key"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.wallet.BitcoinWallet.encrypt_private_key">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">encrypt_private_key</span><span class="p">(</span><span class="n">private_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Encrypt private key with the password.&quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Encrypt private key with the password.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            private_key (str): private key</span>
+<span class="sd">            password (str): password to encrypt private key with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bytes: encrpyted private key</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">iv</span> <span class="o">=</span> <span class="n">Random</span><span class="o">.</span><span class="n">new</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">)</span>
         <span class="n">cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">sha256</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)))</span><span class="o">.</span><span class="n">digest</span><span class="p">(),</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CFB</span><span class="p">,</span> <span class="n">iv</span><span class="p">)</span>
         <span class="n">encrypted_private_key</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">iv</span> <span class="o">+</span> <span class="n">cipher</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">private_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))))</span>
@@ -192,7 +205,16 @@
 
 <div class="viewcode-block" id="BitcoinWallet.decrypt_private_key"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.wallet.BitcoinWallet.decrypt_private_key">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">decrypt_private_key</span><span class="p">(</span><span class="n">encrypted_private_key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Decrypt private key with the password.&quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Decrypt private key with the password.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            encrypted_private_key (bytes): encrypted private key</span>
+<span class="sd">            password (str): password to decrypt private key with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: decrypted private key</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">encrypted_private_key</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">encrypted_private_key</span><span class="p">)</span>
         <span class="n">iv</span> <span class="o">=</span> <span class="n">encrypted_private_key</span><span class="p">[:</span><span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">]</span>
         <span class="n">cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">sha256</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)))</span><span class="o">.</span><span class="n">digest</span><span class="p">(),</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CFB</span><span class="p">,</span> <span class="n">iv</span><span class="p">)</span>

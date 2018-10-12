@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Transaction refunds" href="refund.html" /> 
+    <link rel="prev" title="Tips &amp; Tricks" href="tips-and-tricks.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -81,6 +81,7 @@
 <li class="toctree-l1"><a class="reference internal" href="README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-clove.block_explorer.base">clove.block_explorer.base</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-clove.block_explorer.blockcypher">clove.block_explorer.blockcypher</a></li>
@@ -177,15 +178,20 @@
 <dt id="clove.block_explorer.base.BaseAPI">
 <em class="property">class </em><code class="descclassname">clove.block_explorer.base.</code><code class="descname">BaseAPI</code><a class="reference internal" href="_modules/clove/block_explorer/base.html#BaseAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.base.BaseAPI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Common class for all the block explorers adapter classes.</p>
 <dl class="attribute">
 <dt id="clove.block_explorer.base.BaseAPI.API">
 <code class="descname">API</code><em class="property"> = True</em><a class="headerlink" href="#clove.block_explorer.base.BaseAPI.API" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This value tells us that a given network have a block explorer API support.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.base.BaseAPI.get_confirmations_from_tx_json">
 <em class="property">classmethod </em><code class="descname">get_confirmations_from_tx_json</code><span class="sig-paren">(</span><em>tx_json: dict</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/clove/block_explorer/base.html#BaseAPI.get_confirmations_from_tx_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.base.BaseAPI.get_confirmations_from_tx_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This is an adapter method for getting the number of confirmatons from transaction details.</p>
+<p>This method may be halpfull in a future if some block explorers
+will store the number of confirmations under the different key name.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -196,57 +202,250 @@
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI">
 <em class="property">class </em><code class="descclassname">clove.block_explorer.blockcypher.</code><code class="descname">BlockcypherAPI</code><a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#clove.block_explorer.base.BaseAPI" title="clove.block_explorer.base.BaseAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.block_explorer.base.BaseAPI</span></code></a></p>
+<p>Adapter class for blockcypher.com</p>
 <dl class="attribute">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.api_url">
 <code class="descname">api_url</code><em class="property"> = 'https://api.blockcypher.com'</em><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.api_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Base url for block explorer API.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.blockcypher_url">
-<em class="property">classmethod </em><code class="descname">blockcypher_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.blockcypher_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.blockcypher_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">blockcypher_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.blockcypher_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.blockcypher_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a full API url for a given network.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">full API url</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.extract_secret_from_redeem_transaction">
 <em class="property">classmethod </em><code class="descname">extract_secret_from_redeem_transaction</code><span class="sig-paren">(</span><em>contract_address: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.extract_secret_from_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.extract_secret_from_redeem_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extracting secret from redeem transaction based on contract address.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>contract_address</strong> (<em>str</em>) – address of the contract atomic swap contract</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Secret string or None if contract wasn’t redeemed yet.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="s1">&#39;2N7Gxryn4dD1mdyGM3DMxMAwD7k3RBTJ1gP&#39;</span><span class="p">)</span>
+<span class="go">90f6b9b9a34acb486654b3e9cdc02cce0b8e40a8845924ffda68453ac2477d20</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.get_balance">
 <em class="property">classmethod </em><code class="descname">get_balance</code><span class="sig-paren">(</span><em>wallet_address: str</em><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_balance" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns wallet balance without unconfirmed transactions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wallet_address</strong> (<em>str</em>) – wallet address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">account balance converted from base units or None if something went wrong</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_balance</span><span class="p">(</span><span class="s1">&#39;msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM&#39;</span><span class="p">)</span>
+<span class="go">4.22188744</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.get_fee">
 <em class="property">classmethod </em><code class="descname">get_fee</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_fee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_fee" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns actual fee per kb.</p>
+<dd><p>Getting actual fee per kb</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">actual fee per kb or None if eg. API is not responding</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_fee</span><span class="p">()</span>
+<span class="go">0.00024538</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.get_first_vout_from_tx_json">
 <em class="property">classmethod </em><code class="descname">get_first_vout_from_tx_json</code><span class="sig-paren">(</span><em>tx_json: dict</em><span class="sig-paren">)</span> &#x2192; bitcoin.core.CTxOut<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_first_vout_from_tx_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_first_vout_from_tx_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Adapter method for returning first vout.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_json</strong> (<em>dict</em>) – dictionary with transaction details</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction output</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">CTxOut</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.get_latest_block">
-<em class="property">classmethod </em><code class="descname">get_latest_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_latest_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_latest_block" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_latest_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[int, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_latest_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_latest_block" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of the latest block.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of the latest block or None if API is not working</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_latest_block</span><span class="p">()</span>
+<span class="go">544989</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.get_transaction">
-<em class="property">classmethod </em><code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; Union[dict, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting transaction details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_address</strong> (<em>str</em>) – transaction address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary with transaction details or None if transaction doesn’t exist</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="s1">&#39;a82213fd237a2b4bf05c805611dc913125aef138bf2874f0668133a4bb5f3b64&#39;</span><span class="p">)</span>
+<span class="go">{&#39;blockhash&#39;: &#39;0000000000000000000e2d8d964b4da69f2f30b79aaa58597848719bf0b86a1b&#39;,</span>
+<span class="go"> &#39;blockheight&#39;: 544987,</span>
+<span class="go"> &#39;blocktime&#39;: 1539068621,</span>
+<span class="go"> &#39;confirmations&#39;: 3,</span>
+<span class="go"> &#39;fees&#39;: 0.0011,</span>
+<span class="go"> &#39;locktime&#39;: 0,</span>
+<span class="go"> &#39;size&#39;: 192,</span>
+<span class="go"> &#39;time&#39;: 1539068621,</span>
+<span class="go"> &#39;txid&#39;: &#39;a82213fd237a2b4bf05c805611dc913125aef138bf2874f0668133a4bb5f3b64&#39;,</span>
+<span class="go"> &#39;valueIn&#39;: 0.60725408,</span>
+<span class="go"> &#39;valueOut&#39;: 0.60615408,</span>
+<span class="go"> &#39;version&#39;: 1,</span>
+<span class="go"> &#39;vin&#39;: [{&#39;addr&#39;: &#39;163o7ig87TnUnp1QF1rBrsjU1uhfEW9nNU&#39;,</span>
+<span class="go">   &#39;doubleSpentTxID&#39;: None,</span>
+<span class="go">   &#39;n&#39;: 0,</span>
+<span class="go">   &#39;scriptSig&#39;: {</span>
+<span class="go">    &#39;asm&#39;: &#39;3045022100ad5db8c05d7f702c8328ae5a817a13dd7f0fda876e3bb3b7729b041bb612275502200af30b833c06c8485ccec95de48c2238a4ffa4e4820dd6466b95dc5d26e883ae[ALL] 03b504de54d5940a81cf5f8c483025c6f39bfc7eed60a022549513fd8d6e41d74f&#39;,  # noqa: E50</span>
+<span class="go">    &#39;hex&#39;: &#39;483045022100ad5db8c05d7f702c8328ae5a817a13dd7f0fda876e3bb3b7729b041bb612275502200af30b833c06c8485ccec95de48c2238a4ffa4e4820dd6466b95dc5d26e883ae012103b504de54d5940a81cf5f8c483025c6f39bfc7eed60a022549513fd8d6e41d74f&#39;},  # noqa: E501</span>
+<span class="go">   &#39;sequence&#39;: 4294967295,</span>
+<span class="go">   &#39;txid&#39;: &#39;101cc115cc6882e1fd150c35efd056d18a73c12a3321c406960844561922dfc0&#39;,</span>
+<span class="go">   &#39;value&#39;: 0.60725408,</span>
+<span class="go">   &#39;valueSat&#39;: 60725408,</span>
+<span class="go">   &#39;vout&#39;: 0}],</span>
+<span class="go"> &#39;vout&#39;: [{&#39;n&#39;: 0,</span>
+<span class="go">   &#39;scriptPubKey&#39;: {&#39;addresses&#39;: [&#39;13xMGnw7sTTVXT26YpfZQkk2rvuvJFoMvi&#39;],</span>
+<span class="go">    &#39;asm&#39;: &#39;OP_DUP OP_HASH160 20680d49e72e1de6af9a0180b3293f2cbd0d0666 OP_EQUALVERIFY OP_CHECKSIG&#39;,</span>
+<span class="go">    &#39;hex&#39;: &#39;76a91420680d49e72e1de6af9a0180b3293f2cbd0d066688ac&#39;,</span>
+<span class="go">    &#39;type&#39;: &#39;pubkeyhash&#39;},</span>
+<span class="go">   &#39;spentHeight&#39;: None,</span>
+<span class="go">   &#39;spentIndex&#39;: None,</span>
+<span class="go">   &#39;spentTxId&#39;: None,</span>
+<span class="go">   &#39;value&#39;: &#39;0.60615408&#39;}]}</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.get_transaction_url">
-<em class="property">classmethod </em><code class="descname">get_transaction_url</code><span class="sig-paren">(</span><em>tx_hash: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_transaction_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_transaction_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_transaction_url</code><span class="sig-paren">(</span><em>tx_hash: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_transaction_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_transaction_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns transaction url for a given transaction hash in block explorer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_hash</strong> (<em>str</em>) – transaction hash</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Url to transaction</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.blockcypher.BlockcypherAPI.get_utxo">
-<em class="property">classmethod </em><code class="descname">get_utxo</code><span class="sig-paren">(</span><em>address: str</em>, <em>amount: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_utxo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_utxo</code><span class="sig-paren">(</span><em>address: str</em>, <em>amount: float</em><span class="sig-paren">)</span> &#x2192; Union[list, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/blockcypher.html#BlockcypherAPI.get_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.blockcypher.BlockcypherAPI.get_utxo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting list of UTXO objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> (<em>str</em>) – wallet address to look for UTXO</li>
+<li><strong>amount</strong> (<em>float</em>) – minimum value that should be satisfied in UTXO objects</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of UTXO objects or None it there was not enough UTXO</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_utxo</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go"> Utxo(tx_id=&#39;0cd90567497823097d03464b4b2d08dd659f1c5621dd55e9540bc9bcd3e191ec&#39;, vout=&#39;0&#39;, value=&#39;0.00976168&#39;, tx_script=&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;, wallet=None, secret=None, refund=False),  # noqa: E501</span>
+<span class="go"> Utxo(tx_id=&#39;a5c027027c695f403fe570850e35ffd44bb28479ecaaee039372015fe0aae7b2&#39;, vout=&#39;0&#39;, value=&#39;0.00097114&#39;, tx_script=&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;, wallet=None, secret=None, refund=False)  # noqa: E501</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </dd></dl>
 
@@ -260,54 +459,248 @@
 <dl class="attribute">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.api_url">
 <code class="descname">api_url</code><em class="property"> = 'https://chainz.cryptoid.info'</em><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.api_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Base url for block explorer API.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.cryptoid_url">
 <em class="property">classmethod </em><code class="descname">cryptoid_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.cryptoid_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.cryptoid_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method returns a full API url for a given network.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">full API url</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.extract_secret_from_redeem_transaction">
 <em class="property">classmethod </em><code class="descname">extract_secret_from_redeem_transaction</code><span class="sig-paren">(</span><em>contract_address: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.extract_secret_from_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.extract_secret_from_redeem_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extracting secret from redeem transaction based on contract address.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>contract_address</strong> (<em>str</em>) – address of the contract atomic swap contract</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Secret string or None if contract wasn’t redeemed yet.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="s1">&#39;2N7Gxryn4dD1mdyGM3DMxMAwD7k3RBTJ1gP&#39;</span><span class="p">)</span>
+<span class="go">90f6b9b9a34acb486654b3e9cdc02cce0b8e40a8845924ffda68453ac2477d20</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.get_balance">
-<em class="property">classmethod </em><code class="descname">get_balance</code><span class="sig-paren">(</span><em>wallet_address: str</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_balance" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_balance</code><span class="sig-paren">(</span><em>wallet_address: str</em><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_balance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns wallet balance without unconfirmed transactions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wallet_address</strong> (<em>str</em>) – wallet address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">account balance converted from base units or None if something went wrong</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_balance</span><span class="p">(</span><span class="s1">&#39;msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM&#39;</span><span class="p">)</span>
+<span class="go">4.22188744</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.get_fee">
 <em class="property">classmethod </em><code class="descname">get_fee</code><span class="sig-paren">(</span><em>tx_limit: int = 5</em><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_fee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_fee" title="Permalink to this definition">¶</a></dt>
-<dd><p>Counting fee based on tx_limit transactions (max 10)</p>
+<dd><p>Getting actual fee per kb</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_limit</strong> (<em>int</em>) – counting fee based on given number of last transactions</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">actual fee per kb or None if eg. API is not responding</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_fee</span><span class="p">()</span>
+<span class="go">0.00024538</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.get_first_vout_from_tx_json">
 <em class="property">classmethod </em><code class="descname">get_first_vout_from_tx_json</code><span class="sig-paren">(</span><em>tx_json: dict</em><span class="sig-paren">)</span> &#x2192; bitcoin.core.CTxOut<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_first_vout_from_tx_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_first_vout_from_tx_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Adapter method for returning first vout.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_json</strong> (<em>dict</em>) – dictionary with transaction details</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction output</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">CTxOut</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.get_latest_block">
-<em class="property">classmethod </em><code class="descname">get_latest_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_latest_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_latest_block" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_latest_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[int, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_latest_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_latest_block" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of the latest block.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of the latest block</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_latest_block</span><span class="p">()</span>
+<span class="go">544989</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.get_transaction">
-<em class="property">classmethod </em><code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; Union[dict, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting transaction details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_address</strong> (<em>str</em>) – transaction address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary with transaction details or None if transaction doesn’t exist</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="s1">&#39;a82213fd237a2b4bf05c805611dc913125aef138bf2874f0668133a4bb5f3b64&#39;</span><span class="p">)</span>
+<span class="go">{&#39;blockhash&#39;: &#39;0000000000000000000e2d8d964b4da69f2f30b79aaa58597848719bf0b86a1b&#39;,</span>
+<span class="go"> &#39;blockheight&#39;: 544987,</span>
+<span class="go"> &#39;blocktime&#39;: 1539068621,</span>
+<span class="go"> &#39;confirmations&#39;: 3,</span>
+<span class="go"> &#39;fees&#39;: 0.0011,</span>
+<span class="go"> &#39;locktime&#39;: 0,</span>
+<span class="go"> &#39;size&#39;: 192,</span>
+<span class="go"> &#39;time&#39;: 1539068621,</span>
+<span class="go"> &#39;txid&#39;: &#39;a82213fd237a2b4bf05c805611dc913125aef138bf2874f0668133a4bb5f3b64&#39;,</span>
+<span class="go"> &#39;valueIn&#39;: 0.60725408,</span>
+<span class="go"> &#39;valueOut&#39;: 0.60615408,</span>
+<span class="go"> &#39;version&#39;: 1,</span>
+<span class="go"> &#39;vin&#39;: [{&#39;addr&#39;: &#39;163o7ig87TnUnp1QF1rBrsjU1uhfEW9nNU&#39;,</span>
+<span class="go">   &#39;doubleSpentTxID&#39;: None,</span>
+<span class="go">   &#39;n&#39;: 0,</span>
+<span class="go">   &#39;scriptSig&#39;: {</span>
+<span class="go">    &#39;asm&#39;: &#39;3045022100ad5db8c05d7f702c8328ae5a817a13dd7f0fda876e3bb3b7729b041bb612275502200af30b833c06c8485ccec95de48c2238a4ffa4e4820dd6466b95dc5d26e883ae[ALL] 03b504de54d5940a81cf5f8c483025c6f39bfc7eed60a022549513fd8d6e41d74f&#39;,  # noqa: E50</span>
+<span class="go">    &#39;hex&#39;: &#39;483045022100ad5db8c05d7f702c8328ae5a817a13dd7f0fda876e3bb3b7729b041bb612275502200af30b833c06c8485ccec95de48c2238a4ffa4e4820dd6466b95dc5d26e883ae012103b504de54d5940a81cf5f8c483025c6f39bfc7eed60a022549513fd8d6e41d74f&#39;},  # noqa: E501</span>
+<span class="go">   &#39;sequence&#39;: 4294967295,</span>
+<span class="go">   &#39;txid&#39;: &#39;101cc115cc6882e1fd150c35efd056d18a73c12a3321c406960844561922dfc0&#39;,</span>
+<span class="go">   &#39;value&#39;: 0.60725408,</span>
+<span class="go">   &#39;valueSat&#39;: 60725408,</span>
+<span class="go">   &#39;vout&#39;: 0}],</span>
+<span class="go"> &#39;vout&#39;: [{&#39;n&#39;: 0,</span>
+<span class="go">   &#39;scriptPubKey&#39;: {&#39;addresses&#39;: [&#39;13xMGnw7sTTVXT26YpfZQkk2rvuvJFoMvi&#39;],</span>
+<span class="go">    &#39;asm&#39;: &#39;OP_DUP OP_HASH160 20680d49e72e1de6af9a0180b3293f2cbd0d0666 OP_EQUALVERIFY OP_CHECKSIG&#39;,</span>
+<span class="go">    &#39;hex&#39;: &#39;76a91420680d49e72e1de6af9a0180b3293f2cbd0d066688ac&#39;,</span>
+<span class="go">    &#39;type&#39;: &#39;pubkeyhash&#39;},</span>
+<span class="go">   &#39;spentHeight&#39;: None,</span>
+<span class="go">   &#39;spentIndex&#39;: None,</span>
+<span class="go">   &#39;spentTxId&#39;: None,</span>
+<span class="go">   &#39;value&#39;: &#39;0.60615408&#39;}]}</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.get_transaction_url">
 <em class="property">classmethod </em><code class="descname">get_transaction_url</code><span class="sig-paren">(</span><em>tx_hash: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_transaction_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_transaction_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns transaction url for a given transaction hash in block explorer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_hash</strong> (<em>str</em>) – transaction hash</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Url to transaction</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.cryptoid.CryptoidAPI.get_utxo">
-<em class="property">classmethod </em><code class="descname">get_utxo</code><span class="sig-paren">(</span><em>address: str</em>, <em>amount: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_utxo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_utxo</code><span class="sig-paren">(</span><em>address: str</em>, <em>amount: float</em><span class="sig-paren">)</span> &#x2192; Union[list, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/cryptoid.html#CryptoidAPI.get_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.cryptoid.CryptoidAPI.get_utxo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting list of UTXO objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> (<em>str</em>) – wallet address to look for UTXO</li>
+<li><strong>amount</strong> (<em>float</em>) – minimum value that should be satisfied in UTXO objects</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of UTXO objects or None it there was not enough UTXO</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_utxo</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go"> Utxo(tx_id=&#39;0cd90567497823097d03464b4b2d08dd659f1c5621dd55e9540bc9bcd3e191ec&#39;, vout=&#39;0&#39;, value=&#39;0.00976168&#39;, tx_script=&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;, wallet=None, secret=None, refund=False),  # noqa: E501</span>
+<span class="go"> Utxo(tx_id=&#39;a5c027027c695f403fe570850e35ffd44bb28479ecaaee039372015fe0aae7b2&#39;, vout=&#39;0&#39;, value=&#39;0.00097114&#39;, tx_script=&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;, wallet=None, secret=None, refund=False)  # noqa: E501</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </dd></dl>
 
@@ -337,21 +730,42 @@
 <dt id="clove.block_explorer.insight.InsightAPIv4">
 <em class="property">class </em><code class="descclassname">clove.block_explorer.insight.</code><code class="descname">InsightAPIv4</code><a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#clove.block_explorer.base.BaseAPI" title="clove.block_explorer.base.BaseAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.block_explorer.base.BaseAPI</span></code></a></p>
-<p>Wrapper for block explorers that runs on Insight API engine.
-Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/">https://github.com/bitpay/insight-api/</a></p>
+<p>Wrapper for block explorers that runs on Insight API engine.</p>
+<p>Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/">https://github.com/bitpay/insight-api/</a></p>
 <dl class="attribute">
 <dt id="clove.block_explorer.insight.InsightAPIv4.api_url">
 <code class="descname">api_url</code><em class="property"> = None</em><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.api_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>URL for Insight API</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.extract_secret_from_redeem_transaction">
 <em class="property">classmethod </em><code class="descname">extract_secret_from_redeem_transaction</code><span class="sig-paren">(</span><em>contract_address: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.extract_secret_from_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.extract_secret_from_redeem_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extracting secret from redeem transaction based on contract address.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>contract_address</strong> (<em>str</em>) – address of the contract atomic swap contract</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Secret string or None if contract wasn’t redeemed yet.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="s1">&#39;2N7Gxryn4dD1mdyGM3DMxMAwD7k3RBTJ1gP&#39;</span><span class="p">)</span>
+<span class="go">90f6b9b9a34acb486654b3e9cdc02cce0b8e40a8845924ffda68453ac2477d20</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.get_balance">
-<em class="property">classmethod </em><code class="descname">get_balance</code><span class="sig-paren">(</span><em>wallet_address: str</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_balance" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_balance</code><span class="sig-paren">(</span><em>wallet_address: str</em><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_balance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns wallet balance without unconfirmed transactions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -359,9 +773,9 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wallet_address</strong> (<em>str</em>) – wallet address</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">amount converted from base units</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">amount converted from base units or None if something went wrong</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float, None</td>
 </tr>
 </tbody>
 </table>
@@ -377,23 +791,122 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.get_fee">
 <em class="property">classmethod </em><code class="descname">get_fee</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_fee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_fee" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Getting actual fee per kb</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">actual fee per kb or None if eg. API is not responding</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_fee</span><span class="p">()</span>
+<span class="go">0.00024538</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.get_first_vout_from_tx_json">
 <em class="property">classmethod </em><code class="descname">get_first_vout_from_tx_json</code><span class="sig-paren">(</span><em>tx_json: dict</em><span class="sig-paren">)</span> &#x2192; bitcoin.core.CTxOut<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_first_vout_from_tx_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_first_vout_from_tx_json" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Adapter method for returning first vout.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_json</strong> (<em>dict</em>) – dictionary with transaction details</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction output</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">CTxOut</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.get_latest_block">
 <em class="property">classmethod </em><code class="descname">get_latest_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[int, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_latest_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_latest_block" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of the latest block.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of the latest block or None if API is not working</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_latest_block</span><span class="p">()</span>
+<span class="go">544989</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.get_transaction">
-<em class="property">classmethod </em><code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; Union[dict, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting transaction details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_address</strong> (<em>str</em>) – transaction address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary with transaction details or None if transaction doesn’t exist</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="s1">&#39;a82213fd237a2b4bf05c805611dc913125aef138bf2874f0668133a4bb5f3b64&#39;</span><span class="p">)</span>
+<span class="go">{&#39;blockhash&#39;: &#39;0000000000000000000e2d8d964b4da69f2f30b79aaa58597848719bf0b86a1b&#39;,</span>
+<span class="go"> &#39;blockheight&#39;: 544987,</span>
+<span class="go"> &#39;blocktime&#39;: 1539068621,</span>
+<span class="go"> &#39;confirmations&#39;: 3,</span>
+<span class="go"> &#39;fees&#39;: 0.0011,</span>
+<span class="go"> &#39;locktime&#39;: 0,</span>
+<span class="go"> &#39;size&#39;: 192,</span>
+<span class="go"> &#39;time&#39;: 1539068621,</span>
+<span class="go"> &#39;txid&#39;: &#39;a82213fd237a2b4bf05c805611dc913125aef138bf2874f0668133a4bb5f3b64&#39;,</span>
+<span class="go"> &#39;valueIn&#39;: 0.60725408,</span>
+<span class="go"> &#39;valueOut&#39;: 0.60615408,</span>
+<span class="go"> &#39;version&#39;: 1,</span>
+<span class="go"> &#39;vin&#39;: [{&#39;addr&#39;: &#39;163o7ig87TnUnp1QF1rBrsjU1uhfEW9nNU&#39;,</span>
+<span class="go">   &#39;doubleSpentTxID&#39;: None,</span>
+<span class="go">   &#39;n&#39;: 0,</span>
+<span class="go">   &#39;scriptSig&#39;: {</span>
+<span class="go">    &#39;asm&#39;: &#39;3045022100ad5db8c05d7f702c8328ae5a817a13dd7f0fda876e3bb3b7729b041bb612275502200af30b833c06c8485ccec95de48c2238a4ffa4e4820dd6466b95dc5d26e883ae[ALL] 03b504de54d5940a81cf5f8c483025c6f39bfc7eed60a022549513fd8d6e41d74f&#39;,  # noqa: E50</span>
+<span class="go">    &#39;hex&#39;: &#39;483045022100ad5db8c05d7f702c8328ae5a817a13dd7f0fda876e3bb3b7729b041bb612275502200af30b833c06c8485ccec95de48c2238a4ffa4e4820dd6466b95dc5d26e883ae012103b504de54d5940a81cf5f8c483025c6f39bfc7eed60a022549513fd8d6e41d74f&#39;},  # noqa: E501</span>
+<span class="go">   &#39;sequence&#39;: 4294967295,</span>
+<span class="go">   &#39;txid&#39;: &#39;101cc115cc6882e1fd150c35efd056d18a73c12a3321c406960844561922dfc0&#39;,</span>
+<span class="go">   &#39;value&#39;: 0.60725408,</span>
+<span class="go">   &#39;valueSat&#39;: 60725408,</span>
+<span class="go">   &#39;vout&#39;: 0}],</span>
+<span class="go"> &#39;vout&#39;: [{&#39;n&#39;: 0,</span>
+<span class="go">   &#39;scriptPubKey&#39;: {&#39;addresses&#39;: [&#39;13xMGnw7sTTVXT26YpfZQkk2rvuvJFoMvi&#39;],</span>
+<span class="go">    &#39;asm&#39;: &#39;OP_DUP OP_HASH160 20680d49e72e1de6af9a0180b3293f2cbd0d0666 OP_EQUALVERIFY OP_CHECKSIG&#39;,</span>
+<span class="go">    &#39;hex&#39;: &#39;76a91420680d49e72e1de6af9a0180b3293f2cbd0d066688ac&#39;,</span>
+<span class="go">    &#39;type&#39;: &#39;pubkeyhash&#39;},</span>
+<span class="go">   &#39;spentHeight&#39;: None,</span>
+<span class="go">   &#39;spentIndex&#39;: None,</span>
+<span class="go">   &#39;spentTxId&#39;: None,</span>
+<span class="go">   &#39;value&#39;: &#39;0.60615408&#39;}]}</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.get_transaction_url">
@@ -422,13 +935,43 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 
 <dl class="classmethod">
 <dt id="clove.block_explorer.insight.InsightAPIv4.get_utxo">
-<em class="property">classmethod </em><code class="descname">get_utxo</code><span class="sig-paren">(</span><em>address</em>, <em>amount</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_utxo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_utxo</code><span class="sig-paren">(</span><em>address</em>, <em>amount</em><span class="sig-paren">)</span> &#x2192; Union[list, NoneType]<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.get_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.get_utxo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting list of UTXO objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> (<em>str</em>) – wallet address to look for UTXO</li>
+<li><strong>amount</strong> (<em>float</em>) – minimum value that should be satisfied in UTXO objects</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of UTXO objects or None it there was not enough UTXO</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_utxo</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go"> Utxo(tx_id=&#39;0cd90567497823097d03464b4b2d08dd659f1c5621dd55e9540bc9bcd3e191ec&#39;, vout=&#39;0&#39;, value=&#39;0.00976168&#39;, tx_script=&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;, wallet=None, secret=None, refund=False),  # noqa: E501</span>
+<span class="go"> Utxo(tx_id=&#39;a5c027027c695f403fe570850e35ffd44bb28479ecaaee039372015fe0aae7b2&#39;, vout=&#39;0&#39;, value=&#39;0.00097114&#39;, tx_script=&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;, wallet=None, secret=None, refund=False)  # noqa: E501</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.block_explorer.insight.InsightAPIv4.ui_url">
 <code class="descname">ui_url</code><em class="property"> = None</em><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.ui_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>URL for Insight UI</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -556,199 +1099,748 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 <dd><p>Bases: <a class="reference internal" href="#clove.network.base.BaseNetwork" title="clove.network.base.BaseNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.base.BaseNetwork</span></code></a></p>
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.atomic_swap">
-<code class="descname">atomic_swap</code><span class="sig-paren">(</span><em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>solvable_utxo: list = None</em>, <em>secret_hash: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.atomic_swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.atomic_swap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">atomic_swap</code><span class="sig-paren">(</span><em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>solvable_utxo: list = None</em>, <em>secret_hash: str = None</em><span class="sig-paren">)</span> &#x2192; Union[clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.atomic_swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.atomic_swap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates atomic swap unsigned transaction object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sender_address</strong> (<em>str</em>) – wallet address of the sender</li>
+<li><strong>recipient_address</strong> (<em>str</em>) – wallet address of the recipient</li>
+<li><strong>value</strong> (<em>float</em>) – amount to swap</li>
+<li><strong>solvable_utxo</strong> (<em>list</em>) – optional list of UTXO objects. If None then it will try to find UTXO automatically
+by using the <cite>get_utxo</cite> method.</li>
+<li><strong>secret_hash</strong> (<em>str</em>) – optional secret hash to be used in transaction. If None then the new hash
+will be generated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">unsigned Atomic Swap transaction object or None if something went wrong</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction" title="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction">BitcoinAtomicSwapTransaction</a>, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span><span class="s1">&#39;msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM&#39;</span><span class="p">,</span> <span class="s1">&#39;mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1&#39;</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">)</span>
+<span class="go">&lt;clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction at 0x7f989439d630&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.audit_contract">
 <code class="descname">audit_contract</code><span class="sig-paren">(</span><em>contract: str</em>, <em>raw_transaction: Union[str</em>, <em>NoneType] = None</em>, <em>transaction_address: Union[str</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.contract.BitcoinContract<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.audit_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.audit_contract" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Getting details about an Atomic Swap contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>contract</strong> (<em>str</em>) – contract definition (hex string)</li>
+<li><strong>raw_transaction</strong> (<em>str</em>) – hex string with raw transaction</li>
+<li><strong>transaction_address</strong> (<em>str</em>) – hex string with transaction address which created an Atomic Swap</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">contract object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#clove.network.bitcoin.contract.BitcoinContract" title="clove.network.bitcoin.contract.BitcoinContract">BitcoinContract</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
+<span class="go">    contract=&#39;63a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;,  # noqa: E501</span>
+<span class="go">    transaction_address=&#39;09a60dc3fafe6ba058b2a140457df1c3b446602595d47deed641cb635ffd25aa&#39;</span>
+<span class="go">)</span>
+<span class="go">&lt;clove.network.bitcoin.contract.BitcoinContract at 0x7f98870db978&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.base58_prefixes">
 <code class="descname">base58_prefixes</code><em class="property"> = {}</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.base58_prefixes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Dictionary of different prefixes</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.bitcoin_based">
 <code class="descname">bitcoin_based</code><em class="property"> = True</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.bitcoin_based" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flag for bitcoin-based networks</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.blacklist_nodes">
 <code class="descname">blacklist_nodes</code><em class="property"> = {}</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.blacklist_nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>List of dead nodes</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.broadcast_transaction">
-<code class="descname">broadcast_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.broadcast_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.broadcast_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">broadcast_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.broadcast_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.broadcast_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends given transaction to connected node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_transaction</strong> (<em>str</em>) – hex string containing signed transaction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction address if transaction was sent, None otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.capture_messages">
 <code class="descname">capture_messages</code><span class="sig-paren">(</span><em>expected_message_types: list</em>, <em>timeout: int = 20</em>, <em>buf_size: int = 1024</em>, <em>ignore_empty: bool = False</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.capture_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.capture_messages" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method for receiving messages from network nodes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>expected_message_types</strong> (<em>list</em>) – list of message types to search for</li>
+<li><strong>timeout</strong> (<em>int</em>) – timeout for waiting for messages</li>
+<li><strong>buf_size</strong> (<em>int</em>) – buffer size that is going to be used for receiving messages</li>
+<li><strong>ignore_empty</strong> (<em>bool</em>) – flag for ignoring errors if the message that we’re looking for wasn’t found.
+Eg. this flag can be set to True when looking for reject messages because the absence of the
+reject message is not an error.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of received messages or None if none or not all expected message types were found</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">bitcoin.messages</span> <span class="k">import</span> <span class="n">msg_verack</span><span class="p">,</span> <span class="n">msg_version</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">capture_messages</span><span class="p">([</span><span class="n">msg_version</span><span class="p">,</span> <span class="n">msg_verack</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.connect">
-<code class="descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.connect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects to some node from the network.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">node IP address or domain, None if doesn’t connect to any node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="go">&#39;198.251.83.19&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">connection</span>
+<span class="go">&lt;socket.socket fd=12, family=AddressFamily.AF_INET, type=2049, proto=6, laddr=(&#39;10.93.5.21&#39;, 54300), raddr=(&#39;198.251.83.19&#39;, 18333)&gt;  # noqa: E501</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.connection">
 <code class="descname">connection</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.connection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Connection object</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.create_connection">
-<code class="descname">create_connection</code><span class="sig-paren">(</span><em>node</em>, <em>timeout=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.create_connection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">create_connection</code><span class="sig-paren">(</span><em>node: str</em>, <em>timeout=2</em><span class="sig-paren">)</span> &#x2192; Union[socket.socket, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.create_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establish connection to a given node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node</strong> (<em>str</em>) – node domain or IP address</li>
+<li><strong>timeout</strong> (<em>int</em>) – number of seconds to wait before raising timeout</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">socket connection</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">socket.socket</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">create_connection</span><span class="p">(</span><span class="s1">&#39;104.248.185.143&#39;</span><span class="p">)</span>
+<span class="go">&lt;socket.socket fd=11, family=AddressFamily.AF_INET, type=2049, proto=6, laddr=(&#39;10.93.5.21&#39;, 36086), raddr=(&#39;104.248.185.143&#39;, 18333)&gt;  # noqa: E501</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.deserialize_raw_transaction">
 <em class="property">static </em><code class="descname">deserialize_raw_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; bitcoin.core.CTransaction<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.deserialize_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.deserialize_raw_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checking if transaction can be deserialized (is not corrupted).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_transaction</strong> (<em>str</em>) – transaction to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">CTransaction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ImpossibleDeserialization</span></code> – when transaction is corrupted</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">deserialize_raw_transaction</span><span class="p">(</span><span class="s1">&#39;0100000001aa25fd5f63cb41d6ee7dd495256046b4c3f17d4540a1b258a06bfefac30da60900000000fdff0047304402201c8869d359b5599ecffd51a96f0a8799392c98c4e15242762ba455e37b1f5d6302203f2974e9afc8d641f9363167df48e5a845a8deba1381bf5a1b549ac04718a1ac01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf420c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9514c5163a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac00000000015a7b0100000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">CTransaction((CTxIn(COutPoint(lx(&#39;09a60dc3fafe6ba058b2a140457df1c3b446602595d47deed641cb635ffd25aa&#39;), 0), CScript([x(&#39;304402201c8869d359b5599ecffd51a96f0a8799392c98c4e15242762ba455e37b1f5d6302203f2974e9afc8d641f9363167df48e5a845a8deba1381bf5a1b549ac04718a1ac01&#39;), x(&#39;0459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4&#39;), x(&#39;c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9&#39;), 1, x(&#39;63a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;)]), 0x0),), (CTxOut(0.00097114*COIN, CScript([OP_DUP, OP_HASH160, x(&#39;85c0522f6e23beb11cc3d066cd20ed732648a4e6&#39;), OP_EQUALVERIFY, OP_CHECKSIG])),), 0, 1, CTxWitness())  # noqa: E501</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret">
 <em class="property">classmethod </em><code class="descname">extract_secret</code><span class="sig-paren">(</span><em>raw_transaction: str = None</em>, <em>scriptsig: str = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.extract_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extracting secret from Alice redeem transaction (first redeem in the Atomic Swao).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>raw_transaction</strong> (<em>str</em>) – raw transaction to extract secret from</li>
+<li><strong>scriptSig</strong> (<em>str</em>) – value of the scriptSig field from the first vin</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">transaction secret</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if something goes wrong</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">extract_secret</span><span class="p">(</span><span class="n">raw_transaction</span><span class="o">=</span><span class="s1">&#39;0100000001aa25fd5f63cb41d6ee7dd495256046b4c3f17d4540a1b258a06bfefac30da60900000000fdff0047304402201c8869d359b5599ecffd51a96f0a8799392c98c4e15242762ba455e37b1f5d6302203f2974e9afc8d641f9363167df48e5a845a8deba1381bf5a1b549ac04718a1ac01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf420c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9514c5163a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac00000000015a7b0100000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">&#39;c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">extract_secret</span><span class="p">(</span><span class="n">scriptsig</span><span class="o">=</span><span class="s1">&#39;0c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9514c5163a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">&#39;c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.filter_blacklisted_nodes">
-<code class="descname">filter_blacklisted_nodes</code><span class="sig-paren">(</span><em>nodes</em>, <em>max_tries_number=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.filter_blacklisted_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.filter_blacklisted_nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">filter_blacklisted_nodes</code><span class="sig-paren">(</span><em>nodes: list</em>, <em>max_tries_number=3</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.filter_blacklisted_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.filter_blacklisted_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filtering out dead nodes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>nodes</strong> (<em>list</em>) – list of nodes to filter</li>
+<li><strong>max_tries_number</strong> (<em>int</em>) – maximum number of attempts to connect to a node (above this value node
+is being filtered out)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of nodes without dead nodes</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_fee_per_kb">
 <em class="property">classmethod </em><code class="descname">get_current_fee_per_kb</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[float, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_current_fee_per_kb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_fee_per_kb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getting current network fee from Clove API</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">current fee per kb or None if something went wrong</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_current_fee_per_kb</span><span class="p">()</span>
+<span class="go">0.01006814</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node">
-<code class="descname">get_current_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_current_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">get_current_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_current_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting address of connected node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">IP for connected node or None if there is no connection established.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_current_node</span><span class="p">()</span>
+<span class="go">&#39;157.97.106.250&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_new_wallet">
-<em class="property">classmethod </em><code class="descname">get_new_wallet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_new_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_new_wallet" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_new_wallet</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.wallet.BitcoinWallet<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_new_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_new_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a new wallet.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wallet</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">get_new_wallet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="go">&#39;mrkLKxgzfQk4dgFrfaoVYjeTkXxCfKyz1q&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_nodes">
-<em class="property">static </em><code class="descname">get_nodes</code><span class="sig-paren">(</span><em>seed</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">get_nodes</code><span class="sig-paren">(</span><em>seed: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting nodes from seed node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>seed</strong> (<em>str</em>) – seed node address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of IPs of network nodes</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_nodes</span><span class="p">(</span><span class="s1">&#39;seed.testnet.bitcoin.sprovoost.nl&#39;</span><span class="p">)</span>
+<span class="go">[&#39;46.101.230.222&#39;,</span>
+<span class="go"> &#39;47.97.79.7&#39;,</span>
+<span class="go"> &#39;159.89.205.190&#39;,</span>
+<span class="go"> &#39;163.44.175.226&#39;,</span>
+<span class="go"> &#39;13.57.215.93&#39;,</span>
+<span class="go"> &#39;18.191.17.25&#39;,</span>
+<span class="go"> &#39;46.4.61.78&#39;,</span>
+<span class="go"> &#39;104.248.185.143&#39;,</span>
+<span class="go"> &#39;149.28.176.234&#39;,</span>
+<span class="go"> &#39;71.13.92.62&#39;,</span>
+<span class="go"> &#39;114.215.66.15&#39;,</span>
+<span class="go"> &#39;178.128.244.253&#39;,</span>
+<span class="go"> &#39;46.23.46.139&#39;,</span>
+<span class="go"> &#39;54.37.192.136&#39;,</span>
+<span class="go"> &#39;167.114.64.228&#39;,</span>
+<span class="go"> &#39;159.89.128.32&#39;,</span>
+<span class="go"> &#39;144.76.136.19&#39;,</span>
+<span class="go"> &#39;18.212.60.14&#39;,</span>
+<span class="go"> &#39;54.149.194.238&#39;,</span>
+<span class="go"> &#39;52.53.159.115&#39;,</span>
+<span class="go"> &#39;18.218.226.83&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.get_wallet">
-<em class="property">classmethod </em><code class="descname">get_wallet</code><span class="sig-paren">(</span><em>private_key=None</em>, <em>encrypted_private_key=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_wallet" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">classmethod </em><code class="descname">get_wallet</code><span class="sig-paren">(</span><em>private_key: str = None</em>, <em>encrypted_private_key: bytes = None</em>, <em>password: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.wallet.BitcoinWallet<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.get_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.get_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns wallet object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>private_key</strong> (<em>str</em>) – hex string with wallet’s secret key</li>
+<li><strong>encrypted_private_key</strong> (<em>bytes</em>) – private key encrypted with password</li>
+<li><strong>password</strong> (<em>str</em>) – password for decrypting an encrypted private key</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">wallet object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#clove.network.bitcoin.wallet.BitcoinWallet" title="clove.network.bitcoin.wallet.BitcoinWallet">BitcoinWallet</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wallet</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="s1">&#39;cV8FDJu3JhLED2D7q5L7FwLCus69TajYGEnTWEbNqhzzV9WxMBE7&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wallet</span><span class="o">.</span><span class="n">address</span>
+<span class="go">&#39;mtUXc6UJTiwb5FdoEJ2hzR8R1yUrcj3hcn&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If private_key has not been provided then a new wallet will be generated just like via <cite>get_new_wallet()</cite>.</p>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.is_valid_address">
 <em class="property">classmethod </em><code class="descname">is_valid_address</code><span class="sig-paren">(</span><em>address: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.is_valid_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.is_valid_address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checks if wallet address is valid for this network.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> (<em>str</em>) – wallet address to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if address is valued, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">is_valid_address</span><span class="p">(</span><span class="s1">&#39;13iNsKgMfVJQaYVFqp5ojuudxKkVCMtkoa&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">is_valid_address</span><span class="p">(</span><span class="s1">&#39;msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.message_start">
 <code class="descname">message_start</code><em class="property"> = b''</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.message_start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Message prefix</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.name">
 <code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Network name</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.nodes">
 <code class="descname">nodes</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tuple with nodes addresses or IPs</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.port">
 <code class="descname">port</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.port" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Port number used by network nodes</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.protocol_version">
 <code class="descname">protocol_version</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.protocol_version" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Protocol version number used by network nodes</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.publish">
-<code class="descname">publish</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.publish" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">publish</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for publishing transactions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_transaction</strong> (<em>str</em>) – hex string containing signed transaction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction address or None if transaction wasn’t published</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">raw_transaction</span> <span class="o">=</span> <span class="s1">&#39;010000000184a38a4e8743964249665fb241fbd3...35b&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">)</span>
+<span class="go">70eefae0106b787e592e12914e4040efd8181dd299fa314d8f66da6a95cd1cfe</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.reset_connection">
 <code class="descname">reset_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.reset_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.reset_connection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Disconnection from node if connected and clearing the blacklisted nodes.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.seeds">
 <code class="descname">seeds</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.seeds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tuple with seed nodes addresses</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_inventory">
-<code class="descname">send_inventory</code><span class="sig-paren">(</span><em>serialized_transaction</em><span class="sig-paren">)</span> &#x2192; bitcoin.messages.msg_getdata<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_inventory" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">send_inventory</code><span class="sig-paren">(</span><em>serialized_transaction</em><span class="sig-paren">)</span> &#x2192; Union[bitcoin.messages.msg_getdata, NoneType]<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_inventory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends inventory message with given serialized transaction to connected node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">get data request or None if something went wrong</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">msg_getdata, None</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is used by <cite>broadcast_transaction</cite> to inform connected node about existence
+of the new transaction.</p>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_message">
 <code class="descname">send_message</code><span class="sig-paren">(</span><em>msg: object</em>, <em>timeout: int = 2</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_message" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sends given message to the connected node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>msg</strong> (<em>obj</em>) – bitcoin message object eg bitcoin.messages.msg_version or bitcoin.messages.msg_tx</li>
+<li><strong>timeout</strong> (<em>int</em>) – timeout for communication with connected node</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the message was sent, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">bitcoin.messages</span> <span class="k">import</span> <span class="n">msg_ping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">msg_ping</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_ping">
 <code class="descname">send_ping</code><span class="sig-paren">(</span><em>timeout: int = 1</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_ping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_ping" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sends ping message and tries to capture pong message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<em>int</em>) – timeout for communication with connected node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the message was sent, False otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">send_ping</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_pong">
-<code class="descname">send_pong</code><span class="sig-paren">(</span><em>ping</em>, <em>timeout: int = 1</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_pong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_pong" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">send_pong</code><span class="sig-paren">(</span><em>ping: bitcoin.messages.msg_ping</em>, <em>timeout: int = 1</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_pong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_pong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends pong message in response to ping message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ping</strong> (<em>bitcoin.messages.msg_ping</em>) – ping message that where received</li>
+<li><strong>timeout</strong> (<em>int</em>) – timeout for communication with connected node</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the message was sent, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">send_pong</span><span class="p">(</span><span class="n">ping_message</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_verack">
 <code class="descname">send_verack</code><span class="sig-paren">(</span><em>timeout: int = 2</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_verack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_verack" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sending version acknowledge message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<em>int</em>) – timeout for communication with connected node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the message was sent, False otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">send_verack</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.send_version">
 <code class="descname">send_version</code><span class="sig-paren">(</span><em>timeout: int = 2</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.send_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.send_version" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sending version message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<em>int</em>) – timeout for communication with connected node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the message was sent, False otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">send_version</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.split_message">
 <em class="property">classmethod </em><code class="descname">split_message</code><span class="sig-paren">(</span><em>received_data: bytes</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.split_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.split_message" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Splits received data based on start message prefix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>received_data</strong> (<em>bytes</em>) – portion of received data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of messages that were found</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.switch_params">
 <em class="property">classmethod </em><code class="descname">switch_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.switch_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.switch_params" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method for changing network parameteres.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is used by the <cite>auto_switch_params</cite> decorator.</p>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.symbols">
 <code class="descname">symbols</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.symbols" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tuple with network symbols</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.terminate">
-<code class="descname">terminate</code><span class="sig-paren">(</span><em>node=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.terminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.terminate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">terminate</code><span class="sig-paren">(</span><em>node: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.terminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.terminate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closing connection to a given node and increasing number of failed connection attempts to this node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<em>str</em>) – node’s IP address or domain. If the node was not given then this method will just
+close the existing connection.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.update_blacklist">
 <code class="descname">update_blacklist</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.update_blacklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.update_blacklist" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Increasing number of failed connection attempts to a give node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<em>str</em>) – node’s IP address or domain</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.base.BitcoinBaseNetwork.version_packet">
-<code class="descname">version_packet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.version_packet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.version_packet" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">version_packet</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bitcoin.messages.msg_version<a class="reference internal" href="_modules/clove/network/bitcoin/base.html#BitcoinBaseNetwork.version_packet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.BitcoinBaseNetwork.version_packet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creating version package for a current network.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bitcoin.messages.msg_version</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -756,6 +1848,7 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 <dt id="clove.network.bitcoin.base.NoAPI">
 <em class="property">class </em><code class="descclassname">clove.network.bitcoin.base.</code><code class="descname">NoAPI</code><a class="reference internal" href="_modules/clove/network/bitcoin/base.html#NoAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.base.NoAPI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Empty class for networks that does not have block explorer with API.</p>
 <dl class="attribute">
 <dt id="clove.network.bitcoin.base.NoAPI.API">
 <code class="descname">API</code><em class="property"> = False</em><a class="headerlink" href="#clove.network.bitcoin.base.NoAPI.API" title="Permalink to this definition">¶</a></dt>
@@ -795,40 +1888,138 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 <dt id="clove.network.bitcoin.contract.BitcoinContract">
 <em class="property">class </em><code class="descclassname">clove.network.bitcoin.contract.</code><code class="descname">BitcoinContract</code><span class="sig-paren">(</span><em>network</em>, <em>contract: str</em>, <em>raw_transaction: Union[str</em>, <em>NoneType] = None</em>, <em>transaction_address: Union[str</em>, <em>NoneType] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Atomic Swap contract.</p>
 <dl class="method">
 <dt id="clove.network.bitcoin.contract.BitcoinContract.get_contract_utxo">
-<code class="descname">get_contract_utxo</code><span class="sig-paren">(</span><em>wallet=None</em>, <em>secret=None</em>, <em>refund=False</em>, <em>contract=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.get_contract_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.get_contract_utxo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">get_contract_utxo</code><span class="sig-paren">(</span><em>wallet=None</em>, <em>secret: str = None</em>, <em>refund: bool = False</em>, <em>contract: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.utxo.Utxo<a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.get_contract_utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.get_contract_utxo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creating UTXO object from contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>wallet</strong> (<em>obj</em>) – wallet object</li>
+<li><strong>secret</strong> (<em>str</em>) – tranaction secret (used to redeem contract)</li>
+<li><strong>refund</strong> (<em>bool</em>) – flag used for refund transactions</li>
+<li><strong>contract</strong> (<em>str</em>) – hex string with contract definition</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Unspent transaction output object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#clove.network.bitcoin.utxo.Utxo" title="clove.network.bitcoin.utxo.Utxo">Utxo</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.bitcoin.contract.BitcoinContract.is_valid_contract_script">
-<em class="property">static </em><code class="descname">is_valid_contract_script</code><span class="sig-paren">(</span><em>script_ops</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.is_valid_contract_script"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.is_valid_contract_script" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">is_valid_contract_script</code><span class="sig-paren">(</span><em>script_ops</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.is_valid_contract_script"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.is_valid_contract_script" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checking if contract script is an Atomic Swap contract.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.contract.BitcoinContract.participate">
 <code class="descname">participate</code><span class="sig-paren">(</span><em>symbol: str</em>, <em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>utxo: list = None</em>, <em>token_address: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.participate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.participate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method for creating a second Atomic Swap transaction based on the secret hash from the current contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>symbol</strong> (<em>str</em>) – network symbol</li>
+<li><strong>sender_address</strong> (<em>str</em>) – wallet address of the transaction creator</li>
+<li><strong>recipient_address</strong> (<em>str</em>) – wallet address of the transaction recipient</li>
+<li><strong>value</strong> (<em>float</em>) – amount to be send</li>
+<li><strong>utxo</strong> (<em>list</em>) – list of UTXO objects. In None UTXO will be gathered automatically if needed
+(for bitcoin-based networks)</li>
+<li><strong>token_address</strong> (<em>str</em>) – address of the token contract if we want to use a token</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>Atomic Swap transaction object</dt>
+<dd><p class="first last">or None if something went wrong.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction" title="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction">BitcoinAtomicSwapTransaction</a>, <a class="reference internal" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction" title="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction">EthereumAtomicSwapTransaction</a>, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.contract.BitcoinContract.redeem">
-<code class="descname">redeem</code><span class="sig-paren">(</span><em>wallet</em>, <em>secret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.redeem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.redeem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">redeem</code><span class="sig-paren">(</span><em>wallet</em>, <em>secret: str</em><span class="sig-paren">)</span> &#x2192; clove.network.bitcoin.transaction.BitcoinTransaction<a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.redeem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.redeem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates transaction that can redeem a contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>wallet</strong> (<em>obj</em>) – wallet object of the Atomic Swap contract recipient</li>
+<li><strong>secret</strong> (<em>str</em>) – transaction secret that should match the contract secret hash (after hashing)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">unsigned transaction object with redeem transaction</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#clove.network.bitcoin.transaction.BitcoinTransaction" title="clove.network.bitcoin.transaction.BitcoinTransaction">BitcoinTransaction</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if contract balance is 0</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.contract.BitcoinContract.refund">
 <code class="descname">refund</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.refund"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.refund" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates transaction that can refund a contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>wallet</strong> (<em>obj</em>) – wallet object of the Atomic Swap contract creator</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">unsigned transaction object with refund transaction</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#clove.network.bitcoin.transaction.BitcoinTransaction" title="clove.network.bitcoin.transaction.BitcoinTransaction">BitcoinTransaction</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code> – if contract is still valid</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if contract balance is 0</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.contract.BitcoinContract.show_details">
-<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.show_details" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/bitcoin/contract.html#BitcoinContract.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with transaction details.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.bitcoin.contract.BitcoinContract.transaction_address">
 <code class="descname">transaction_address</code><a class="headerlink" href="#clove.network.bitcoin.contract.BitcoinContract.transaction_address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns transaction address.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -971,8 +2162,9 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 <span id="clove-network-bitcoin-utxo"></span><span id="clove-network-bitcoin-utxo"></span><h2>clove.network.bitcoin.utxo<a class="headerlink" href="#module-clove.network.bitcoin.utxo" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="clove.network.bitcoin.utxo.Utxo">
-<em class="property">class </em><code class="descclassname">clove.network.bitcoin.utxo.</code><code class="descname">Utxo</code><span class="sig-paren">(</span><em>tx_id</em>, <em>vout</em>, <em>value</em>, <em>tx_script</em>, <em>wallet=None</em>, <em>secret=None</em>, <em>refund=False</em>, <em>contract=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/utxo.html#Utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">clove.network.bitcoin.utxo.</code><code class="descname">Utxo</code><span class="sig-paren">(</span><em>tx_id: str</em>, <em>vout: str</em>, <em>value: str</em>, <em>tx_script: str</em>, <em>wallet=None</em>, <em>secret: str = None</em>, <em>refund: bool = False</em>, <em>contract: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/utxo.html#Utxo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Unspent transaction output object.</p>
 <dl class="attribute">
 <dt id="clove.network.bitcoin.utxo.Utxo.outpoint">
 <code class="descname">outpoint</code><a class="headerlink" href="#clove.network.bitcoin.utxo.Utxo.outpoint" title="Permalink to this definition">¶</a></dt>
@@ -1002,27 +2194,66 @@ Docs: <a class="reference external" href="https://github.com/bitpay/insight-api/
 <dt id="clove.network.bitcoin.wallet.BitcoinWallet">
 <em class="property">class </em><code class="descclassname">clove.network.bitcoin.wallet.</code><code class="descname">BitcoinWallet</code><span class="sig-paren">(</span><em>private_key=None</em>, <em>encrypted_private_key=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wallet object.</p>
 <dl class="staticmethod">
 <dt id="clove.network.bitcoin.wallet.BitcoinWallet.decrypt_private_key">
 <em class="property">static </em><code class="descname">decrypt_private_key</code><span class="sig-paren">(</span><em>encrypted_private_key: bytes</em>, <em>password: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.decrypt_private_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.decrypt_private_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decrypt private key with the password.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>encrypted_private_key</strong> (<em>bytes</em>) – encrypted private key</li>
+<li><strong>password</strong> (<em>str</em>) – password to decrypt private key with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">decrypted private key</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.bitcoin.wallet.BitcoinWallet.encrypt_private_key">
 <em class="property">static </em><code class="descname">encrypt_private_key</code><span class="sig-paren">(</span><em>private_key: str</em>, <em>password: str</em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.encrypt_private_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.encrypt_private_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encrypt private key with the password.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>private_key</strong> (<em>str</em>) – private key</li>
+<li><strong>password</strong> (<em>str</em>) – password to encrypt private key with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">encrpyted private key</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bytes</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.wallet.BitcoinWallet.get_private_key">
 <code class="descname">get_private_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.get_private_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.get_private_key" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns wallet’s private key as a string</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.wallet.BitcoinWallet.get_public_key">
 <code class="descname">get_public_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bitcoin.core.key.CPubKey<a class="reference internal" href="_modules/clove/network/bitcoin/wallet.html#BitcoinWallet.get_public_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.wallet.BitcoinWallet.get_public_key" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns wallet’s privete key as a <cite>CPubKey</cite> object.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1409,17 +2640,69 @@ Smart contract is taken based on provided address</p>
 <dl class="function">
 <dt id="clove.utils.bitcoin.auto_switch_params">
 <code class="descclassname">clove.utils.bitcoin.</code><code class="descname">auto_switch_params</code><span class="sig-paren">(</span><em>args_index: int = 0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/bitcoin.html#auto_switch_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.auto_switch_params" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Decorator for changing network parameters before running some method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args_index</strong> (<em>int</em>) – if network object was passed as an argument we can provide an index number of this argument.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@auto_switch_params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="clove.utils.bitcoin.from_base_units">
-<code class="descclassname">clove.utils.bitcoin.</code><code class="descname">from_base_units</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/bitcoin.html#from_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.from_base_units" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">clove.utils.bitcoin.</code><code class="descname">from_base_units</code><span class="sig-paren">(</span><em>value: int</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/clove/utils/bitcoin.html#from_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.from_base_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converting value from base units.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em>) – value in base units</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value in main coins</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">from_base_units</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">from_base_units</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="go">0.0001</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="clove.utils.bitcoin.to_base_units">
-<code class="descclassname">clove.utils.bitcoin.</code><code class="descname">to_base_units</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/bitcoin.html#to_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.to_base_units" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">clove.utils.bitcoin.</code><code class="descname">to_base_units</code><span class="sig-paren">(</span><em>value: float</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/clove/utils/bitcoin.html#to_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.to_base_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converting value from base units.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em>) – value in base units</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value in main coins</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.utils.bitcoin</span> <span class="k">import</span> <span class="n">to_base_units</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_base_units</span><span class="p">(</span><span class="mf">0.000001</span><span class="p">)</span>
+<span class="go">100</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </div>
 <div class="section" id="module-clove.utils.external_source">
@@ -1445,18 +2728,18 @@ Smart contract is taken based on provided address</p>
 <p class="rubric">Example</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.utils.external_source</span> <span class="k">import</span> <span class="n">clove_req_json</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clove_req_json</span><span class="p">(</span><span class="s1">&#39;https://testnet.blockexplorer.com/api/status?q=getInfo&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;blocks&#39;</span><span class="p">:</span> <span class="mi">1414831</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;connections&#39;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;difficulty&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;errors&#39;</span><span class="p">:</span> <span class="s1">&#39;Warning: unknown new rules activated (versionbit 28)&#39;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="s1">&#39;testnet&#39;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;protocolversion&#39;</span><span class="p">:</span> <span class="mi">70012</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;proxy&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;relayfee&#39;</span><span class="p">:</span> <span class="mf">1e-05</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;testnet&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;timeoffset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>     <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="mi">120100</span><span class="p">}}</span>
+<span class="go">{&#39;info&#39;: {</span>
+<span class="go">     &#39;blocks&#39;: 1414831,</span>
+<span class="go">     &#39;connections&#39;: 23,</span>
+<span class="go">     &#39;difficulty&#39;: 1,</span>
+<span class="go">     &#39;errors&#39;: &#39;Warning: unknown new rules activated (versionbit 28)&#39;,</span>
+<span class="go">     &#39;network&#39;: &#39;testnet&#39;,</span>
+<span class="go">     &#39;protocolversion&#39;: 70012,</span>
+<span class="go">     &#39;proxy&#39;: &#39;&#39;,</span>
+<span class="go">     &#39;relayfee&#39;: 1e-05,</span>
+<span class="go">     &#39;testnet&#39;: True,</span>
+<span class="go">     &#39;timeoffset&#39;: 0,</span>
+<span class="go">     &#39;version&#39;: 120100}}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1467,18 +2750,53 @@ Smart contract is taken based on provided address</p>
 <dl class="function">
 <dt id="clove.utils.hashing.generate_secret_with_hash">
 <code class="descclassname">clove.utils.hashing.</code><code class="descname">generate_secret_with_hash</code><span class="sig-paren">(</span><em>) -&gt; (&lt;class 'bytes'&gt;</em>, <em>&lt;class 'bytes'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/hashing.html#generate_secret_with_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.hashing.generate_secret_with_hash" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generating secret and related ripemd160 hash.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">secret, secret hash</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.utils.hashing</span> <span class="k">import</span> <span class="n">generate_secret_with_hash</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">secret</span><span class="p">,</span> <span class="n">secret_hash</span> <span class="o">=</span> <span class="n">generate_secret_with_hash</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">secret</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+<span class="go">&#39;95a968aa18866ffe6ed9ad39a06e27a90e55699734007173bfdd3daa4bab661d&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </div>
 <div class="section" id="module-clove.utils.logging">
 <span id="clove-utils-logging"></span><span id="clove-utils-logging"></span><h2>clove.utils.logging<a class="headerlink" href="#module-clove.utils.logging" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="clove.utils.logging.logger">
+<code class="descclassname">clove.utils.logging.</code><code class="descname">logger</code><em class="property"> = &lt;RootLogger root (DEBUG)&gt;</em><a class="headerlink" href="#clove.utils.logging.logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Common logger for all the clove methods.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-clove.utils.network">
 <span id="clove-utils-network"></span><span id="clove-utils-network"></span><h2>clove.utils.network<a class="headerlink" href="#module-clove.utils.network" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="clove.utils.network.generate_params_object">
 <code class="descclassname">clove.utils.network.</code><code class="descname">generate_params_object</code><span class="sig-paren">(</span><em>message_start=b''</em>, <em>default_port=None</em>, <em>rpc_port=None</em>, <em>dns_seeds=()</em>, <em>base58_prefixes={}</em>, <em>max_money=None</em>, <em>genesis_block=None</em>, <em>proof_of_work_limit=None</em>, <em>subsidy_halving_interval=None</em>, <em>name=None</em><span class="sig-paren">)</span> &#x2192; bitcoin.GenericParams<a class="reference internal" href="_modules/clove/utils/network.html#generate_params_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.network.generate_params_object" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method that returns GenericParams objects filled with given values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">modified object with network parameters.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">GenericParams</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-clove.utils.search">
@@ -1486,7 +2804,26 @@ Smart contract is taken based on provided address</p>
 <dl class="function">
 <dt id="clove.utils.search.get_network_by_symbol">
 <code class="descclassname">clove.utils.search.</code><code class="descname">get_network_by_symbol</code><span class="sig-paren">(</span><em>symbol: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/utils/search.html#get_network_by_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.search.get_network_by_symbol" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns network instance by its symbol.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>symbol</strong> (<em>str</em>) – network symbol</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Network object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code> – if there is no network with given symbol.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.utils.search</span> <span class="k">import</span> <span class="n">get_network_by_symbol</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_network_by_symbol</span><span class="p">(</span><span class="s1">&#39;BTC&#39;</span><span class="p">)</span>
+<span class="go">&lt;clove.network.bitcoin.Bitcoin at 0x7f5a84b233c8&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </div>
 </div>
@@ -1500,7 +2837,7 @@ Smart contract is taken based on provided address</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="refund.html" class="btn btn-neutral" title="Transaction refunds" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tips-and-tricks.html" class="btn btn-neutral" title="Tips &amp; Tricks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

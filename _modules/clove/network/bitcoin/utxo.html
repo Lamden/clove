@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
 </ul>
 
@@ -148,8 +149,11 @@
 
 
 <div class="viewcode-block" id="Utxo"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.utxo.Utxo">[docs]</a><span class="k">class</span> <span class="nc">Utxo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Unspent transaction output object.&#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_id</span><span class="p">,</span> <span class="n">vout</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tx_script</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">refund</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">contract</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">vout</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tx_script</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">refund</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">tx_id</span> <span class="o">=</span> <span class="n">tx_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vout</span> <span class="o">=</span> <span class="n">vout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>

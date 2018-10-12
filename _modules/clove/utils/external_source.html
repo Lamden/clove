@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
 </ul>
 
@@ -168,18 +169,18 @@
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; from clove.utils.external_source import clove_req_json</span>
 <span class="sd">        &gt;&gt;&gt; clove_req_json(&#39;https://testnet.blockexplorer.com/api/status?q=getInfo&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; {&#39;info&#39;: {</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;blocks&#39;: 1414831,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;connections&#39;: 23,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;difficulty&#39;: 1,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;errors&#39;: &#39;Warning: unknown new rules activated (versionbit 28)&#39;,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;network&#39;: &#39;testnet&#39;,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;protocolversion&#39;: 70012,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;proxy&#39;: &#39;&#39;,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;relayfee&#39;: 1e-05,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;testnet&#39;: True,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;timeoffset&#39;: 0,</span>
-<span class="sd">        &gt;&gt;&gt;      &#39;version&#39;: 120100}}</span>
+<span class="sd">        {&#39;info&#39;: {</span>
+<span class="sd">             &#39;blocks&#39;: 1414831,</span>
+<span class="sd">             &#39;connections&#39;: 23,</span>
+<span class="sd">             &#39;difficulty&#39;: 1,</span>
+<span class="sd">             &#39;errors&#39;: &#39;Warning: unknown new rules activated (versionbit 28)&#39;,</span>
+<span class="sd">             &#39;network&#39;: &#39;testnet&#39;,</span>
+<span class="sd">             &#39;protocolversion&#39;: 70012,</span>
+<span class="sd">             &#39;proxy&#39;: &#39;&#39;,</span>
+<span class="sd">             &#39;relayfee&#39;: 1e-05,</span>
+<span class="sd">             &#39;testnet&#39;: True,</span>
+<span class="sd">             &#39;timeoffset&#39;: 0,</span>
+<span class="sd">             &#39;version&#39;: 120100}}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Requesting: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>

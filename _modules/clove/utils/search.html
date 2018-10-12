@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
 </ul>
 
@@ -148,6 +149,23 @@
 
 
 <div class="viewcode-block" id="get_network_by_symbol"><a class="viewcode-back" href="../../../api.html#clove.utils.search.get_network_by_symbol">[docs]</a><span class="k">def</span> <span class="nf">get_network_by_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns network instance by its symbol.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        symbol (str): network symbol</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Network object</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: if there is no network with given symbol.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from clove.utils.search import get_network_by_symbol</span>
+<span class="sd">        &gt;&gt;&gt; get_network_by_symbol(&#39;BTC&#39;)</span>
+<span class="sd">        &lt;clove.network.bitcoin.Bitcoin at 0x7f5a84b233c8&gt;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">BaseNetwork</span><span class="o">.</span><span class="n">get_network_by_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>

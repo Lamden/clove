@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
 </ul>
 
@@ -149,15 +150,53 @@
 <span class="kn">from</span> <span class="nn">bitcoin.core</span> <span class="k">import</span> <span class="n">COIN</span>
 
 
-<div class="viewcode-block" id="from_base_units"><a class="viewcode-back" href="../../../api.html#clove.utils.bitcoin.from_base_units">[docs]</a><span class="k">def</span> <span class="nf">from_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="from_base_units"><a class="viewcode-back" href="../../../api.html#clove.utils.bitcoin.from_base_units">[docs]</a><span class="k">def</span> <span class="nf">from_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converting value from base units.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (int): value in base units</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: value in main coins</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from clove.utils.bitcoin import from_base_units</span>
+<span class="sd">        &gt;&gt;&gt; from_base_units(10000)</span>
+<span class="sd">        0.0001</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">value</span> <span class="o">/</span> <span class="n">COIN</span></div>
 
 
-<div class="viewcode-block" id="to_base_units"><a class="viewcode-back" href="../../../api.html#clove.utils.bitcoin.to_base_units">[docs]</a><span class="k">def</span> <span class="nf">to_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="to_base_units"><a class="viewcode-back" href="../../../api.html#clove.utils.bitcoin.to_base_units">[docs]</a><span class="k">def</span> <span class="nf">to_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converting value from base units.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (int): value in base units</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: value in main coins</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from clove.utils.bitcoin import to_base_units</span>
+<span class="sd">        &gt;&gt;&gt; to_base_units(0.000001)</span>
+<span class="sd">        100</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="n">COIN</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="auto_switch_params"><a class="viewcode-back" href="../../../api.html#clove.utils.bitcoin.auto_switch_params">[docs]</a><span class="k">def</span> <span class="nf">auto_switch_params</span><span class="p">(</span><span class="n">args_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="auto_switch_params"><a class="viewcode-back" href="../../../api.html#clove.utils.bitcoin.auto_switch_params">[docs]</a><span class="k">def</span> <span class="nf">auto_switch_params</span><span class="p">(</span><span class="n">args_index</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Decorator for changing network parameters before running some method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args_index (int): if network object was passed as an argument we can provide an index number of this argument.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; @auto_switch_params()</span>
+<span class="sd">        &gt;&gt;&gt; def connect(self) -&gt; str:</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

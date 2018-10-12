@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
 </ul>
 
@@ -194,19 +195,36 @@
 <div class="viewcode-block" id="BitcoinBaseNetwork"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork">[docs]</a><span class="k">class</span> <span class="nc">BitcoinBaseNetwork</span><span class="p">(</span><span class="n">BaseNetwork</span><span class="p">):</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Network name&#39;&#39;&#39;</span>
     <span class="n">symbols</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="sd">&#39;&#39;&#39;Tuple with network symbols&#39;&#39;&#39;</span>
     <span class="n">seeds</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="sd">&#39;&#39;&#39;Tuple with seed nodes addresses&#39;&#39;&#39;</span>
     <span class="n">nodes</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="sd">&#39;&#39;&#39;Tuple with nodes addresses or IPs&#39;&#39;&#39;</span>
     <span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Port number used by network nodes&#39;&#39;&#39;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Connection object&#39;&#39;&#39;</span>
     <span class="n">protocol_version</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Protocol version number used by network nodes&#39;&#39;&#39;</span>
     <span class="n">blacklist_nodes</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&#39;&#39;&#39;List of dead nodes&#39;&#39;&#39;</span>
     <span class="n">message_start</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;Message prefix&#39;&#39;&#39;</span>
     <span class="n">base58_prefixes</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&#39;&#39;&#39;Dictionary of different prefixes&#39;&#39;&#39;</span>
     <span class="n">bitcoin_based</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="sd">&#39;&#39;&#39;Flag for bitcoin-based networks&#39;&#39;&#39;</span>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.switch_params"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.switch_params">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">switch_params</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Method for changing network parameteres.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is used by the `auto_switch_params` decorator.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;bitcoin&#39;</span><span class="p">:</span>
             <span class="n">SelectParams</span><span class="p">(</span><span class="s1">&#39;mainnet&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;test-bitcoin&#39;</span><span class="p">:</span>
@@ -221,7 +239,21 @@
                 <span class="p">)</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BitcoinBaseNetwork.publish"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="BitcoinBaseNetwork.publish"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Method for publishing transactions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_transaction (str): hex string containing signed transaction</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: transaction address or None if transaction wasn&#39;t published</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; raw_transaction = &#39;010000000184a38a4e8743964249665fb241fbd3...35b&#39;</span>
+<span class="sd">            &gt;&gt;&gt; network.publish(raw_transaction)</span>
+<span class="sd">            70eefae0106b787e592e12914e4040efd8181dd299fa314d8f66da6a95cd1cfe</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">TRANSACTION_BROADCASTING_MAX_ATTEMPTS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">transaction_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">broadcast_transaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">)</span>
 
@@ -238,7 +270,40 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.get_nodes"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_nodes">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_nodes</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_nodes</span><span class="p">(</span><span class="n">seed</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Extracting nodes from seed node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seed (str): seed node address</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: list of IPs of network nodes</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.get_nodes(&#39;seed.testnet.bitcoin.sprovoost.nl&#39;)</span>
+<span class="sd">            [&#39;46.101.230.222&#39;,</span>
+<span class="sd">             &#39;47.97.79.7&#39;,</span>
+<span class="sd">             &#39;159.89.205.190&#39;,</span>
+<span class="sd">             &#39;163.44.175.226&#39;,</span>
+<span class="sd">             &#39;13.57.215.93&#39;,</span>
+<span class="sd">             &#39;18.191.17.25&#39;,</span>
+<span class="sd">             &#39;46.4.61.78&#39;,</span>
+<span class="sd">             &#39;104.248.185.143&#39;,</span>
+<span class="sd">             &#39;149.28.176.234&#39;,</span>
+<span class="sd">             &#39;71.13.92.62&#39;,</span>
+<span class="sd">             &#39;114.215.66.15&#39;,</span>
+<span class="sd">             &#39;178.128.244.253&#39;,</span>
+<span class="sd">             &#39;46.23.46.139&#39;,</span>
+<span class="sd">             &#39;54.37.192.136&#39;,</span>
+<span class="sd">             &#39;167.114.64.228&#39;,</span>
+<span class="sd">             &#39;159.89.128.32&#39;,</span>
+<span class="sd">             &#39;144.76.136.19&#39;,</span>
+<span class="sd">             &#39;18.212.60.14&#39;,</span>
+<span class="sd">             &#39;54.149.194.238&#39;,</span>
+<span class="sd">             &#39;52.53.159.115&#39;,</span>
+<span class="sd">             &#39;18.218.226.83&#39;]</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Getting nodes from seed node </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">hostname</span><span class="p">,</span> <span class="n">alias</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname_ex</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
@@ -250,7 +315,24 @@
 <div class="viewcode-block" id="BitcoinBaseNetwork.capture_messages"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.capture_messages">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">capture_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expected_message_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
                          <span class="n">ignore_empty</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Method for receiving messages from network nodes.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            expected_message_types (list): list of message types to search for</span>
+<span class="sd">            timeout (int): timeout for waiting for messages</span>
+<span class="sd">            buf_size (int): buffer size that is going to be used for receiving messages</span>
+<span class="sd">            ignore_empty (bool): flag for ignoring errors if the message that we&#39;re looking for wasn&#39;t found.</span>
+<span class="sd">                Eg. this flag can be set to True when looking for reject messages because the absence of the</span>
+<span class="sd">                reject message is not an error.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list, None: list of received messages or None if none or not all expected message types were found</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from bitcoin.messages import msg_verack, msg_version</span>
+<span class="sd">            &gt;&gt;&gt; network.capture_messages([msg_version, msg_verack])</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">deadline</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">timeout</span>
         <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">partial_message</span> <span class="o">=</span> <span class="kc">None</span>
@@ -302,7 +384,21 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Not all messages could be captured&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.create_connection"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.create_connection">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">create_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Establish connection to a given node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (str): node domain or IP address</span>
+<span class="sd">            timeout (int): number of seconds to wait before raising timeout</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            socket.socket: socket connection</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.create_connection(&#39;104.248.185.143&#39;)</span>
+<span class="sd">            &lt;socket.socket fd=11, family=AddressFamily.AF_INET, type=2049, proto=6, laddr=(&#39;10.93.5.21&#39;, 36086), raddr=(&#39;104.248.185.143&#39;, 18333)&gt;  # noqa: E501</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">(</span>
                 <span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">),</span>
@@ -317,8 +413,19 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.connect"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.connect">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Connects to some node from the network.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: node IP address or domain, None if doesn&#39;t connect to any node</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.connect()</span>
+<span class="sd">            &#39;198.251.83.19&#39;</span>
+<span class="sd">            &gt;&gt;&gt; network.connection</span>
+<span class="sd">            &lt;socket.socket fd=12, family=AddressFamily.AF_INET, type=2049, proto=6, laddr=(&#39;10.93.5.21&#39;, 54300), raddr=(&#39;198.251.83.19&#39;, 18333)&gt;  # noqa: E501</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_ping</span><span class="p">():</span>
             <span class="c1"># already connected</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_node</span><span class="p">()</span>
@@ -361,13 +468,34 @@
 
                 <span class="k">return</span> <span class="n">node</span></div>
 
-<div class="viewcode-block" id="BitcoinBaseNetwork.filter_blacklisted_nodes"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.filter_blacklisted_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">filter_blacklisted_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">max_tries_number</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="BitcoinBaseNetwork.filter_blacklisted_nodes"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.filter_blacklisted_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">filter_blacklisted_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">max_tries_number</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Filtering out dead nodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nodes (list): list of nodes to filter</span>
+<span class="sd">            max_tries_number (int): maximum number of attempts to connect to a node (above this value node</span>
+<span class="sd">                is being filtered out)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: list of nodes without dead nodes</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">[</span><span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blacklist_nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_tries_number</span><span class="p">],</span>
             <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">blacklist_nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BitcoinBaseNetwork.terminate"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.terminate">[docs]</a>    <span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BitcoinBaseNetwork.terminate"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.terminate">[docs]</a>    <span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Closing connection to a given node and increasing number of failed connection attempts to this node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (str): node&#39;s IP address or domain. If the node was not given then this method will just</span>
+<span class="sd">                close the existing connection.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_blacklist</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">:</span>
@@ -375,6 +503,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.update_blacklist"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.update_blacklist">[docs]</a>    <span class="k">def</span> <span class="nf">update_blacklist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Increasing number of failed connection attempts to a give node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (str): node&#39;s IP address or domain</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">blacklist_nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -382,7 +519,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">blacklist_nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.version_packet"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.version_packet">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">version_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">version_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bitcoin</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">msg_version</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creating version package for a current network.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bitcoin.messages.msg_version</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">packet</span> <span class="o">=</span> <span class="n">msg_version</span><span class="p">(</span><span class="mi">170002</span><span class="p">)</span>
         <span class="n">packet</span><span class="o">.</span><span class="n">addrFrom</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">packet</span><span class="o">.</span><span class="n">addrFrom</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
         <span class="n">packet</span><span class="o">.</span><span class="n">addrTo</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">packet</span><span class="o">.</span><span class="n">addrTo</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">getpeername</span><span class="p">()</span>
@@ -391,12 +534,36 @@
 <div class="viewcode-block" id="BitcoinBaseNetwork.split_message"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.split_message">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">split_message</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">received_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Splits received data based on start message prefix.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            received_data (bytes): portion of received data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: list of messages that were found</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">bitcoin</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">MESSAGE_START</span> <span class="o">+</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">received_data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">bitcoin</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">MESSAGE_START</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span>
         <span class="p">]</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.send_message"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.send_message">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sends given message to the connected node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            msg (obj): bitcoin message object eg bitcoin.messages.msg_version or bitcoin.messages.msg_tx</span>
+<span class="sd">            timeout (int): timeout for communication with connected node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the message was sent, False otherwise.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from bitcoin.messages import msg_ping</span>
+<span class="sd">            &gt;&gt;&gt; network.send_message(msg_ping())</span>
+<span class="sd">            True</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">())</span>
@@ -408,6 +575,19 @@
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.send_ping"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.send_ping">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">send_ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sends ping message and tries to capture pong message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timeout (int): timeout for communication with connected node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the message was sent, False otherwise.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.send_ping()</span>
+<span class="sd">            True</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">msg_ping</span><span class="p">(),</span> <span class="n">timeout</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_messages</span><span class="p">([</span><span class="n">msg_pong</span><span class="p">,</span> <span class="p">]):</span>
@@ -415,24 +595,73 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.send_pong"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.send_pong">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">send_pong</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ping</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">send_pong</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ping</span><span class="p">:</span> <span class="n">msg_ping</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sends pong message in response to ping message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ping (bitcoin.messages.msg_ping): ping message that where received</span>
+<span class="sd">            timeout (int): timeout for communication with connected node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the message was sent, False otherwise.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.send_pong(ping_message)</span>
+<span class="sd">            True</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
             <span class="n">msg_pong</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">protocol_version</span><span class="o">.</span><span class="n">nVersion</span><span class="p">,</span> <span class="n">ping</span><span class="o">.</span><span class="n">nonce</span><span class="p">),</span> <span class="n">timeout</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.send_verack"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.send_verack">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">send_verack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sending version acknowledge message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timeout (int): timeout for communication with connected node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the message was sent, False otherwise.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.send_verack()</span>
+<span class="sd">            True</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
             <span class="n">msg_verack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">protocol_version</span><span class="o">.</span><span class="n">nVersion</span><span class="p">),</span> <span class="n">timeout</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.send_version"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.send_version">[docs]</a>    <span class="k">def</span> <span class="nf">send_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sending version message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timeout (int): timeout for communication with connected node</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the message was sent, False otherwise.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.send_version()</span>
+<span class="sd">            True</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">version_packet</span><span class="p">(),</span> <span class="n">timeout</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.broadcast_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.broadcast_transaction">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sends given transaction to connected node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_transaction (str): hex string containing signed transaction</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: transaction address if transaction was sent, None otherwise.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">deserialized_transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deserialize_raw_transaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">)</span>
         <span class="n">serialized_transaction</span> <span class="o">=</span> <span class="n">deserialized_transaction</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
 
@@ -441,13 +670,15 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="n">ConnectionProblem</span><span class="p">(</span><span class="s1">&#39;Clove could not get connected with any of the nodes for too long.&#39;</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">()</span>
+            <span class="k">return</span>
 
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_node</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">hash</span> <span class="o">!=</span> <span class="n">Hash</span><span class="p">(</span><span class="n">serialized_transaction</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">get_data</span><span class="o">.</span><span class="n">inv</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">UnexpectedResponseFromNode</span><span class="p">(</span><span class="s1">&#39;Node did not ask for our transaction&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">()</span>
+            <span class="k">return</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="n">msg_tx</span><span class="p">()</span>
         <span class="n">message</span><span class="o">.</span><span class="n">tx</span> <span class="o">=</span> <span class="n">deserialized_transaction</span>
@@ -459,7 +690,8 @@
         <span class="n">messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_messages</span><span class="p">([</span><span class="n">msg_reject</span><span class="p">,</span> <span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">REJECT_TIMEOUT</span><span class="p">,</span> <span class="n">buf_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span> <span class="n">ignore_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">messages</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">TransactionRejected</span><span class="p">(</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">node</span><span class="p">))</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">()</span>
+            <span class="k">return</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">] Reject message not found.&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
 
         <span class="n">transaction_address</span> <span class="o">=</span> <span class="n">b2lx</span><span class="p">(</span><span class="n">deserialized_transaction</span><span class="o">.</span><span class="n">GetHash</span><span class="p">())</span>
@@ -467,7 +699,17 @@
         <span class="k">return</span> <span class="n">transaction_address</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.send_inventory"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.send_inventory">[docs]</a>    <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">send_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serialized_transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">msg_getdata</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">send_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serialized_transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">msg_getdata</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Sends inventory message with given serialized transaction to connected node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            msg_getdata, None: get data request or None if something went wrong</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is used by `broadcast_transaction` to inform connected node about existence</span>
+<span class="sd">            of the new transaction.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">message</span> <span class="o">=</span> <span class="n">msg_inv</span><span class="p">()</span>
         <span class="n">inventory</span> <span class="o">=</span> <span class="n">CInv</span><span class="p">()</span>
         <span class="n">inventory</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">MSG_TX</span>
@@ -496,6 +738,7 @@
             <span class="k">return</span> <span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.reset_connection"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.reset_connection">[docs]</a>    <span class="k">def</span> <span class="nf">reset_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Disconnection from node if connected and clearing the blacklisted nodes.&#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
@@ -503,12 +746,29 @@
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.get_new_wallet"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_new_wallet">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">get_new_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_new_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BitcoinWallet</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generates a new wallet.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; wallet = network.get_new_wallet()</span>
+<span class="sd">            &gt;&gt;&gt; wallet.address</span>
+<span class="sd">            &#39;mrkLKxgzfQk4dgFrfaoVYjeTkXxCfKyz1q&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.get_current_fee_per_kb"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_fee_per_kb">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_current_fee_per_kb</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Getting current network fee from Clove API&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Getting current network fee from Clove API</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float, None: current fee per kb or None if something went wrong</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.get_current_fee_per_kb()</span>
+<span class="sd">            0.01006814</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">network</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">testnet</span><span class="p">:</span>
@@ -521,7 +781,17 @@
 
         <span class="k">return</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;fee&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="BitcoinBaseNetwork.get_current_node"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BitcoinBaseNetwork.get_current_node"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_current_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Getting address of connected node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: IP for connected node or None if there is no connection established.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; network.get_current_node()</span>
+<span class="sd">            &#39;157.97.106.250&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">getpeername</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
 
@@ -533,7 +803,28 @@
         <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">solvable_utxo</span><span class="p">:</span> <span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">secret_hash</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BitcoinAtomicSwapTransaction</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BitcoinAtomicSwapTransaction</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creates atomic swap unsigned transaction object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sender_address (str): wallet address of the sender</span>
+<span class="sd">            recipient_address (str): wallet address of the recipient</span>
+<span class="sd">            value (float): amount to swap</span>
+<span class="sd">            solvable_utxo (list): optional list of UTXO objects. If None then it will try to find UTXO automatically</span>
+<span class="sd">                by using the `get_utxo` method.</span>
+<span class="sd">            secret_hash (str): optional secret hash to be used in transaction. If None then the new hash</span>
+<span class="sd">                will be generated.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BitcoinAtomicSwapTransaction, None: unsigned Atomic Swap transaction object or None if something went wrong</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import BitcoinTestNet</span>
+<span class="sd">            &gt;&gt;&gt; network = BitcoinTestNet()</span>
+<span class="sd">            &gt;&gt;&gt; network.atomic_swap(&#39;msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM&#39;, &#39;mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1&#39;, 2.4)</span>
+<span class="sd">            &lt;clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction at 0x7f989439d630&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">solvable_utxo</span><span class="p">:</span>
             <span class="n">solvable_utxo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_utxo</span><span class="p">(</span><span class="n">sender_address</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">solvable_utxo</span><span class="p">:</span>
@@ -552,16 +843,78 @@
         <span class="n">raw_transaction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">transaction_address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BitcoinContract</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Getting details about an Atomic Swap contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            contract (str): contract definition (hex string)</span>
+<span class="sd">            raw_transaction (str): hex string with raw transaction</span>
+<span class="sd">            transaction_address (str): hex string with transaction address which created an Atomic Swap</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BitcoinContract: contract object</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Litecoin</span>
+<span class="sd">            &gt;&gt;&gt; network = Litecoin()</span>
+<span class="sd">            &gt;&gt;&gt; network.audit_contract(</span>
+<span class="sd">                contract=&#39;63a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;,  # noqa: E501</span>
+<span class="sd">                transaction_address=&#39;09a60dc3fafe6ba058b2a140457df1c3b446602595d47deed641cb635ffd25aa&#39;</span>
+<span class="sd">            )</span>
+<span class="sd">            &lt;clove.network.bitcoin.contract.BitcoinContract at 0x7f98870db978&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">BitcoinContract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">,</span> <span class="n">transaction_address</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.get_wallet"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.get_wallet">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="nd">@auto_switch_params</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">get_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encrypted_private_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">private_key</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encrypted_private_key</span><span class="p">:</span> <span class="nb">bytes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span><span class="n">BitcoinWallet</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns wallet object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            private_key (str): hex string with wallet&#39;s secret key</span>
+<span class="sd">            encrypted_private_key (bytes): private key encrypted with password</span>
+<span class="sd">            password (str): password for decrypting an encrypted private key</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BitcoinWallet: wallet object</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import BitcoinTestNet</span>
+<span class="sd">            &gt;&gt;&gt; network = BitcoinTestNet()</span>
+<span class="sd">            &gt;&gt;&gt; wallet = network.get_wallet(&#39;cV8FDJu3JhLED2D7q5L7FwLCus69TajYGEnTWEbNqhzzV9WxMBE7&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; wallet.address</span>
+<span class="sd">            &#39;mtUXc6UJTiwb5FdoEJ2hzR8R1yUrcj3hcn&#39;</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If private_key has not been provided then a new wallet will be generated just like via `get_new_wallet()`.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">BitcoinWallet</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">encrypted_private_key</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.extract_secret"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.extract_secret">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">extract_secret</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scriptsig</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Extracting secret from Alice redeem transaction (first redeem in the Atomic Swao).</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            raw_transaction (str): raw transaction to extract secret from</span>
+<span class="sd">            scriptSig (str): value of the scriptSig field from the first vin</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: transaction secret</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if something goes wrong</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Litecoin</span>
+<span class="sd">            &gt;&gt;&gt; network = Litecoin()</span>
+<span class="sd">            &gt;&gt;&gt; network.extract_secret(raw_transaction=&#39;0100000001aa25fd5f63cb41d6ee7dd495256046b4c3f17d4540a1b258a06bfefac30da60900000000fdff0047304402201c8869d359b5599ecffd51a96f0a8799392c98c4e15242762ba455e37b1f5d6302203f2974e9afc8d641f9363167df48e5a845a8deba1381bf5a1b549ac04718a1ac01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf420c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9514c5163a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac00000000015a7b0100000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000&#39;)  # noqa: E501</span>
+<span class="sd">            &#39;c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9&#39;</span>
+
+<span class="sd">            &gt;&gt;&gt; network.extract_secret(scriptsig=&#39;0c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9514c5163a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20&#39;)  # noqa: E501</span>
+<span class="sd">            &#39;c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">raw_transaction</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">scriptsig</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;raw_transaction or scriptsig have to be provided.&#39;</span><span class="p">)</span>
 
@@ -584,6 +937,23 @@
 <div class="viewcode-block" id="BitcoinBaseNetwork.is_valid_address"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.is_valid_address">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="nd">@auto_switch_params</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">is_valid_address</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Checks if wallet address is valid for this network.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            address (str): wallet address to check</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if address is valued, False otherwise</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Bitcoin</span>
+<span class="sd">            &gt;&gt;&gt; network = Bitcoin()</span>
+<span class="sd">            &gt;&gt;&gt; network.is_valid_address(&#39;13iNsKgMfVJQaYVFqp5ojuudxKkVCMtkoa&#39;)</span>
+<span class="sd">            True</span>
+<span class="sd">            &gt;&gt;&gt; network.is_valid_address(&#39;msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM&#39;)</span>
+<span class="sd">            False</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">CBitcoinAddress</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">CBitcoinAddressError</span><span class="p">,</span> <span class="n">Base58ChecksumError</span><span class="p">,</span> <span class="n">InvalidBase58Error</span><span class="p">):</span>
@@ -593,6 +963,24 @@
 
 <div class="viewcode-block" id="BitcoinBaseNetwork.deserialize_raw_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.BitcoinBaseNetwork.deserialize_raw_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">deserialize_raw_transaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CTransaction</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Checking if transaction can be deserialized (is not corrupted).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_transaction (str): transaction to check</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            CTransaction: transaction object</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ImpossibleDeserialization: when transaction is corrupted</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Litecoin</span>
+<span class="sd">            &gt;&gt;&gt; network = Litecoin()</span>
+<span class="sd">            &gt;&gt;&gt; network.deserialize_raw_transaction(&#39;0100000001aa25fd5f63cb41d6ee7dd495256046b4c3f17d4540a1b258a06bfefac30da60900000000fdff0047304402201c8869d359b5599ecffd51a96f0a8799392c98c4e15242762ba455e37b1f5d6302203f2974e9afc8d641f9363167df48e5a845a8deba1381bf5a1b549ac04718a1ac01410459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf420c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9514c5163a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac00000000015a7b0100000000001976a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac00000000&#39;)  # noqa: E501</span>
+<span class="sd">            CTransaction((CTxIn(COutPoint(lx(&#39;09a60dc3fafe6ba058b2a140457df1c3b446602595d47deed641cb635ffd25aa&#39;), 0), CScript([x(&#39;304402201c8869d359b5599ecffd51a96f0a8799392c98c4e15242762ba455e37b1f5d6302203f2974e9afc8d641f9363167df48e5a845a8deba1381bf5a1b549ac04718a1ac01&#39;), x(&#39;0459cdb91eb7298bc2578dc4e7ac2109ac3cfd9dc9818795c5583e720d2114d540724bf26b4541f683ff51968db627a04eecd1f5cff615b6350dad5fb595f8adf4&#39;), x(&#39;c480afb333623864901c968022a07dd93fe3c06f5684ea728b8113e17fa91bd9&#39;), 1, x(&#39;63a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;)]), 0x0),), (CTxOut(0.00097114*COIN, CScript([OP_DUP, OP_HASH160, x(&#39;85c0522f6e23beb11cc3d066cd20ed732648a4e6&#39;), OP_EQUALVERIFY, OP_CHECKSIG])),), 0, 1, CTxWitness())  # noqa: E501</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">CTransaction</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -600,6 +988,7 @@
 
 
 <div class="viewcode-block" id="NoAPI"><a class="viewcode-back" href="../../../../api.html#clove.network.bitcoin.base.NoAPI">[docs]</a><span class="k">class</span> <span class="nc">NoAPI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Empty class for networks that does not have block explorer with API.&#39;&#39;&#39;</span>
 
     <span class="n">API</span> <span class="o">=</span> <span class="kc">False</span>
 

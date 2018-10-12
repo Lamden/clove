@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
 </ul>
 
@@ -145,11 +146,19 @@
             
   <h1>Source code for clove.block_explorer.base</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="BaseAPI"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.base.BaseAPI">[docs]</a><span></span><span class="k">class</span> <span class="nc">BaseAPI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Common class for all the block explorers adapter classes.&#39;&#39;&#39;</span>
 
     <span class="n">API</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="sd">&#39;&#39;&#39;This value tells us that a given network have a block explorer API support.&#39;&#39;&#39;</span>
 
 <div class="viewcode-block" id="BaseAPI.get_confirmations_from_tx_json"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.base.BaseAPI.get_confirmations_from_tx_json">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_confirmations_from_tx_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_json</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This is an adapter method for getting the number of confirmatons from transaction details.</span>
+
+<span class="sd">        This method may be halpfull in a future if some block explorers</span>
+<span class="sd">        will store the number of confirmations under the different key name.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">tx_json</span><span class="p">[</span><span class="s1">&#39;confirmations&#39;</span><span class="p">]</span></div></div>
 </pre></div>
 

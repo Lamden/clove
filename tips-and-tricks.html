@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tips &amp; Tricks &mdash; Clove  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Transaction refunds" href="refund.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Clove
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Clove </a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Atomic swap example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refund.html">Transaction refunds</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tips &amp; Tricks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gathering-utxo">Gathering UTXO</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#automated">Automated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manual">Manual</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-fee">Getting fee</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#via-clove-api">via Clove API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#via-block-explorer">via block explorer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-fee-manually">Setting fee manually</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#publishing-custom-transactions">Publishing custom transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-transaction-details">Getting transaction details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-balance">Getting balance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Clove</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tips &amp; Tricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tips-and-tricks.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tips-tricks">
+<span id="tips-tricks"></span><h1>Tips &amp; Tricks<a class="headerlink" href="#tips-tricks" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gathering-utxo">
+<span id="gathering-utxo"></span><h2>Gathering UTXO<a class="headerlink" href="#gathering-utxo" title="Permalink to this headline">¶</a></h2>
+<p>For Bitcoin-based networks there are two ways to create UTXO list: automated and manual.</p>
+<div class="section" id="automated">
+<span id="automated"></span><h3>Automated<a class="headerlink" href="#automated" title="Permalink to this headline">¶</a></h3>
+<p>This method is used behind the scene in the <code class="docutils literal notranslate"><span class="pre">atomic_swap()</span></code> method when the <code class="docutils literal notranslate"><span class="pre">solvable_utxo</span></code> argument hasn’t been passed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
+
+<span class="n">network</span> <span class="o">=</span> <span class="n">Litecoin</span><span class="p">()</span>
+
+<span class="n">utxo</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">get_utxo</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="s1">&#39;0.01&#39;</span><span class="p">)</span>
+
+<span class="n">utxo</span>
+<span class="p">[</span>
+    <span class="n">Utxo</span><span class="p">(</span>
+        <span class="n">tx_id</span><span class="o">=</span><span class="s1">&#39;0cd90567497823097d03464b4b2d08dd659f1c5621dd55e9540bc9bcd3e191ec&#39;</span><span class="p">,</span>
+        <span class="n">vout</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;0.00976168&#39;</span><span class="p">,</span>
+        <span class="n">tx_script</span><span class="o">=</span><span class="s1">&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;</span><span class="p">,</span>
+        <span class="n">wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">refund</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">),</span>
+    <span class="n">Utxo</span><span class="p">(</span>
+        <span class="n">tx_id</span><span class="o">=</span><span class="s1">&#39;a5c027027c695f403fe570850e35ffd44bb28479ecaaee039372015fe0aae7b2&#39;</span><span class="p">,</span>
+        <span class="n">vout</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;0.00097114&#39;</span><span class="p">,</span>
+        <span class="n">tx_script</span><span class="o">=</span><span class="s1">&#39;76a91485c0522f6e23beb11cc3d066cd20ed732648a4e688ac&#39;</span><span class="p">,</span>
+        <span class="n">wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">refund</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="manual">
+<span id="manual"></span><h3>Manual<a class="headerlink" href="#manual" title="Permalink to this headline">¶</a></h3>
+<p>If some network doesn’t have block explorer integration to gather UTXO automatically you can still create it manually by getting required data (<code class="docutils literal notranslate"><span class="pre">tx_id</span></code>, <code class="docutils literal notranslate"><span class="pre">vout</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code> and <code class="docutils literal notranslate"><span class="pre">tx_script</span></code>) from some other source.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network.bitcoin.utxo</span> <span class="k">import</span> <span class="n">Utxo</span>
+
+<span class="n">utxo_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Utxo</span><span class="p">(</span>
+        <span class="n">tx_id</span><span class="o">=</span><span class="s1">&#39;5d920e7093b2f0ac94cb1c13a42a79ed1c1290fcc4155d15a123d69b1afe05d2&#39;</span><span class="p">,</span>
+        <span class="n">vout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="mf">2.086</span><span class="p">,</span>
+        <span class="n">tx_script</span><span class="o">=</span><span class="s1">&#39;76a9142b6a3314e8fcf1f1fd6b4d70b112bd5a1928505788ac&#39;</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>and then you can use this list in atomic swap transaction.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span>
+    <span class="n">sender_address</span><span class="o">=</span><span class="n">alice_address</span><span class="p">,</span>
+    <span class="n">recipient_address</span><span class="o">=</span><span class="n">bob_address</span><span class="p">,</span>
+    <span class="n">value</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+    <span class="n">solvable_utxo</span><span class="o">=</span><span class="n">utxo_list</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="getting-fee">
+<span id="getting-fee"></span><h2>Getting fee<a class="headerlink" href="#getting-fee" title="Permalink to this headline">¶</a></h2>
+<p>In Bitcoin-base networks every transaction needs to include some small fee for miners. Fee depends on several factors and is changing over time.</p>
+<div class="section" id="via-clove-api">
+<span id="via-clove-api"></span><h3>via Clove API<a class="headerlink" href="#via-clove-api" title="Permalink to this headline">¶</a></h3>
+<p>The easiest way to get current fee is to ask Clove API via <code class="docutils literal notranslate"><span class="pre">get_current_fee_per_kb</span></code> method. Clove API is a proxy between you and block explorer with a cache layer so you will not be exposed to requests limits in some block explorers.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
+
+<span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
+<span class="n">network</span><span class="o">.</span><span class="n">get_current_fee_per_kb</span><span class="p">()</span>
+<span class="mf">0.00014827</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="via-block-explorer">
+<span id="via-block-explorer"></span><h3>via block explorer<a class="headerlink" href="#via-block-explorer" title="Permalink to this headline">¶</a></h3>
+<p>You can omit the Clove API and calculate fee directly from network’s block explorer</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Mooncoin</span>
+
+<span class="n">network</span> <span class="o">=</span> <span class="n">Mooncoin</span><span class="p">()</span>
+<span class="n">network</span><span class="o">.</span><span class="n">get_fee</span><span class="p">()</span>
+<span class="mf">0.00200369</span>
+</pre></div>
+</div>
+<p>some of those networks supports also counting fee from a given number of last transactions</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">network</span><span class="o">.</span><span class="n">get_fee</span><span class="p">(</span><span class="n">tx_limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="mf">0.00200362</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-fee-manually">
+<span id="setting-fee-manually"></span><h3>Setting fee manually<a class="headerlink" href="#setting-fee-manually" title="Permalink to this headline">¶</a></h3>
+<p>If you want to suggest your own fee value you can do this directly by setting <code class="docutils literal notranslate"><span class="pre">transaction.fee</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">transaction</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">transaction</span><span class="o">.</span><span class="n">add_fee</span><span class="p">()</span>
+<span class="n">transaction</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">SOME_WALLET</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="publishing-custom-transactions">
+<span id="publishing-custom-transactions"></span><h2>Publishing custom transactions<a class="headerlink" href="#publishing-custom-transactions" title="Permalink to this headline">¶</a></h2>
+<p>Even if you have non atomic swap transaction you can still use clove for publishing.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">raw_transaction</span> <span class="o">=</span> <span class="s1">&#39;010000000184a38a4e8743964249665fb241fbd3...35b&#39;</span>
+<span class="n">network</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-transaction-details">
+<span id="getting-transaction-details"></span><h2>Getting transaction details<a class="headerlink" href="#getting-transaction-details" title="Permalink to this headline">¶</a></h2>
+<p>Using clove you can check details of every transaction.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Mooncoin</span>
+
+<span class="n">network</span> <span class="o">=</span> <span class="n">Mooncoin</span><span class="p">()</span>
+<span class="n">network</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="s1">&#39;675e379fa2e0ce4853b8d33ee13d90eb1cdc71aecdf94ecf455d3b7cf04577ac&#39;</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;block&#39;</span><span class="p">:</span> <span class="mi">1358589</span><span class="p">,</span>
+ <span class="s1">&#39;confirmations&#39;</span><span class="p">:</span> <span class="mi">72</span><span class="p">,</span>
+ <span class="s1">&#39;fees&#39;</span><span class="p">:</span> <span class="mf">0.000654</span><span class="p">,</span>
+ <span class="s1">&#39;hash&#39;</span><span class="p">:</span> <span class="s1">&#39;675e379fa2e0ce4853b8d33ee13d90eb1cdc71aecdf94ecf455d3b7cf04577ac&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+ <span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="s1">&#39;2ZqW69xn69cLSqRjdaCgyCutmVtpGc5hy5&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">5655.451082</span><span class="p">,</span>
+   <span class="s1">&#39;received_from&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;tx&#39;</span><span class="p">:</span> <span class="s1">&#39;f7d5e6eb642db342647017621bda3c3f78ccb1338cf10d2a0ae90bd606582c26&#39;</span><span class="p">}}],</span>
+ <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="s1">&#39;2PtewZ6yPQUyb3ATgUnUH5kaLHhNm9QupF&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">5650.170428</span><span class="p">,</span>
+   <span class="s1">&#39;script&#39;</span><span class="p">:</span> <span class="s1">&#39;76a914774ef2ad06c0bf967b55b5e221af795d01e66bd388ac&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="s1">&#39;2Z1cWuzCzWAxo1BumMiiqDd7k5jpv5JvGk&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">0.76</span><span class="p">,</span>
+   <span class="s1">&#39;script&#39;</span><span class="p">:</span> <span class="s1">&#39;76a914db58f7b45d5555bff1b49a7a79e6e1cb25eb558288ac&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="s1">&#39;2VQFxhq4LFRu2wfq2gP6btve2MiVwuiXsm&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">2.04</span><span class="p">,</span>
+   <span class="s1">&#39;script&#39;</span><span class="p">:</span> <span class="s1">&#39;76a914b3c0df73140cc787723252cc9f7c0db04953023188ac&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="s1">&#39;2MzTQt2GuGd7fx1aT4vsBWQDg2uh1aLKGQ&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span>
+   <span class="s1">&#39;script&#39;</span><span class="p">:</span> <span class="s1">&#39;76a9146277917f54f218d4723452a307f7134542db079688ac&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="s1">&#39;2bimR99ZxpyeTxVeRrtoE4V3eEbUaDdLgD&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">1.88</span><span class="p">,</span>
+   <span class="s1">&#39;script&#39;</span><span class="p">:</span> <span class="s1">&#39;76a914f911b40d716f6a2da724cb333cccdb4f2546fb7688ac&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="mi">1539000366</span><span class="p">,</span>
+ <span class="s1">&#39;total_input&#39;</span><span class="p">:</span> <span class="mf">5655.451082</span><span class="p">,</span>
+ <span class="s1">&#39;total_output&#39;</span><span class="p">:</span> <span class="mf">5655.450428</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-balance">
+<span id="getting-balance"></span><h2>Getting balance<a class="headerlink" href="#getting-balance" title="Permalink to this headline">¶</a></h2>
+<p>To check balance of a given wallet or contract just use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
+
+<span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>
+<span class="n">network</span><span class="o">.</span><span class="n">get_balance</span><span class="p">(</span><span class="s1">&#39;msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM&#39;</span><span class="p">)</span>
+<span class="mf">4.22188744</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="refund.html" class="btn btn-neutral" title="Transaction refunds" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lamden Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

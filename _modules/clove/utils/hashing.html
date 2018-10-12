@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Clove </a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Atomic swap example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../refund.html">Transaction refunds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips-and-tricks.html">Tips &amp; Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
 </ul>
 
@@ -149,6 +150,18 @@
 
 
 <div class="viewcode-block" id="generate_secret_with_hash"><a class="viewcode-back" href="../../../api.html#clove.utils.hashing.generate_secret_with_hash">[docs]</a><span class="k">def</span> <span class="nf">generate_secret_with_hash</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generating secret and related ripemd160 hash.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: secret, secret hash</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from clove.utils.hashing import generate_secret_with_hash</span>
+<span class="sd">        &gt;&gt;&gt; secret, secret_hash = generate_secret_with_hash()</span>
+<span class="sd">        &gt;&gt;&gt; secret.hex()</span>
+<span class="sd">        &#39;95a968aa18866ffe6ed9ad39a06e27a90e55699734007173bfdd3daa4bab661d&#39;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">secret</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
     <span class="n">secret_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;ripemd160&#39;</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">secret</span><span class="p">,</span> <span class="n">secret_hash</span></div>
