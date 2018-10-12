@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from pytest import mark
+from pytest import mark, raises
 
 from clove.block_explorer.insight import InsightAPIv4
 from clove.network import BITCOIN_BASED as networks
@@ -166,3 +166,62 @@ def test_get_fee(request_mock):
     request_mock.return_value = {"1": 0.00020451}
     balance = Monacoin.get_fee()
     assert balance == 0.00020451
+
+
+class MockGoodResponse:
+
+    def __init__(self):
+        self.status_code = 200
+
+    def json(self):
+        return {'txid': '123'}
+
+
+class MockBadResponse:
+
+    def __init__(self):
+        self.status_code = 400
+        self.text = 'xxx'
+
+
+class MockUnexpectedResponse:
+
+    def __init__(self):
+        self.status_code = 500
+        self.text = 'yyy'
+
+
+class MockUnexpectedJsonResponse:
+
+    def __init__(self):
+        self.status_code = 200
+
+    def json(self):
+        return 'not-a-json'
+
+
+@patch('requests.post', return_value=MockGoodResponse())
+def test_publish_via_api_success(request_mock):
+    network = Monacoin()
+    assert network.publish('123') == '123'
+
+
+@patch('requests.post', return_value=MockBadResponse())
+def test_publish_via_api_error(request_mock):
+    network = Monacoin()
+    with raises(ValueError):
+        assert network.publish('123')
+
+
+@patch('requests.post', return_value=MockUnexpectedResponse())
+def test_publish_via_api_unexpected_error(request_mock):
+    network = Monacoin()
+    with raises(ValueError):
+        assert network.publish('123')
+
+
+@patch('requests.post', return_value=MockUnexpectedJsonResponse())
+def test_publish_via_api_unexpected_json(request_mock):
+    network = Monacoin()
+    with raises(ValueError):
+        assert network.publish('123')

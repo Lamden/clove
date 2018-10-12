@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+* Speed-up for publishing transactions in networks that use Insight API.
+
 ## v1.2.12
 
 * Fix for extracting secret from redeem transaction for Insight API

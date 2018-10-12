@@ -1,4 +1,5 @@
 import ipaddress
+from unittest.mock import patch
 
 import bitcoin
 from bitcoin.core import CTransaction
@@ -7,7 +8,7 @@ from validators import domain
 
 from clove.exceptions import ImpossibleDeserialization
 from clove.network import BITCOIN_BASED as networks
-from clove.network import BitcoinTestNet
+from clove.network import BitcoinTestNet, ZCoin
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 from clove.utils.bitcoin import auto_switch_params
 from clove.utils.search import get_network_by_symbol
@@ -111,16 +112,17 @@ def test_broadcast_transaction(signed_transaction, connection_mock):
         assert signed_transaction.address == btc_network.broadcast_transaction(signed_transaction.raw_transaction)
 
 
-def test_publish_transaction_from_network(signed_transaction, connection_mock):
-    btc_network = BitcoinTestNet()
+@patch('clove.network.bitcoin.base.BitcoinBaseNetwork.broadcast_transaction')
+def test_publish_transaction_from_network(broadcast_mock, signed_transaction):
+    broadcast_mock.return_value = signed_transaction.address
+    network = ZCoin()
+    assert signed_transaction.address == network.publish(signed_transaction.raw_transaction)
 
-    with connection_mock:
-        assert signed_transaction.address == btc_network.publish(signed_transaction.raw_transaction)
 
-
-def test_publish_transaction_from_transaction(signed_transaction, connection_mock):
-    with connection_mock:
-        assert signed_transaction.address == signed_transaction.publish()
+@patch('clove.block_explorer.InsightAPIv4.publish')
+def test_publish_transaction_from_transaction(publish_mock, signed_transaction):
+    publish_mock.return_value = signed_transaction.address
+    assert signed_transaction.address == signed_transaction.publish()
 
 
 def test_deserialize_raw_transaction():
