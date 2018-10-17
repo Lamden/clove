@@ -81,12 +81,14 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">Clove </a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Atomic swap example</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#bitcoin-based-networks">Bitcoin based networks</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#assumptions">Assumptions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cryptoid-api-key">Cryptoid API key</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#etherscan-api-key">Etherscan API key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-keys">API keys</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cryptoid-api-key">Cryptoid API key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etherscan-api-key">Etherscan API key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#infura-api-key">Infura API key</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#bitcoin-based-networks">Bitcoin based networks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#assumptions">Assumptions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#wallets-setup">1. Wallets setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#communication-b1">2. Communication (b1)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#alice-is-initializing-an-atomic-swap-transaction-using-monacoin">3. Alice is initializing an atomic swap transaction using Monacoin</a></li>
@@ -187,6 +189,30 @@
             
   <div class="section" id="atomic-swap-example">
 <span id="atomic-swap-example"></span><h1>Atomic swap example<a class="headerlink" href="#atomic-swap-example" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="api-keys">
+<span id="api-keys"></span><h2>API keys<a class="headerlink" href="#api-keys" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cryptoid-api-key">
+<span id="cryptoid-api-key"></span><h3>Cryptoid API key<a class="headerlink" href="#cryptoid-api-key" title="Permalink to this headline">¶</a></h3>
+<p>For operations on networks supported by <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> API a <a class="reference external" href="https://chainz.cryptoid.info/api.key.dws">free API key</a> is needed. This key has to be setup as an environment variable under the <code class="docutils literal notranslate"><span class="pre">CRYPTOID_API_KEY</span></code> key.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export CRYPTOID_API_KEY=YOUR_API_KEY
+</pre></div>
+</div>
+</div>
+<div class="section" id="etherscan-api-key">
+<span id="etherscan-api-key"></span><h3>Etherscan API key<a class="headerlink" href="#etherscan-api-key" title="Permalink to this headline">¶</a></h3>
+<p>For operations on Etherscan API (e.q. <code class="docutils literal notranslate"><span class="pre">find_redeem_transaction</span></code>) a <a class="reference external" href="https://etherscan.io/myapikey">free API key</a> is needed. This key has to be setup as an environment variable under the <code class="docutils literal notranslate"><span class="pre">ETHERSCAN_API_KEY</span></code> key.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export ETHERSCAN_API_KEY=YOUR_API_KEY
+</pre></div>
+</div>
+</div>
+<div class="section" id="infura-api-key">
+<span id="infura-api-key"></span><h3>Infura API key<a class="headerlink" href="#infura-api-key" title="Permalink to this headline">¶</a></h3>
+<p>All the interactions with Ethereum network are done via <a class="reference external" href="https://infura.io/">infura</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export INFURA_TOKEN=YOUR_API_KEY
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="bitcoin-based-networks">
 <span id="bitcoin-based-networks"></span><h2>Bitcoin based networks<a class="headerlink" href="#bitcoin-based-networks" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="assumptions">
@@ -198,20 +224,6 @@
 <li>Bob has a monacoin wallet</li>
 </ul>
 <p>(2018-10-04) Exchange rate: 0.001 litecoins is 0.030 monacoin</p>
-<div class="section" id="cryptoid-api-key">
-<span id="cryptoid-api-key"></span><h4>Cryptoid API key<a class="headerlink" href="#cryptoid-api-key" title="Permalink to this headline">¶</a></h4>
-<p>For operations on networks supported by <code class="docutils literal notranslate"><span class="pre">chainz.cryptoid.info</span></code> API a <a class="reference external" href="https://chainz.cryptoid.info/api.key.dws">free API key</a> is needed. This key has to be setup as a environment variable under the <code class="docutils literal notranslate"><span class="pre">CRYPTOID_API_KEY</span></code> key.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export CRYPTOID_API_KEY=YOUR_API_KEY
-</pre></div>
-</div>
-</div>
-<div class="section" id="etherscan-api-key">
-<span id="etherscan-api-key"></span><h4>Etherscan API key<a class="headerlink" href="#etherscan-api-key" title="Permalink to this headline">¶</a></h4>
-<p>For operations on Etherscan API (e.q. <code class="docutils literal notranslate"><span class="pre">find_redeem_transaction</span></code>) a <a class="reference external" href="https://etherscan.io/myapikey">free API key</a> is needed. This key has to be setup as a environment variable under the <code class="docutils literal notranslate"><span class="pre">ETHERSCAN_API_KEY</span></code> key.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export ETHERSCAN_API_KEY=YOUR_API_KEY
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="wallets-setup">
 <span id="wallets-setup"></span><h3>1. Wallets setup<a class="headerlink" href="#wallets-setup" title="Permalink to this headline">¶</a></h3>
@@ -237,14 +249,14 @@
 
 <span class="n">mona_network</span> <span class="o">=</span> <span class="n">Monacoin</span><span class="p">()</span>
 
-<span class="c1"># Alice provides hers private key. The one below is fake, because of obvious security reasons.</span>
+<span class="c1"># Alice provides her private key. The one below is fake, because of obvious security reasons.</span>
 <span class="n">alice_mona_wallet</span> <span class="o">=</span> <span class="n">mona_network</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="s1">&#39;cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe&#39;</span><span class="p">)</span>
 
 <span class="n">alice_mona_wallet</span><span class="o">.</span><span class="n">address</span>
 <span class="s1">&#39;MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP&#39;</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="https://insight.electrum-mona.org/insight/address/MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP">Check addres on block explorer</a></p>
+<p><a class="reference external" href="https://insight.electrum-mona.org/insight/address/MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP">Check address on block explorer</a></p>
 <p>[<strong>Bob</strong>] can use his existing monacoin wallet by passing his private key</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Monacoin</span>
 
@@ -257,7 +269,7 @@
 <span class="s1">&#39;MWsDkqHLonS5KfbRnRu3feByD9qkuj44Ye&#39;</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="https://insight.electrum-mona.org/insight/address/MWsDkqHLonS5KfbRnRu3feByD9qkuj44Ye">Check addres on block explorer</a></p>
+<p><a class="reference external" href="https://insight.electrum-mona.org/insight/address/MWsDkqHLonS5KfbRnRu3feByD9qkuj44Ye">Check address on block explorer</a></p>
 <p>[<strong>Bob</strong>] has to prepare his litecoin wallet</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Litecoin</span>
 
@@ -270,7 +282,7 @@
 <span class="s1">&#39;LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq&#39;</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="https://chainz.cryptoid.info/ltc/address.dws?LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq.htm">Check addres on block explorer</a></p>
+<p><a class="reference external" href="https://chainz.cryptoid.info/ltc/address.dws?LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq.htm">Check address on block explorer</a></p>
 </div>
 <div class="section" id="communication-b1">
 <span id="communication-b1"></span><h3>2. Communication (b1)<a class="headerlink" href="#communication-b1" title="Permalink to this headline">¶</a></h3>
@@ -331,8 +343,8 @@
 </div>
 <div class="section" id="contract-audit-mona">
 <span id="contract-audit-mona"></span><h3>5. Contract audit (MONA)<a class="headerlink" href="#contract-audit-mona" title="Permalink to this headline">¶</a></h3>
-<p>[<strong>Bob</strong>] needs to create a contract in network of coins he wants to receive (i.e. Alice’s network), in our case in Monacoin network.
-And also at this point Bob should validate if the data returned in the contract is correct.</p>
+<p>[<strong>Bob</strong>] needs to create a contract in a network of coins he wants to receive (i.e. Alice’s network), in our case in Monacoin network.
+And also at this point Bob should validate if the data returned in the contract are correct.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_contract</span> <span class="o">=</span> <span class="n">mona_network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
     <span class="n">contract</span><span class="o">=</span><span class="s1">&#39;63a61450314a793bf317665ecdc54c2e843bb106aeee158876a914fbed00c1502fded3dfa2524f8672ee013bb3f28f670465bab85bb17576a914a96a92963b7a65ac904875cfa5d535b3115888276888ac&#39;</span><span class="p">,</span>
     <span class="n">transaction_address</span><span class="o">=</span><span class="s1">&#39;a019e444e331ec843ae2d98b87073884e695dd08be06ba91f335af89dbe45473&#39;</span><span class="p">,</span>
@@ -397,8 +409,8 @@ And also at this point Bob should validate if the data returned in the contract 
 </div>
 <div class="section" id="contract-audit-ltc">
 <span id="contract-audit-ltc"></span><h3>8. Contract audit (LTC)<a class="headerlink" href="#contract-audit-ltc" title="Permalink to this headline">¶</a></h3>
-<p>[<strong>Alice</strong>] needs to audit the contract in network of coins she wants to receive (i.e. Bob’s network), in our case on the Litecoin network.
-And also at this point Alice should validate if the data returned in the contract is correct</p>
+<p>[<strong>Alice</strong>] needs to audit the contract in a network of coins she wants to receive (i.e. Bob’s network), in our case on the Litecoin network.
+And also at this point Alice should validate if the data returned in the contract are correct</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_contract</span> <span class="o">=</span> <span class="n">ltc_network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
     <span class="n">contract</span><span class="o">=</span><span class="s1">&#39;63a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac&#39;</span><span class="p">,</span>
     <span class="n">transaction_address</span><span class="o">=</span><span class="s1">&#39;09a60dc3fafe6ba058b2a140457df1c3b446602595d47deed641cb635ffd25aa&#39;</span>
@@ -501,9 +513,9 @@ And also at this point Alice should validate if the data returned in the contrac
 <div class="section" id="setup">
 <span id="setup"></span><h3>1. Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
 <p>Alice should initialize the network object, set her address, private key, amount of tokens to be swapped and the address of the token.</p>
-<p>[<strong>Alice</strong>]’s console input:
-from clove.network import EthereumTestnet</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eth_test</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<p>[<strong>Alice</strong>]’s console input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="n">eth_test</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
 
 <span class="n">address</span> <span class="o">=</span> <span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span>
 <span class="n">private_key</span> <span class="o">=</span> <span class="s1">&#39;alice_private_key&#39;</span>
@@ -518,9 +530,9 @@ from clove.network import EthereumTestnet</p>
 </pre></div>
 </div>
 <p>Bob should initialize the network object, set his address, private key and amount of ethers to be swapped.</p>
-<p>[<strong>Bob</strong>]’s console input:
-from clove.network import EthereumTestnet</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eth_test</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<p>[<strong>Bob</strong>]’s console input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="n">eth_test</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
 
 <span class="n">address</span> <span class="o">=</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span>
 <span class="n">private_key</span> <span class="o">=</span> <span class="s1">&#39;bob_private_key&#39;</span>
@@ -543,7 +555,7 @@ from clove.network import EthereumTestnet</p>
 </div>
 <div class="section" id="token-approval">
 <span id="token-approval"></span><h3>3. Token approval<a class="headerlink" href="#token-approval" title="Permalink to this headline">¶</a></h3>
-<p>To send tokens to an atomic swap contract Alice has to first approve that the tokens she own can be spend by that contract.</p>
+<p>To send tokens to an atomic swap contract Alice has to first approve that the tokens she owns can be spent by that contract.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">approve_transaction</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">approve_token</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">tokens_to_swap</span><span class="p">,</span> <span class="n">token_address</span><span class="p">)</span>
 <span class="n">approve_transaction</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
 <span class="n">approve_transaction</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
@@ -610,12 +622,12 @@ from clove.network import EthereumTestnet</p>
 </div>
 <div class="section" id="communication-e2">
 <span id="communication-e2"></span><h3>5. Communication (e2)<a class="headerlink" href="#communication-e2" title="Permalink to this headline">¶</a></h3>
-<p>[<strong>Alice</strong>] sends hers transaction address <code class="docutils literal notranslate"><span class="pre">0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840</span></code> to Bob so he can audit created contract.</p>
+<p>[<strong>Alice</strong>] sends her transaction address <code class="docutils literal notranslate"><span class="pre">0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840</span></code> to Bob so he can audit created contract.</p>
 </div>
 <div class="section" id="contract-audit-bbt-token">
 <span id="contract-audit-bbt-token"></span><h3>6. Contract audit (BBT token)<a class="headerlink" href="#contract-audit-bbt-token" title="Permalink to this headline">¶</a></h3>
 <p>[<strong>Bob</strong>] needs to audit the contract in the network it was created in, in our case it’s Ethereum Testnet network.
-And also at this point Bob should validate if the data returned in the contract is correct.</p>
+And also at this point Bob should validate if the data returned in the contract are correct.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_contract</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span><span class="s1">&#39;0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840&#39;</span><span class="p">)</span>
 <span class="n">alice_contract</span><span class="o">.</span><span class="n">show_details</span><span class="p">()</span>
 
@@ -633,7 +645,7 @@ And also at this point Bob should validate if the data returned in the contract 
 </div>
 <div class="section" id="participation-eth-testnet">
 <span id="participation-eth-testnet"></span><h3>7. Participation (ETH-TESTNET)<a class="headerlink" href="#participation-eth-testnet" title="Permalink to this headline">¶</a></h3>
-<p>[<strong>Bob</strong>] has to create parallel transaction from point 4 but for 0.5 ETH. We call it <code class="docutils literal notranslate"><span class="pre">participate_transaction</span></code>.</p>
+<p>[<strong>Bob</strong>] has to create a parallel transaction from point 4 but for 0.5 ETH. We call it <code class="docutils literal notranslate"><span class="pre">participate_transaction</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">participate_transaction</span> <span class="o">=</span> <span class="n">alice_contract</span><span class="o">.</span><span class="n">participate</span><span class="p">(</span>
     <span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;ETH-TESTNET&#39;</span><span class="p">,</span>
     <span class="n">sender_address</span><span class="o">=</span><span class="n">address</span><span class="p">,</span>
@@ -677,7 +689,7 @@ And also at this point Bob should validate if the data returned in the contract 
 <div class="section" id="contract-audit-eth-testnet">
 <span id="contract-audit-eth-testnet"></span><h3>9. Contract audit (ETH-TESTNET)<a class="headerlink" href="#contract-audit-eth-testnet" title="Permalink to this headline">¶</a></h3>
 <p>[<strong>Alice</strong>] needs to audit the contract in the network it was created in, in our case it’s Ethereum Testnet network.
-And also at this point Alice should validate if the data returned in the contract is correct.</p>
+And also at this point Alice should validate if the data returned in the contract are correct.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bob_contract</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span>
     <span class="s1">&#39;0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f&#39;</span>
 <span class="p">)</span>
@@ -725,8 +737,10 @@ And also at this point Alice should validate if the data returned in the contrac
 <div class="section" id="secret-capture-eth-testnet">
 <span id="secret-capture-eth-testnet"></span><h3>11. Secret capture (ETH-TESTNET)<a class="headerlink" href="#secret-capture-eth-testnet" title="Permalink to this headline">¶</a></h3>
 <p>[<strong>Bob</strong>] should extract the secret from the redeem transaction. For this operation (<code class="docutils literal notranslate"><span class="pre">find_redeem_transaction</span></code>) an Etherscan API key is required - <a class="reference external" href="#etherscan-api-key">read more</a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_redeem_tx_hash</span> <span class="o">=</span> <span class="n">bob_contract</span><span class="o">.</span><span class="n">find_redeem_transaction</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alice_redeem_tx_hash</span> <span class="o">=</span> <span class="n">participate_transaction</span><span class="o">.</span><span class="n">find_redeem_transaction</span><span class="p">()</span>
 <span class="n">secret</span> <span class="o">=</span> <span class="n">eth_test</span><span class="o">.</span><span class="n">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="n">alice_redeem_tx_hash</span><span class="p">)</span>
+<span class="n">secret</span>
+<span class="s1">&#39;c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac&#39;</span>
 </pre></div>
 </div>
 </div>

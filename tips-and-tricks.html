@@ -230,10 +230,10 @@
 </div>
 <div class="section" id="getting-fee">
 <span id="getting-fee"></span><h2>Getting fee<a class="headerlink" href="#getting-fee" title="Permalink to this headline">¶</a></h2>
-<p>In Bitcoin-base networks every transaction needs to include some small fee for miners. Fee depends on several factors and is changing over time.</p>
+<p>In Bitcoin-based networks every transaction needs to include some small fee for miners. Fee depends on several factors and is changing over time.</p>
 <div class="section" id="via-clove-api">
 <span id="via-clove-api"></span><h3>via Clove API<a class="headerlink" href="#via-clove-api" title="Permalink to this headline">¶</a></h3>
-<p>The easiest way to get current fee is to ask Clove API via <code class="docutils literal notranslate"><span class="pre">get_current_fee_per_kb</span></code> method. Clove API is a proxy between you and block explorer with a cache layer so you will not be exposed to requests limits in some block explorers.</p>
+<p>The easiest way to get a current fee is to ask Clove API via <code class="docutils literal notranslate"><span class="pre">get_current_fee_per_kb</span></code> method. Clove API is a proxy between you and block explorer with a cache layer so you will not be exposed to requests limits in some block explorers.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Bitcoin</span>
 
 <span class="n">network</span> <span class="o">=</span> <span class="n">Bitcoin</span><span class="p">()</span>
@@ -252,7 +252,7 @@
 <span class="mf">0.00200369</span>
 </pre></div>
 </div>
-<p>some of those networks supports also counting fee from a given number of last transactions</p>
+<p>some of those networks support also counting fee from a given number of last transactions</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">network</span><span class="o">.</span><span class="n">get_fee</span><span class="p">(</span><span class="n">tx_limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="mf">0.00200362</span>
 </pre></div>
@@ -278,7 +278,7 @@
 </div>
 <div class="section" id="getting-transaction-details">
 <span id="getting-transaction-details"></span><h2>Getting transaction details<a class="headerlink" href="#getting-transaction-details" title="Permalink to this headline">¶</a></h2>
-<p>Using clove you can check details of every transaction.</p>
+<p>Using clove you can check details of every transaction by hash.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Mooncoin</span>
 
 <span class="n">network</span> <span class="o">=</span> <span class="n">Mooncoin</span><span class="p">()</span>
@@ -315,7 +315,7 @@
 </div>
 <div class="section" id="getting-balance">
 <span id="getting-balance"></span><h2>Getting balance<a class="headerlink" href="#getting-balance" title="Permalink to this headline">¶</a></h2>
-<p>To check balance of a given wallet or contract just use</p>
+<p>To check the balance of a given wallet or contract just use</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">BitcoinTestNet</span>
 
 <span class="n">network</span> <span class="o">=</span> <span class="n">BitcoinTestNet</span><span class="p">()</span>

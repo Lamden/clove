@@ -64,11 +64,11 @@ and then you can use this list in atomic swap transaction.
 
 ## Getting fee
 
-In Bitcoin-base networks every transaction needs to include some small fee for miners. Fee depends on several factors and is changing over time.
+In Bitcoin-based networks every transaction needs to include some small fee for miners. Fee depends on several factors and is changing over time.
 
 ### via Clove API
 
-The easiest way to get current fee is to ask Clove API via `get_current_fee_per_kb` method. Clove API is a proxy between you and block explorer with a cache layer so you will not be exposed to requests limits in some block explorers.
+The easiest way to get a current fee is to ask Clove API via `get_current_fee_per_kb` method. Clove API is a proxy between you and block explorer with a cache layer so you will not be exposed to requests limits in some block explorers.
 
     from clove.network import Bitcoin
 
@@ -87,7 +87,7 @@ You can omit the Clove API and calculate fee directly from network's block explo
     network.get_fee()
     0.00200369
 
-some of those networks supports also counting fee from a given number of last transactions
+some of those networks support also counting fee from a given number of last transactions
 
     network.get_fee(tx_limit=20)
     0.00200362
@@ -112,7 +112,7 @@ Even if you have non atomic swap transaction you can still use clove for publish
 
 ## Getting transaction details
 
-Using clove you can check details of every transaction.
+Using clove you can check details of every transaction by hash.
 
     from clove.network import Mooncoin
 
@@ -149,7 +149,7 @@ Using clove you can check details of every transaction.
 
 ## Getting balance
 
-To check balance of a given wallet or contract just use
+To check the balance of a given wallet or contract just use
 
     from clove.network import BitcoinTestNet
 
