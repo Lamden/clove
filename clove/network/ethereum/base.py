@@ -189,6 +189,8 @@ class EthereumBaseNetwork(BaseNetwork):
             name = concise.name()
             symbol = concise.symbol()
             decimals = concise.decimals()
+            if name == '' or symbol == '':
+                raise RuntimeError('Unable to extract token details from token contract')
             logger.debug(f'Token get from contract with success')
         except (OverflowError, BadFunctionCallOutput):
             logger.warning(f'Unable to take token from address: {token_address}')
