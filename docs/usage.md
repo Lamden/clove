@@ -1,5 +1,27 @@
 # Atomic swap example
 
+## API keys
+
+### Cryptoid API key
+
+For operations on networks supported by `chainz.cryptoid.info` API a [free API key](https://chainz.cryptoid.info/api.key.dws) is needed. This key has to be setup as an environment variable under the `CRYPTOID_API_KEY` key.
+
+    $ export CRYPTOID_API_KEY=YOUR_API_KEY
+
+
+### Etherscan API key
+
+For operations on Etherscan API (e.q. `find_redeem_transaction`) a [free API key](https://etherscan.io/myapikey) is needed. This key has to be setup as an environment variable under the `ETHERSCAN_API_KEY` key.
+
+    $ export ETHERSCAN_API_KEY=YOUR_API_KEY
+
+
+### Infura API key
+
+All the interactions with Ethereum network are done via [infura](https://infura.io/).
+
+    $ export INFURA_TOKEN=YOUR_API_KEY
+
 
 ## Bitcoin based networks
 
@@ -11,20 +33,6 @@
 * Bob has a monacoin wallet
 
 (2018-10-04) Exchange rate: 0.001 litecoins is 0.030 monacoin
-
-
-#### Cryptoid API key
-
-For operations on networks supported by `chainz.cryptoid.info` API a [free API key](https://chainz.cryptoid.info/api.key.dws) is needed. This key has to be setup as a environment variable under the `CRYPTOID_API_KEY` key.
-
-    $ export CRYPTOID_API_KEY=YOUR_API_KEY
-
-
-#### Etherscan API key
-
-For operations on Etherscan API (e.q. `find_redeem_transaction`) a [free API key](https://etherscan.io/myapikey) is needed. This key has to be setup as a environment variable under the `ETHERSCAN_API_KEY` key.
-
-    $ export ETHERSCAN_API_KEY=YOUR_API_KEY
 
 
 ### 1. Wallets setup
@@ -52,13 +60,13 @@ For operations on Etherscan API (e.q. `find_redeem_transaction`) a [free API key
 
     mona_network = Monacoin()
 
-    # Alice provides hers private key. The one below is fake, because of obvious security reasons.
+    # Alice provides her private key. The one below is fake, because of obvious security reasons.
     alice_mona_wallet = mona_network.get_wallet(private_key='cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe')
 
     alice_mona_wallet.address
     'MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP'
 
-[Check addres on block explorer](https://insight.electrum-mona.org/insight/address/MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP)
+[Check address on block explorer](https://insight.electrum-mona.org/insight/address/MPLx6eJS41da9bPsLLkHo35uY6KsHu7dXP)
 
 [**Bob**] can use his existing monacoin wallet by passing his private key
 
@@ -72,7 +80,7 @@ For operations on Etherscan API (e.q. `find_redeem_transaction`) a [free API key
     bob_mona_wallet.address
     'MWsDkqHLonS5KfbRnRu3feByD9qkuj44Ye'
 
-[Check addres on block explorer](https://insight.electrum-mona.org/insight/address/MWsDkqHLonS5KfbRnRu3feByD9qkuj44Ye)
+[Check address on block explorer](https://insight.electrum-mona.org/insight/address/MWsDkqHLonS5KfbRnRu3feByD9qkuj44Ye)
 
 [**Bob**] has to prepare his litecoin wallet
 
@@ -86,7 +94,7 @@ For operations on Etherscan API (e.q. `find_redeem_transaction`) a [free API key
     bob_ltc_wallet.address
     'LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq'
 
-[Check addres on block explorer](https://chainz.cryptoid.info/ltc/address.dws?LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq.htm)
+[Check address on block explorer](https://chainz.cryptoid.info/ltc/address.dws?LUAn5PWmsPavgz32mGkqsUuAKncftS37Jq.htm)
 
 
 ### 2. Communication (b1)
@@ -153,8 +161,8 @@ We can check if the transaction exists by using the `transaction_link` from `sho
 
 ### 5. Contract audit (MONA)
 
-[**Bob**] needs to create a contract in network of coins he wants to receive (i.e. Alice's network), in our case in Monacoin network.
-And also at this point Bob should validate if the data returned in the contract is correct.
+[**Bob**] needs to create a contract in a network of coins he wants to receive (i.e. Alice's network), in our case in Monacoin network.
+And also at this point Bob should validate if the data returned in the contract are correct.
 
     alice_contract = mona_network.audit_contract(
         contract='63a61450314a793bf317665ecdc54c2e843bb106aeee158876a914fbed00c1502fded3dfa2524f8672ee013bb3f28f670465bab85bb17576a914a96a92963b7a65ac904875cfa5d535b3115888276888ac',
@@ -221,8 +229,8 @@ And also at this point Bob should validate if the data returned in the contract 
 
 ### 8. Contract audit (LTC)
 
-[**Alice**] needs to audit the contract in network of coins she wants to receive (i.e. Bob's network), in our case on the Litecoin network.
-And also at this point Alice should validate if the data returned in the contract is correct
+[**Alice**] needs to audit the contract in a network of coins she wants to receive (i.e. Bob's network), in our case on the Litecoin network.
+And also at this point Alice should validate if the data returned in the contract are correct
 
     bob_contract = ltc_network.audit_contract(
         contract='63a61450314a793bf317665ecdc54c2e843bb106aeee158876a91485c0522f6e23beb11cc3d066cd20ed732648a4e66704926db75bb17576a914621f617c765c3caa5ce1bb67f6a3e51382b8da296888ac',
@@ -332,8 +340,8 @@ And also at this point Alice should validate if the data returned in the contrac
 Alice should initialize the network object, set her address, private key, amount of tokens to be swapped and the address of the token.
 
 [**Alice**]'s console input:
-    from clove.network import EthereumTestnet
 
+    from clove.network import EthereumTestnet
     eth_test = EthereumTestnet()
 
     address = '0x999F348959E611F1E9eab2927c21E88E48e6Ef45'
@@ -350,8 +358,8 @@ It is also possible to get the token data directly from the network object by th
 Bob should initialize the network object, set his address, private key and amount of ethers to be swapped.
 
 [**Bob**]'s console input:
-    from clove.network import EthereumTestnet
 
+    from clove.network import EthereumTestnet
     eth_test = EthereumTestnet()
 
     address = '0xd867f293Ba129629a9f9355fa285B8D3711a9092'
@@ -375,7 +383,7 @@ Alice and Bob exchange their wallet addresses.
 
 ### 3. Token approval
 
-To send tokens to an atomic swap contract Alice has to first approve that the tokens she own can be spend by that contract.
+To send tokens to an atomic swap contract Alice has to first approve that the tokens she owns can be spent by that contract.
 
     approve_transaction = eth_test.approve_token(address, tokens_to_swap, token_address)
     approve_transaction.sign(private_key)
@@ -443,13 +451,13 @@ To send tokens to an atomic swap contract Alice has to first approve that the to
 
 ### 5. Communication (e2)
 
-[**Alice**] sends hers transaction address `0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840` to Bob so he can audit created contract.
+[**Alice**] sends her transaction address `0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840` to Bob so he can audit created contract.
 
 
 ### 6. Contract audit (BBT token)
 
 [**Bob**] needs to audit the contract in the network it was created in, in our case it's Ethereum Testnet network.
-And also at this point Bob should validate if the data returned in the contract is correct.
+And also at this point Bob should validate if the data returned in the contract are correct.
 
     alice_contract = eth_test.audit_contract('0x4cc2308652423a1b05712def62fe5183dfa507bd033941bdb40b56a258760840')
     alice_contract.show_details()
@@ -467,7 +475,7 @@ And also at this point Bob should validate if the data returned in the contract 
 
 ### 7. Participation (ETH-TESTNET)
 
-[**Bob**] has to create parallel transaction from point 4 but for 0.5 ETH. We call it `participate_transaction`.
+[**Bob**] has to create a parallel transaction from point 4 but for 0.5 ETH. We call it `participate_transaction`.
 
     participate_transaction = alice_contract.participate(
         symbol='ETH-TESTNET',
@@ -512,7 +520,7 @@ And also at this point Bob should validate if the data returned in the contract 
 ### 9. Contract audit (ETH-TESTNET)
 
 [**Alice**] needs to audit the contract in the network it was created in, in our case it's Ethereum Testnet network.
-And also at this point Alice should validate if the data returned in the contract is correct.
+And also at this point Alice should validate if the data returned in the contract are correct.
 
     bob_contract = eth_test.audit_contract(
         '0xc9b2bf9b67dcfea39dea71b3416922adfcae23f6410be7d109fb9df2e1c0695f'
@@ -563,8 +571,10 @@ And also at this point Alice should validate if the data returned in the contrac
 
 [**Bob**] should extract the secret from the redeem transaction. For this operation (`find_redeem_transaction`) an Etherscan API key is required - [read more](#etherscan-api-key)
 
-    alice_redeem_tx_hash = bob_contract.find_redeem_transaction()
+    alice_redeem_tx_hash = participate_transaction.find_redeem_transaction()
     secret = eth_test.extract_secret_from_redeem_transaction(alice_redeem_tx_hash)
+    secret
+    'c037026e2d0f3901c797d2414df30a4ce700d18055925f416e575635c5c2b7ac'
 
 
 ### 12. Second redeem transaction (BBT token)
