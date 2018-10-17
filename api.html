@@ -967,6 +967,26 @@ will store the number of confirmations under the different key name.</p>
 </div>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="clove.block_explorer.insight.InsightAPIv4.publish">
+<em class="property">classmethod </em><code class="descname">publish</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/block_explorer/insight.html#InsightAPIv4.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Publish signed transaction via block explorer API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_transaction</strong> (<em>str</em>) – signed transaction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction address if transaction was published</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if something went wrong</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="clove.block_explorer.insight.InsightAPIv4.ui_url">
 <code class="descname">ui_url</code><em class="property"> = None</em><a class="headerlink" href="#clove.block_explorer.insight.InsightAPIv4.ui_url" title="Permalink to this definition">¶</a></dt>

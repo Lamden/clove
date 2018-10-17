@@ -145,9 +145,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for clove.block_explorer.insight</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">json</span> <span class="k">import</span> <span class="n">JSONDecodeError</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">bitcoin.core</span> <span class="k">import</span> <span class="n">CTxOut</span><span class="p">,</span> <span class="n">script</span>
+<span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="kn">from</span> <span class="nn">clove.block_explorer.base</span> <span class="k">import</span> <span class="n">BaseAPI</span>
 <span class="kn">from</span> <span class="nn">clove.network.bitcoin.utxo</span> <span class="k">import</span> <span class="n">Utxo</span>
@@ -464,7 +466,37 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">cscript</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">CScript</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">tx_json</span><span class="p">[</span><span class="s1">&#39;vout&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;scriptPubKey&#39;</span><span class="p">][</span><span class="s1">&#39;hex&#39;</span><span class="p">])</span>
         <span class="n">nValue</span> <span class="o">=</span> <span class="n">to_base_units</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tx_json</span><span class="p">[</span><span class="s1">&#39;vout&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]))</span>
-        <span class="k">return</span> <span class="n">CTxOut</span><span class="p">(</span><span class="n">nValue</span><span class="p">,</span> <span class="n">cscript</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">CTxOut</span><span class="p">(</span><span class="n">nValue</span><span class="p">,</span> <span class="n">cscript</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InsightAPIv4.publish"><a class="viewcode-back" href="../../../api.html#clove.block_explorer.insight.InsightAPIv4.publish">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Publish signed transaction via block explorer API.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_transaction (str): signed transaction</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: transaction address if transaction was published</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if something went wrong</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{cls.api_url}</span><span class="s1">/tx/send&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;rawtx&#39;</span><span class="p">:</span> <span class="n">raw_transaction</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;txid&#39;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Unexpected response from API when publishing transaction (</span><span class="si">{cls.symbols[0]}</span><span class="s1">)&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected response format from API. Please try again.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">400</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Error while publishing transaction via API (</span><span class="si">{cls.symbols[0]}</span><span class="s1">): </span><span class="si">{response.text}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Unexepected error: (</span><span class="si">{response.text}</span><span class="s1">). Please try again or check your transaction.&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="n">f</span><span class="s1">&#39;Unexepected error while publishing transaction via API (</span><span class="si">{cls.symbols[0]}</span><span class="s1">). &#39;</span>
+            <span class="s1">&#39;Status code: </span><span class="si">{response.status.code}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected response from API. Please try again.&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
