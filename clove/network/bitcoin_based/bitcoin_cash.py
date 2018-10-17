@@ -2,7 +2,7 @@ from clove.block_explorer.insight import InsightAPIv4
 from clove.network.bitcoin.base import BitcoinBaseNetwork
 
 
-class BitcoinCash(BitcoinBaseNetwork, InsightAPIv4):
+class BitcoinCash(InsightAPIv4, BitcoinBaseNetwork):
     """
     Class with all the necessary BCH network information based on
     https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/src/chainparams.cpp
@@ -28,6 +28,9 @@ class BitcoinCash(BitcoinBaseNetwork, InsightAPIv4):
     source_code_url = 'https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/src/chainparams.cpp'
     api_url = 'https://blockdozer.com/api'
     ui_url = 'https://blockdozer.com'
+
+    # disabled until signing and new address format is supported
+    API = False
 
 
 class BitcoinCashTestNet(BitcoinCash):
