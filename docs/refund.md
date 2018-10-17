@@ -167,6 +167,6 @@ Please remember, that initial transaction contract is set to be **valid for 48 h
     >>> refund.publish()
     '0xbf13af6b32a0af2406fdfb23705742d2d1d097742af9bf3946029e8d1f3feba3'
 
-### 4. Voilà! Alice should get her ethereum_testnet coins back.
+### 4. Voilà! Alice should get her ether coins back.
 
 You can check it for example [here](https://kovan.etherscan.io/tx/0xbf13af6b32a0af2406fdfb23705742d2d1d097742af9bf3946029e8d1f3feba3).
