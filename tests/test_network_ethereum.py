@@ -286,6 +286,16 @@ def test_get_token_from_token_contract(infura_token):
     )
 
 
+@patch('clove.network.ethereum.base.ConciseContract')
+def test_unable_to_get_token_from_token_contract(contract_mock, infura_token):
+    contract_mock().name.return_value = ''
+    contract_mock().symbol.return_value = ''
+    contract_mock().decimals.return_value = 0
+    network = EthereumTestnet()
+    with raises(RuntimeError, match='Unable to extract token details from token contract'):
+        network.get_token_from_token_contract('0x53E546387A0d054e7FF127923254c0a679DA6DBf')
+
+
 def test_get_token_by_address(infura_token):
 
     network = EthereumTestnet()
