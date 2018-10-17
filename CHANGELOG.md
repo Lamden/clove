@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.2.14
+
+* Remove Bitcoin Cash from API
+* Raise error if token details are not extracted from contract
+
 ## v1.2.13
 
 * Speed-up for publishing transactions in networks that use Insight API.
