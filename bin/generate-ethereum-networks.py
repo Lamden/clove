@@ -35,14 +35,17 @@ class EthereumNetworkGenerator(object):
 
     def get_pagination(self):
         pagination = self.html.find('#ContentPlaceHolder1_divpagingpanel p span').text().split()
-        self.current_page = int(pagination[1])
-        self.last_page = int(pagination[3])
+        self.current_page = int(pagination[3])
+        self.last_page = int(pagination[5])
 
     def extract_tokens(self):
         links = [l for l in self.html.find('#ContentPlaceHolder1_divresult tbody tr h5 a')]
         for l in links:
             address = l.attrib['href'].replace('/token/', '')
-            name, symbol = l.text[:-1].split(' (')
+            try:
+                name, symbol = l.text[:-1].split(' (')
+            except ValueError:
+                continue
             decimals = self.get_token_precision(address)
             if not decimals:
                 print_error(f'Cannot define the number of decimal places for {name} ({symbol}). Ignoring.')
