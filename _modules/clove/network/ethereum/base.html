@@ -171,21 +171,30 @@
 
 
 <div class="viewcode-block" id="EthereumBaseNetwork"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork">[docs]</a><span class="k">class</span> <span class="nc">EthereumBaseNetwork</span><span class="p">(</span><span class="n">BaseNetwork</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Class with all the necessary ETH network information and transaction building.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">API</span> <span class="o">=</span> <span class="kc">True</span>
-
+    <span class="sd">&#39;&#39;&#39;This value tells us that a given network have a block explorer API support.&#39;&#39;&#39;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Network name&#39;&#39;&#39;</span>
     <span class="n">symbols</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="sd">&#39;&#39;&#39;Tuple with network symbols&#39;&#39;&#39;</span>
     <span class="n">web3_provider_address</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Address to a web3 provider&#39;&#39;&#39;</span>
     <span class="n">ethereum_based</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="sd">&#39;&#39;&#39;Flag for ethereum-based networks&#39;&#39;&#39;</span>
     <span class="n">contract_address</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Placeholder for a contract address&#39;&#39;&#39;</span>
     <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="sd">&#39;&#39;&#39;Placeholder for a list of tokens&#39;&#39;&#39;</span>
     <span class="n">blockexplorer_tx</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&#39;&#39;&#39;Template string for the transaction address&#39;&#39;&#39;</span>
     <span class="n">filtering_supported</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="sd">&#39;&#39;&#39;Support for filtering events&#39;&#39;&#39;</span>
 
     <span class="n">abi</span> <span class="o">=</span> <span class="n">ETHEREUM_CONTRACT_ABI</span>
+    <span class="sd">&#39;&#39;&#39;Application Binary Interface definition for Ethereum Atomic Swap contract.&#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
@@ -197,14 +206,62 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">refund</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;refund(bytes20, address)&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.method_id"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.method_id">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">method_id</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method_id</span><span class="p">(</span><span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns Atomic Swap methods identifiers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            method (str): method name with arguments</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: method identifier</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Ethereum</span>
+<span class="sd">            &gt;&gt;&gt; network = Ethereum()</span>
+<span class="sd">            &gt;&gt;&gt; network.method_id(&#39;redeem(bytes32)&#39;)</span>
+<span class="sd">            &#39;eda1122c&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">Web3</span><span class="o">.</span><span class="n">sha3</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">method</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.extract_method_id"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.extract_method_id">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">extract_method_id</span><span class="p">(</span><span class="n">tx_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">extract_method_id</span><span class="p">(</span><span class="n">tx_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Extract Atomic Swap method identifier from transaction input (hash string).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tx_inpit: hash string with transaction input</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: method identifier</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.extract_method_id(&#39;0x7337c993000000000000000000000000000000000000000000000000000000005bd1e24b6603102c4aad175d1d719326d32127d55593f986000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000004fd13283a6b9e26c4833d7b9ee7557f1d008371d0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000002386f26fc10000&#39;)  # noqa: E501</span>
+<span class="sd">            &#39;7337c993&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">tx_input</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="EthereumBaseNetwork.get_method_name"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_method_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_id</span><span class="p">):</span>
+<div class="viewcode-block" id="EthereumBaseNetwork.get_method_name"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_method_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returning Atomic Swap method name based on method identifier.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            method_id (str): method identifier</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: method name</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnsupportedTransactionType: if method identifier is not recognized</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_method_name(&#39;7337c993&#39;)</span>
+<span class="sd">            &#39;initiate&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">initiate</span><span class="p">:</span> <span class="s1">&#39;initiate&#39;</span><span class="p">,</span>
@@ -216,15 +273,63 @@
             <span class="k">raise</span> <span class="n">UnsupportedTransactionType</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Unrecognized method id </span><span class="si">{self.method_id}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.value_from_base_units"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.value_from_base_units">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">value_from_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">value_from_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Converting value from base units.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (int): value in base units (Wei)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Decimal: value in main coins (Ethereum)</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Ethereum</span>
+<span class="sd">            &gt;&gt;&gt; network = Ethereum()</span>
+<span class="sd">            &gt;&gt;&gt; network.value_from_base_units(10000000000000)</span>
+<span class="sd">            Decimal(&#39;0.00001&#39;)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">Web3</span><span class="o">.</span><span class="n">fromWei</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.value_to_base_units"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.value_to_base_units">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">value_to_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">value_to_base_units</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Converting value to base units.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (int): value in main coins (Ethereum)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: value in base units (Wei)</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Ethereum</span>
+<span class="sd">            &gt;&gt;&gt; network = Ethereum()</span>
+<span class="sd">            &gt;&gt;&gt; network.value_to_base_units(0.00000001)</span>
+<span class="sd">            10000000000</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toWei</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.unify_address"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.unify_address">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">unify_address</span><span class="p">(</span><span class="n">address</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">unify_address</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns Ethereum address with checksum.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            str: Ethereum address</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: address with checksum</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: if the address length is incorrect</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Ethereum</span>
+<span class="sd">            &gt;&gt;&gt; network = Ethereum()</span>
+<span class="sd">            &gt;&gt;&gt; network.unify_address(&#39;0x999f348959e611f1e9eab2927c21e88e48e6ef45&#39;)</span>
+<span class="sd">            &#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">address</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">42</span><span class="p">),</span> <span class="s1">&#39;Provided address is not properly formatted.&#39;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">address</span><span class="p">)</span> <span class="o">==</span> <span class="mi">40</span><span class="p">:</span>
             <span class="n">address</span> <span class="o">=</span> <span class="s1">&#39;0x&#39;</span> <span class="o">+</span> <span class="n">address</span>
@@ -233,6 +338,23 @@
 
 <div class="viewcode-block" id="EthereumBaseNetwork.is_valid_address"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.is_valid_address">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_valid_address</span><span class="p">(</span><span class="n">adddress</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Checking if given address is valid (with checksum or not).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            str: Ethereum address</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if address is valid, False otherwise</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import Ethereum</span>
+<span class="sd">            &gt;&gt;&gt; network = Ethereum()</span>
+<span class="sd">            &gt;&gt;&gt; network.is_valid_address(&#39;foobar&#39;)</span>
+<span class="sd">            False</span>
+<span class="sd">            &gt;&gt;&gt; network.is_valid_address(&#39;0x999f348959e611f1e9eab2927c21e88e48e6ef45&#39;)</span>
+<span class="sd">            True</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">Web3</span><span class="o">.</span><span class="n">isAddress</span><span class="p">(</span><span class="n">adddress</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.atomic_swap"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.atomic_swap">[docs]</a>    <span class="k">def</span> <span class="nf">atomic_swap</span><span class="p">(</span>
@@ -243,8 +365,29 @@
         <span class="n">secret_hash</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumAtomicSwapTransaction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Return EthereumAtomicSwapTransaction object,</span>
-<span class="sd">            which initiate and build transaction beetwen sender and recipient &quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Return EthereumAtomicSwapTransaction object, which initiate and build transaction between sender and recipient.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sender_address (str): wallet address of the sender</span>
+<span class="sd">            recipient_address (str): wallet address of the recipient</span>
+<span class="sd">            value (str, Decimal): amount to swap</span>
+<span class="sd">            secret_hash (str): optional secret hash to be used in transaction. If None then the new hash</span>
+<span class="sd">                will be generated.</span>
+<span class="sd">            token_address: address of the ERC20 token contract to swap</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthereumAtomicSwapTransaction: atomic swap unsigned transaction for Ethereum</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if you use an incorrect token address</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.atomic_swap(&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;, &#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;, &#39;0.05&#39;)  # noqa: E501</span>
+<span class="sd">            &lt;clove.network.ethereum.transaction.EthereumAtomicSwapTransaction at 0x7f286d16dba8&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
@@ -272,7 +415,26 @@
         <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">],</span>
         <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumTokenApprovalTransaction</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Create unsigned token approve transaction.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            sender_address (str): wallet address of the sender</span>
+<span class="sd">            value (str, Decimal): amount to swap</span>
+<span class="sd">            token_address: address of the ERC20 token contract to swap</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthereumTokenApprovalTransaction: unsigned token approve transaction</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if you use an incorrect token address</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.approve_token(&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;, &#39;0.05&#39;, &#39;0x53E546387A0d054e7FF127923254c0a679DA6DBf&#39;)  # noqa: E501</span>
+<span class="sd">            &lt;clove.network.ethereum.transaction.EthereumTokenApprovalTransaction at 0x7f286d14bc50&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 
@@ -294,14 +456,73 @@
 
 <div class="viewcode-block" id="EthereumBaseNetwork.sign"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.sign">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">private_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Signing the transaction.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            transaction (Transaction): Ethereum unsigned transaction object</span>
+<span class="sd">            private_key (str): private key</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Transaction: Ethereum signed transaction object</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Transaction signed&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">transaction</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AttributeDict</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Getting transaction details.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tx_address (str): transaction address</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict, None: dictionary with transaction details or None if transaction doesn&#39;t exist</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_transaction(&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;)</span>
+<span class="sd">            AttributeDict({&#39;blockHash&#39;: HexBytes(&#39;0x676df82b6cc2dcf34311bc21c5989452a5ef88c2ddf356991db15e1ee5ede159&#39;),</span>
+<span class="sd">             &#39;blockNumber&#39;: 9181891,</span>
+<span class="sd">             &#39;chainId&#39;: None,</span>
+<span class="sd">             &#39;condition&#39;: None,</span>
+<span class="sd">             &#39;creates&#39;: None,</span>
+<span class="sd">             &#39;from&#39;: &#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;,</span>
+<span class="sd">             &#39;gas&#39;: 100000,</span>
+<span class="sd">             &#39;gasPrice&#39;: 1000000000,</span>
+<span class="sd">             &#39;hash&#39;: HexBytes(&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;),</span>
+<span class="sd">             &#39;input&#39;: &#39;0xeda1122cb2eefaadbbefeb9d9467092b612464db7c6724f71b5c1d70c85853845728f0e9&#39;,</span>
+<span class="sd">             &#39;nonce&#39;: 499,</span>
+<span class="sd">             &#39;publicKey&#39;: HexBytes(&#39;0x76c4f5810736d1d9b9964863abc339dce70ace058db5c820e5fdec26e0840f36f9adcb150e5216213bc301f3a6b71a178c81ddd34a361d696c8cb03970590d4f&#39;),  # noqa: E501</span>
+<span class="sd">             &#39;r&#39;: HexBytes(&#39;0xb5c8d879d9f85e6454f69cdf1c16ac2342999608d0366fa495b51ec61d33b9b7&#39;),</span>
+<span class="sd">             &#39;raw&#39;: HexBytes(&#39;0xf88a8201f3843b9aca00830186a094ce07ab9477bc20790b88b398a2a9e0f626c7d26380a4eda1122cb2eefaadbbefeb9d9467092b612464db7c6724f71b5c1d70c85853845728f0e91ca0b5c8d879d9f85e6454f69cdf1c16ac2342999608d0366fa495b51ec61d33b9b7a01c35cc6de96f61543d92c21c572407481c05a3509af57fa3979d30258571b05a&#39;),  # noqa: E501</span>
+<span class="sd">             &#39;s&#39;: HexBytes(&#39;0x1c35cc6de96f61543d92c21c572407481c05a3509af57fa3979d30258571b05a&#39;),</span>
+<span class="sd">             &#39;standardV&#39;: 1,</span>
+<span class="sd">             &#39;to&#39;: &#39;0xce07aB9477BC20790B88B398A2A9e0F626c7D263&#39;,</span>
+<span class="sd">             &#39;transactionIndex&#39;: 2,</span>
+<span class="sd">             &#39;v&#39;: 28,</span>
+<span class="sd">             &#39;value&#39;: 0})</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransaction</span><span class="p">(</span><span class="n">tx_address</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.audit_contract"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.audit_contract">[docs]</a>    <span class="k">def</span> <span class="nf">audit_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumContract</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Getting details about an Atomic Swap contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            transaction_address (str): hex string with transaction address which created an Atomic Swap</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthereumContract: contract object</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.audit_contract(&#39;0xfe4bcc1b522923ca6f8dc2721134c7d8636b34737aeafb2d6d0868d73e226891&#39;)</span>
+<span class="sd">            &lt;clove.network.ethereum.contract.EthereumContract at 0x7f7b3fec3e80&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">tx_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_address</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tx_dict</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot audit contract, no such transaction: </span><span class="si">{tx_address}</span><span class="s1"> (</span><span class="si">{self.name}</span><span class="s1">)&#39;</span><span class="p">)</span>
@@ -309,6 +530,24 @@
         <span class="k">return</span> <span class="n">EthereumContract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_dict</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.extract_secret_from_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.extract_secret_from_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Extracting secret from redeem transaction.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tx_address (str): address of the redeem transaction</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str,: Secret string</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: When given transaction was not a redeem type transaction</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.extract_secret_from_redeem_transaction(&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;)  # noqa: E501</span>
+<span class="sd">            b2eefaadbbefeb9d9467092b612464db7c6724f71b5c1d70c85853845728f0e9</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">tx_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_address</span><span class="p">)</span>
         <span class="n">method_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_method_id</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">method_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">redeem</span><span class="p">:</span>
@@ -321,14 +560,45 @@
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_token_by_attribute"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_attribute">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_token_by_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Token</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot; Get a token by provided attribute and its value &quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get a known token (from clove) by provided attribute and its value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): attribute name</span>
+<span class="sd">            value (str): attribute value</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Token, None: Ethereum Token namedtuple or None if there is no matching token</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_token_by_attribute(&#39;symbol&#39;, &#39;PGT&#39;)</span>
+<span class="sd">            Token(name=&#39;PrettyGoodToken&#39;, symbol=&#39;PGT&#39;, address=&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;, decimals=18)  # noqa: E501</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                 <span class="k">return</span> <span class="n">token</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_token_from_token_contract"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_token_from_token_contract">[docs]</a>    <span class="k">def</span> <span class="nf">get_token_from_token_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Token</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot; Getting information from token contract and creating Token.</span>
-<span class="sd">            Smart contract is taken based on provided address &quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Getting information from token contract (remote)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            token_address (str): address of the token contract</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Token, None: Ethereum Token namedtuple or None if there is something goes wrong</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: if name or symbol of the token is not defined.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_token_from_token_contract(&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;)</span>
+<span class="sd">            Token(name=&#39;PrettyGoodToken&#39;, symbol=&#39;PGT&#39;, address=&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;, decimals=18)  # noqa: E501</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">token_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unify_address</span><span class="p">(</span><span class="n">token_address</span><span class="p">)</span>
         <span class="n">token_contract</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">token_address</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">ERC20_BASIC_ABI</span><span class="p">)</span>
         <span class="n">concise</span> <span class="o">=</span> <span class="n">ConciseContract</span><span class="p">(</span><span class="n">token_contract</span><span class="p">)</span>
@@ -344,7 +614,22 @@
             <span class="k">return</span>
         <span class="k">return</span> <span class="n">Token</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">token_address</span><span class="p">,</span> <span class="n">decimals</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EthereumBaseNetwork.get_token_by_address"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_address">[docs]</a>    <span class="k">def</span> <span class="nf">get_token_by_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="EthereumBaseNetwork.get_token_by_address"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_address">[docs]</a>    <span class="k">def</span> <span class="nf">get_token_by_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EthToken</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get token by its address.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            address (str): token address</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthToken, None: Ethereum Token namedtuple</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_token_by_address(&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;)</span>
+<span class="sd">            &lt;clove.network.ethereum.token.EthToken at 0x7f7b3fed1eb8&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_token_by_attribute</span><span class="p">(</span><span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">address</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_token_from_token_contract</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;No token found for address </span><span class="si">{address}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -352,23 +637,48 @@
         <span class="k">return</span> <span class="n">EthToken</span><span class="o">.</span><span class="n">from_namedtuple</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_token_by_symbol"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_symbol">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_token_by_symbol</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;  Get raw_transaction by encoding Transaction object token by provided symbol &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">get_token_by_symbol</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EthToken</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get a known token (from clove) by its symbol.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symbol (str): token symbol</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthToken, None: Ethereum Token namedtuple or None if there is no matching token</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_token_by_symbol(&#39;PGT&#39;)</span>
+<span class="sd">            &lt;clove.network.ethereum.token.EthToken at 0x7f7b3fdffe48&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">token</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_token_by_attribute</span><span class="p">(</span><span class="s1">&#39;symbol&#39;</span><span class="p">,</span> <span class="n">symbol</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;No token found for symbol </span><span class="si">{symbol}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="k">return</span> <span class="n">EthToken</span><span class="o">.</span><span class="n">from_namedtuple</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EthereumBaseNetwork.get_raw_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_raw_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_raw_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Get raw_transaction by encoding Transaction object &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toHex</span><span class="p">(</span><span class="n">rlp</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span></div>
-
 <div class="viewcode-block" id="EthereumBaseNetwork.deserialize_raw_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.deserialize_raw_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">deserialize_raw_transaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Transaction</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot; Method to deserialize raw method.</span>
-<span class="sd">        It&#39;s deserializing raw_transaction and returns Transaction object&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">deserialize_raw_transaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Deserializing raw transaction and returning Transaction object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_transaction (str): raw transaction hex string</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            `ethereum.transactions.Transaction`: Ethereum transaction object</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ImpossibleDeserialization: if the raw transaction was not deserializable</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; transaction = network.deserialize_raw_transaction(&#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;)  # noqa: E501</span>
+<span class="sd">            &lt;Transaction(821b)&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">transaction</span> <span class="o">=</span> <span class="n">rlp</span><span class="o">.</span><span class="n">hex_decode</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">,</span> <span class="n">Transaction</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Deserialization succeed&#39;</span><span class="p">)</span>
@@ -381,9 +691,48 @@
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
+<div class="viewcode-block" id="EthereumBaseNetwork.get_raw_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_raw_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_raw_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get raw_transaction by encoding Transaction object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            transaction (`ethereum.transactions.Transaction`): Ethereum transaction object</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: raw transaction hex string</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; transaction = network.deserialize_raw_transaction(&#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;)  # noqa: E501</span>
+<span class="sd">            &gt;&gt;&gt; network.get_raw_transaction(transaction)</span>
+<span class="sd">            &#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;  # noqa: E501</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">Web3</span><span class="o">.</span><span class="n">toHex</span><span class="p">(</span><span class="n">rlp</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="EthereumBaseNetwork.sign_raw_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.sign_raw_transaction">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">sign_raw_transaction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">raw_transaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">private_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Method to sign raw transactions &quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Method to sign raw transactions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_transaction (str): raw transaction hex string</span>
+<span class="sd">            private_key (str): private key hex string</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: signed transaction hex string</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if given private key is invalid</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; raw_transaction = &#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;  # noqa: E501</span>
+<span class="sd">            &gt;&gt;&gt; network.sign_raw_transaction(raw_transaction, MY_PRIVATE_KEY)</span>
+<span class="sd">            &#39;0xf901318201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001ca0d1c5b984ef2629eeb7c96f48a645566b2caf4130b0f3d7060ad5225946eee9e99f9928c5dfe868b45efbb9f8ae7d64d6162591c78961439c49e836947842e178&#39;  # noqa: E501</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">deserialize_raw_transaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -396,7 +745,22 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_raw_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.publish"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Transaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot; Method to publish transaction &quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Method to publish transaction</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            transaction (str, `ethereum.transactions.Transaction`): signed transaction</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: transaction hash or None if something goes wrong</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; signed_transaction = &#39;0xf901318201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001ca0d1c5b984ef2629eeb7c96f48a645566b2caf4130b0f3d7060ad5225946eee9e99f9928c5dfe868b45efbb9f8ae7d64d6162591c78961439c49e836947842e178&#39;  # noqa: E501</span>
+<span class="sd">            &gt;&gt;&gt; network.publish(signed_transaction)</span>
+<span class="sd">            &#39;0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">raw_transaction</span> <span class="o">=</span> <span class="n">transaction</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_raw_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">published_transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">sendRawTransaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
@@ -407,26 +771,84 @@
             <span class="k">return</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_wallet"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_wallet">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns Ethereum wallter object, which allows to keep address and priv key &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">get_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumWallet</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns Ethereum wallet object, which allows to keep address and private.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            private_key (str, None): private key</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthereumWallet: Ethereum wallet object</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; method.get_wallet(private_key=MY_PRIVATE_KEY)</span>
+<span class="sd">            &lt;clove.network.ethereum.wallet.EthereumWallet at 0x7f7b3febd518&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">EthereumWallet</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_new_wallet"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_new_wallet">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_new_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns new Ethereum wallter object, which allows to keep address and priv key &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">get_new_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumWallet</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns new Ethereum wallet object, which allows to keep address and private key.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthereumWallet: Ethereum wallet object</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; method.get_new_wallet()</span>
+<span class="sd">            &lt;clove.network.ethereum.wallet.EthereumWallet at 0x7f7b3fdff898&gt;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">get_latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns the number of the latest block.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: number of the latest block</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_latest_block</span>
+<span class="sd">            9188959</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">blockNumber</span>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contract_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Placeholder&#39;&#39;&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="EthereumBaseNetwork.find_redeem_token_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_token_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_token_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Placeholder&#39;&#39;&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="EthereumBaseNetwork.find_transaction_details_in_redeem_event"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_transaction_details_in_redeem_event">[docs]</a>    <span class="k">def</span> <span class="nf">find_transaction_details_in_redeem_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">block_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="EthereumBaseNetwork.find_transaction_details_in_redeem_event"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.find_transaction_details_in_redeem_event">[docs]</a>    <span class="k">def</span> <span class="nf">find_transaction_details_in_redeem_event</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">recipient_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">secret_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">block_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Searching for transaction details of redeem transaction in Atomic Swap contract events.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            recipient_address (str): recipient address</span>
+<span class="sd">            secret_hash (str): hash of the secret</span>
+<span class="sd">            block_number (int): number of the block from which filtering should be started</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict, None: dictionary with secret and transaction hash, None if no redeem transaction where found</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: if the network doesn&#39;t support event filtering</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">filtering_supported</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
@@ -453,6 +875,21 @@
 
 <div class="viewcode-block" id="EthereumBaseNetwork.get_transaction_url"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.base.EthereumBaseNetwork.get_transaction_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_transaction_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns transaction url for a given transaction hash in block explorer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tx_hash (str): transaction hash</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: Url to transaction, None if `blockexplorer_tx` was not set for this network.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; network.get_transaction_url(&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;)</span>
+<span class="sd">            &#39;https://kovan.etherscan.io/tx/0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blockexplorer_tx</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">blockexplorer_tx</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span></div></div>

@@ -146,6 +146,7 @@
             
   <h1>Source code for clove.network.ethereum.contract</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">eth_abi</span> <span class="k">import</span> <span class="n">decode_abi</span>
 <span class="kn">from</span> <span class="nn">ethereum.transactions</span> <span class="k">import</span> <span class="n">Transaction</span>
@@ -159,6 +160,7 @@
 
 
 <div class="viewcode-block" id="EthereumContract"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract">[docs]</a><span class="k">class</span> <span class="nc">EthereumContract</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Atomic Swap contract.&#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">tx_dict</span><span class="p">):</span>
 
@@ -199,16 +201,29 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">default_symbol</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_token_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_token_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Checking if contract is a token contract.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True is contract is a token contract, False otherwise</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;_isToken&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">contract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Returns a contract object.&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span>
             <span class="n">address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">abi</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="EthereumContract.get_balance"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.get_balance">[docs]</a>    <span class="k">def</span> <span class="nf">get_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Checking contract balance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: contract balance</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">contract</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span>
         <span class="n">contract_swap</span> <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">swaps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">)</span><span class="o">.</span><span class="n">call</span><span class="p">()</span>
         <span class="n">contract_exists</span> <span class="o">=</span> <span class="n">contract_swap</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -227,6 +242,22 @@
         <span class="n">utxo</span><span class="p">:</span> <span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">token_address</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Method for creating a second Atomic Swap transaction based on the secret hash from the current contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symbol (str): network symbol</span>
+<span class="sd">            sender_address (str): wallet address of the transaction creator</span>
+<span class="sd">            recipient_address (str): wallet address of the transaction recipient</span>
+<span class="sd">            value (float): amount to be send</span>
+<span class="sd">            utxo (list): list of UTXO objects. In None UTXO will be gathered automatically if needed</span>
+<span class="sd">                (for bitcoin-based networks)</span>
+<span class="sd">            token_address (str): address of the token contract if we want to use a token</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BitcoinAtomicSwapTransaction, EthereumAtomicSwapTransaction, None: Atomic Swap transaction object</span>
+<span class="sd">                or None if something went wrong.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">network</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_network_by_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">ethereum_based</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span>
@@ -245,6 +276,18 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="EthereumContract.redeem"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.redeem">[docs]</a>    <span class="k">def</span> <span class="nf">redeem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumTokenTransaction</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creates transaction that can redeem a contract.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            secret (str): transaction secret that should match the contract secret hash (after hashing)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthereumTokenTransaction: unsigned transaction object with redeem transaction</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if contract balance is 0</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Balance of this contract is 0.&quot;</span><span class="p">)</span>
         <span class="n">contract</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span>
@@ -271,7 +314,23 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">recipient_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient_address</span>
         <span class="k">return</span> <span class="n">transaction</span></div>
 
-<div class="viewcode-block" id="EthereumContract.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EthereumContract.find_redeem_transaction"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.find_redeem_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">find_redeem_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Getting details of redeem transaction.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: Redeem transaction hash, None if redeem transaction was not found</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if the network is not supported</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; from clove.network import EthereumTestnet</span>
+<span class="sd">            &gt;&gt;&gt; network = EthereumTestnet()</span>
+<span class="sd">            &gt;&gt;&gt; contract = network.audit_contract(&#39;0xfe4bcc1b522923ca6f8dc2721134c7d8636b34737aeafb2d6d0868d73e226891&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; contract.find_redeem_transaction()</span>
+<span class="sd">            &#39;0x9879c8e9866fed8f9a2abdefff72c0dacb9e683ffcbd68cb966b5b8358421f39&#39;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">filtering_supported</span><span class="p">:</span>
             <span class="n">tx_details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">find_transaction_details_in_redeem_event</span><span class="p">(</span>
                 <span class="n">block_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block_number</span><span class="p">,</span>
@@ -300,7 +359,16 @@
                 <span class="n">f</span><span class="s1">&#39;Unable to find redeem transaction, </span><span class="si">{self.network.default_symbol}</span><span class="s1"> network is not supported.&#39;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="EthereumContract.find_secret"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.find_secret">[docs]</a>    <span class="k">def</span> <span class="nf">find_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EthereumContract.find_secret"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.find_secret">[docs]</a>    <span class="k">def</span> <span class="nf">find_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Searching for the secret in the redeem transaction details.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str, None: secret or None if the redeem transaction was not found</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if the network doesn&#39;t support event filtering</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">tx_details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">find_transaction_details_in_redeem_event</span><span class="p">(</span>
                 <span class="n">block_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block_number</span><span class="p">,</span>
@@ -317,7 +385,17 @@
                 <span class="n">f</span><span class="s1">&#39;Unable to find secret, </span><span class="si">{self.network.default_symbol}</span><span class="s1"> network is not supported.&#39;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="EthereumContract.refund"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.refund">[docs]</a>    <span class="k">def</span> <span class="nf">refund</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EthereumContract.refund"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.refund">[docs]</a>    <span class="k">def</span> <span class="nf">refund</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EthereumTokenTransaction</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creates transaction that can refund a contract.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EthereumTokenTransaction: unsigned transaction object with refund transaction</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: if contract is still valid</span>
+<span class="sd">            ValueError: if contract balance is 0</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Balance of this contract is 0.&quot;</span><span class="p">)</span>
         <span class="n">contract</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span>
@@ -351,7 +429,8 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Transaction refunded&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">transaction</span></div>
 
-<div class="viewcode-block" id="EthereumContract.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EthereumContract.show_details"><a class="viewcode-back" href="../../../../api.html#clove.network.ethereum.contract.EthereumContract.show_details">[docs]</a>    <span class="k">def</span> <span class="nf">show_details</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Returns information about the contract.&#39;&#39;&#39;</span>
         <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;contract_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract_address</span><span class="p">,</span>
             <span class="s1">&#39;confirmations&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmations</span><span class="p">,</span>

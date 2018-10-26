@@ -2089,8 +2089,9 @@ close the existing connection.</td>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.show_details">
-<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.show_details" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinAtomicSwapTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with transaction details.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction.validate_address">
@@ -2155,8 +2156,9 @@ close the existing connection.</td>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.transaction.BitcoinTransaction.show_details">
-<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.show_details" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/bitcoin/transaction.html#BitcoinTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.bitcoin.transaction.BitcoinTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with transaction details.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.bitcoin.transaction.BitcoinTransaction.sign">
@@ -2288,205 +2290,794 @@ close the existing connection.</td>
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.API">
 <code class="descname">API</code><em class="property"> = True</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.API" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This value tells us that a given network have a block explorer API support.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.abi">
 <code class="descname">abi</code><em class="property"> = [{'constant': False, 'inputs': [{'name': '_expiration', 'type': 'uint256'}, {'name': '_hash', 'type': 'bytes20'}, {'name': '_participant', 'type': 'address'}, {'name': '_token', 'type': 'address'}, {'name': '_isToken', 'type': 'bool'}, {'name': '_value', 'type': 'uint256'}], 'name': 'initiate', 'outputs': [], 'payable': True, 'stateMutability': 'payable', 'type': 'function'}, {'constant': True, 'inputs': [{'name': '', 'type': 'address'}, {'name': '', 'type': 'bytes20'}], 'name': 'swaps', 'outputs': [{'name': 'expiration', 'type': 'uint256'}, {'name': 'initiator', 'type': 'address'}, {'name': 'participant', 'type': 'address'}, {'name': 'value', 'type': 'uint256'}, {'name': 'isToken', 'type': 'bool'}, {'name': 'token', 'type': 'address'}, {'name': 'exists', 'type': 'bool'}], 'payable': False, 'stateMutability': 'view', 'type': 'function'}, {'constant': False, 'inputs': [{'name': '_secret', 'type': 'bytes32'}], 'name': 'redeem', 'outputs': [], 'payable': False, 'stateMutability': 'nonpayable', 'type': 'function'}, {'constant': False, 'inputs': [{'name': '_hash', 'type': 'bytes20'}, {'name': '_participant', 'type': 'address'}], 'name': 'refund', 'outputs': [], 'payable': False, 'stateMutability': 'nonpayable', 'type': 'function'}, {'anonymous': False, 'inputs': [{'indexed': False, 'name': '_initiator', 'type': 'address'}, {'indexed': False, 'name': '_participant', 'type': 'address'}, {'indexed': False, 'name': '_expiration', 'type': 'uint256'}, {'indexed': False, 'name': '_hash', 'type': 'bytes20'}, {'indexed': False, 'name': '_token', 'type': 'address'}, {'indexed': False, 'name': '_isToken', 'type': 'bool'}, {'indexed': False, 'name': '_value', 'type': 'uint256'}], 'name': 'InitiateSwap', 'type': 'event'}, {'anonymous': False, 'inputs': [{'indexed': False, 'name': '_participant', 'type': 'address'}, {'indexed': False, 'name': '_hash', 'type': 'bytes20'}, {'indexed': False, 'name': '_secret', 'type': 'bytes32'}], 'name': 'RedeemSwap', 'type': 'event'}, {'anonymous': False, 'inputs': [{'indexed': False, 'name': '_initiator', 'type': 'address'}, {'indexed': False, 'name': '_participant', 'type': 'address'}, {'indexed': False, 'name': '_hash', 'type': 'bytes20'}], 'name': 'RefundSwap', 'type': 'event'}]</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.abi" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Application Binary Interface definition for Ethereum Atomic Swap contract.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.approve_token">
 <code class="descname">approve_token</code><span class="sig-paren">(</span><em>sender_address: str, value: Union[str, decimal.Decimal], token_address: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.transaction.EthereumTokenApprovalTransaction<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.approve_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.approve_token" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create unsigned token approve transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sender_address</strong> (<em>str</em>) – wallet address of the sender</li>
+<li><strong>value</strong> (<em>str</em><em>, </em><em>Decimal</em>) – amount to swap</li>
+<li><strong>token_address</strong> – address of the ERC20 token contract to swap</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">unsigned token approve transaction</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#clove.network.ethereum.transaction.EthereumTokenApprovalTransaction" title="clove.network.ethereum.transaction.EthereumTokenApprovalTransaction">EthereumTokenApprovalTransaction</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if you use an incorrect token address</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">approve_token</span><span class="p">(</span><span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span> <span class="s1">&#39;0.05&#39;</span><span class="p">,</span> <span class="s1">&#39;0x53E546387A0d054e7FF127923254c0a679DA6DBf&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">&lt;clove.network.ethereum.transaction.EthereumTokenApprovalTransaction at 0x7f286d14bc50&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.atomic_swap">
 <code class="descname">atomic_swap</code><span class="sig-paren">(</span><em>sender_address: str, recipient_address: str, value: Union[str, decimal.Decimal], secret_hash: str = None, token_address: str = None</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.transaction.EthereumAtomicSwapTransaction<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.atomic_swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.atomic_swap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return EthereumAtomicSwapTransaction object,
-which initiate and build transaction beetwen sender and recipient</p>
+<dd><p>Return EthereumAtomicSwapTransaction object, which initiate and build transaction between sender and recipient.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sender_address</strong> (<em>str</em>) – wallet address of the sender</li>
+<li><strong>recipient_address</strong> (<em>str</em>) – wallet address of the recipient</li>
+<li><strong>value</strong> (<em>str</em><em>, </em><em>Decimal</em>) – amount to swap</li>
+<li><strong>secret_hash</strong> (<em>str</em>) – optional secret hash to be used in transaction. If None then the new hash
+will be generated.</li>
+<li><strong>token_address</strong> – address of the ERC20 token contract to swap</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">atomic swap unsigned transaction for Ethereum</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction" title="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction">EthereumAtomicSwapTransaction</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if you use an incorrect token address</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">atomic_swap</span><span class="p">(</span><span class="s1">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span><span class="p">,</span> <span class="s1">&#39;0xd867f293Ba129629a9f9355fa285B8D3711a9092&#39;</span><span class="p">,</span> <span class="s1">&#39;0.05&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">&lt;clove.network.ethereum.transaction.EthereumAtomicSwapTransaction at 0x7f286d16dba8&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.audit_contract">
 <code class="descname">audit_contract</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.contract.EthereumContract<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.audit_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.audit_contract" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Getting details about an Atomic Swap contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transaction_address</strong> (<em>str</em>) – hex string with transaction address which created an Atomic Swap</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">contract object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#clove.network.ethereum.contract.EthereumContract" title="clove.network.ethereum.contract.EthereumContract">EthereumContract</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span><span class="s1">&#39;0xfe4bcc1b522923ca6f8dc2721134c7d8636b34737aeafb2d6d0868d73e226891&#39;</span><span class="p">)</span>
+<span class="go">&lt;clove.network.ethereum.contract.EthereumContract at 0x7f7b3fec3e80&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.blockexplorer_tx">
 <code class="descname">blockexplorer_tx</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.blockexplorer_tx" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Template string for the transaction address</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.contract_address">
 <code class="descname">contract_address</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.contract_address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Placeholder for a contract address</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.deserialize_raw_transaction">
-<em class="property">static </em><code class="descname">deserialize_raw_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; Union[ethereum.transactions.Transaction, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.deserialize_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.deserialize_raw_transaction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to deserialize raw method.
-It’s deserializing raw_transaction and returns Transaction object</p>
+<em class="property">static </em><code class="descname">deserialize_raw_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em><span class="sig-paren">)</span> &#x2192; ethereum.transactions.Transaction<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.deserialize_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.deserialize_raw_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserializing raw transaction and returning Transaction object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_transaction</strong> (<em>str</em>) – raw transaction hex string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Ethereum transaction object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><cite>ethereum.transactions.Transaction</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ImpossibleDeserialization</span></code> – if the raw transaction was not deserializable</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transaction</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">deserialize_raw_transaction</span><span class="p">(</span><span class="s1">&#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">&lt;Transaction(821b)&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.ethereum_based">
 <code class="descname">ethereum_based</code><em class="property"> = True</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.ethereum_based" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flag for ethereum-based networks</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.extract_method_id">
-<em class="property">static </em><code class="descname">extract_method_id</code><span class="sig-paren">(</span><em>tx_input: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.extract_method_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.extract_method_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">extract_method_id</code><span class="sig-paren">(</span><em>tx_input: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.extract_method_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.extract_method_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract Atomic Swap method identifier from transaction input (hash string).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_inpit</strong> – hash string with transaction input</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">method identifier</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">extract_method_id</span><span class="p">(</span><span class="s1">&#39;0x7337c993000000000000000000000000000000000000000000000000000000005bd1e24b6603102c4aad175d1d719326d32127d55593f986000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000004fd13283a6b9e26c4833d7b9ee7557f1d008371d0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000002386f26fc10000&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">&#39;7337c993&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.extract_secret_from_redeem_transaction">
 <code class="descname">extract_secret_from_redeem_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.extract_secret_from_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.extract_secret_from_redeem_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extracting secret from redeem transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_address</strong> (<em>str</em>) – address of the redeem transaction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Secret string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – When given transaction was not a redeem type transaction</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">extract_secret_from_redeem_transaction</span><span class="p">(</span><span class="s1">&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="go">b2eefaadbbefeb9d9467092b612464db7c6724f71b5c1d70c85853845728f0e9</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.filtering_supported">
 <code class="descname">filtering_supported</code><em class="property"> = False</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.filtering_supported" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Support for filtering events</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_token_transaction">
 <code class="descname">find_redeem_token_transaction</code><span class="sig-paren">(</span><em>recipient_address: str</em>, <em>token_address: str</em>, <em>value: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.find_redeem_token_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_token_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Placeholder</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_transaction">
 <code class="descname">find_redeem_transaction</code><span class="sig-paren">(</span><em>recipient_address: str</em>, <em>contract_address: str</em>, <em>value: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.find_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.find_redeem_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Placeholder</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.find_transaction_details_in_redeem_event">
-<code class="descname">find_transaction_details_in_redeem_event</code><span class="sig-paren">(</span><em>recipient_address: str</em>, <em>secret_hash: str</em>, <em>block_number: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.find_transaction_details_in_redeem_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.find_transaction_details_in_redeem_event" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">find_transaction_details_in_redeem_event</code><span class="sig-paren">(</span><em>recipient_address: str</em>, <em>secret_hash: str</em>, <em>block_number: int</em><span class="sig-paren">)</span> &#x2192; Union[dict, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.find_transaction_details_in_redeem_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.find_transaction_details_in_redeem_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searching for transaction details of redeem transaction in Atomic Swap contract events.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipient_address</strong> (<em>str</em>) – recipient address</li>
+<li><strong>secret_hash</strong> (<em>str</em>) – hash of the secret</li>
+<li><strong>block_number</strong> (<em>int</em>) – number of the block from which filtering should be started</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary with secret and transaction hash, None if no redeem transaction where found</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">dict, None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NotImplementedError</span></code> – if the network doesn’t support event filtering</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_latest_block">
 <code class="descname">get_latest_block</code><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_latest_block" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the number of the latest block.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of the latest block</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_latest_block</span>
+<span class="go">9188959</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_method_name">
-<code class="descname">get_method_name</code><span class="sig-paren">(</span><em>method_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_method_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_method_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">get_method_name</code><span class="sig-paren">(</span><em>method_id: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_method_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_method_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returning Atomic Swap method name based on method identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>method_id</strong> (<em>str</em>) – method identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">method name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnsupportedTransactionType</span></code> – if method identifier is not recognized</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_method_name</span><span class="p">(</span><span class="s1">&#39;7337c993&#39;</span><span class="p">)</span>
+<span class="go">&#39;initiate&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_new_wallet">
-<em class="property">classmethod </em><code class="descname">get_new_wallet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_new_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_new_wallet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns new Ethereum wallter object, which allows to keep address and priv key</p>
+<em class="property">classmethod </em><code class="descname">get_new_wallet</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.wallet.EthereumWallet<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_new_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_new_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns new Ethereum wallet object, which allows to keep address and private key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Ethereum wallet object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#clove.network.ethereum.wallet.EthereumWallet" title="clove.network.ethereum.wallet.EthereumWallet">EthereumWallet</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">method</span><span class="o">.</span><span class="n">get_new_wallet</span><span class="p">()</span>
+<span class="go">&lt;clove.network.ethereum.wallet.EthereumWallet at 0x7f7b3fdff898&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_raw_transaction">
 <em class="property">static </em><code class="descname">get_raw_transaction</code><span class="sig-paren">(</span><em>transaction: ethereum.transactions.Transaction</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_raw_transaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get raw_transaction by encoding Transaction object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transaction</strong> (<cite>ethereum.transactions.Transaction</cite>) – Ethereum transaction object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">raw transaction hex string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transaction</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">deserialize_raw_transaction</span><span class="p">(</span><span class="s1">&#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_raw_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+<span class="go">&#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;  # noqa: E501</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_address">
-<code class="descname">get_token_by_address</code><span class="sig-paren">(</span><em>address: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">get_token_by_address</code><span class="sig-paren">(</span><em>address: str</em><span class="sig-paren">)</span> &#x2192; Union[clove.network.ethereum.token.EthToken, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get token by its address.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> (<em>str</em>) – token address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Ethereum Token namedtuple</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">EthToken, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_token_by_address</span><span class="p">(</span><span class="s1">&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;</span><span class="p">)</span>
+<span class="go">&lt;clove.network.ethereum.token.EthToken at 0x7f7b3fed1eb8&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_attribute">
 <em class="property">classmethod </em><code class="descname">get_token_by_attribute</code><span class="sig-paren">(</span><em>name: str</em>, <em>value: str</em><span class="sig-paren">)</span> &#x2192; Union[clove.network.ethereum_based.Token, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_attribute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a token by provided attribute and its value</p>
+<dd><p>Get a known token (from clove) by provided attribute and its value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – attribute name</li>
+<li><strong>value</strong> (<em>str</em>) – attribute value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Ethereum Token namedtuple or None if there is no matching token</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Token, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_token_by_attribute</span><span class="p">(</span><span class="s1">&#39;symbol&#39;</span><span class="p">,</span> <span class="s1">&#39;PGT&#39;</span><span class="p">)</span>
+<span class="go">Token(name=&#39;PrettyGoodToken&#39;, symbol=&#39;PGT&#39;, address=&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;, decimals=18)  # noqa: E501</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_symbol">
-<em class="property">classmethod </em><code class="descname">get_token_by_symbol</code><span class="sig-paren">(</span><em>symbol: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_symbol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get raw_transaction by encoding Transaction object token by provided symbol</p>
+<em class="property">classmethod </em><code class="descname">get_token_by_symbol</code><span class="sig-paren">(</span><em>symbol: str</em><span class="sig-paren">)</span> &#x2192; Union[clove.network.ethereum.token.EthToken, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_by_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_by_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a known token (from clove) by its symbol.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>symbol</strong> (<em>str</em>) – token symbol</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Ethereum Token namedtuple or None if there is no matching token</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">EthToken, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_token_by_symbol</span><span class="p">(</span><span class="s1">&#39;PGT&#39;</span><span class="p">)</span>
+<span class="go">&lt;clove.network.ethereum.token.EthToken at 0x7f7b3fdffe48&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_token_from_token_contract">
 <code class="descname">get_token_from_token_contract</code><span class="sig-paren">(</span><em>token_address: str</em><span class="sig-paren">)</span> &#x2192; Union[clove.network.ethereum_based.Token, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_token_from_token_contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_token_from_token_contract" title="Permalink to this definition">¶</a></dt>
-<dd><p>Getting information from token contract and creating Token.
-Smart contract is taken based on provided address</p>
+<dd><p>Getting information from token contract (remote)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>token_address</strong> (<em>str</em>) – address of the token contract</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Ethereum Token namedtuple or None if there is something goes wrong</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Token, None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code> – if name or symbol of the token is not defined.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_token_from_token_contract</span><span class="p">(</span><span class="s1">&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;</span><span class="p">)</span>
+<span class="go">Token(name=&#39;PrettyGoodToken&#39;, symbol=&#39;PGT&#39;, address=&#39;0x2c76B98079Bb5520FF4BDBC1bf5012AC3E87ddF6&#39;, decimals=18)  # noqa: E501</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_transaction">
 <code class="descname">get_transaction</code><span class="sig-paren">(</span><em>tx_address: str</em><span class="sig-paren">)</span> &#x2192; web3.utils.datastructures.AttributeDict<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Getting transaction details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_address</strong> (<em>str</em>) – transaction address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary with transaction details or None if transaction doesn’t exist</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="s1">&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;</span><span class="p">)</span>
+<span class="go">AttributeDict({&#39;blockHash&#39;: HexBytes(&#39;0x676df82b6cc2dcf34311bc21c5989452a5ef88c2ddf356991db15e1ee5ede159&#39;),</span>
+<span class="go"> &#39;blockNumber&#39;: 9181891,</span>
+<span class="go"> &#39;chainId&#39;: None,</span>
+<span class="go"> &#39;condition&#39;: None,</span>
+<span class="go"> &#39;creates&#39;: None,</span>
+<span class="go"> &#39;from&#39;: &#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;,</span>
+<span class="go"> &#39;gas&#39;: 100000,</span>
+<span class="go"> &#39;gasPrice&#39;: 1000000000,</span>
+<span class="go"> &#39;hash&#39;: HexBytes(&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;),</span>
+<span class="go"> &#39;input&#39;: &#39;0xeda1122cb2eefaadbbefeb9d9467092b612464db7c6724f71b5c1d70c85853845728f0e9&#39;,</span>
+<span class="go"> &#39;nonce&#39;: 499,</span>
+<span class="go"> &#39;publicKey&#39;: HexBytes(&#39;0x76c4f5810736d1d9b9964863abc339dce70ace058db5c820e5fdec26e0840f36f9adcb150e5216213bc301f3a6b71a178c81ddd34a361d696c8cb03970590d4f&#39;),  # noqa: E501</span>
+<span class="go"> &#39;r&#39;: HexBytes(&#39;0xb5c8d879d9f85e6454f69cdf1c16ac2342999608d0366fa495b51ec61d33b9b7&#39;),</span>
+<span class="go"> &#39;raw&#39;: HexBytes(&#39;0xf88a8201f3843b9aca00830186a094ce07ab9477bc20790b88b398a2a9e0f626c7d26380a4eda1122cb2eefaadbbefeb9d9467092b612464db7c6724f71b5c1d70c85853845728f0e91ca0b5c8d879d9f85e6454f69cdf1c16ac2342999608d0366fa495b51ec61d33b9b7a01c35cc6de96f61543d92c21c572407481c05a3509af57fa3979d30258571b05a&#39;),  # noqa: E501</span>
+<span class="go"> &#39;s&#39;: HexBytes(&#39;0x1c35cc6de96f61543d92c21c572407481c05a3509af57fa3979d30258571b05a&#39;),</span>
+<span class="go"> &#39;standardV&#39;: 1,</span>
+<span class="go"> &#39;to&#39;: &#39;0xce07aB9477BC20790B88B398A2A9e0F626c7D263&#39;,</span>
+<span class="go"> &#39;transactionIndex&#39;: 2,</span>
+<span class="go"> &#39;v&#39;: 28,</span>
+<span class="go"> &#39;value&#39;: 0})</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_transaction_url">
 <em class="property">classmethod </em><code class="descname">get_transaction_url</code><span class="sig-paren">(</span><em>tx_hash: str</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_transaction_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_transaction_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns transaction url for a given transaction hash in block explorer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tx_hash</strong> (<em>str</em>) – transaction hash</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Url to transaction, None if <cite>blockexplorer_tx</cite> was not set for this network.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">get_transaction_url</span><span class="p">(</span><span class="s1">&#39;0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;</span><span class="p">)</span>
+<span class="go">&#39;https://kovan.etherscan.io/tx/0x9e41847c3cc780e4cb59902cf55657f0ee92642d9dee4145e090cbf206d4748f&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.get_wallet">
-<em class="property">classmethod </em><code class="descname">get_wallet</code><span class="sig-paren">(</span><em>private_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_wallet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns Ethereum wallter object, which allows to keep address and priv key</p>
+<em class="property">classmethod </em><code class="descname">get_wallet</code><span class="sig-paren">(</span><em>private_key=None</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.wallet.EthereumWallet<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.get_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.get_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Ethereum wallet object, which allows to keep address and private.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>private_key</strong> (<em>str</em><em>, </em><em>None</em>) – private key</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Ethereum wallet object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#clove.network.ethereum.wallet.EthereumWallet" title="clove.network.ethereum.wallet.EthereumWallet">EthereumWallet</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">method</span><span class="o">.</span><span class="n">get_wallet</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="n">MY_PRIVATE_KEY</span><span class="p">)</span>
+<span class="go">&lt;clove.network.ethereum.wallet.EthereumWallet at 0x7f7b3febd518&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.is_valid_address">
 <em class="property">static </em><code class="descname">is_valid_address</code><span class="sig-paren">(</span><em>adddress: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.is_valid_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.is_valid_address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checking if given address is valid (with checksum or not).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>str</strong> – Ethereum address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if address is valid, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Ethereum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Ethereum</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">is_valid_address</span><span class="p">(</span><span class="s1">&#39;foobar&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">is_valid_address</span><span class="p">(</span><span class="s1">&#39;0x999f348959e611f1e9eab2927c21e88e48e6ef45&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.method_id">
-<em class="property">static </em><code class="descname">method_id</code><span class="sig-paren">(</span><em>method</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.method_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.method_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">method_id</code><span class="sig-paren">(</span><em>method: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.method_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.method_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Atomic Swap methods identifiers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>method</strong> (<em>str</em>) – method name with arguments</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">method identifier</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Ethereum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Ethereum</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">method_id</span><span class="p">(</span><span class="s1">&#39;redeem(bytes32)&#39;</span><span class="p">)</span>
+<span class="go">&#39;eda1122c&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.name">
 <code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Network name</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.publish">
 <code class="descname">publish</code><span class="sig-paren">(</span><em>transaction: Union[str, ethereum.transactions.Transaction]</em><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.publish" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to publish transaction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transaction</strong> (str, <cite>ethereum.transactions.Transaction</cite>) – signed transaction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">transaction hash or None if something goes wrong</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_transaction</span> <span class="o">=</span> <span class="s1">&#39;0xf901318201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001ca0d1c5b984ef2629eeb7c96f48a645566b2caf4130b0f3d7060ad5225946eee9e99f9928c5dfe868b45efbb9f8ae7d64d6162591c78961439c49e836947842e178&#39;</span>  <span class="c1"># noqa: E501</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">signed_transaction</span><span class="p">)</span>
+<span class="go">&#39;0x4fd41289b816f6122e59a0759bd10441ead75d550562f4b3aad2fddc56eb3274&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.sign">
 <em class="property">static </em><code class="descname">sign</code><span class="sig-paren">(</span><em>transaction: ethereum.transactions.Transaction</em>, <em>private_key: str</em><span class="sig-paren">)</span> &#x2192; ethereum.transactions.Transaction<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.sign" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Signing the transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transaction</strong> (<em>Transaction</em>) – Ethereum unsigned transaction object</li>
+<li><strong>private_key</strong> (<em>str</em>) – private key</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Ethereum signed transaction object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Transaction</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.sign_raw_transaction">
 <em class="property">classmethod </em><code class="descname">sign_raw_transaction</code><span class="sig-paren">(</span><em>raw_transaction: str</em>, <em>private_key: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.sign_raw_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.sign_raw_transaction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to sign raw transactions</p>
+<dd><p>Method to sign raw transactions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>raw_transaction</strong> (<em>str</em>) – raw transaction hex string</li>
+<li><strong>private_key</strong> (<em>str</em>) – private key hex string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">signed transaction hex string</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if given private key is invalid</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">raw_transaction</span> <span class="o">=</span> <span class="s1">&#39;0xf8f28201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a9092000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000808080&#39;</span>  <span class="c1"># noqa: E501</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">sign_raw_transaction</span><span class="p">(</span><span class="n">raw_transaction</span><span class="p">,</span> <span class="n">MY_PRIVATE_KEY</span><span class="p">)</span>
+<span class="go">&#39;0xf901318201f4843b9aca008302251694ce07ab9477bc20790b88b398a2a9e0f626c7d26387b1a2bc2ec50000b8c47337c993000000000000000000000000000000000000000000000000000000005bd564819d3e84874c199ca4656d434060ec1a393750ab74000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001ca0d1c5b984ef2629eeb7c96f48a645566b2caf4130b0f3d7060ad5225946eee9e99f9928c5dfe868b45efbb9f8ae7d64d6162591c78961439c49e836947842e178&#39;  # noqa: E501</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.symbols">
 <code class="descname">symbols</code><em class="property"> = ()</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.symbols" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tuple with network symbols</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.tokens">
 <code class="descname">tokens</code><em class="property"> = []</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.tokens" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Placeholder for a list of tokens</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.unify_address">
-<em class="property">static </em><code class="descname">unify_address</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.unify_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.unify_address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">unify_address</code><span class="sig-paren">(</span><em>address: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.unify_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.unify_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Ethereum address with checksum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>str</strong> – Ethereum address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">address with checksum</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AssertionError</span></code> – if the address length is incorrect</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Ethereum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Ethereum</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">unify_address</span><span class="p">(</span><span class="s1">&#39;0x999f348959e611f1e9eab2927c21e88e48e6ef45&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x999F348959E611F1E9eab2927c21E88E48e6Ef45&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.value_from_base_units">
-<em class="property">static </em><code class="descname">value_from_base_units</code><span class="sig-paren">(</span><em>value: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.value_from_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.value_from_base_units" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">value_from_base_units</code><span class="sig-paren">(</span><em>value: int</em><span class="sig-paren">)</span> &#x2192; decimal.Decimal<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.value_from_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.value_from_base_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converting value from base units.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em>) – value in base units (Wei)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value in main coins (Ethereum)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Decimal</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Ethereum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Ethereum</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">value_from_base_units</span><span class="p">(</span><span class="mi">10000000000000</span><span class="p">)</span>
+<span class="go">Decimal(&#39;0.00001&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.value_to_base_units">
-<em class="property">static </em><code class="descname">value_to_base_units</code><span class="sig-paren">(</span><em>value: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.value_to_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.value_to_base_units" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">value_to_base_units</code><span class="sig-paren">(</span><em>value: float</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/clove/network/ethereum/base.html#EthereumBaseNetwork.value_to_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.value_to_base_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converting value to base units.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em>) – value in main coins (Ethereum)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value in base units (Wei)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">Ethereum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">Ethereum</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">value_to_base_units</span><span class="p">(</span><span class="mf">0.00000001</span><span class="p">)</span>
+<span class="go">10000000000</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.base.EthereumBaseNetwork.web3_provider_address">
 <code class="descname">web3_provider_address</code><em class="property"> = None</em><a class="headerlink" href="#clove.network.ethereum.base.EthereumBaseNetwork.web3_provider_address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Address to a web3 provider</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2497,50 +3088,172 @@ Smart contract is taken based on provided address</p>
 <dt id="clove.network.ethereum.contract.EthereumContract">
 <em class="property">class </em><code class="descclassname">clove.network.ethereum.contract.</code><code class="descname">EthereumContract</code><span class="sig-paren">(</span><em>network</em>, <em>tx_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Atomic Swap contract.</p>
 <dl class="attribute">
 <dt id="clove.network.ethereum.contract.EthereumContract.contract">
 <code class="descname">contract</code><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.contract" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a contract object.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.contract.EthereumContract.find_redeem_transaction">
-<code class="descname">find_redeem_transaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.find_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.find_redeem_transaction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">find_redeem_transaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.find_redeem_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.find_redeem_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting details of redeem transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Redeem transaction hash, None if redeem transaction was not found</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if the network is not supported</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clove.network</span> <span class="k">import</span> <span class="n">EthereumTestnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">EthereumTestnet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">contract</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">audit_contract</span><span class="p">(</span><span class="s1">&#39;0xfe4bcc1b522923ca6f8dc2721134c7d8636b34737aeafb2d6d0868d73e226891&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">contract</span><span class="o">.</span><span class="n">find_redeem_transaction</span><span class="p">()</span>
+<span class="go">&#39;0x9879c8e9866fed8f9a2abdefff72c0dacb9e683ffcbd68cb966b5b8358421f39&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.contract.EthereumContract.find_secret">
-<code class="descname">find_secret</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.find_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.find_secret" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">find_secret</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[str, NoneType]<a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.find_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.find_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searching for the secret in the redeem transaction details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">secret or None if the redeem transaction was not found</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str, None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if the network doesn’t support event filtering</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.contract.EthereumContract.get_balance">
 <code class="descname">get_balance</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.get_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.get_balance" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checking contract balance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">contract balance</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="clove.network.ethereum.contract.EthereumContract.is_token_contract">
 <code class="descname">is_token_contract</code><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.is_token_contract" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checking if contract is a token contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True is contract is a token contract, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.contract.EthereumContract.participate">
 <code class="descname">participate</code><span class="sig-paren">(</span><em>symbol: str</em>, <em>sender_address: str</em>, <em>recipient_address: str</em>, <em>value: float</em>, <em>utxo: list = None</em>, <em>token_address: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.participate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.participate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method for creating a second Atomic Swap transaction based on the secret hash from the current contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>symbol</strong> (<em>str</em>) – network symbol</li>
+<li><strong>sender_address</strong> (<em>str</em>) – wallet address of the transaction creator</li>
+<li><strong>recipient_address</strong> (<em>str</em>) – wallet address of the transaction recipient</li>
+<li><strong>value</strong> (<em>float</em>) – amount to be send</li>
+<li><strong>utxo</strong> (<em>list</em>) – list of UTXO objects. In None UTXO will be gathered automatically if needed
+(for bitcoin-based networks)</li>
+<li><strong>token_address</strong> (<em>str</em>) – address of the token contract if we want to use a token</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>Atomic Swap transaction object</dt>
+<dd><p class="first last">or None if something went wrong.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction" title="clove.network.bitcoin.transaction.BitcoinAtomicSwapTransaction">BitcoinAtomicSwapTransaction</a>, <a class="reference internal" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction" title="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction">EthereumAtomicSwapTransaction</a>, None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.contract.EthereumContract.redeem">
 <code class="descname">redeem</code><span class="sig-paren">(</span><em>secret: str</em><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.transaction.EthereumTokenTransaction<a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.redeem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.redeem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates transaction that can redeem a contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>secret</strong> (<em>str</em>) – transaction secret that should match the contract secret hash (after hashing)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">unsigned transaction object with redeem transaction</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#clove.network.ethereum.transaction.EthereumTokenTransaction" title="clove.network.ethereum.transaction.EthereumTokenTransaction">EthereumTokenTransaction</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if contract balance is 0</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.contract.EthereumContract.refund">
-<code class="descname">refund</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.refund"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.refund" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">refund</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; clove.network.ethereum.transaction.EthereumTokenTransaction<a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.refund"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.refund" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates transaction that can refund a contract.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">unsigned transaction object with refund transaction</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#clove.network.ethereum.transaction.EthereumTokenTransaction" title="clove.network.ethereum.transaction.EthereumTokenTransaction">EthereumTokenTransaction</a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code> – if contract is still valid</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if contract balance is 0</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="clove.network.ethereum.contract.EthereumContract.show_details">
-<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.show_details" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/ethereum/contract.html#EthereumContract.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.contract.EthereumContract.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns information about the contract.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2578,8 +3291,8 @@ Smart contract is taken based on provided address</p>
 
 <dl class="method">
 <dt id="clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.show_details">
-<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.show_details" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns information about transaction.</p>
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumAtomicSwapTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumAtomicSwapTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with transaction details.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2590,8 +3303,8 @@ Smart contract is taken based on provided address</p>
 <dd><p>Bases: <a class="reference internal" href="#clove.network.ethereum.transaction.EthereumTokenTransaction" title="clove.network.ethereum.transaction.EthereumTokenTransaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">clove.network.ethereum.transaction.EthereumTokenTransaction</span></code></a></p>
 <dl class="method">
 <dt id="clove.network.ethereum.transaction.EthereumTokenApprovalTransaction.show_details">
-<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTokenApprovalTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTokenApprovalTransaction.show_details" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns information about transaction.</p>
+<code class="descname">show_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/clove/network/ethereum/transaction.html#EthereumTokenApprovalTransaction.show_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.network.ethereum.transaction.EthereumTokenApprovalTransaction.show_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with transaction details.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2703,14 +3416,14 @@ Smart contract is taken based on provided address</p>
 <dl class="function">
 <dt id="clove.utils.bitcoin.to_base_units">
 <code class="descclassname">clove.utils.bitcoin.</code><code class="descname">to_base_units</code><span class="sig-paren">(</span><em>value: float</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/clove/utils/bitcoin.html#to_base_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clove.utils.bitcoin.to_base_units" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converting value from base units.</p>
+<dd><p>Converting value to base units.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em>) – value in base units</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em>) – value in main coins</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value in main coins</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value in base units</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
