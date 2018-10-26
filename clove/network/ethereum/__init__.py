@@ -20,6 +20,13 @@ class Ethereum(EtherscanAPI, EthereumBaseNetwork):
 
     @property
     def web3_provider_address(self) -> str:
+        '''
+        Returns:
+            str: address for web3 provider.
+
+        Raises:
+            ValueError: if the `INFURA_TOKEN` environment variable is not set.
+        '''
         token = os.environ.get('INFURA_TOKEN')
         if not token:
             logger.warning('INFURA_TOKEN environment variable was not set.')

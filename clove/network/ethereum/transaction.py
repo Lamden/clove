@@ -124,7 +124,8 @@ class EthereumTokenApprovalTransaction(EthereumTokenTransaction):
             data=Web3.toBytes(hexstr=tx_dict['data']),
         )
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns a dictionary with transaction details.'''
         details = super().show_details()
         details['token_address'] = Web3.toChecksumAddress(details.pop('to'))
         details['sender_address'] = self.sender_address
@@ -223,7 +224,8 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             data=Web3.toBytes(hexstr=tx_dict['data']),
         )
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns a dictionary with transaction details.'''
         details = super().show_details()
         details['secret'] = self.secret.hex() if self.secret else ''
         details['secret_hash'] = self.secret_hash.hex()
