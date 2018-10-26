@@ -23,13 +23,13 @@ def from_base_units(value: int) -> float:
 
 def to_base_units(value: float) -> int:
     '''
-    Converting value from base units.
+    Converting value to base units.
 
     Args:
-        value (int): value in base units
+        value (int): value in main coins
 
     Returns:
-        float: value in main coins
+        float: value in base units
 
     Example:
         >>> from clove.utils.bitcoin import to_base_units

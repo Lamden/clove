@@ -133,7 +133,8 @@ class BitcoinTransaction(object):
     def address(self):
         return b2lx(self.tx.GetHash())
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns a dictionary with transaction details.'''
         details = {
             'transaction': self.raw_transaction,
             'transaction_address': self.address,
@@ -244,7 +245,8 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
             raise RuntimeError('Cannot subtract fee from change transaction. You need to add more input transactions.')
         self.tx.vout[1].nValue -= fee_in_satoshi
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns a dictionary with transaction details.'''
         details = {
             'contract': self.contract.hex(),
             'contract_address': str(CBitcoinAddress.from_scriptPubKey(self.contract.to_p2sh_scriptPubKey())),

@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from eth_abi import decode_abi
 from ethereum.transactions import Transaction
@@ -12,6 +13,7 @@ from clove.utils.logging import logger
 
 
 class EthereumContract(object):
+    '''Atomic Swap contract.'''
 
     def __init__(self, network, tx_dict):
 
@@ -52,16 +54,29 @@ class EthereumContract(object):
             self.symbol = self.network.default_symbol
 
     @property
-    def is_token_contract(self):
+    def is_token_contract(self) -> bool:
+        '''
+        Checking if contract is a token contract.
+
+        Returns:
+            bool: True is contract is a token contract, False otherwise
+        '''
         return self.inputs['_isToken']
 
     @property
     def contract(self):
+        '''Returns a contract object.'''
         return self.network.web3.eth.contract(
             address=self.contract_address, abi=self.network.abi
         )
 
     def get_balance(self) -> float:
+        '''
+        Checking contract balance.
+
+        Returns:
+            float: contract balance
+        '''
         contract = self.contract
         contract_swap = contract.functions.swaps(self.recipient_address, self.secret_hash).call()
         contract_exists = contract_swap[-1]
@@ -80,6 +95,22 @@ class EthereumContract(object):
         utxo: list=None,
         token_address: str=None,
     ):
+        '''
+        Method for creating a second Atomic Swap transaction based on the secret hash from the current contract.
+
+        Args:
+            symbol (str): network symbol
+            sender_address (str): wallet address of the transaction creator
+            recipient_address (str): wallet address of the transaction recipient
+            value (float): amount to be send
+            utxo (list): list of UTXO objects. In None UTXO will be gathered automatically if needed
+                (for bitcoin-based networks)
+            token_address (str): address of the token contract if we want to use a token
+
+        Returns:
+            BitcoinAtomicSwapTransaction, EthereumAtomicSwapTransaction, None: Atomic Swap transaction object
+                or None if something went wrong.
+        '''
         network = self.network.get_network_by_symbol(symbol)
         if network.ethereum_based:
             return network.atomic_swap(
@@ -98,6 +129,18 @@ class EthereumContract(object):
         )
 
     def redeem(self, secret: str) -> EthereumTokenTransaction:
+        '''
+        Creates transaction that can redeem a contract.
+
+        Args:
+            secret (str): transaction secret that should match the contract secret hash (after hashing)
+
+        Returns:
+            EthereumTokenTransaction: unsigned transaction object with redeem transaction
+
+        Raises:
+            ValueError: if contract balance is 0
+        '''
         if self.balance == 0:
             raise ValueError("Balance of this contract is 0.")
         contract = self.contract
@@ -124,7 +167,23 @@ class EthereumContract(object):
         transaction.recipient_address = self.recipient_address
         return transaction
 
-    def find_redeem_transaction(self):
+    def find_redeem_transaction(self) -> Optional[str]:
+        '''
+        Getting details of redeem transaction.
+
+        Returns:
+            str, None: Redeem transaction hash, None if redeem transaction was not found
+
+        Raises:
+            ValueError: if the network is not supported
+
+        Example:
+            >>> from clove.network import EthereumTestnet
+            >>> network = EthereumTestnet()
+            >>> contract = network.audit_contract('0xfe4bcc1b522923ca6f8dc2721134c7d8636b34737aeafb2d6d0868d73e226891')
+            >>> contract.find_redeem_transaction()
+            '0x9879c8e9866fed8f9a2abdefff72c0dacb9e683ffcbd68cb966b5b8358421f39'
+        '''
         if self.network.filtering_supported:
             tx_details = self.network.find_transaction_details_in_redeem_event(
                 block_number=self.block_number,
@@ -153,7 +212,16 @@ class EthereumContract(object):
                 f'Unable to find redeem transaction, {self.network.default_symbol} network is not supported.'
             )
 
-    def find_secret(self):
+    def find_secret(self) -> Optional[str]:
+        '''
+        Searching for the secret in the redeem transaction details.
+
+        Returns:
+            str, None: secret or None if the redeem transaction was not found
+
+        Raises:
+            ValueError: if the network doesn't support event filtering
+        '''
         try:
             tx_details = self.network.find_transaction_details_in_redeem_event(
                 block_number=self.block_number,
@@ -170,7 +238,17 @@ class EthereumContract(object):
                 f'Unable to find secret, {self.network.default_symbol} network is not supported.'
             )
 
-    def refund(self):
+    def refund(self) -> EthereumTokenTransaction:
+        '''
+        Creates transaction that can refund a contract.
+
+        Returns:
+            EthereumTokenTransaction: unsigned transaction object with refund transaction
+
+        Raises:
+            RuntimeError: if contract is still valid
+            ValueError: if contract balance is 0
+        '''
         if self.balance == 0:
             raise ValueError("Balance of this contract is 0.")
         contract = self.contract
@@ -204,7 +282,8 @@ class EthereumContract(object):
         logger.debug('Transaction refunded')
         return transaction
 
-    def show_details(self):
+    def show_details(self) -> dict:
+        '''Returns information about the contract.'''
         details = {
             'contract_address': self.contract_address,
             'confirmations': self.confirmations,
