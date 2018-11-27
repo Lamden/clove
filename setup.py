@@ -23,7 +23,7 @@ setup(
         'coloredlogs==9.0',
         'web3==4.0.0b11',
         'ecdsa==0.13',
-        'requests==2.4.3',
+        'requests==2.20.0',
 
         # fixed requirements of ethereum
         'eth-account==0.1.0a2',
@@ -42,7 +42,7 @@ setup(
             'freezegun==0.3.9',
             'validators==0.12.0',
             'pytest-cov==2.5.1',
-            'requests==2.18.4',
+            'requests==2.20.0',
         ],
         'dev': [
             'pyquery==1.4.0',
