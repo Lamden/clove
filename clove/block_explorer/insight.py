@@ -1,4 +1,5 @@
 from json import JSONDecodeError
+import time
 from typing import Optional
 
 from bitcoin.core import CTxOut, script
@@ -335,7 +336,12 @@ class InsightAPIv4(BaseAPI):
         Raises:
             ValueError: if something went wrong
         '''
-        response = requests.post(f'{cls.api_url}/tx/send', data={'rawtx': raw_transaction})
+        url = f'{cls.api_url}/tx/send'
+        logger.debug('  Requesting: %s', url)
+        request_start = time.time()
+        response = requests.post(url, data={'rawtx': raw_transaction})
+        response_time = time.time() - request_start
+        logger.debug('Got response: %s [%.2fs]', url, response_time)
         if response.status_code == 200:
             try:
                 return response.json()['txid']
