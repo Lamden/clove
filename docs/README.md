@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/Lamden/clove/master/docs/clove.jpg" align="right" title="Clove" width="300" height="450">
 
-version number: 1.2.15
+version number: 1.2.16
 
 
 ## Overview

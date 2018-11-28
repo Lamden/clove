@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.16
 
 * Ignore tokens without symbol
 
