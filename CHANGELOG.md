@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+* Ignore tokens without symbol
+
 ## v1.2.15
 
 * New Ethereum tokens

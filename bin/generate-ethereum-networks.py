@@ -51,6 +51,10 @@ class EthereumNetworkGenerator(object):
                 print_error(f'Cannot define the number of decimal places for {name} ({symbol}). Ignoring.')
                 self.ignored.append(name)
                 continue
+            if not symbol:
+                print_error(f'Cannot get symbol for {name}. Ignoring.')
+                self.ignored.append(name)
+                continue
             token = Token(name, symbol, Web3.toChecksumAddress(address), decimals)
             if symbol in self.symbols:
                 print_error(f'Duplicate symbol {symbol} for token {name}. Ignoring.')
