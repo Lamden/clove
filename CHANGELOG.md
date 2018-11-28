@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.2.15
+
+* New Ethereum tokens
+* requests version upgrade
+
 ## v1.2.14
 
 * Remove Bitcoin Cash from API
