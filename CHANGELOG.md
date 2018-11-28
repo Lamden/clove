@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.2.15
 
 * New Ethereum tokens
 * requests version upgrade
