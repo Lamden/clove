@@ -53,6 +53,24 @@ ERC20_BASIC_ABI = [{
     "payable": False,
     "stateMutability": "view",
     "type": "function"
+}, {
+    "constant": True,
+    "inputs": [
+        {
+            "name": "_owner",
+            "type": "address"
+        }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+        {
+            "name": "balance",
+            "type": "uint256"
+        }
+    ],
+    "payable": False,
+    "stateMutability": "view",
+    "type": "function"
 }]
 
 
