@@ -2,7 +2,7 @@ from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class CreativeCoin(CryptoidAPI, BitcoinBaseNetwork):
+class CreativeCoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary CreativeCoin (CREA) network information based on
     https://github.com/creativechain/creativechain-core/blob/master/src/chainparams.cpp
@@ -20,13 +20,15 @@ class CreativeCoin(CryptoidAPI, BitcoinBaseNetwork):
     }
     source_code_url = 'https://github.com/creativechain/creativechain-core/blob/master/src/chainparams.cpp'
 
+"""
+Code depreciated with NoAPI
 
 class CreativeCoinTestNet(NoAPI, CreativeCoin):
-    """
-    Class with all the necessary CreativeCoin (CREA) testing network information based on
-    https://github.com/creativechain/creativechain-core/blob/master/src/chainparams.cpp
-    (date of access: 02/17/2018)
-    """
+
+    # Class with all the necessary CreativeCoin (CREA) testing network information based on
+    # https://github.com/creativechain/creativechain-core/blob/master/src/chainparams.cpp
+    # (date of access: 02/17/2018)
+
     name = 'test-creativecoin'
     seeds = ('testnet-seed.creativecoin.net', 'tcreaseed.owldevelopers.site', )
     port = 11946
@@ -37,3 +39,4 @@ class CreativeCoinTestNet(NoAPI, CreativeCoin):
         'SECRET_KEY': 239
     }
     testnet = True
+"""

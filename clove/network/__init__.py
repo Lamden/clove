@@ -9,7 +9,7 @@ from clove.network.bitcoin_based.bitmark import Bitmark
 from clove.network.bitcoin_based.bitsend import BitSend, BitSendTestNet
 from clove.network.bitcoin_based.blackcoin import BlackCoin
 from clove.network.bitcoin_based.blocknet import Blocknet
-from clove.network.bitcoin_based.creativecoin import CreativeCoin, CreativeCoinTestNet
+from clove.network.bitcoin_based.creativecoin import CreativeCoin
 from clove.network.bitcoin_based.dash import Dash, DashTestNet
 from clove.network.bitcoin_based.digibyte import Digibyte
 from clove.network.bitcoin_based.dopecoin import Dopecoin
@@ -25,7 +25,7 @@ from clove.network.bitcoin_based.joulecoin import Joulecoin
 from clove.network.bitcoin_based.komodo import Komodo
 from clove.network.bitcoin_based.lanacoin import LanaCoin, LanaCoinTestNet
 from clove.network.bitcoin_based.litecoin import Litecoin, LitecoinTestNet
-from clove.network.bitcoin_based.machinecoin import Machinecoin, MachinecoinTestNet
+from clove.network.bitcoin_based.machinecoin import Machinecoin
 from clove.network.bitcoin_based.monacoin import Monacoin, MonacoinTestNet
 from clove.network.bitcoin_based.monetaryunit import MonetaryUnit, MonetaryUnitTestNet
 from clove.network.bitcoin_based.mooncoin import Mooncoin
@@ -52,7 +52,7 @@ from clove.network.bitcoin_based.visio import Visio
 from clove.network.bitcoin_based.vivo import Vivo
 from clove.network.bitcoin_based.zcoin import ZCoin, ZCoinTestNet
 from clove.network.bitcoin_based.zetacoin import Zetacoin, ZetacoinTestNet
-from clove.network.bitcoin_based.zoin import Zoin, ZoinTestNet
+from clove.network.bitcoin_based.zoin import Zoin
 from clove.network.ethereum import Ethereum, EthereumTestnet
 from clove.network.ethereum_based.ellaism import Ellaism, EllaismTestnet
 from clove.network.ethereum_based.ether_gem import EtherGem
@@ -72,7 +72,7 @@ BITCOIN_BASED = (
     BitSend, BitSendTestNet,
     BlackCoin,
     Blocknet,
-    CreativeCoin, CreativeCoinTestNet,
+    CreativeCoin,
     Dash, DashTestNet,
     Digibyte,
     Dopecoin,
@@ -88,8 +88,8 @@ BITCOIN_BASED = (
     Komodo,
     LanaCoin, LanaCoinTestNet,
     Litecoin, LitecoinTestNet,
-    Machinecoin, MachinecoinTestNet,
-    Monacoin, MonacoinTestNet,
+    Machinecoin,
+    Monacoin,
     MonetaryUnit, MonetaryUnitTestNet,
     Mooncoin,
     Myriad, MyriadTestNet,
@@ -115,7 +115,7 @@ BITCOIN_BASED = (
     Vivo,
     ZCoin, ZCoinTestNet,
     Zetacoin, ZetacoinTestNet,
-    Zoin, ZoinTestNet,
+    Zoin,
 )
 
 ETHEREUM_BASED = (
