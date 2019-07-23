@@ -512,6 +512,55 @@ class EthereumBaseNetwork(BaseNetwork):
             return
         return EthToken.from_namedtuple(token)
 
+    def get_balance(self, symbol: str, address: str ) -> str:
+        '''
+        Returns wallet balance without unconfirmed transactions.
+
+        Args:
+            wallet_address (str): wallet address
+
+        Returns:
+            float, None: account balance converted from base units or None if something went wrong
+
+        Example:
+            >>> from clove.network import BitcoinTestNet
+            >>> network = Ethereum()
+            >>> network.get_balance('0x424638050a2b9984030954c8a19e2032beb11d48')
+            4.22188744
+        '''
+
+        return self.web3.eth.getBalance(self.unify_address(address))
+
+
+    def get_balance_erc20(self, address: str, contract_address: str ) -> str:
+        '''
+        Returns wallet balance without unconfirmed transactions.
+
+        Args:
+            wallet_address (str): wallet address
+
+        Returns:
+            float, None: account balance converted from base units or None if something went wrong
+
+        Example:
+            >>> from clove.network import BitcoinTestNet
+            >>> network = Ethereum()
+            >>> network.get_balance('0x424638050a2b9984030954c8a19e2032beb11d48')
+            4.22188744
+        '''
+        contract_address = self.unify_address(contract_address)
+        address = self.unify_address(address)
+        
+        token_contract = self.web3.eth.contract(address=contract_address, abi=ERC20_BASIC_ABI)
+        concise = ConciseContract(token_contract)
+
+        if not token_contract:
+            logger.warning(f'{contract_address} is not an ERC20 contract')
+            return
+        
+        return concise.balanceOf(address)
+
+
     @staticmethod
     def deserialize_raw_transaction(raw_transaction: str) -> Transaction:
         '''
