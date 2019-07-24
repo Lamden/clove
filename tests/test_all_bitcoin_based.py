@@ -45,6 +45,14 @@ def test_BitcoinCash():
     network = get_network_by_symbol('BCH')
     assert network.get_balance('qq3q4leh6fn9099lcfwmrztr80msg2m9p5zln7hvqz') == 0.00059330
 
+""" Needs upgrage to Insitev8 example: 
+https://api.bitcore.io/api/BCH/mainnet/address/qq3q4leh6fn9099lcfwmrztr80msg2m9p5zln7hvqz/balance
+def test_BitcoinCashTestNet():
+    # https://blockexplorer.one/bitcoin-cash/testnet/address/qqyu6ngler7tqruhv5utc4kg6ct8j6qslukmz78ued
+    network = get_network_by_symbol('BCH-TESTNET')
+    assert network.get_balance('qqyu6ngler7tqruhv5utc4kg6ct8j6qslukmz78ued') == 0.00010000
+"""
+
 def test_BitcoinGold():
     # https://explorer.bitcoingold.org/insight/address/GVK4S5HHMBcEbATd1Hgiv5wgRKvbFyJaSe
     network = get_network_by_symbol('BTG')
@@ -64,3 +72,6 @@ def test_RavencoinTestNet():
     # https://testnet.ravencoin.network/address/mzeGFKD9Zs7oH2WwAkqCm1uewJg2j2urDs
     network = get_network_by_symbol('RVN-TESTNET')
     assert network.get_balance('mzeGFKD9Zs7oH2WwAkqCm1uewJg2j2urDs') == 2.10566468
+
+
+
