@@ -3,7 +3,7 @@ from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Bitcore(CryptoidAPI, BitcoinBaseNetwork):
+class Bitcore(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary BTX network information based on
     http://www.github.com/LIMXTEC/BitCore/blob/master/src/chainparams.cpp
@@ -23,7 +23,7 @@ class Bitcore(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/LIMXTEC/BitCore/blob/master/src/chainparams.cpp'
 
 
-class BitcoreTestNet(NoAPI, Bitcore):
+class BitcoreTestNet(Bitcore):
     """
     Class with all the necessary BTX testing network information based on
     http://www.github.com/LIMXTEC/BitCore/blob/master/src/chainparams.cpp

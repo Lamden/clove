@@ -2,7 +2,7 @@ from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class EGulden(CryptoidAPI, BitcoinBaseNetwork):
+class EGulden(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary eGulden (EFL) network information based on
     https://github.com/Electronic-Gulden-Foundation/egulden/blob/master/src/chainparams.cpp
@@ -32,7 +32,7 @@ class EGulden(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'https://github.com/Electronic-Gulden-Foundation/egulden/blob/master/src/chainparams.cpp'
 
 
-class EGuldenTestNet(NoAPI, EGulden):
+class EGuldenTestNet(EGulden):
     """
     Class with all the necessary eGulden (EFL) testing network information based on
     https://github.com/Electronic-Gulden-Foundation/egulden/blob/master/src/chainparams.cpp

@@ -512,54 +512,50 @@ class EthereumBaseNetwork(BaseNetwork):
             return
         return EthToken.from_namedtuple(token)
 
-    def get_balance(self, symbol: str, address: str ) -> str:
+    def get_balance(self, address: str, contract_address: str = None ) -> str:
         '''
-        Returns wallet balance without unconfirmed transactions.
+        Returns wallet balance without unconfirmed transactions of an ETH address
+        or if 'contract_address' is not NONE then the balance of an ERC20 token
 
         Args:
             wallet_address (str): wallet address
+            [Optional]: contract_address (ste): ERC20 contact address
 
         Returns:
-            float, None: account balance converted from base units or None if something went wrong
+            str, gwei
 
         Example:
-            >>> from clove.network import BitcoinTestNet
+            Get balance of an ETH address
+            >>> from clove.network import Ethereum
             >>> network = Ethereum()
-            >>> network.get_balance('0x424638050a2b9984030954c8a19e2032beb11d48')
-            4.22188744
-        '''
+            >>> Ethereum.get_balance('0x49d77B4a97fBEdFaA9526BDbE00Ac0f0859aB91f')
+            2300000000000000
 
-        return self.web3.eth.getBalance(self.unify_address(address))
-
-
-    def get_balance_erc20(self, address: str, contract_address: str ) -> str:
-        '''
-        Returns wallet balance without unconfirmed transactions.
-
-        Args:
-            wallet_address (str): wallet address
-
-        Returns:
-            float, None: account balance converted from base units or None if something went wrong
-
-        Example:
-            >>> from clove.network import BitcoinTestNet
+            Get balance of an ERC20 Token
+            >>> from clove.network import Ethereum
             >>> network = Ethereum()
-            >>> network.get_balance('0x424638050a2b9984030954c8a19e2032beb11d48')
-            4.22188744
+            >>> network.get_balance('0x49d77B4a97fBEdFaA9526BDbE00Ac0f0859aB91f', '0xc27a2f05fa577a83ba0fdb4c38443c0718356501')
+            1000000000000000000
         '''
-        contract_address = self.unify_address(contract_address)
-        address = self.unify_address(address)
-        
-        token_contract = self.web3.eth.contract(address=contract_address, abi=ERC20_BASIC_ABI)
-        concise = ConciseContract(token_contract)
+        if contract_address is None:
+            # Return balance of ETH address
+            address = self.unify_address(address)
+            balance = self.web3.eth.getBalance(address)
+            return balance
+        else:
+            # Return balance of ERC20 token
+            contract_address = self.unify_address(contract_address)
+            address = self.unify_address(address)
+            token_contract = self.web3.eth.contract(address=contract_address, abi=ERC20_BASIC_ABI)                     
+            concise = ConciseContract(token_contract)
 
-        if not token_contract:
-            logger.warning(f'{contract_address} is not an ERC20 contract')
-            return
-        
-        return concise.balanceOf(address)
+            try:
+                balance = concise.balanceOf(address)
+            except (OverflowError, BadFunctionCallOutput, AttributeError):
+                raise ValueError(f'{contract_address} is not a valid ERC20 contract') 
+                logger.warning(f'{contract_address} is not a valid ERC20 contract')
 
+            return balance
 
     @staticmethod
     def deserialize_raw_transaction(raw_transaction: str) -> Transaction:

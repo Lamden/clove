@@ -1,3 +1,6 @@
+"""
+WEB3 PROVIDER NO LONGER WORKS
+
 from eth_abi import encode_single
 from web3 import HTTPProvider, Web3
 
@@ -40,3 +43,4 @@ class EthereumClassic(EthereumBaseNetwork):
                     'secret': events[0]['data'][2:],
                     'transaction_hash': events[0]['transactionHash'].hex()
                 }
+"""

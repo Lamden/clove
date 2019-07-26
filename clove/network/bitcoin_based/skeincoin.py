@@ -1,9 +1,9 @@
 
 from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Skeincoin(CryptoidAPI, BitcoinBaseNetwork):
+class Skeincoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary SKC network information based on
     http://www.github.com/skeincoin/skeincoin/blob/master/src/chainparams.cpp

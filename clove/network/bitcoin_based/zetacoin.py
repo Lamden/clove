@@ -2,7 +2,7 @@ from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Zetacoin(CryptoidAPI, BitcoinBaseNetwork):
+class Zetacoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary ZET network information based on
     http://www.github.com/zetacoin/zetacoin/blob/master/src/chainparams.cpp
@@ -25,7 +25,7 @@ class Zetacoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/zetacoin/zetacoin/blob/master/src/chainparams.cpp'
 
 
-class ZetacoinTestNet(NoAPI, Zetacoin):
+class ZetacoinTestNet(Zetacoin):
     """
     Class with all the necessary ZET testing network information based on
     http://www.github.com/zetacoin/zetacoin/blob/master/src/chainparams.cpp

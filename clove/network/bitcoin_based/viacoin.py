@@ -3,7 +3,7 @@ from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Viacoin(CryptoidAPI, BitcoinBaseNetwork):
+class Viacoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary VIA network information based on
     http://www.github.com/viacoin/viacoin/blob/master/src/chainparams.cpp
@@ -23,7 +23,7 @@ class Viacoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/viacoin/viacoin/blob/master/src/chainparams.cpp'
 
 
-class ViacoinTestNet(NoAPI, Viacoin):
+class ViacoinTestNet(Viacoin):
     """
     Class with all the necessary VIA testing network information based on
     http://www.github.com/viacoin/viacoin/blob/master/src/chainparams.cpp

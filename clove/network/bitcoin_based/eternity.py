@@ -3,7 +3,7 @@ from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Eternity(CryptoidAPI, BitcoinBaseNetwork):
+class Eternity(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary ENT network information based on
     http://www.github.com/eternity-group/eternity/blob/master/src/chainparams.cpp
@@ -22,7 +22,7 @@ class Eternity(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/eternity-group/eternity/blob/master/src/chainparams.cpp'
 
 
-class EternityTestNet(NoAPI, Eternity):
+class EternityTestNet(Eternity):
     """
     Class with all the necessary ENT testing network information based on
     http://www.github.com/eternity-group/eternity/blob/master/src/chainparams.cpp

@@ -1,8 +1,8 @@
 from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Pura(CryptoidAPI, BitcoinBaseNetwork):
+class Pura(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Pura (PURA) network information based on
     https://github.com/puracore/pura/blob/master/src/chainparamsseeds.h

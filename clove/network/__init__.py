@@ -54,10 +54,10 @@ from clove.network.bitcoin_based.zcoin import ZCoin, ZCoinTestNet
 from clove.network.bitcoin_based.zetacoin import Zetacoin, ZetacoinTestNet
 from clove.network.bitcoin_based.zoin import Zoin
 from clove.network.ethereum import Ethereum, EthereumTestnet
-from clove.network.ethereum_based.ellaism import Ellaism, EllaismTestnet
+# from clove.network.ethereum_based.ellaism import Ellaism, EllaismTestnet
 from clove.network.ethereum_based.ether_gem import EtherGem
-from clove.network.ethereum_based.ethereum_classic import EthereumClassic
-from clove.network.ethereum_based.expanse import Expanse
+# from clove.network.ethereum_based.ethereum_classic import EthereumClassic  WEB3 PROVIDER NO LONGER WORKING
+# from clove.network.ethereum_based.expanse import Expanse
 from clove.network.ethereum_based.musicoin import Musicoin
 
 BITCOIN_BASED = (
@@ -119,11 +119,11 @@ BITCOIN_BASED = (
 )
 
 ETHEREUM_BASED = (
-    Ellaism, EllaismTestnet,
+#    Ellaism, EllaismTestnet,
     Ethereum, EthereumTestnet,
-    EthereumClassic,
+#    EthereumClassic,
     EtherGem,
-    Expanse,
+#    Expanse,
     Musicoin,
 )
 

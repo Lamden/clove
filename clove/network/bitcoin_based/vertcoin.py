@@ -2,7 +2,7 @@ from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Vertcoin(CryptoidAPI, BitcoinBaseNetwork):
+class Vertcoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary VTC network information based on
     https://github.com/vertcoin-project/vertcoin-core/blob/master/src/chainparams.cpp
@@ -29,7 +29,7 @@ class Vertcoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'https://github.com/vertcoin-project/vertcoin-core/blob/master/src/chainparams.cpp'
 
 
-class VertcoinTestNet(NoAPI, Vertcoin):
+class VertcoinTestNet(Vertcoin):
     """
     Class with all the necessary VTC testing network information based on
     https://github.com/vertcoin-project/vertcoin-core/blob/master/src/chainparams.cpp
