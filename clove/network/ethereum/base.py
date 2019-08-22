@@ -279,7 +279,7 @@ class EthereumBaseNetwork(BaseNetwork):
             token_address: address of the ERC20 token contract to swap
 
         Returns:
-        EthereumP2PTransaction: atomic swap unsigned transaction for Ethereum
+        EthereumP2PTransaction: unsigned transaction for Ethereum and Ethereum ERC20 tokens
 
         Raises:
             ValueError: if you use an incorrect token address
