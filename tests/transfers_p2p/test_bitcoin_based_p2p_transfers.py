@@ -1,5 +1,6 @@
-from clove.network.base import BaseNetwork
 import pytest
+
+from clove.network.base import BaseNetwork
 
 '''''''''
 Testing the Bitcoin Network Base Class "p2p_transaction" method
@@ -167,7 +168,7 @@ def test_p2p_transaction_BTC_DASH():
     assert p2p_transaction.create_unsigned_transaction is not None
 
 #Digibyte (DGB)
-def test_p2p_transaction_DGB():
+def test_p2p_transaction_DGB(cryptoid_token):
     '''
     DGB Transaction Object can be created as well as unsigned transaction
     '''
@@ -177,7 +178,7 @@ def test_p2p_transaction_DGB():
     assert p2p_transaction.create_unsigned_transaction is not None
 
 #Litecoin (LTC)
-def test_p2p_transaction_LTC():
+def test_p2p_transaction_LTC(cryptoid_token):
     '''
     LTC Transaction Object can be created as well as unsigned transaction
     '''
@@ -187,7 +188,7 @@ def test_p2p_transaction_LTC():
     assert p2p_transaction.create_unsigned_transaction is not None
     
 #ZCoin (XZC)
-def test_p2p_transaction_XZC():
+def test_p2p_transaction_XZC(cryptoid_token):
     '''
     XZC Transaction Object can be created as well as unsigned transaction
     '''

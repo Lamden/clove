@@ -94,7 +94,7 @@ class EthereumBaseNetwork(BaseNetwork):
             >>> network.extract_method_id('0x7337c993000000000000000000000000000000000000000000000000000000005bd1e24b6603102c4aad175d1d719326d32127d55593f986000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000004fd13283a6b9e26c4833d7b9ee7557f1d008371d0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000002386f26fc10000')  # noqa: E501
             '7337c993'
         '''
-        return tx_input[2:10]
+        return tx_input[:10]
 
     def get_method_name(self, method_id: str) -> str:
         '''
@@ -115,6 +115,7 @@ class EthereumBaseNetwork(BaseNetwork):
             >>> network.get_method_name('7337c993')
             'initiate'
         '''
+
         try:
             return {
                 self.initiate: 'initiate',

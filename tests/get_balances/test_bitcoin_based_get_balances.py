@@ -20,7 +20,7 @@ def test_all_CryptoID():
 """
 Test API is Live for CryptoID
 """
-def test_CryptoID_API_isLive():
+def test_CryptoID_API_isLive(cryptoid_token):
     # https://chainz.cryptoid.info/ltc/address.dws?LT7hW5QeBnbXz5ihPXToHJaGNRHWgnibZe.htm
     network = get_network_by_symbol('LTC')
     assert network.get_balance('LT7hW5QeBnbXz5ihPXToHJaGNRHWgnibZe') == 0.53420632
@@ -75,22 +75,22 @@ def test_RavencoinTestNet():
     assert network.get_balance('mzeGFKD9Zs7oH2WwAkqCm1uewJg2j2urDs') == 2.10566468
 
 ### CryptoID API
-def test_Dash():
+def test_Dash(cryptoid_token):
     # https://chainz.cryptoid.info/dash/address.dws?XccPicDbg7HhRfFwPU3Z2CFVpHSYAhuxtu.htm
     network = get_network_by_symbol('DASH')
     assert network.get_balance('XccPicDbg7HhRfFwPU3Z2CFVpHSYAhuxtu') == 0.00208369
 
-def test_Digibyte():
+def test_Digibyte(cryptoid_token):
     # https://chainz.cryptoid.info/dgb/address.dws?D7CWTxvtwM2216a7aRGyYuqAEQDaudXA5k.htm
     network = get_network_by_symbol('DGB')
     assert network.get_balance('D7CWTxvtwM2216a7aRGyYuqAEQDaudXA5k') == 396.4892545
 
-def test_Litecoin():
+def test_Litecoin(cryptoid_token):
     # https://chainz.cryptoid.info/ltc/address.dws?LVmMhqp6JDTTknTqLWGhXvboXyron6zkKB.htm
     network = get_network_by_symbol('LTC')
     assert network.get_balance('LVmMhqp6JDTTknTqLWGhXvboXyron6zkKB') == 0.00000011
     
-def test_ZCoin():
+def test_ZCoin(cryptoid_token):
     # https://chainz.cryptoid.info/xzc/address.dws?aK6RS6dMf3xRGg9DF2JA3ExMfcDWXL4Zyp.htm
     network = get_network_by_symbol('XZC')
     assert network.get_balance('aK6RS6dMf3xRGg9DF2JA3ExMfcDWXL4Zyp') == 0.1917628

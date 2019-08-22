@@ -1,5 +1,6 @@
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
+
 class Goldcoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Goldcoin network information based on

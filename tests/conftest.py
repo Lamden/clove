@@ -17,6 +17,10 @@ from clove.network.bitcoin.utxo import Utxo
 Key = namedtuple('Key', ['secret', 'address'])
 
 
+def pytest_addoption(parser):
+	parser.addoption('--CRYPTOID_API_KEY', metavar='CRYPTOID_API_KEY', default=None, help='specify resolution cryptoID API KEY"')
+	parser.addoption('--INFURA_TOKEN', metavar='INFURA_TOKEN', default=None, help='specify resolution infura token API KEY"')
+
 @pytest.fixture
 def alice_wallet():
     return BitcoinTestNet.get_wallet(private_key='cSYq9JswNm79GUdyz6TiNKajRTiJEKgv4RxSWGthP3SmUHiX9WKe')
@@ -149,11 +153,10 @@ def web3_request_mock():
 
 
 @pytest.fixture
-def infura_token():
-    os.environ['INFURA_TOKEN'] = 'WsUXSFPvO9t86xDAAhNi'
+def infura_token(request):
+    os.environ['INFURA_TOKEN'] = request.config.getoption('--INFURA_TOKEN')
     yield
     del os.environ['INFURA_TOKEN']
-
 
 @pytest.fixture
 def etherscan_token():
@@ -161,6 +164,11 @@ def etherscan_token():
     yield
     del os.environ['ETHERSCAN_API_KEY']
 
+@pytest.fixture
+def cryptoid_token(request):
+    os.environ['CRYPTOID_API_KEY'] = request.config.getoption('--CRYPTOID_API_KEY')
+    yield
+    del os.environ['CRYPTOID_API_KEY']
 
 @pytest.fixture
 def fake_cryptoid_token():
