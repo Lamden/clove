@@ -71,7 +71,30 @@ ERC20_BASIC_ABI = [{
     "payable": False,
     "stateMutability": "view",
     "type": "function"
-}]
+}, {
+    "constant": False,
+    "inputs": [
+        {
+            "name": "_to",
+            "type": "address"
+        },
+        {
+            "name": "_value",
+            "type": "uint256"
+        }
+    ],
+    "name": "transfer",
+    "outputs": [
+        {
+            "name": "",
+            "type": "bool"
+        }
+    ],
+    "payable": False,
+    "stateMutability": "nonpayable",
+    "type": "function"
+},
+]
 
 
 ETHEREUM_CONTRACT_ABI = [{

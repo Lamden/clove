@@ -84,7 +84,7 @@ class BitcoinTransaction(object):
             sig = wallet.private_key.sign(sig_hash) + struct.pack('<B', script.SIGHASH_ALL)
             script_sig = [sig, wallet.private_key.pub] + utxo.unsigned_script_sig
             tx_in.scriptSig = script.CScript(script_sig)
-
+            
             VerifyScript(
                 tx_in.scriptSig,
                 tx_script,
@@ -97,7 +97,7 @@ class BitcoinTransaction(object):
     def create_unsigned_transaction(self):
         assert self.utxo_value >= self.value, 'You want to spend more than you\'ve got. Add more UTXO\'s.'
         self.build_outputs()
-        self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list, nLockTime=self.tx_locktime)
+        self.tx = CMutableTransaction(self.tx_in_list, self.tx_out_list, nLockTime=self.tx_locktime)    
 
     def publish(self):
         return self.network.publish(self.raw_transaction)
@@ -269,3 +269,74 @@ class BitcoinAtomicSwapTransaction(BitcoinTransaction):
         if self.signed:
             details['transaction_link'] = self.network.get_transaction_url(self.address)
         return details
+
+class BitcoinP2PKH(BitcoinTransaction):
+    '''Bitcoin P2PKH.'''
+
+    def __init__(
+        self,
+        network,
+        sender_address: str,
+        recipient_address: str,
+        value: float,
+        solvable_utxo: list,
+        tx_locktime: int=0
+    ):
+        self.sender_address = sender_address
+        self.change_amount = 0.0
+        super().__init__(network, recipient_address, value, solvable_utxo, tx_locktime)
+
+        self.locktime = 0.0
+
+    def validate_address(self):
+        invalid_recipient = not self.network.is_valid_address(self.recipient_address)
+        invalid_sender = not self.network.is_valid_address(self.sender_address)
+        if invalid_recipient and invalid_sender:
+            raise ValueError('Given recipient and sender addresses are invalid.')
+        elif invalid_recipient:
+            raise ValueError('Given recipient address is invalid.')
+        elif invalid_sender:
+            raise ValueError('Given sender address is invalid.')
+
+    def add_fee(self):
+        """Adding fee to the transaction by decreasing 'change' transaction."""
+        if not self.fee:
+            self.calculate_fee()
+        fee_in_satoshi = to_base_units(self.fee)
+
+        if len(self.tx.vout) == 1 or self.tx.vout[1].nValue < fee_in_satoshi:
+            raise RuntimeError('Cannot subtract fee from change transaction. You need to add more input transactions.')
+        self.tx.vout[1].nValue -= fee_in_satoshi
+        self.change_amount -= self.fee
+    
+    def build_outputs(self):
+        ''' Create a standard P2PKS bitcoin script '''
+        if self.utxo_value > self.value:
+            self.change_amount = self.utxo_value - self.value
+            self.tx_out_list = [
+                CMutableTxOut(to_base_units(self.value), CBitcoinAddress(self.recipient_address).to_scriptPubKey()),
+                CMutableTxOut(to_base_units(self.change_amount), CBitcoinAddress(self.sender_address).to_scriptPubKey()),
+            ]
+        
+    def show_details(self) -> dict:
+        '''Returns a dictionary with transaction details.'''
+        details = {
+            'transaction_address': self.address,
+            'fee': self.fee,
+            'fee_per_kb': self.fee_per_kb,
+            'fee_per_kb_text': f'{self.fee_per_kb:.8f} {self.symbol} / 1 kB',
+            'fee_text': f'{self.fee:.8f} {self.symbol}',
+            'locktime': self.locktime,
+            'recipient_address': self.recipient_address,
+            'sender_address': self.sender_address,
+            'size': self.size,
+            'size_text': f'{self.size} bytes',
+            'value': self.value,
+            'value_text': f'{self.value:.8f} {self.symbol}',
+            'utxo_value': f'{self.utxo_value:.8f} {self.symbol}',
+            'change_amount': f'{self.change_amount:.8f} {self.symbol}',
+        }
+        if self.signed:
+            details['transaction_link'] = self.network.get_transaction_url(self.address)
+        return details
+

@@ -17,7 +17,7 @@ from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionTy
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.token import EthToken
-from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
+from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction, EthereumP2PTransaction
 from clove.network.ethereum.wallet import EthereumWallet
 from clove.network.ethereum_based import Token
 from clove.utils.logging import logger
@@ -258,6 +258,57 @@ class EthereumBaseNetwork(BaseNetwork):
             recipient_address,
             value,
             secret_hash,
+            token,
+        )
+        return transaction
+
+    def transaction_p2p(
+        self,
+        sender_address: str,
+        recipient_address: str,
+        value: float,
+        token_address: str=None,
+    ) -> EthereumP2PTransaction:
+        '''
+        Return EthereumP2PTransaction object, which initiate and build transaction between sender and recipient.
+
+        Args:
+            sender_address (str): wallet address of the sender
+            recipient_address (str): wallet address of the recipient
+            value (str, Decimal): amount to swap
+            token_address: address of the ERC20 token contract to swap
+
+        Returns:
+        EthereumP2PTransaction: atomic swap unsigned transaction for Ethereum
+
+        Raises:
+            ValueError: if you use an incorrect token address
+
+        Example:
+            >>> from clove.network import EthereumTestnet
+            >>> network = EthereumTestnet()
+            >>> network.p2p_transfer('0x999F348959E611F1E9eab2927c21E88E48e6Ef45', '0xd867f293Ba129629a9f9355fa285B8D3711a9092', '0.05')  # noqa: E501
+            <clove.network.ethereum.transaction.EthereumP2PTransaction at 0x7f286d16dba8>
+        '''
+        if not isinstance(sender_address, str): raise TypeError('sender_address must be STR')
+        if not isinstance(recipient_address, str): raise TypeError('recipient_address must be STR')
+        if not isinstance(value, (int, float)): raise TypeError('Transaction value must be a Number')
+        if token_address and not isinstance(token_address, str): raise TypeError('token_address must be STR')
+
+        token = None
+        value = Decimal(str(value))
+
+        if token_address:
+            token = self.get_token_by_address(token_address)
+            if not token:
+                logger.warning('Unknown ethereum token')
+                raise ValueError('Unknown token')
+
+        transaction = EthereumP2PTransaction(
+            self,
+            sender_address,
+            recipient_address,
+            value,
             token,
         )
         return transaction

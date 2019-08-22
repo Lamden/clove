@@ -32,14 +32,15 @@ Test InsiteAPI based coins
 def test_Bitcoin():
     # https://www.blockchain.com/btc/address/12c35gMcjsEidhufU9Pazg888HHjfJzjxQ
     network = get_network_by_symbol('BTC')
-    assert network.get_balance('12c35gMcjsEidhufU9Pazg888HHjfJzjxQ') == 0.00009528
+    assert network.get_balance('12c35gMcjsEidhufU9Pazg888HHjfJzjxQ') == 0.00024528
 
 def test_BitcoinTestNet():
     # https://live.blockcypher.com/btc-testnet/address/n31RX4xTyvfJ1GubXCMWLRCrxa5UkZByrC/
     network = get_network_by_symbol('BTC-TESTNET')
-    assert network.get_balance('n31RX4xTyvfJ1GubXCMWLRCrxa5UkZByrC') == 0.07450057
+    assert network.get_balance('n31RX4xTyvfJ1GubXCMWLRCrxa5UkZByrC') == 0.10651696
 
-# Bitcon Based Tokens wit APIs
+# Bitcon Based Tokens with APIs
+## Cash Addresses and legacy work with this
 def test_BitcoinCash():
     # https://explorer.bitcoin.com/bch/address/bitcoincash:qq3q4leh6fn9099lcfwmrztr80msg2m9p5zln7hvqz
     network = get_network_by_symbol('BCH')
