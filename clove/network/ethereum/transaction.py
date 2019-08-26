@@ -313,6 +313,10 @@ class EthereumP2PTransaction(EthereumTokenTransaction):
     def show_details(self) -> dict:
         '''Returns a dictionary with transaction details.'''
         details = super().show_details()
+        details['symbol'] = self.network.default_symbol
+        details['sender_address'] = self.sender_address
         if self.token:
             details['token_address'] = self.token_address
+            details['symbol'] = self.token.symbol
+        details['unsigned_raw_tx'] = self.raw_transaction
         return details

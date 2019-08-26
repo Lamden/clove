@@ -30,7 +30,7 @@ pip-log.txt
 .coverage
 .tox
 nosetests.xml
-helper.tst
+helper.py
 
 # Complexity
 output/*.html

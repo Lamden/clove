@@ -321,6 +321,7 @@ class BitcoinP2PKH(BitcoinTransaction):
     def show_details(self) -> dict:
         '''Returns a dictionary with transaction details.'''
         details = {
+            'symbol': self.network.default_symbol,
             'transaction_address': self.address,
             'fee': self.fee,
             'fee_per_kb': self.fee_per_kb,
@@ -335,6 +336,7 @@ class BitcoinP2PKH(BitcoinTransaction):
             'value_text': f'{self.value:.8f} {self.symbol}',
             'utxo_value': f'{self.utxo_value:.8f} {self.symbol}',
             'change_amount': f'{self.change_amount:.8f} {self.symbol}',
+            'unsigned_raw_tx': self.raw_transaction,
         }
         if self.signed:
             details['transaction_link'] = self.network.get_transaction_url(self.address)
