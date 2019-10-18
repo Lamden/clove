@@ -62,11 +62,15 @@ def test_EthereumClassic():
     assert network.get_balance( '0x097738363B1662599ad0777E19461601F5EC8dF9' ) == 326105321792870
 '''
 
+'''''''''
+MUSIC COIN WEB3 PROVIDER DOWN
 def test_MusicCoin(infura_token):
     # https://explorer.musicoin.org/account/0x8a69953c4c0c0547b57f77dd96f782be9464fe2d
     network = get_network_by_symbol('MUSIC')
 
     assert network.get_balance( '0x8a69953c4c0c0547b57f77dd96f782be9464fe2d' ) == 80126313574442000
+'''
+
 '''
 def test_Expanse():
     # https://gander.tech/address/0x3e641113891d12755f59003fbe96b91927370963

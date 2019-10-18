@@ -150,17 +150,19 @@ def test_p2p_transaction_token_sign_tx_ETH_Testnet(infura_token):
     assert type( p2p_transaction.raw_transaction ) is str
 
 '''''''''
+MUSIC COIN WEB3 PROVIDER DOWN
 Music Coin Tests
 Test creating and signing transaction objects
-'''
+
 def test_p2p_transaction_sign_tx_MUSIC():
-    '''
-    MUSIC Transaction transaction can be signed
-    '''
+
+    'MUSIC Transaction transaction can be signed
+
     network = BaseNetwork.get_network_by_symbol('MUSIC')
     p2p_transaction = network.transaction_p2p('0x02e3e151755ef1ffa83f90166e378ebaa102d698', '0x02e3e151755ef1ffa83f90166e378ebaa102d698', 0.001)
     p2p_transaction.sign( 'FCD906EEC6D9710E545A5DFE12BC1C5D1143F02C7340C8031DA668769615F49F' )
     assert type( p2p_transaction.raw_transaction ) is str
+'''
 
 '''''''''
 EtherGem Tests

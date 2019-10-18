@@ -118,7 +118,6 @@ BITCOIN_BASED = (
 ETHEREUM_BASED = (
     Ethereum, EthereumTestnet,
     EtherGem,
-    Musicoin,
 )
 
 
