@@ -12,6 +12,7 @@ class Ethereum(EtherscanAPI, EthereumBaseNetwork):
     name = 'ethereum'
     symbols = ('ETH',)
     infura_network = 'mainnet'
+    chain_id = '1'
     tokens = tokens
     etherscan_api_subdomain = 'api'
     blockexplorer_tx = 'https://etherscan.io/tx/{0}'
@@ -38,6 +39,7 @@ class EthereumTestnet(Ethereum):
 
     name = 'test-ethereum'
     infura_network = 'kovan'
+    chain_id = '42'
     tokens = kovan_tokens
     testnet = True
     etherscan_api_subdomain = 'api-kovan'
