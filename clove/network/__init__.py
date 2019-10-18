@@ -55,7 +55,6 @@ from clove.network.bitcoin_based.zetacoin import Zetacoin, ZetacoinTestNet
 from clove.network.bitcoin_based.zoin import Zoin
 from clove.network.ethereum import Ethereum, EthereumTestnet
 from clove.network.ethereum_based.ether_gem import EtherGem
-from clove.network.ethereum_based.musicoin import Musicoin
 
 BITCOIN_BASED = (
     Bitcoin, BitcoinTestNet,
