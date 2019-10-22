@@ -22,7 +22,7 @@ setup(
         'colorama==0.3.9',
         'coloredlogs==9.0',
         'web3==4.0.0b11',
-        'ecdsa==0.13',
+        'ecdsa==0.13.3',
         'requests==2.20.0',
 
         # fixed requirements of ethereum
