@@ -42,7 +42,7 @@ class cmcAPI(object):
         Example:
             >>> from clove.network import Bitcoin
             >>> network = Bitcoin()
-            >>> network.cmc_info()
+            >>> network.cmc_api.cmc_info()
             https://sandbox.coinmarketcap.com/api/v1/#operation/getV1CryptocurrencyInfo
         '''
         url = f'{cls.cmc_url()}cryptocurrency/info?symbol={symbol}'
@@ -60,10 +60,8 @@ class cmcAPI(object):
         Example:
             >>> from clove.network import Bitcoin
             >>> network = Bitcoin()
-            >>> network.cmc_price()
+            >>> network.cmc_api.cmc_prices()
             https://sandbox.coinmarketcap.com/api/v1/#operation/getV1CryptocurrencyQuotesLatest
         '''
         symbolsStr = ",".join(symbols)
-        print(symbols)
-        print(symbolsStr)
         return clove_req_json(f'{cls.cmc_url()}cryptocurrency/quotes/latest?symbol={symbolsStr}&convert={currency}', cls.cmc_headers())
