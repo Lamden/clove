@@ -1,3 +1,5 @@
+from clove.coinmarketcap.base import cmcAPI
+
 class BaseNetwork(object):
     '''Class for shared properties and methods for Bitcoin and Ethereum network.'''
 
@@ -15,6 +17,7 @@ class BaseNetwork(object):
     '''Flag for test networks.'''
     blockexplorer_tx = None
     '''Url of the transaction in block explorer (format string)'''
+    cmc_api = cmcAPI()
 
     @property
     def default_symbol(self) -> str:
