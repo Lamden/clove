@@ -27,7 +27,6 @@ class Litecoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp'
     blockexplorer_tx = 'https://live.blockcypher.com/ltc/tx/{0}/'
 
-
 class LitecoinTestNet(NoAPI, Litecoin):
     """
     Class with all the necessary LTC testing network information based on

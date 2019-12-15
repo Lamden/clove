@@ -26,6 +26,18 @@ class CryptoidAPI(BaseAPI):
         return f'{cls.api_url}/{cls.symbols[0].lower()}'
 
     @classmethod
+    def get_all_coins(cls):
+        '''
+        This method will return all the suported coins by CryptoID
+
+        Returns:
+            json (dict): dictionary with the details of all coins
+        '''
+
+        data = clove_req_json(f'{cls.api_url}/explorer/api.dws?q=summary')
+        return data
+
+    @classmethod
     def get_latest_block(cls) -> Optional[int]:
         '''
         Returns the number of the latest block.
@@ -144,6 +156,8 @@ class CryptoidAPI(BaseAPI):
                 return utxo
 
         logger.debug(f'Cannot find enough UTXO\'s. Found %.8f from %.8f.', total, amount)
+        raise ValueError (f'Cannot find enough UTXO\'s. Found {total:.8f} of {amount:.8f}')
+
 
     @classmethod
     def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:

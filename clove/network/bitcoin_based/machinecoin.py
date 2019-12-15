@@ -1,9 +1,6 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
-
-class Machinecoin(CryptoidAPI, BitcoinBaseNetwork):
+class Machinecoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary MAC network information based on
     http://www.github.com/machinecoin-project/machinecoin-core/blob/master/src/chainparams.cpp
@@ -22,7 +19,7 @@ class Machinecoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/machinecoin-project/machinecoin-core/blob/master/src/chainparams.cpp'
 
 
-class MachinecoinTestNet(NoAPI, Machinecoin):
+class MachinecoinTestNet(Machinecoin):
     """
     Class with all the necessary MAC testing network information based on
     http://www.github.com/machinecoin-project/machinecoin-core/blob/master/src/chainparams.cpp

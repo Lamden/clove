@@ -8,6 +8,7 @@ import rlp
 from web3 import Web3
 
 from clove.utils.hashing import generate_secret_with_hash
+from clove.constants import ERC20_BASIC_ABI
 
 
 class EthereumTransaction(object):
@@ -23,7 +24,7 @@ class EthereumTransaction(object):
     def raw_transaction(self) -> str:
         '''Returns raw transaction serialized to hex.'''
         return Web3.toHex(rlp.encode(self.tx))
-
+    
     def show_details(self) -> dict:
         '''Returns information about transaction.'''
         details = self.tx.to_dict()
@@ -208,9 +209,9 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
             'from': self.sender_address,
             'value': self.value_base_units,
         }
-
+        
         tx_dict = initiate_func.buildTransaction(tx_dict)
-
+        
         self.gas_limit = initiate_func.estimateGas({
             key: value for key, value in tx_dict.items() if key not in ('to', 'data')
         })
@@ -236,4 +237,86 @@ class EthereumAtomicSwapTransaction(EthereumTokenTransaction):
         details['refund_address'] = self.sender_address
         if self.token:
             details['token_address'] = self.token_address
+        return details
+
+class EthereumP2PTransaction(EthereumTokenTransaction):
+
+    def __init__(
+        self,
+        network,
+        sender_address: str,
+        recipient_address: str,
+        value: Decimal,
+        token=None,
+    ):
+        super().__init__(network)
+
+        self.sender_address = network.unify_address(sender_address)
+        self.recipient_address = network.unify_address(recipient_address)
+        self.value = value
+        self.gas_limit = None
+        self.token = token
+        self.token_address = None
+        self.token_value_base_units = 0
+        self.value_base_units = 0
+
+        if self.token:
+            self.token_address = self.token.token_address
+            self.symbol = self.token.symbol
+            self.token_value_base_units = self.token.value_to_base_units(self.value)
+            self.set_contract()
+        else:
+            self.token_address = '0x0000000000000000000000000000000000000000'
+            self.symbol = self.network.default_symbol
+            self.value_base_units = self.network.value_to_base_units(self.value)
+            self.set_tx()
+        
+    def set_tx(self):
+            self.gas_limit = 31000
+            self.tx = Transaction(
+                self.network.web3.eth.getTransactionCount(self.sender_address),
+                self.network.web3.eth.gasPrice,
+                self.gas_limit,
+                self.recipient_address,
+                self.value_base_units,
+                b''
+            )
+
+    def set_contract(self):
+        self.contract = self.network.web3.eth.contract(address=self.token_address, abi=ERC20_BASIC_ABI)
+
+        transfer_func = self.contract.functions.transfer(
+            self.recipient_address,
+            self.token_value_base_units,
+        )
+        
+        tx_dict = {
+            'nonce': self.network.web3.eth.getTransactionCount(self.sender_address),
+            'from': self.sender_address,
+        }
+
+        self.gas_limit = transfer_func.estimateGas({
+            key: value for key, value in tx_dict.items() if key not in ('to', 'data')
+        })
+        
+        tx_dict = transfer_func.buildTransaction(tx_dict)
+
+        self.tx = Transaction(
+            nonce=tx_dict['nonce'],
+            gasprice=tx_dict['gasPrice'],
+            startgas=self.gas_limit,
+            to=tx_dict['to'],
+            value=tx_dict['value'],
+            data=Web3.toBytes(hexstr=tx_dict['data']),
+        )
+            
+    def show_details(self) -> dict:
+        '''Returns a dictionary with transaction details.'''
+        details = super().show_details()
+        details['symbol'] = self.network.default_symbol
+        details['sender_address'] = self.sender_address
+        if self.token:
+            details['token_address'] = self.token_address
+            details['symbol'] = self.token.symbol
+        details['unsigned_raw_tx'] = self.raw_transaction
         return details

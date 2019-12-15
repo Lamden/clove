@@ -5,6 +5,7 @@ class EtherGem(EthereumBaseNetwork):
 
     name = 'ethergem'
     symbols = ('EGEM',)
+    chain_id = '1987'
     web3_provider_address = 'https://jsonrpc.egem.io/custom'
     blockexplorer_tx = 'https://explorer.egem.io/tx/{0}'
     filtering_supported = True

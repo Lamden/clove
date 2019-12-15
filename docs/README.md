@@ -38,6 +38,7 @@ Or clone the repo:
     $ python setup.py develop
 
 ### Running tests
+CRYPTOID_API_KEY and INFURA_TOKEN environment variables need to be set.  If you are running sudo then they also need to be running in that environment.
 
 Install requirements:
 
@@ -49,7 +50,7 @@ To run all linters and tests:
 
 If you want to run a specyfic test
 
-    $ py.test -k test_name
+    $ py.test -k test_name -q --CRYPTOID_API_KEY $CRYPTOID_API_KEY --INFURA_TOKEN $INFURA_TOKEN -vv
 
 ### Documentation
 

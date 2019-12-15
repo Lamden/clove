@@ -23,7 +23,7 @@ class BitcoinGold(InsightAPIv4, BitcoinBaseNetwork):
     api_url = 'https://explorer.bitcoingold.org/insight-api'
     ui_url = 'https://explorer.bitcoingold.org/insight'
 
-
+    
 class BitcoinGoldTestNet(NoAPI, BitcoinGold):
     """
     Class with all the necessary BTG testing network information based on

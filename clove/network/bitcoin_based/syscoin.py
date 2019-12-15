@@ -1,8 +1,8 @@
 from clove.block_explorer.cryptoid import CryptoidAPI
-from clove.network.bitcoin.base import BitcoinBaseNetwork
+from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Syscoin(CryptoidAPI, BitcoinBaseNetwork):
+class Syscoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary Syscoin SYS network information based on
     https://github.com/syscoin/syscoin/blob/master/src/net.cpp

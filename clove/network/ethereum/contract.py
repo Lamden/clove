@@ -24,6 +24,8 @@ class EthereumContract(object):
         self.type = self.network.get_method_name(self.method_id)
         self.token = None
 
+        print ('self.method_id', self.method_id)
+        print ('self.network.initiate', self.network.initiate)
         if self.method_id != self.network.initiate:
             logger.warning('Not a contract transaction.')
             raise ValueError('Not a contract transaction.')

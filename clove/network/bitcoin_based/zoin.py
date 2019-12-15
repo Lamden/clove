@@ -1,9 +1,7 @@
-
-from clove.block_explorer.cryptoid import CryptoidAPI
 from clove.network.bitcoin.base import BitcoinBaseNetwork, NoAPI
 
 
-class Zoin(CryptoidAPI, BitcoinBaseNetwork):
+class Zoin(NoAPI, BitcoinBaseNetwork):
     """
     Class with all the necessary ZOI network information based on
     http://www.github.com/zoinofficial/zoin/blob/master/src/chainparams.cpp
@@ -23,7 +21,7 @@ class Zoin(CryptoidAPI, BitcoinBaseNetwork):
     source_code_url = 'http://www.github.com/zoinofficial/zoin/blob/master/src/chainparams.cpp'
 
 
-class ZoinTestNet(NoAPI, Zoin):
+class ZoinTestNet(Zoin):
     """
     Class with all the necessary ZOI testing network information based on
     http://www.github.com/zoinofficial/zoin/blob/master/src/chainparams.cpp

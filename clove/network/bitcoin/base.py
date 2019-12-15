@@ -37,7 +37,7 @@ from clove.exceptions import (
 )
 from clove.network.base import BaseNetwork
 from clove.network.bitcoin.contract import BitcoinContract
-from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction
+from clove.network.bitcoin.transaction import BitcoinAtomicSwapTransaction, BitcoinP2PKH
 from clove.network.bitcoin.wallet import BitcoinWallet
 from clove.utils.bitcoin import auto_switch_params
 from clove.utils.external_source import clove_req_json
@@ -686,6 +686,54 @@ class BitcoinBaseNetwork(BaseNetwork):
         transaction = BitcoinAtomicSwapTransaction(
             self, sender_address, recipient_address, value, solvable_utxo, secret_hash
         )
+        transaction.create_unsigned_transaction()
+        return transaction
+
+    @auto_switch_params()
+    def transaction_p2p(
+        self,
+        sender_address: str,
+        recipient_address: str,
+        value: float,
+    ) -> Optional[BitcoinP2PKH]:              
+        if not isinstance(sender_address, str): raise TypeError('sender_address must be STR')
+        if not isinstance(recipient_address, str): raise TypeError('recipient_address must be STR')
+        if not isinstance(value, (int, float)): raise TypeError('Transaction value must be a Number')
+        '''
+        A P2PKH transaction object for bitcoin transferrs.
+
+        Args:
+            sender_address (str): wallet address of the sender
+                AssertionError if not STR
+            recipient_address (str): wallet address of the recipient
+                AssertionError if not STR
+            value (float): amount to swap
+                AssertionError if not Number
+
+        Returns:
+            BitcoinP2PKH Transaction object
+
+        Exceptions:
+            ValueError if not enough UTXO's could be found to satisfy transfer
+            AttributeError if utxo list could not be gathered
+        
+
+        Example:
+            >>> from clove.network import BitcoinTestNet
+            >>> network = BitcoinTestNet()
+            >>> network.transaction_p2p('msJ2ucZ2NDhpVzsiNE5mGUFzqFDggjBVTM', 'mmJtKA92Mxqfi3XdyGReza69GjhkwAcBN1', 0.0002)
+            <clove.network.bitcoin.transaction.transaction_p2p at...>
+        '''
+
+        solvable_utxo = self.get_utxo(sender_address, value)
+        
+        if not solvable_utxo:
+            logger.error(f'Cannot get UTXO\'s for address {sender_address}')
+            raise AttributeError(f'Cannot get UTXO\'s for address {sender_address}')
+            return
+
+        transaction = BitcoinP2PKH(self, sender_address, recipient_address, value, solvable_utxo)
+
         transaction.create_unsigned_transaction()
         return transaction
 

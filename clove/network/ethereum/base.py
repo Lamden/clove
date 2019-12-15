@@ -17,7 +17,7 @@ from clove.exceptions import ImpossibleDeserialization, UnsupportedTransactionTy
 from clove.network.base import BaseNetwork
 from clove.network.ethereum.contract import EthereumContract
 from clove.network.ethereum.token import EthToken
-from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction
+from clove.network.ethereum.transaction import EthereumAtomicSwapTransaction, EthereumTokenApprovalTransaction, EthereumP2PTransaction
 from clove.network.ethereum.wallet import EthereumWallet
 from clove.network.ethereum_based import Token
 from clove.utils.logging import logger
@@ -94,7 +94,7 @@ class EthereumBaseNetwork(BaseNetwork):
             >>> network.extract_method_id('0x7337c993000000000000000000000000000000000000000000000000000000005bd1e24b6603102c4aad175d1d719326d32127d55593f986000000000000000000000000000000000000000000000000d867f293ba129629a9f9355fa285b8d3711a90920000000000000000000000004fd13283a6b9e26c4833d7b9ee7557f1d008371d0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000002386f26fc10000')  # noqa: E501
             '7337c993'
         '''
-        return tx_input[2:10]
+        return tx_input[:10]
 
     def get_method_name(self, method_id: str) -> str:
         '''
@@ -115,6 +115,7 @@ class EthereumBaseNetwork(BaseNetwork):
             >>> network.get_method_name('7337c993')
             'initiate'
         '''
+
         try:
             return {
                 self.initiate: 'initiate',
@@ -258,6 +259,57 @@ class EthereumBaseNetwork(BaseNetwork):
             recipient_address,
             value,
             secret_hash,
+            token,
+        )
+        return transaction
+
+    def transaction_p2p(
+        self,
+        sender_address: str,
+        recipient_address: str,
+        value: float,
+        token_address: str=None,
+    ) -> EthereumP2PTransaction:
+        '''
+        Return EthereumP2PTransaction object, which initiate and build transaction between sender and recipient.
+
+        Args:
+            sender_address (str): wallet address of the sender
+            recipient_address (str): wallet address of the recipient
+            value (str, Decimal): amount to swap
+            token_address: address of the ERC20 token contract to swap
+
+        Returns:
+        EthereumP2PTransaction: unsigned transaction for Ethereum and Ethereum ERC20 tokens
+
+        Raises:
+            ValueError: if you use an incorrect token address
+
+        Example:
+            >>> from clove.network import EthereumTestnet
+            >>> network = EthereumTestnet()
+            >>> network.p2p_transfer('0x999F348959E611F1E9eab2927c21E88E48e6Ef45', '0xd867f293Ba129629a9f9355fa285B8D3711a9092', '0.05')  # noqa: E501
+            <clove.network.ethereum.transaction.EthereumP2PTransaction at 0x7f286d16dba8>
+        '''
+        if not isinstance(sender_address, str): raise TypeError('sender_address must be STR')
+        if not isinstance(recipient_address, str): raise TypeError('recipient_address must be STR')
+        if not isinstance(value, (int, float)): raise TypeError('Transaction value must be a Number')
+        if token_address and not isinstance(token_address, str): raise TypeError('token_address must be STR')
+
+        token = None
+        value = Decimal(str(value))
+
+        if token_address:
+            token = self.get_token_by_address(token_address)
+            if not token:
+                logger.warning('Unknown ethereum token')
+                raise ValueError('Unknown token')
+
+        transaction = EthereumP2PTransaction(
+            self,
+            sender_address,
+            recipient_address,
+            value,
             token,
         )
         return transaction
@@ -511,6 +563,51 @@ class EthereumBaseNetwork(BaseNetwork):
             logger.warning(f'No token found for symbol {symbol}')
             return
         return EthToken.from_namedtuple(token)
+
+    def get_balance(self, address: str, contract_address: str = None ) -> str:
+        '''
+        Returns wallet balance without unconfirmed transactions of an ETH address
+        or if 'contract_address' is not NONE then the balance of an ERC20 token
+
+        Args:
+            wallet_address (str): wallet address
+            [Optional]: contract_address (ste): ERC20 contact address
+
+        Returns:
+            str, gwei
+
+        Example:
+            Get balance of an ETH address
+            >>> from clove.network import Ethereum
+            >>> network = Ethereum()
+            >>> Ethereum.get_balance('0x49d77B4a97fBEdFaA9526BDbE00Ac0f0859aB91f')
+            2300000000000000
+
+            Get balance of an ERC20 Token
+            >>> from clove.network import Ethereum
+            >>> network = Ethereum()
+            >>> network.get_balance('0x49d77B4a97fBEdFaA9526BDbE00Ac0f0859aB91f', '0xc27a2f05fa577a83ba0fdb4c38443c0718356501')
+            1000000000000000000
+        '''
+        if contract_address is None:
+            # Return balance of ETH address
+            address = self.unify_address(address)
+            balance = self.web3.eth.getBalance(address)
+            return balance
+        else:
+            # Return balance of ERC20 token
+            contract_address = self.unify_address(contract_address)
+            address = self.unify_address(address)
+            token_contract = self.web3.eth.contract(address=contract_address, abi=ERC20_BASIC_ABI)                     
+            concise = ConciseContract(token_contract)
+
+            try:
+                balance = concise.balanceOf(address)
+            except (OverflowError, BadFunctionCallOutput, AttributeError):
+                raise ValueError(f'{contract_address} is not a valid ERC20 contract') 
+                logger.warning(f'{contract_address} is not a valid ERC20 contract')
+
+            return balance
 
     @staticmethod
     def deserialize_raw_transaction(raw_transaction: str) -> Transaction:

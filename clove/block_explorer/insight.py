@@ -144,6 +144,8 @@ class InsightAPIv4(BaseAPI):
                 return utxo
 
         logger.debug(f'Cannot find enough UTXO\'s. Found %.8f from %.8f.', total, amount)
+        raise ValueError (f'Cannot find enough UTXO\'s. Found {total:.8f} of {amount:.8f}')
+
 
     @classmethod
     def extract_secret_from_redeem_transaction(cls, contract_address: str) -> Optional[str]:

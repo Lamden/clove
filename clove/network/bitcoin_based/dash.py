@@ -32,6 +32,7 @@ class Dash(InsightAPIv4, BitcoinBaseNetwork):
     api_url = 'https://insight.dash.org/insight-api'
     ui_url = 'https://insight.dash.org/insight'
 
+
     @classmethod
     def get_fee(cls) -> Optional[float]:
         '''Returns actual fee per kb.'''
