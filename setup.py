@@ -26,7 +26,7 @@ setup(
         'requests==2.20.0',
 
         # fixed requirements of ethereum
-        'eth-account==0.1.0a2',
+        'eth-account==0.5.9',
         'eth-rlp==0.1.0',
         'rlp==0.6.0',
         'idna==2.6',
